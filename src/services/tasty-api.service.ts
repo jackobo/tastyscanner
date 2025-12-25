@@ -35,18 +35,33 @@ export class TastyApiService {
         return data.access_token;
     }
 
-    async getEquityData(...symbols: string[]): Promise<unknown> {
+    private async _get(path: string): Promise<unknown> {
+        if(!path.startsWith("/")) {
+            path = `/${path}`;
+        }
         const token = await this.getAccessToken();
-        const response = await fetch(`${this.baseUrl}/market-data/by-type?equity=${symbols.join(",")}`, {
+        const response = await fetch(`${this.baseUrl}${path}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         });
+        return await response.json();
+    }
 
-        const data = await response.json();
-        debugger;
-        console.log(data);
-        return data;
+    async getEquityData(...symbols: string[]): Promise<unknown> {
+        return await this._get(`market-data/equities/${symbols.join(",")}`);
+    }
+
+    async getNestedOptionsChain(symbol: string): Promise<unknown> {
+        return await this._get(`/option-chains/${symbol}/nested`);
+    }
+
+    async getDetailedOptionsChain(symbol: string): Promise<unknown> {
+        return await this._get(`/option-chains/${symbol}`);
+    }
+
+    async getOptionQuote(symbol: string): Promise<unknown> {
+        return await this._get(`/market-data/by-type?equity-option=${symbol}`);
     }
 }
