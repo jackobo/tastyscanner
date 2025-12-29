@@ -14,5 +14,10 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
+  },
+  resolve: {
+    alias: {
+      '@tastytrade/api/lib/quote-streamer': '/node_modules/@tastytrade/api/lib/quote-streamer.ts',
+    }
   }
 })

@@ -47,14 +47,14 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
     }
 
     const fetchDetailedOptionsChains = async () => {
-        const data = await TastyApiService.Instance.getDetailedOptionsChain('NVDA');
-        setDetailedOptionsChains(JSON.stringify(data, null, 2));
+        //const data = await TastyApiService.Instance.getDetailedOptionsChain('NVDA');
+        //setDetailedOptionsChains(JSON.stringify(data, null, 2));
 
     }
 
     const fetchdOptionQuote = async () => {
-        const data = await TastyApiService.Instance.getOptionQuote(optionsQuotesSymbols);
-        setOptionsQuotes(JSON.stringify(data, null, 2));
+        //const data = await TastyApiService.Instance.getOptionQuote(optionsQuotesSymbols);
+        //setOptionsQuotes(JSON.stringify(data, null, 2));
 
     }
 
