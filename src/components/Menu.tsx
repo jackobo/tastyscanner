@@ -1,5 +1,4 @@
 import {
-  IonChip,
   IonContent,
   IonItem,
   IonList,
@@ -39,28 +38,12 @@ const TickerMenuItemComponent: React.FC<{ticker: ITickerViewModel}> = observer((
     services.optionsChains.currentTicker = props.ticker;
   }
 
-  const renderIronCondorsCount = () => {
-    let count = 0;
-    props.ticker.getExpirationsWithIronCondors().forEach(exp => {
-      count += exp.ironCondors.length;
-    })
 
-    if(count === 0) {
-      return null;
-    }
-
-    return (
-        <IonChip>
-          {count}
-        </IonChip>
-    )
-  }
 
   return  <IonMenuToggle autoHide={false} onClick={onClick}>
     <MenuItemBox className={props.ticker.symbol === services.optionsChains.currentTicker.symbol ? 'selected' : ''} lines="none" detail={false}>
       <MenuItemContentBox>
         <TickerSymbolBox>{props.ticker.symbol}</TickerSymbolBox>
-        {renderIronCondorsCount()}
       </MenuItemContentBox>
     </MenuItemBox>
   </IonMenuToggle>

@@ -5,7 +5,7 @@ import {IIronCondorViewModel} from "../models/iron-condor.view-model.interface";
 import {IOptionViewModel} from "../models/option.view-model.interface";
 import styled from "styled-components";
 import {useServices} from "../hooks/use-services.hook";
-import { IonCard, IonChip } from '@ionic/react';
+import { IonCard, IonChip, IonSpinner } from '@ionic/react';
 
 const ContainerBox = styled.div`
     display: flex;
@@ -77,6 +77,14 @@ const StrikePriceBox = styled.span`
     width: 100%;
 `
 
+const SpinnerContainerBox = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+`
+
 const CondorLegComponent: React.FC<{option: IOptionViewModel; isSellOption: boolean}> = observer((props) => {
     const price = props.isSellOption ? props.option.lastPrice : -1 * props.option.lastPrice
     return (
@@ -144,6 +152,15 @@ export const TickerIronCondorsComponent: React.FC = observer(() => {
     const services = useServices();
 
     const ticker = services.optionsChains.currentTicker;
+
+    if(ticker.isLoading) {
+        return (
+            <SpinnerContainerBox>
+                <IonSpinner name="circles"/>
+            </SpinnerContainerBox>
+
+        )
+    }
 
     const expirations = ticker.getExpirationsWithIronCondors()
 

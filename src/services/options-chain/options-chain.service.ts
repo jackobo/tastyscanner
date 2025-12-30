@@ -13,6 +13,7 @@ export class OptionsChainService extends ServiceBase implements IOptionsChainSer
             new TickerModel("NVDA", this.services),
             new TickerModel("SLV", this.services)];
         this._currentTicker = this.tickers[0];
+        this._currentTicker.start();
         makeObservable<this, '_currentTicker'>(this, {
             _currentTicker: observable.ref
         });
@@ -21,13 +22,17 @@ export class OptionsChainService extends ServiceBase implements IOptionsChainSer
 
     public tickers: TickerModel[];
 
-    private _currentTicker: ITickerViewModel;
+    private _currentTicker: TickerModel;
     get currentTicker(): ITickerViewModel {
         return this._currentTicker;
     }
 
     set currentTicker(ticker: ITickerViewModel) {
-        runInAction(() => this._currentTicker = ticker);
+        this._currentTicker.stop();
+        runInAction(() => {
+            this._currentTicker = ticker as TickerModel;
+            this._currentTicker.start();
+        });
     }
 
 

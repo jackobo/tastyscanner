@@ -14,17 +14,16 @@ export class TickerModel implements ITickerViewModel {
             oauthScopes: ['read']
         });
 
-        makeObservable(this, {
+        this._tastyClient.quoteStreamer.addEventListener(this._streamEventHandler);
+
+        makeObservable<this, '_isLoading'>(this, {
             tickerTrade: observable.ref,
             optionsQuotes: observable,
             optionsTrades: observable,
             optionsGreeks: observable,
-            expirations: observable
-        })
-
-
-
-        this._start();
+            expirations: observable,
+            _isLoading: observable.ref
+        });
     }
 
 
@@ -40,64 +39,61 @@ export class TickerModel implements ITickerViewModel {
 
     public expirations: OptionsExpirationModel[] = [];
 
-    private async _start(): Promise<void> {
-        await this._tastyClient.quoteStreamer.connect();
+    private _isLoading: boolean = true;
 
-        const optionsChain = await this._tastyClient.instrumentsService.getNestedOptionChain(this.symbol);
-        //const marketData = await this._tastyClient.httpClient.getData(`/market-data/by-type`,{}, {"equity": this.symbol});
+    get isLoading(): boolean {
+        return this._isLoading;
+    }
 
-        //console.log(marketData);
+    set isLoading(value: boolean) {
+        runInAction(() => this._isLoading = value);
+    }
 
-        runInAction(() => {
-            for(const optionChain of optionsChain) {
-                for(const expiration of optionChain.expirations) {
-                    this.expirations.push(new OptionsExpirationModel(expiration, this))
-                }
-            }
-        })
+    private _optionsChains: any = null;
+    private async _loadOptionsChain(): Promise<any> {
+        if(!this._optionsChains) {
+            this._optionsChains = await this._tastyClient.instrumentsService.getNestedOptionChain(this.symbol);
 
-
-
-        this._tastyClient.quoteStreamer.addEventListener((records: any[]) => {
             runInAction(() => {
-                for(const record of records) {
-                    if(record.eventSymbol === this.symbol) {
-                        if(record.eventType === "Trade") {
-                            this.tickerTrade = record;
-                        }
-                    } else {
-                        if(record.eventType === "Quote") {
-                            //console.log(record);
-                            this.optionsQuotes[record.eventSymbol] = record;
-                        } else if(record.eventType === "Trade") {
-                            this.optionsTrades[record.eventSymbol] = record;
-                        } else if(record.eventType === "Greeks") {
-                            this.optionsGreeks[record.eventSymbol] = record;
-                        }
+                for(const optionChain of this._optionsChains) {
+                    for(const expiration of optionChain.expirations) {
+                        this.expirations.push(new OptionsExpirationModel(expiration, this))
                     }
-
                 }
             })
-
-        });
-
-        const allOptionsSymbols: string[] = [this.symbol];
-        for(const expiration of this.expirations) {
-            expiration.getAllSymbols().forEach(s => allOptionsSymbols.push(s));
         }
 
-        this._tastyClient.quoteStreamer.subscribe(allOptionsSymbols, [
-            MarketDataSubscriptionType.Quote,
-            MarketDataSubscriptionType.Trade,
-            //MarketDataSubscriptionType.Summary,
-            //MarketDataSubscriptionType.Profile,
-            MarketDataSubscriptionType.Greeks,
-            //MarketDataSubscriptionType.Underlying
-        ]);
+        return this._optionsChains;
+    }
 
+    async start(): Promise<void> {
+        this.isLoading = true;
+        try {
+            await this._loadOptionsChain();
 
+            await this._tastyClient.quoteStreamer.connect();
 
+            const allOptionsSymbols: string[] = [this.symbol];
+            for(const expiration of this.expirations) {
+                expiration.getAllSymbols().forEach(s => allOptionsSymbols.push(s));
+            }
 
+            this._tastyClient.quoteStreamer.subscribe(allOptionsSymbols, [
+                MarketDataSubscriptionType.Quote,
+                MarketDataSubscriptionType.Trade,
+                //MarketDataSubscriptionType.Summary,
+                //MarketDataSubscriptionType.Profile,
+                MarketDataSubscriptionType.Greeks,
+                //MarketDataSubscriptionType.Underlying
+            ]);
+        } finally {
+            this.isLoading = false;
+        }
+
+    }
+
+    async stop(): Promise<void> {
+        this._tastyClient.quoteStreamer.disconnect();
     }
 
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[] {
@@ -108,5 +104,27 @@ export class TickerModel implements ITickerViewModel {
             }
             return expiration.ironCondors.length > 0;
         }); //.filter(e => e.expirationDate === "2026-02-20");
+    }
+
+    private _streamEventHandler= (records: any[]) => {
+        runInAction(() => {
+            for(const record of records) {
+                if(record.eventSymbol === this.symbol) {
+                    if(record.eventType === "Trade") {
+                        this.tickerTrade = record;
+                    }
+                } else {
+                    if(record.eventType === "Quote") {
+                        //console.log(record);
+                        this.optionsQuotes[record.eventSymbol] = record;
+                    } else if(record.eventType === "Trade") {
+                        this.optionsTrades[record.eventSymbol] = record;
+                    } else if(record.eventType === "Greeks") {
+                        this.optionsGreeks[record.eventSymbol] = record;
+                    }
+                }
+
+            }
+        })
     }
 }

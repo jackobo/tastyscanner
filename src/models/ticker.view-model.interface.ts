@@ -3,6 +3,7 @@ import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interf
 export interface ITickerViewModel {
     readonly symbol: string;
     readonly currentPrice: number;
+    readonly isLoading: boolean;
     readonly expirations: IOptionsExpirationVewModel[];
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[];
 }
