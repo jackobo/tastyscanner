@@ -95,8 +95,8 @@ export class TickerModel implements ITickerViewModel {
 
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[] {
         return this.expirations.filter(expiration => {
-            if(expiration.daysToExpiration < this.services.settings.ironCondorScanner.minDaysToExpiration
-                || expiration.daysToExpiration > this.services.settings.ironCondorScanner.maxDaysToExpiration) {
+            if(expiration.daysToExpiration < this.services.settings.ironCondorFilters.minDaysToExpiration
+                || expiration.daysToExpiration > this.services.settings.ironCondorFilters.maxDaysToExpiration) {
                 return false;
             }
             return expiration.ironCondors.length > 0;

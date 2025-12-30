@@ -13,7 +13,7 @@ import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
 import {ITickerViewModel} from "../models/ticker.view-model.interface";
 import styled from "styled-components";
-import {IronCondorScannerSettingsComponent} from "./iron-condor-scanner-settings.component";
+import {IronCondorFiltersComponent} from "./iron-condor-filters.component";
 
 const MenuItemBox = styled(IonItem)`
   cursor: pointer;
@@ -62,7 +62,7 @@ const Menu: React.FC = observer(() => {
         <IonList id="inbox-list">
           <IonListHeader>IC Scanner</IonListHeader>
 
-          <IronCondorScannerSettingsComponent/>
+          <IronCondorFiltersComponent/>
         </IonList>
 
         <IonList id="labels-list">

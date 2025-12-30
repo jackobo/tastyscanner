@@ -1,9 +1,9 @@
 
 export interface ISettingsService {
-    readonly ironCondorScanner: IronCondorScannerSettingsViewModel;
+    readonly ironCondorFilters: IronCondorFiltersViewModel;
 }
 
-export interface IronCondorScannerSettingsViewModel {
+export interface IronCondorFiltersViewModel {
     minDelta: number;
     maxDelta: number;
     maxRiskRewardRatio: number;

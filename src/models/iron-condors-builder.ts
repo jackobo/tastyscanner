@@ -13,15 +13,15 @@ export class IronCondorsBuilder {
     }
 
     get minDelta(): number {
-        return this.services.settings.ironCondorScanner.minDelta;
+        return this.services.settings.ironCondorFilters.minDelta;
     }
 
     get maxDelta(): number {
-        return this.services.settings.ironCondorScanner.maxDelta;
+        return this.services.settings.ironCondorFilters.maxDelta;
     }
 
     get wings(): number[] {
-        return this.services.settings.ironCondorScanner.wings;
+        return this.services.settings.ironCondorFilters.wings;
     }
 
     private _filterByDelta(options: OptionModel[]): OptionModel[] {
@@ -70,7 +70,7 @@ export class IronCondorsBuilder {
     }
 
     private _hasGoodBidAskSpread(options: OptionModel[]): boolean {
-        return !options.some(o => o.bidAskSpread > this.services.settings.ironCondorScanner.maxBidAskSpread)
+        return !options.some(o => o.bidAskSpread > this.services.settings.ironCondorFilters.maxBidAskSpread)
     }
 
 }

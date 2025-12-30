@@ -1,11 +1,11 @@
-import {IronCondorScannerSettingsViewModel, ISettingsService} from "./settings.service.interface";
+import {IronCondorFiltersViewModel, ISettingsService} from "./settings.service.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 
 export class SettingsService implements ISettingsService {
-    readonly ironCondorScanner = new IronCondorScannerSettingsModel();
+    readonly ironCondorFilters = new IronCondorFiltersModel();
 }
 
-export class IronCondorScannerSettingsModel implements IronCondorScannerSettingsViewModel {
+export class IronCondorFiltersModel implements IronCondorFiltersViewModel {
     constructor() {
         makeObservable<this, '_minDelta'
             | '_maxDelta'
