@@ -4,4 +4,5 @@ export interface ITickerViewModel {
     readonly symbol: string;
     readonly currentPrice: number;
     readonly expirations: IOptionsExpirationVewModel[];
+    getExpirationsWithIronCondors(): IOptionsExpirationVewModel[];
 }

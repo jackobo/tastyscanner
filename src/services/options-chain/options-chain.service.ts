@@ -2,10 +2,16 @@ import { makeObservable, observable, runInAction } from "mobx";
 import {TickerModel} from "../../models/ticker.model";
 import {IOptionsChainService} from "./options-chain.service.interface";
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
+import {ServiceBase} from "../service-base";
+import {IServiceFactory} from "../service-factory.interface";
 
-export class OptionsChainService implements IOptionsChainService {
-    constructor() {
-        this.tickers = [new TickerModel("NVDA") , new TickerModel("GOOGL")];
+export class OptionsChainService extends ServiceBase implements IOptionsChainService {
+    constructor(services: IServiceFactory) {
+        super(services);
+        this.tickers = [
+            new TickerModel("SPY", this.services),
+            new TickerModel("NVDA", this.services),
+            new TickerModel("GOOGL", this.services)];
         this._currentTicker = this.tickers[0];
         makeObservable<this, '_currentTicker'>(this, {
             _currentTicker: observable.ref

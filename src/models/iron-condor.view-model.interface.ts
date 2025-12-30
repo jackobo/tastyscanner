@@ -1,6 +1,7 @@
 import {IOptionViewModel} from "./option.view-model.interface";
 
 export interface IIronCondorViewModel {
+    readonly key: string;
     readonly wingsWidth: number;
     readonly credit: number;
     readonly riskRewardRatio: number;

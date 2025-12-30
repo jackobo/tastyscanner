@@ -11,6 +11,7 @@ const ContainerBox = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+    padding: 24px;
 `
 
 const ExploreContainer: React.FC = observer(() => {

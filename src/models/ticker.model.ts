@@ -2,9 +2,11 @@ import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {makeObservable, observable, runInAction} from "mobx";
 import {OptionsExpirationModel} from "./options-expiration.model";
 import {ITickerViewModel} from "./ticker.view-model.interface";
+import {IServiceFactory} from "../services/service-factory.interface";
+import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interface";
 
 export class TickerModel implements ITickerViewModel {
-    constructor(public readonly symbol: string) {
+    constructor(public readonly symbol: string, public readonly services: IServiceFactory) {
         this._tastyClient = new TastyTradeClient({
             ...TastyTradeClient.ProdConfig,
             clientSecret: import.meta.env.VITE_CLIENT_SECRET,
@@ -95,5 +97,15 @@ export class TickerModel implements ITickerViewModel {
 
 
 
+    }
+
+    getExpirationsWithIronCondors(): IOptionsExpirationVewModel[] {
+        return this.expirations.filter(expiration => {
+            if(expiration.daysToExpiration < this.services.settings.ironCondorScanner.minDaysToExpiration
+                || expiration.daysToExpiration > this.services.settings.ironCondorScanner.maxDaysToExpiration) {
+                return false;
+            }
+            return expiration.ironCondors.length > 0;
+        }); //.filter(e => e.expirationDate === "2026-02-20");
     }
 }

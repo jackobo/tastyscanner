@@ -5,6 +5,7 @@ import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interf
 import {IronCondorModel} from "./iron-condor.model";
 import {computed, makeObservable } from "mobx";
 import {IronCondorsBuilder} from "./iron-condors-builder";
+import {IServiceFactory} from "../services/service-factory.interface";
 
 export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     constructor(private readonly rawData: any,
@@ -22,6 +23,10 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     private readonly _ironCondorsBuilder: IronCondorsBuilder;
+
+    public get services(): IServiceFactory {
+        return this.ticker.services;
+    }
 
     get expirationDate(): string {
         return this.rawData["expiration-date"];
@@ -60,6 +65,6 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     get ironCondors(): IronCondorModel[] {
-        return this._ironCondorsBuilder.build().filter(ic => ic.riskRewardRatio <= 4);
+        return this._ironCondorsBuilder.build().filter(ic => ic.riskRewardRatio <= this.services.settings.ironCondorScanner.maxRiskRewardRatio);
     }
 }

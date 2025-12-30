@@ -5,7 +5,7 @@ import {IIronCondorViewModel} from "../models/iron-condor.view-model.interface";
 import {IOptionViewModel} from "../models/option.view-model.interface";
 import styled from "styled-components";
 import {useServices} from "../hooks/use-services.hook";
-import { IonCard } from '@ionic/react';
+import { IonCard, IonChip } from '@ionic/react';
 
 const ContainerBox = styled.div`
     display: flex;
@@ -14,8 +14,14 @@ const ContainerBox = styled.div`
 `
 
 const ExpirationHeaderBox = styled.div`
-    background-color: lightgray;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
     padding: 16px;
+    border-radius: 12px;
 `
 
 const CondorsBox = styled.div`
@@ -50,6 +56,10 @@ const CondorFooterBox = styled.div`
     font-weight: bold;
 `
 
+const CondorsCountBox = styled(IonChip)`
+    --background: var(--ion-color-tertiary);
+    --color: var(--ion-color-tertiary-contrast);
+`
 
 
 const OptionPriceBox = styled.span`
@@ -78,6 +88,8 @@ const CondorFooterComponent: React.FC<{condor: IIronCondorViewModel}> = observer
             <span>{props.condor.riskRewardRatio}</span>
             <span>Wings:</span>
             <span>{`${props.condor.wingsWidth}$`}</span>
+            <span>POP:</span>
+            <span>???</span>
         </CondorFooterBox>
     )
 })
@@ -103,9 +115,14 @@ const ExpirationIronCondorsComponent: React.FC<{expiration: IOptionsExpirationVe
     const condors = props.expiration.ironCondors;
     return (
         <ContainerBox>
-            <ExpirationHeaderBox>{props.expiration.expirationDate}</ExpirationHeaderBox>
+            <ExpirationHeaderBox>
+                {`${props.expiration.expirationDate} (${props.expiration.daysToExpiration} days)`}
+                <CondorsCountBox>
+                    {condors.length}
+                </CondorsCountBox>
+            </ExpirationHeaderBox>
             <CondorsBox>
-                {condors.map(condor => <CondorComponent condor={condor}/>)}
+                {condors.map(condor => <CondorComponent key={condor.key} condor={condor}/>)}
             </CondorsBox>
 
         </ContainerBox>
@@ -117,7 +134,7 @@ export const IronCondorsComponent: React.FC = observer(() => {
 
     const ticker = services.optionsChains.currentTicker;
 
-    const expirations = ticker.expirations.filter(expiration => expiration.ironCondors.length > 0); //.filter(e => e.expirationDate === "2026-02-20");
+    const expirations = ticker.getExpirationsWithIronCondors()
 
     return <React.Fragment>
         {expirations.map(expiration => <ExpirationIronCondorsComponent key={expiration.expirationDate} expiration={expiration}/>)}

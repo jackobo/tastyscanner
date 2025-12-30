@@ -9,6 +9,10 @@ export class IronCondorModel implements IIronCondorViewModel {
                 public readonly btoCall: OptionModel) {
     }
 
+    get key(): string {
+        return `${this.wingsWidth}${this.btoPut.strikePrice}${this.stoPut.strikePrice}${this.stoCall.strikePrice}${this.btoCall.strikePrice}`;
+    }
+
     get credit(): number {
         const val = this.stoPut.lastPrice + this.stoCall.lastPrice - this.btoCall.lastPrice - this.btoPut.lastPrice;
         return Math.round(val * 100) / 100;
