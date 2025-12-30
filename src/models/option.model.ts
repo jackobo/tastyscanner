@@ -9,6 +9,7 @@ export abstract class OptionModel implements IOptionViewModel {
     }
 
     abstract get isOutOfMoney(): boolean;
+    abstract get optionType(): string;
 
     protected get ticker(): TickerModel {
         return this.strike.ticker;
@@ -41,12 +42,19 @@ export abstract class OptionModel implements IOptionViewModel {
 }
 
 export class PutOptionModel extends OptionModel {
+    get optionType(): string {
+        return "P";
+    }
+
     get isOutOfMoney(): boolean {
         return this.strike.strikePrice < this.ticker.currentPrice;
     }
 }
 
 export class CallOptionModel extends OptionModel {
+    get optionType(): string {
+        return "C";
+    }
     get isOutOfMoney(): boolean {
         return this.strike.strikePrice > this.ticker.currentPrice;
     }

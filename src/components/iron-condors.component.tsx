@@ -20,7 +20,7 @@ const CondorsBox = styled.div`
 
 const CondorLegBox = styled.div<{$isSell: boolean}>`
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 16px;
     background-color: ${props => props.$isSell ? '#ff0000' : '#00ff00'};
     border-radius: 8px;
@@ -43,7 +43,8 @@ const CondorFooterBox = styled.div`
 const CondorLegComponent: React.FC<{option: IOptionViewModel; isSellOption: boolean}> = observer((props) => {
     return (
         <CondorLegBox $isSell={props.isSellOption}>
-            <span>{props.isSellOption ? "S" : "B"}</span>
+            <span>{props.isSellOption ? "STO" : "BTO"}</span>
+            <span>{props.option.optionType}</span>
             <span>{props.option.strikePrice}</span>
             <span>{props.isSellOption ? props.option.lastPrice : -1 * props.option.lastPrice}</span>
             <span>{props.option.delta}</span>
