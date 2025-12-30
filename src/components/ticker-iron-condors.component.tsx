@@ -33,7 +33,7 @@ const CondorsBox = styled.div`
 
 const CondorLegBox = styled.div<{$isSell: boolean}>`
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: auto auto 1fr 1fr auto;
     gap: 16px;
     background-color: ${props => props.$isSell ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'};
     color: ${props => props.$isSell ? 'var(--ion-color-danger-contrast)' : 'var(--ion-color-success-contrast)'};
@@ -55,6 +55,7 @@ const CondorFooterBox = styled.div`
     row-gap: 8px;
     column-gap: 16px;
     font-weight: bold;
+    color: var(--ion-color-primary);
 `
 
 const CondorsCountBox = styled(IonChip)`
@@ -67,13 +68,18 @@ const OptionPriceBox = styled.span`
     text-align: right;
 `
 
+const StrikePriceBox = styled.span`
+    text-align: center;
+    width: 100%;
+`
+
 const CondorLegComponent: React.FC<{option: IOptionViewModel; isSellOption: boolean}> = observer((props) => {
     const price = props.isSellOption ? props.option.lastPrice : -1 * props.option.lastPrice
     return (
         <CondorLegBox $isSell={props.isSellOption}>
             <span>{props.isSellOption ? "STO" : "BTO"}</span>
             <span>{props.option.optionType}</span>
-            <span>{props.option.strikePrice}</span>
+            <StrikePriceBox>{props.option.strikePrice}</StrikePriceBox>
             <OptionPriceBox>{`${price}$`}</OptionPriceBox>
             <span>{props.option.delta + '\u0394'}</span>
         </CondorLegBox>
