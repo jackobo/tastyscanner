@@ -123,7 +123,7 @@ const ExpirationIronCondorsComponent: React.FC<{expiration: IOptionsExpirationVe
     return (
         <ContainerBox>
             <ExpirationHeaderBox>
-                {`${props.expiration.expirationDate} (${props.expiration.daysToExpiration} days)`}
+                {`${props.expiration.expirationDate} (${props.expiration.daysToExpiration} days) - ${props.expiration.expirationType}`}
                 <CondorsCountBox>
                     {condors.length}
                 </CondorsCountBox>
