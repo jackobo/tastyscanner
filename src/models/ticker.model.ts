@@ -1,40 +1,27 @@
-import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {makeObservable, observable, runInAction} from "mobx";
 import {OptionsExpirationModel} from "./options-expiration.model";
 import {ITickerViewModel} from "./ticker.view-model.interface";
 import {IServiceFactory} from "../services/service-factory.interface";
 import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interface";
+import {
+    IGreeksRawData,
+    IOptionsDataProvider,
+    IQuoteRawData, ITradeRawData
+} from "../services/options-chain/data-providers/options-data-provider.interface";
 
 export class TickerModel implements ITickerViewModel {
-    constructor(public readonly symbol: string, public readonly services: IServiceFactory) {
-        this._tastyClient = new TastyTradeClient({
-            ...TastyTradeClient.ProdConfig,
-            clientSecret: import.meta.env.VITE_CLIENT_SECRET,
-            refreshToken: import.meta.env.VITE_REFRESH_TOKEN,
-            oauthScopes: ['read']
-        });
-
-        this._tastyClient.quoteStreamer.addEventListener(this._streamEventHandler);
+    constructor(public readonly symbol: string,
+                public readonly services: IServiceFactory,
+                private readonly dataProvider: IOptionsDataProvider) {
 
         makeObservable<this, '_isLoading'>(this, {
-            tickerTrade: observable.ref,
-            optionsQuotes: observable,
-            optionsTrades: observable,
-            optionsGreeks: observable,
             expirations: observable,
             _isLoading: observable.ref
         });
     }
 
-
-    private _tastyClient: TastyTradeClient;
-    public tickerTrade: any = {};
-    public optionsQuotes: Record<string, unknown> = {};
-    public optionsTrades: Record<string, unknown> = {};
-    public optionsGreeks: Record<string, unknown> = {};
-
     public get currentPrice(): number {
-        return this.tickerTrade?.price ?? 0;
+        return this.getSymbolTrade(this.symbol)?.price ?? 0;
     }
 
     public expirations: OptionsExpirationModel[] = [];
@@ -49,21 +36,44 @@ export class TickerModel implements ITickerViewModel {
         runInAction(() => this._isLoading = value);
     }
 
-    private _optionsChains: any = null;
-    private async _loadOptionsChain(): Promise<any> {
-        if(!this._optionsChains) {
-            this._optionsChains = await this._tastyClient.instrumentsService.getNestedOptionChain(this.symbol);
+    getSymbolTrade(symbol: string): ITradeRawData | undefined {
+        return this.dataProvider.getSymbolTrade(symbol);
+    }
 
-            runInAction(() => {
-                for(const optionChain of this._optionsChains) {
-                    for(const expiration of optionChain.expirations) {
-                        this.expirations.push(new OptionsExpirationModel(expiration, this))
-                    }
-                }
-            })
+    getSymbolQuote(symbol: string): IQuoteRawData | undefined {
+        return this.dataProvider.getSymbolQuote(symbol);
+    }
+    getSymbolGreeks(symbol: string): IGreeksRawData | undefined {
+        return this.dataProvider.getSymbolGreeks(symbol);
+    }
+
+
+    private async _loadOptionsChain(): Promise<void> {
+        if(this.expirations.length > 0) {
+            return;
         }
 
-        return this._optionsChains;
+        const optionsChain = await this.dataProvider.getOptionsChain(this.symbol);
+        const expirations: OptionsExpirationModel[] = []
+
+        for(const optionChain of optionsChain) {
+            for(const expiration of optionChain.expirations) {
+                expirations.push(new OptionsExpirationModel(expiration, this))
+            }
+        }
+
+        runInAction(() => {
+            this.expirations = expirations;
+        });
+    }
+
+    private _getAllSymbols(): string[] {
+        const allOptionsSymbols: string[] = [this.symbol];
+        for(const expiration of this.expirations) {
+            expiration.getAllSymbols().forEach(s => allOptionsSymbols.push(s));
+        }
+
+        return allOptionsSymbols;
     }
 
     async start(): Promise<void> {
@@ -71,21 +81,8 @@ export class TickerModel implements ITickerViewModel {
         try {
             await this._loadOptionsChain();
 
-            await this._tastyClient.quoteStreamer.connect();
+            this.dataProvider.subscribe(this._getAllSymbols());
 
-            const allOptionsSymbols: string[] = [this.symbol];
-            for(const expiration of this.expirations) {
-                expiration.getAllSymbols().forEach(s => allOptionsSymbols.push(s));
-            }
-
-            this._tastyClient.quoteStreamer.subscribe(allOptionsSymbols, [
-                MarketDataSubscriptionType.Quote,
-                MarketDataSubscriptionType.Trade,
-                //MarketDataSubscriptionType.Summary,
-                //MarketDataSubscriptionType.Profile,
-                MarketDataSubscriptionType.Greeks,
-                //MarketDataSubscriptionType.Underlying
-            ]);
         } finally {
             this.isLoading = false;
         }
@@ -93,7 +90,7 @@ export class TickerModel implements ITickerViewModel {
     }
 
     async stop(): Promise<void> {
-        this._tastyClient.quoteStreamer.disconnect();
+        this.dataProvider.unsubscribe(this._getAllSymbols());
     }
 
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[] {
@@ -106,25 +103,4 @@ export class TickerModel implements ITickerViewModel {
         }); //.filter(e => e.expirationDate === "2026-02-20");
     }
 
-    private _streamEventHandler= (records: any[]) => {
-        runInAction(() => {
-            for(const record of records) {
-                if(record.eventSymbol === this.symbol) {
-                    if(record.eventType === "Trade") {
-                        this.tickerTrade = record;
-                    }
-                } else {
-                    if(record.eventType === "Quote") {
-                        //console.log(record);
-                        this.optionsQuotes[record.eventSymbol] = record;
-                    } else if(record.eventType === "Trade") {
-                        this.optionsTrades[record.eventSymbol] = record;
-                    } else if(record.eventType === "Greeks") {
-                        this.optionsGreeks[record.eventSymbol] = record;
-                    }
-                }
-
-            }
-        })
-    }
 }

@@ -153,6 +153,10 @@ export const TickerIronCondorsComponent: React.FC = observer(() => {
 
     const ticker = services.optionsChains.currentTicker;
 
+    if(!ticker) {
+        return null;
+    }
+
     if(ticker.isLoading) {
         return (
             <SpinnerContainerBox>

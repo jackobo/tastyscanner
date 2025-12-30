@@ -41,7 +41,7 @@ const TickerMenuItemComponent: React.FC<{ticker: ITickerViewModel}> = observer((
 
 
   return  <IonMenuToggle autoHide={false} onClick={onClick}>
-    <MenuItemBox className={props.ticker.symbol === services.optionsChains.currentTicker.symbol ? 'selected' : ''} lines="none" detail={false}>
+    <MenuItemBox className={props.ticker.symbol === services.optionsChains.currentTicker?.symbol ? 'selected' : ''} lines="none" detail={false}>
       <MenuItemContentBox>
         <TickerSymbolBox>{props.ticker.symbol}</TickerSymbolBox>
       </MenuItemContentBox>
@@ -60,7 +60,7 @@ const Menu: React.FC = observer(() => {
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList id="inbox-list">
-          <IonListHeader>Tasty IC Scanner</IonListHeader>
+          <IonListHeader>IC Scanner</IonListHeader>
 
           <IronCondorScannerSettingsComponent/>
         </IonList>

@@ -6,13 +6,13 @@ import {IronCondorModel} from "./iron-condor.model";
 import {computed, makeObservable } from "mobx";
 import {IronCondorsBuilder} from "./iron-condors-builder";
 import {IServiceFactory} from "../services/service-factory.interface";
+import {IOptionsExpirationRawData} from "../services/options-chain/data-providers/options-data-provider.interface";
 
 export class OptionsExpirationModel implements IOptionsExpirationVewModel {
-    constructor(private readonly rawData: any,
+    constructor(private readonly rawData: IOptionsExpirationRawData,
                 public readonly ticker: TickerModel) {
         for(const strike of rawData.strikes) {
-            const strikePrice = parseFloat(strike["strike-price"]);
-            this._strikesMap[strikePrice] = new OptionStrikeModel(strikePrice, this, strike["call-streamer-symbol"], strike["put-streamer-symbol"]);
+            this._strikesMap[strike.strikePrice] = new OptionStrikeModel(strike.strikePrice, this, strike.callStreamerSymbol, strike.putStreamerSymbol);
         }
 
         this._ironCondorsBuilder = new IronCondorsBuilder(this);
@@ -29,15 +29,15 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     get expirationDate(): string {
-        return this.rawData["expiration-date"];
+        return this.rawData.expirationDate;
     }
 
     get daysToExpiration(): number {
-        return this.rawData["days-to-expiration"];
+        return this.rawData.daysToExpiration;
     }
 
     get expirationType(): string {
-        return this.rawData["expiration-type"];
+        return this.rawData.expirationType;
     }
 
     private readonly _strikesMap: Record<number, OptionStrikeModel> = {};

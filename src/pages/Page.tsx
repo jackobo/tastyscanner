@@ -3,6 +3,14 @@ import ExploreContainer from '../components/ExploreContainer';
 import './Page.css';
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
+import styled from 'styled-components';
+
+const PageTitleBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px
+`
 
 const Page: React.FC = observer(() => {
     const services = useServices();
@@ -15,9 +23,11 @@ const Page: React.FC = observer(() => {
                         <IonMenuButton/>
                     </IonButtons>
                     <IonTitle>
-                        <span>{ticker.symbol}</span>
-                        <span>:</span>
-                        <span>{ticker.currentPrice}</span>
+                        <PageTitleBox>
+                            <span>{ticker?.symbol}</span>
+                            <span>{ticker?.currentPrice?.toFixed(2)}</span>
+                        </PageTitleBox>
+
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>

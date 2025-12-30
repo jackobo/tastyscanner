@@ -2,6 +2,11 @@ import {TickerModel} from "./ticker.model";
 import {IOptionViewModel} from "./option.view-model.interface";
 import {Check} from "../utils/type-checking";
 import {OptionStrikeModel} from "./option-strike.model";
+import {
+    IGreeksRawData,
+    IQuoteRawData,
+    ITradeRawData
+} from "../services/options-chain/data-providers/options-data-provider.interface";
 
 export abstract class OptionModel implements IOptionViewModel {
     constructor(public readonly symbol: string,
@@ -15,16 +20,16 @@ export abstract class OptionModel implements IOptionViewModel {
         return this.strike.ticker;
     }
 
-    protected get tradeData(): any {
-        return this.ticker.optionsTrades[this.symbol];
+    protected get tradeData(): ITradeRawData | undefined {
+        return this.ticker.getSymbolTrade(this.symbol);
     }
 
-    protected get quoteData(): any {
-        return this.ticker.optionsQuotes[this.symbol];
+    protected get quoteData(): IQuoteRawData | undefined {
+        return this.ticker.getSymbolQuote(this.symbol);
     }
 
-    protected get greeksData(): any {
-        return this.ticker.optionsGreeks[this.symbol];
+    protected get greeksData(): IGreeksRawData | undefined {
+        return this.ticker.getSymbolGreeks(this.symbol);
     }
 
     get strikePrice(): number {
