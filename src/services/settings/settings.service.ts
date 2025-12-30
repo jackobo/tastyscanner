@@ -22,7 +22,7 @@ export class IronCondorScannerSettingsModel implements IronCondorScannerSettings
     _maxRiskRewardRatio: number = 4;
     _minDaysToExpiration: number = 35;
     _maxDaysToExpiration: number = 60;
-    _wings: number[] = [5];
+    _wings: number[] = [5, 10];
 
     get minDelta(): number {
         return this._minDelta;

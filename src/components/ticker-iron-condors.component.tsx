@@ -84,7 +84,7 @@ const CondorLegComponent: React.FC<{option: IOptionViewModel; isSellOption: bool
             <span>{props.isSellOption ? "STO" : "BTO"}</span>
             <span>{props.option.optionType}</span>
             <StrikePriceBox>{props.option.strikePrice}</StrikePriceBox>
-            <OptionPriceBox>{`${price}$`}</OptionPriceBox>
+            <OptionPriceBox>{`${price.toFixed(2)}$`}</OptionPriceBox>
             <span>{props.option.delta + '\u0394'}</span>
         </CondorLegBox>
     )
@@ -96,7 +96,7 @@ const CondorFooterComponent: React.FC<{condor: IIronCondorViewModel}> = observer
             <span>Wings:</span>
             <span>{`${props.condor.wingsWidth}$`}</span>
             <span>Credit:</span>
-            <span>{`${props.condor.credit}$`}</span>
+            <span>{`${props.condor.credit.toFixed(2)}$`}</span>
             <span>Risk/Reward:</span>
             <span>{props.condor.riskRewardRatio}</span>
             <span>POP:</span>
