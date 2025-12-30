@@ -2,7 +2,7 @@ import {OptionsExpirationModel} from "./options-expiration.model";
 import {IronCondorModel} from "./iron-condor.model";
 import {OptionModel} from "./option.model";
 
-
+const WINGS = [5, 10]
 
 export class IronCondorsBuilder {
     constructor(private readonly expiration: OptionsExpirationModel) {
@@ -27,15 +27,18 @@ export class IronCondorsBuilder {
         for(let i = 0; i <= maxIndex; i++) {
             const stoPut = puts[i];
             const stoCall = calls[i];
-            const btoPut = this.expiration.getStrikeByPrice(stoPut.strike.strikePrice - 5)?.put;
-            if(!btoPut) {
-                continue;
+            for(const wingWidth of WINGS) {
+                const btoPut = this.expiration.getStrikeByPrice(stoPut.strike.strikePrice - wingWidth)?.put;
+                if(!btoPut) {
+                    continue;
+                }
+                const btoCall = this.expiration.getStrikeByPrice(stoCall.strike.strikePrice + wingWidth)?.call;
+                if(!btoCall) {
+                    continue;
+                }
+                condors.push(new IronCondorModel(wingWidth, btoPut, stoPut, stoCall, btoCall));
             }
-            const btoCall = this.expiration.getStrikeByPrice(stoCall.strike.strikePrice + 5)?.call;
-            if(!btoCall) {
-                continue;
-            }
-            condors.push(new IronCondorModel(5, btoPut, stoPut, stoCall, btoCall))
+
         }
 
         return condors;

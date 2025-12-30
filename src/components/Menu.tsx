@@ -40,7 +40,7 @@ const Menu: React.FC = observer(() => {
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList id="inbox-list">
-          <IonListHeader>Tasty Scanner</IonListHeader>
+          <IonListHeader>Tasty IC Scanner</IonListHeader>
           <IonNote></IonNote>
           <div>Settings here</div>
         </IonList>

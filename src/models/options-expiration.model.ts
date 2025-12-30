@@ -60,6 +60,6 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     get ironCondors(): IronCondorModel[] {
-        return this._ironCondorsBuilder.build();
+        return this._ironCondorsBuilder.build().filter(ic => ic.riskRewardRatio <= 4);
     }
 }
