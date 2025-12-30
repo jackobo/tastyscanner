@@ -62,7 +62,7 @@ export class IronCondorsBuilder {
 
         }
 
-        return condors.sort((a, b) => b.riskRewardRatio - a.riskRewardRatio);
+        return condors.sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);
 
     }
 

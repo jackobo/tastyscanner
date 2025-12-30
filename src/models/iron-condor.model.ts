@@ -23,4 +23,9 @@ export class IronCondorModel implements IIronCondorViewModel {
         return Math.round(rr * 100) / 100;
     }
 
+    get pop(): number {
+        return 100 - (this.stoPut.delta + this.stoCall.delta)
+
+    }
+
 }

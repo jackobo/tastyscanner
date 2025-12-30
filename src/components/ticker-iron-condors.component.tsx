@@ -11,6 +11,8 @@ const ContainerBox = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
+    border: 1px solid var(--ion-color-light-shade);
+    border-radius: 8px;
 `
 
 const ExpirationHeaderBox = styled.div`
@@ -19,16 +21,18 @@ const ExpirationHeaderBox = styled.div`
     align-items: center;
     justify-content: space-between;
     padding: 8px 16px;
-    border-radius: 8px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     background-color: var(--ion-color-primary);
     color: var(--ion-color-primary-contrast);
     
 `
 
-const CondorsBox = styled.div`
+const ExpirationCondorsBox = styled.div`
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
+    padding: 12px;
 `
 
 const CondorLegBox = styled.div<{$isSell: boolean}>`
@@ -51,7 +55,7 @@ const CondorLegsBox = styled.div`
 
 const CondorFooterBox = styled.div`
     display: grid;
-    grid-template-columns: 2fr 0.7fr 2fr 0.7fr;
+    grid-template-columns: 1fr 0.5fr 1fr 1fr;
     row-gap: 8px;
     column-gap: 16px;
     font-weight: bold;
@@ -89,14 +93,14 @@ const CondorLegComponent: React.FC<{option: IOptionViewModel; isSellOption: bool
 const CondorFooterComponent: React.FC<{condor: IIronCondorViewModel}> = observer((props) => {
     return (
         <CondorFooterBox>
+            <span>Wings:</span>
+            <span>{`${props.condor.wingsWidth}$`}</span>
             <span>Credit:</span>
             <span>{`${props.condor.credit}$`}</span>
             <span>Risk/Reward:</span>
             <span>{props.condor.riskRewardRatio}</span>
-            <span>Wings:</span>
-            <span>{`${props.condor.wingsWidth}$`}</span>
             <span>POP:</span>
-            <span>???</span>
+            <span>{`${props.condor.pop}%`}</span>
         </CondorFooterBox>
     )
 })
@@ -128,9 +132,9 @@ const ExpirationIronCondorsComponent: React.FC<{expiration: IOptionsExpirationVe
                     {condors.length}
                 </CondorsCountBox>
             </ExpirationHeaderBox>
-            <CondorsBox>
+            <ExpirationCondorsBox>
                 {condors.map(condor => <CondorComponent key={condor.key} condor={condor}/>)}
-            </CondorsBox>
+            </ExpirationCondorsBox>
 
         </ContainerBox>
     )

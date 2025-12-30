@@ -5,6 +5,7 @@ export interface IIronCondorViewModel {
     readonly wingsWidth: number;
     readonly credit: number;
     readonly riskRewardRatio: number;
+    readonly pop: number;
     readonly btoPut: IOptionViewModel;
     readonly stoPut: IOptionViewModel;
     readonly stoCall: IOptionViewModel;
