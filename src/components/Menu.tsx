@@ -42,9 +42,14 @@ const Menu: React.FC = observer(() => {
         <IonList id="inbox-list">
           <IonListHeader>Tasty Scanner</IonListHeader>
           <IonNote></IonNote>
+          <div>Settings here</div>
+        </IonList>
+
+        <IonList id="labels-list">
+          <IonListHeader>Tickers</IonListHeader>
           {tickers.map((ticker) => {
             return (
-              <TickerMenuItemComponent key={ticker.symbol} ticker={ticker} />
+                <TickerMenuItemComponent key={ticker.symbol} ticker={ticker} />
             );
           })}
         </IonList>
