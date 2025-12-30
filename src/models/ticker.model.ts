@@ -1,8 +1,9 @@
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {makeObservable, observable, runInAction} from "mobx";
 import {OptionsExpirationModel} from "./options-expiration.model";
+import {ITickerViewModel} from "./ticker.view-model.interface";
 
-export class TickerModel {
+export class TickerModel implements ITickerViewModel {
     constructor(public readonly symbol: string) {
         this._tastyClient = new TastyTradeClient({
             ...TastyTradeClient.ProdConfig,
@@ -18,11 +19,10 @@ export class TickerModel {
             expirations: observable
         })
 
+
+
         this._start();
     }
-
-
-
 
 
     private _tastyClient: TastyTradeClient;
@@ -41,6 +41,9 @@ export class TickerModel {
         await this._tastyClient.quoteStreamer.connect();
 
         const optionsChain = await this._tastyClient.instrumentsService.getNestedOptionChain(this.symbol);
+        //const marketData = await this._tastyClient.httpClient.getData(`/market-data/by-type`,{}, {"equity": this.symbol});
+
+        //console.log(marketData);
 
         runInAction(() => {
             for(const optionChain of optionsChain) {
@@ -77,7 +80,7 @@ export class TickerModel {
 
         const allOptionsSymbols: string[] = [this.symbol];
         for(const expiration of this.expirations) {
-            //expiration.getAllSymbols().forEach(s => allOptionsSymbols.push(s));
+            expiration.getAllSymbols().forEach(s => allOptionsSymbols.push(s));
         }
 
         this._tastyClient.quoteStreamer.subscribe(allOptionsSymbols, [

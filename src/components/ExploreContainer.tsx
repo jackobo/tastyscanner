@@ -1,14 +1,12 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import './ExploreContainer.css';
-import {TastyApiService} from "../services/tasty-api.service";
 import styled from "styled-components";
 import {observer} from "mobx-react-lite";
-import {OptionsExpirationModel} from "../models/options-expiration.model";
-import {OptionStrikeModel} from "../models/option-strike.model";
+import {useServices} from "../hooks/use-services.hook";
+import {IOptionsExpirationVewModel} from "../models/options-expiration.view-model.interface";
+import {IOptionStrikeViewModel} from "../models/option-strike.view-model.interface";
+import {ITickerViewModel} from "../models/ticker.view-model.interface";
 
-interface ContainerProps {
-  name: string;
-}
 
 const ContainerBox = styled.div`
     position: absolute;
@@ -38,10 +36,10 @@ const ExpirationStrikesBox = styled.div`
     padding: 16px;
 `
 
-const OptionsExpirationComponent: React.FC<{expiration: OptionsExpirationModel}> = observer((props) => {
+const OptionsExpirationComponent: React.FC<{expiration: IOptionsExpirationVewModel}> = observer((props) => {
     const strikes = props.expiration.strikes;
 
-    const renderStrike = (strike: OptionStrikeModel) => {
+    const renderStrike = (strike: IOptionStrikeViewModel) => {
         return <React.Fragment key={strike.strikePrice}>
             <div>
                 {strike.call.lastPrice}
@@ -82,23 +80,14 @@ const OptionsExpirationComponent: React.FC<{expiration: OptionsExpirationModel}>
 })
 
 
-const ExploreContainer: React.FC<ContainerProps> = observer(({ name }) => {
+const ExploreContainer: React.FC = observer(() => {
+    const services = useServices();
 
-    console.log(name);
-    useEffect(() => {
-        TastyApiService.Instance.start();
-    }, []);
-
-    const ticker = TastyApiService.Instance.tickers[0];
+    const ticker = services.optionsChains.currentTicker;
 
     const expirations = ticker.expirations;
     return (
         <ContainerBox>
-            <div>
-                <span>{ticker.symbol}</span>
-                <span>:</span>
-                <span>{ticker.currentPrice}</span>
-            </div>
             {expirations.map(expiration => <OptionsExpirationComponent key={expiration.expirationDate} expiration={expiration}/>)}
         </ContainerBox>
 

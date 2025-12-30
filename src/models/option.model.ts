@@ -1,8 +1,10 @@
 import {TickerModel} from "./ticker.model";
+import {IOptionViewModel} from "./option.view-model.interface";
+import {NullableNumber} from "../utils/nullable-types";
+import {Check} from "../utils/type-checking";
 
-export class OptionModel {
+export class OptionModel implements IOptionViewModel {
     constructor(public readonly symbol: string,
-                public readonly strikePrice: number,
                 private readonly ticker: TickerModel) {
     }
 
@@ -14,16 +16,16 @@ export class OptionModel {
         return this.ticker.optionsGreeks[this.symbol];
     }
 
-    get lastPrice(): number | null {
+    get lastPrice(): NullableNumber {
         return this.tradeData?.price;
     }
 
-    get delta(): number | null {
+    get delta(): NullableNumber {
         const delta = this.greeksData?.delta;
-        if(!delta) {
-            return delta;
+        if(Check.isNullOrUndefined(delta)) {
+            return delta ?? null;
         }
 
-        return Math.round(delta * 100) / 100;
+        return Math.round(Math.abs(delta) * 100) / 100;
     }
 }

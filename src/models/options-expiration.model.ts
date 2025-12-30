@@ -1,22 +1,14 @@
 import {OptionModel} from "./option.model";
 import {TickerModel} from "./ticker.model";
 import {OptionStrikeModel} from "./option-strike.model";
+import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interface";
 
-export class OptionsExpirationModel {
+export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     constructor(public readonly rawData: any, private readonly ticker: TickerModel) {
         for(const strike of rawData.strikes) {
             const strikePrice = parseFloat(strike["strike-price"]);
-            /*
-            if(strikePrice > this.ticker.currentPrice * 0.9 && strikePrice < this.ticker.currentPrice * 1.1) {
-                const put = new OptionModel(strike["put-streamer-symbol"], strikePrice, this.ticker);
-                const call = new OptionModel(strike["call-streamer-symbol"], strikePrice, this.ticker);
-                this.strikes.push(new OptionStrikeModel(strikePrice, call, put));
-            }
-
-             */
-
-            const put = new OptionModel(strike["put-streamer-symbol"], strikePrice, this.ticker);
-            const call = new OptionModel(strike["call-streamer-symbol"], strikePrice, this.ticker);
+            const put = new OptionModel(strike["put-streamer-symbol"], this.ticker);
+            const call = new OptionModel(strike["call-streamer-symbol"], this.ticker);
             this.strikes.push(new OptionStrikeModel(strikePrice, call, put));
 
         }

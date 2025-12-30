@@ -1,33 +1,37 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { useParams } from 'react-router';
 import ExploreContainer from '../components/ExploreContainer';
 import './Page.css';
+import {observer} from "mobx-react-lite";
+import {useServices} from "../hooks/use-services.hook";
 
-const Page: React.FC = () => {
+const Page: React.FC = observer(() => {
+    const services = useServices();
+    const ticker = services.optionsChains.currentTicker;
+    return (
+        <IonPage>
+            <IonHeader>
+                <IonToolbar>
+                    <IonButtons slot="start">
+                        <IonMenuButton/>
+                    </IonButtons>
+                    <IonTitle>
+                        <span>{ticker.symbol}</span>
+                        <span>:</span>
+                        <span>{ticker.currentPrice}</span>
+                    </IonTitle>
+                </IonToolbar>
+            </IonHeader>
 
-  const { name } = useParams<{ name: string; }>();
-
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonMenuButton />
-          </IonButtons>
-          <IonTitle>{name}</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">{name}</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name={name} />
-      </IonContent>
-    </IonPage>
-  );
-};
+            <IonContent fullscreen>
+                <IonHeader collapse="condense">
+                    <IonToolbar>
+                        <IonTitle size="large">asdfasdfasfds</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
+                <ExploreContainer />
+            </IonContent>
+        </IonPage>
+    );
+});
 
 export default Page;

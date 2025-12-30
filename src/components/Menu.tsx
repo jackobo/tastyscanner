@@ -1,8 +1,6 @@
 import {
   IonContent,
-  IonIcon,
   IonItem,
-  IonLabel,
   IonList,
   IonListHeader,
   IonMenu,
@@ -10,91 +8,50 @@ import {
   IonNote,
 } from '@ionic/react';
 
-import { useLocation } from 'react-router-dom';
-import { archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
 import './Menu.css';
+import {observer} from "mobx-react-lite";
+import {useServices} from "../hooks/use-services.hook";
+import {ITickerViewModel} from "../models/ticker.view-model.interface";
+import styled from "styled-components";
+const MenuItemBox = styled(IonItem)`
+  cursor: pointer;
+`
 
-interface AppPage {
-  url: string;
-  iosIcon: string;
-  mdIcon: string;
-  title: string;
-}
-
-const appPages: AppPage[] = [
-  {
-    title: 'Inbox',
-    url: '/folder/Inbox',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp
-  },
-  {
-    title: 'Outbox',
-    url: '/folder/Outbox',
-    iosIcon: paperPlaneOutline,
-    mdIcon: paperPlaneSharp
-  },
-  {
-    title: 'Favorites',
-    url: '/folder/Favorites',
-    iosIcon: heartOutline,
-    mdIcon: heartSharp
-  },
-  {
-    title: 'Archived',
-    url: '/folder/Archived',
-    iosIcon: archiveOutline,
-    mdIcon: archiveSharp
-  },
-  {
-    title: 'Trash',
-    url: '/folder/Trash',
-    iosIcon: trashOutline,
-    mdIcon: trashSharp
-  },
-  {
-    title: 'Spam',
-    url: '/folder/Spam',
-    iosIcon: warningOutline,
-    mdIcon: warningSharp
+const TickerMenuItemComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
+  const services = useServices();
+  const onClick = () => {
+    services.optionsChains.currentTicker = props.ticker;
   }
-];
+  return  <IonMenuToggle autoHide={false} onClick={onClick}>
+    <MenuItemBox className={props.ticker.symbol === services.optionsChains.currentTicker.symbol ? 'selected' : ''} lines="none" detail={false}>
+      {props.ticker.symbol}
+    </MenuItemBox>
+  </IonMenuToggle>
+})
 
-const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
 
-const Menu: React.FC = () => {
-  const location = useLocation();
+
+const Menu: React.FC = observer(() => {
+  const services = useServices();
+
+  const tickers = services.optionsChains.tickers;
 
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList id="inbox-list">
-          <IonListHeader>Inbox</IonListHeader>
-          <IonNote>hi@ionicframework.com</IonNote>
-          {appPages.map((appPage, index) => {
+          <IonListHeader>Tasty Scanner</IonListHeader>
+          <IonNote></IonNote>
+          {tickers.map((ticker) => {
             return (
-              <IonMenuToggle key={index} autoHide={false}>
-                <IonItem className={location.pathname === appPage.url ? 'selected' : ''} routerLink={appPage.url} routerDirection="none" lines="none" detail={false}>
-                  <IonIcon aria-hidden="true" slot="start" ios={appPage.iosIcon} md={appPage.mdIcon} />
-                  <IonLabel>{appPage.title}</IonLabel>
-                </IonItem>
-              </IonMenuToggle>
+              <TickerMenuItemComponent key={ticker.symbol} ticker={ticker} />
             );
           })}
         </IonList>
 
-        <IonList id="labels-list">
-          <IonListHeader>Labels</IonListHeader>
-          {labels.map((label, index) => (
-            <IonItem lines="none" key={index}>
-              <IonIcon aria-hidden="true" slot="start" icon={bookmarkOutline} />
-              <IonLabel>{label}</IonLabel>
-            </IonItem>
-          ))}
-        </IonList>
       </IonContent>
     </IonMenu>
   );
-};
+});
 
 export default Menu;
