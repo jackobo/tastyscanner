@@ -39,6 +39,14 @@ const TickersBox = styled.div`
   padding: 16px 0;
 `
 
+const FiltersBox = styled.div`
+  
+`
+
+const MenuTitleBox = styled.div`
+  padding: 8px 0;
+`
+
 const TickerMenuItemComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
   const services = useServices();
   const onClick = () => {
@@ -71,15 +79,19 @@ const Menu: React.FC = observer(() => {
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList id="inbox-list">
-          <IonListHeader>IC Scanner</IonListHeader>
+          <IonListHeader>
+            <MenuTitleBox>
+              IC Scanner
+            </MenuTitleBox>
+          </IonListHeader>
           <IonAccordionGroup>
             <IonAccordion>
               <FiltersAccordionHeaderBox slot="header" color="light">
                 <IonLabel>Filters</IonLabel>
               </FiltersAccordionHeaderBox>
-              <div slot="content">
+              <FiltersBox slot="content">
                 <IronCondorFiltersComponent/>
-              </div>
+              </FiltersBox>
             </IonAccordion>
           </IonAccordionGroup>
 
