@@ -24,7 +24,7 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     get pop(): number {
-        return 100 - (this.stoPut.delta + this.stoCall.delta)
+        return 100 - Math.max(this.stoPut.delta,  this.stoCall.delta);
 
     }
 

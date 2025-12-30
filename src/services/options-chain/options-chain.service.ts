@@ -11,7 +11,7 @@ export class OptionsChainService extends ServiceBase implements IOptionsChainSer
         this.tickers = [
             new TickerModel("SPY", this.services),
             new TickerModel("NVDA", this.services),
-            new TickerModel("GOOGL", this.services)];
+            new TickerModel("SLV", this.services)];
         this._currentTicker = this.tickers[0];
         makeObservable<this, '_currentTicker'>(this, {
             _currentTicker: observable.ref
