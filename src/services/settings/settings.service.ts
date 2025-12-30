@@ -20,9 +20,9 @@ export class IronCondorScannerSettingsModel implements IronCondorScannerSettings
     _minDelta: number = 10;
     _maxDelta: number = 30;
     _maxRiskRewardRatio: number = 4;
-    _minDaysToExpiration: number = 25;
-    _maxDaysToExpiration: number = 90;
-    _wings: number[] = [5, 10];
+    _minDaysToExpiration: number = 35;
+    _maxDaysToExpiration: number = 60;
+    _wings: number[] = [5];
 
     get minDelta(): number {
         return this._minDelta;
@@ -58,6 +58,10 @@ export class IronCondorScannerSettingsModel implements IronCondorScannerSettings
     }
     set maxDaysToExpiration(value) {
         runInAction(() => this._maxDaysToExpiration = value);
+    }
+
+    get availableWings(): number[] {
+        return [5, 10, 15, 20];
     }
 
     get wings(): number[] {

@@ -10,5 +10,6 @@ export interface IronCondorScannerSettingsViewModel {
     minDaysToExpiration: number;
     maxDaysToExpiration: number;
     wings: number[];
+    readonly availableWings: number[];
 }
 

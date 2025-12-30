@@ -3,7 +3,7 @@ import './ExploreContainer.css';
 import styled from "styled-components";
 import {observer} from "mobx-react-lite";
 //import {OptionsChainComponent} from "./options-chain.component";
-import {IronCondorsComponent} from "./iron-condors.component";
+import {TickerIronCondorsComponent} from "./ticker-iron-condors.component";
 
 const ContainerBox = styled.div`
     position: absolute;
@@ -19,7 +19,7 @@ const ExploreContainer: React.FC = observer(() => {
     return (
         <ContainerBox>
             {/*<OptionsChainComponent/>*/}
-            <IronCondorsComponent/>
+            <TickerIronCondorsComponent/>
         </ContainerBox>
 
     );

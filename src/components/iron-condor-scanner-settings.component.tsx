@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import {useServices} from "../hooks/use-services.hook";
-import {IonChip, IonRange } from "@ionic/react";
+import {IonChip, IonRange, IonToggle } from "@ionic/react";
 import styled from "styled-components";
 
 const ConfigsContainerBox = styled.div`
@@ -10,6 +10,7 @@ const ConfigsContainerBox = styled.div`
     flex-direction: column;
     width: 100%;
     column-gap: 16px;
+    row-gap: 8px;
     padding: 16px 8px;
 `
 
@@ -22,7 +23,35 @@ const ConfigItemValueBox = styled(IonChip)`
     text-align: center;
 `
 
-export const IronCondorSettingsComponent: React.FC = observer(() => {
+const WingsEditorBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    column-span: 2/-1;
+`
+
+const WingValueComponent: React.FC<{value: number}> = observer((props) => {
+    const services = useServices();
+    const isChecked = services.settings.ironCondorScanner.wings.includes(props.value);
+    const onToggleHandle = (checked: boolean) => {
+        const wings = [...services.settings.ironCondorScanner.wings];
+        if(checked) {
+            wings.push(props.value);
+            services.settings.ironCondorScanner.wings = wings.sort((a, b) => a - b);
+        } else {
+            services.settings.ironCondorScanner.wings = wings.filter(w => w !== props.value);
+        }
+    }
+    return (
+        <IonToggle checked={isChecked} onIonChange={e => onToggleHandle(e.detail.checked)}>
+            {`${props.value}$`}
+        </IonToggle>
+    )
+})
+
+export const IronCondorScannerSettingsComponent: React.FC = observer(() => {
     const services = useServices();
 
     const settings = services.settings.ironCondorScanner;
@@ -30,7 +59,7 @@ export const IronCondorSettingsComponent: React.FC = observer(() => {
     return (
         <ConfigsContainerBox>
             <ConfigItemLabelBox>
-                <span>Max risk/reward</span>
+                Max risk/reward
             </ConfigItemLabelBox>
             <IonRange min={1} max={10} value={settings.maxRiskRewardRatio} onIonChange={e => {
                 settings.maxRiskRewardRatio = e.detail.value as number;
@@ -40,7 +69,7 @@ export const IronCondorSettingsComponent: React.FC = observer(() => {
             </ConfigItemValueBox>
 
             <ConfigItemLabelBox>
-                <span>Min delta</span>
+                Min delta
             </ConfigItemLabelBox>
             <IonRange min={5} max={49} value={settings.minDelta} onIonChange={e => {
                 settings.minDelta = e.detail.value as number;
@@ -51,7 +80,7 @@ export const IronCondorSettingsComponent: React.FC = observer(() => {
 
 
             <ConfigItemLabelBox>
-                <span>Max delta</span>
+                Max delta
             </ConfigItemLabelBox>
             <IonRange min={5} max={49} value={settings.maxDelta} onIonChange={e => {
                 settings.maxDelta = e.detail.value as number;
@@ -61,7 +90,7 @@ export const IronCondorSettingsComponent: React.FC = observer(() => {
             </ConfigItemValueBox>
 
             <ConfigItemLabelBox>
-                <span>Min DTE</span>
+                Min DTE
             </ConfigItemLabelBox>
             <IonRange min={0} max={365} value={settings.minDaysToExpiration} onIonChange={e => {
                 settings.minDaysToExpiration = e.detail.value as number;
@@ -71,7 +100,7 @@ export const IronCondorSettingsComponent: React.FC = observer(() => {
             </ConfigItemValueBox>
 
             <ConfigItemLabelBox>
-                <span>Max DTE</span>
+                Max DTE
             </ConfigItemLabelBox>
             <IonRange min={0} max={365} value={settings.maxDaysToExpiration} onIonChange={e => {
                 settings.maxDaysToExpiration = e.detail.value as number;
@@ -79,6 +108,12 @@ export const IronCondorSettingsComponent: React.FC = observer(() => {
             <ConfigItemValueBox>
                 {settings.maxDaysToExpiration}
             </ConfigItemValueBox>
+            <ConfigItemLabelBox>
+                Wings
+            </ConfigItemLabelBox>
+            <WingsEditorBox>
+                {settings.availableWings.map(w => <WingValueComponent key={w} value={w}/>)}
+            </WingsEditorBox>
 
         </ConfigsContainerBox>
     )

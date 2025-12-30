@@ -18,10 +18,11 @@ const ExpirationHeaderBox = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    padding: 8px 16px;
+    border-radius: 8px;
     background-color: var(--ion-color-primary);
     color: var(--ion-color-primary-contrast);
-    padding: 16px;
-    border-radius: 12px;
+    
 `
 
 const CondorsBox = styled.div`
@@ -129,7 +130,7 @@ const ExpirationIronCondorsComponent: React.FC<{expiration: IOptionsExpirationVe
     )
 });
 
-export const IronCondorsComponent: React.FC = observer(() => {
+export const TickerIronCondorsComponent: React.FC = observer(() => {
     const services = useServices();
 
     const ticker = services.optionsChains.currentTicker;
