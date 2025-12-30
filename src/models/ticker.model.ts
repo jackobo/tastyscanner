@@ -13,6 +13,7 @@ export class TickerModel implements ITickerViewModel {
         });
 
         makeObservable(this, {
+            tickerTrade: observable.ref,
             optionsQuotes: observable,
             optionsTrades: observable,
             optionsGreeks: observable,
@@ -56,7 +57,6 @@ export class TickerModel implements ITickerViewModel {
 
 
         this._tastyClient.quoteStreamer.addEventListener((records: any[]) => {
-            console.log(records);
             runInAction(() => {
                 for(const record of records) {
                     if(record.eventSymbol === this.symbol) {
