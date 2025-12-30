@@ -1,31 +1,53 @@
 import {TickerModel} from "./ticker.model";
 import {IOptionViewModel} from "./option.view-model.interface";
-import {NullableNumber} from "../utils/nullable-types";
 import {Check} from "../utils/type-checking";
+import {OptionStrikeModel} from "./option-strike.model";
 
-export class OptionModel implements IOptionViewModel {
+export abstract class OptionModel implements IOptionViewModel {
     constructor(public readonly symbol: string,
-                private readonly ticker: TickerModel) {
+                public readonly strike: OptionStrikeModel) {
     }
 
-    private get tradeData(): any {
+    abstract get isOutOfMoney(): boolean;
+
+    protected get ticker(): TickerModel {
+        return this.strike.ticker;
+    }
+
+    protected get tradeData(): any {
         return this.ticker.optionsTrades[this.symbol];
     }
 
-    private get greeksData(): any {
+    protected get greeksData(): any {
         return this.ticker.optionsGreeks[this.symbol];
     }
 
-    get lastPrice(): NullableNumber {
-        return this.tradeData?.price;
+    get strikePrice(): number {
+        return this.strike.strikePrice;
     }
 
-    get delta(): NullableNumber {
+    get lastPrice(): number {
+        return this.tradeData?.price ?? 0;
+    }
+
+    get delta(): number {
         const delta = this.greeksData?.delta;
         if(Check.isNullOrUndefined(delta)) {
-            return delta ?? null;
+            return 0;
         }
 
-        return Math.round(Math.abs(delta) * 100) / 100;
+        return Math.round(Math.abs(delta) * 100);
+    }
+}
+
+export class PutOptionModel extends OptionModel {
+    get isOutOfMoney(): boolean {
+        return this.strike.strikePrice < this.ticker.currentPrice;
+    }
+}
+
+export class CallOptionModel extends OptionModel {
+    get isOutOfMoney(): boolean {
+        return this.strike.strikePrice > this.ticker.currentPrice;
     }
 }

@@ -1,0 +1,22 @@
+import {OptionModel} from "./option.model";
+import {IIronCondorViewModel} from "./iron-condor.view-model.interface";
+
+export class IronCondorModel implements IIronCondorViewModel {
+    constructor(public readonly wingsWidth: number,
+                public readonly btoPut: OptionModel,
+                public readonly stoPut: OptionModel,
+                public readonly stoCall: OptionModel,
+                public readonly btoCall: OptionModel) {
+    }
+
+    get credit(): number {
+        const val = this.stoPut.lastPrice + this.stoCall.lastPrice - this.btoCall.lastPrice - this.btoPut.lastPrice;
+        return Math.round(val * 100) / 100;
+    }
+
+    get riskRewardRatio(): number {
+        const rr = this.wingsWidth / this.credit;
+        return Math.round(rr * 100) / 100;
+    }
+
+}

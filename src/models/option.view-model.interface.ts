@@ -1,6 +1,5 @@
-import {NullableNumber} from "../utils/nullable-types";
-
 export interface IOptionViewModel {
-    readonly lastPrice: NullableNumber;
-    readonly delta: NullableNumber;
+    readonly strikePrice: number;
+    readonly lastPrice: number;
+    readonly delta: number;
 }
