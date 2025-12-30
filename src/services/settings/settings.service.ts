@@ -7,12 +7,18 @@ export class SettingsService implements ISettingsService {
 
 export class IronCondorScannerSettingsModel implements IronCondorScannerSettingsViewModel {
     constructor() {
-        makeObservable<this, '_minDelta' | '_maxDelta' | '_maxRiskRewardRatio' | '_minDaysToExpiration' | '_maxDaysToExpiration' | '_wings'>(this, {
+        makeObservable<this, '_minDelta'
+            | '_maxDelta'
+            | '_maxRiskRewardRatio'
+            | '_minDaysToExpiration'
+            | '_maxDaysToExpiration'
+            | '_maxBidAskSpread' | '_wings'>(this, {
             _minDelta: observable.ref,
             _maxDelta: observable.ref,
             _maxRiskRewardRatio: observable.ref,
             _minDaysToExpiration: observable.ref,
             _maxDaysToExpiration: observable.ref,
+            _maxBidAskSpread: observable.ref,
             _wings: observable.ref
         })
     }
@@ -23,6 +29,7 @@ export class IronCondorScannerSettingsModel implements IronCondorScannerSettings
     _minDaysToExpiration: number = 35;
     _maxDaysToExpiration: number = 60;
     _wings: number[] = [5, 10];
+    _maxBidAskSpread: number = 5;
 
     get minDelta(): number {
         return this._minDelta;
@@ -58,6 +65,13 @@ export class IronCondorScannerSettingsModel implements IronCondorScannerSettings
     }
     set maxDaysToExpiration(value) {
         runInAction(() => this._maxDaysToExpiration = value);
+    }
+
+    get maxBidAskSpread(): number {
+        return this._maxBidAskSpread;
+    }
+    set maxBidAskSpread(value) {
+        runInAction(() => this._maxBidAskSpread = value);
     }
 
     get availableWings(): number[] {

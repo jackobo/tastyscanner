@@ -1,6 +1,6 @@
 {
-  "short_name": "Ionic App",
-  "name": "My Ionic App",
+  "short_name": "Tasty Screener",
+  "name": "Tasty Screener",
   "icons": [
     {
       "src": "assets/icon/favicon.png",

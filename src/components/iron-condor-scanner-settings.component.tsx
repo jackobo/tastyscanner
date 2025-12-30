@@ -108,6 +108,17 @@ export const IronCondorScannerSettingsComponent: React.FC = observer(() => {
             <ConfigItemValueBox>
                 {settings.maxDaysToExpiration}
             </ConfigItemValueBox>
+
+            <ConfigItemLabelBox>
+                Max bid/ask spread
+            </ConfigItemLabelBox>
+            <IonRange min={0} max={20} value={settings.maxBidAskSpread} onIonChange={e => {
+                settings.maxBidAskSpread = e.detail.value as number;
+            }}/>
+            <ConfigItemValueBox>
+                {`${settings.maxBidAskSpread}%`}
+            </ConfigItemValueBox>
+
             <ConfigItemLabelBox>
                 Wings
             </ConfigItemLabelBox>

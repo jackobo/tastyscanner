@@ -67,6 +67,7 @@ export class TickerModel implements ITickerViewModel {
                         }
                     } else {
                         if(record.eventType === "Quote") {
+                            //console.log(record);
                             this.optionsQuotes[record.eventSymbol] = record;
                         } else if(record.eventType === "Trade") {
                             this.optionsTrades[record.eventSymbol] = record;

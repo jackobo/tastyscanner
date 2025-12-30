@@ -57,13 +57,20 @@ export class IronCondorsBuilder {
                 if(!btoCall) {
                     continue;
                 }
-                condors.push(new IronCondorModel(wingWidth, btoPut, stoPut, stoCall, btoCall));
+                if(this._hasGoodBidAskSpread([btoPut, stoPut, stoCall, btoCall])) {
+                    condors.push(new IronCondorModel(wingWidth, btoPut, stoPut, stoCall, btoCall));
+                }
+
             }
 
         }
 
         return condors.sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);
 
+    }
+
+    private _hasGoodBidAskSpread(options: OptionModel[]): boolean {
+        return !options.some(o => o.bidAskSpread > this.services.settings.ironCondorScanner.maxBidAskSpread)
     }
 
 }

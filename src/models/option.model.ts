@@ -19,6 +19,10 @@ export abstract class OptionModel implements IOptionViewModel {
         return this.ticker.optionsTrades[this.symbol];
     }
 
+    protected get quoteData(): any {
+        return this.ticker.optionsQuotes[this.symbol];
+    }
+
     protected get greeksData(): any {
         return this.ticker.optionsGreeks[this.symbol];
     }
@@ -29,6 +33,18 @@ export abstract class OptionModel implements IOptionViewModel {
 
     get lastPrice(): number {
         return this.tradeData?.price ?? 0;
+    }
+
+    get bidPrice(): number {
+        return this.quoteData?.bidPrice ?? 0;
+    }
+
+    get askPrice(): number {
+        return this.quoteData?.askPrice ?? 0;
+    }
+
+    get bidAskSpread(): number {
+        return ((this.askPrice - this.bidPrice) / this.bidPrice) * 100;
     }
 
     get delta(): number {
