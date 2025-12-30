@@ -1,6 +1,9 @@
 import {
+  IonAccordion,
+  IonAccordionGroup,
   IonContent,
   IonItem,
+  IonLabel,
   IonList,
   IonListHeader,
   IonMenu,
@@ -32,6 +35,10 @@ const MenuItemContentBox = styled.div`
   width: 100%;
 `
 
+const TickersBox = styled.div`
+  padding: 16px 0;
+`
+
 const TickerMenuItemComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
   const services = useServices();
   const onClick = () => {
@@ -49,6 +56,10 @@ const TickerMenuItemComponent: React.FC<{ticker: ITickerViewModel}> = observer((
   </IonMenuToggle>
 })
 
+const FiltersAccordionHeaderBox = styled(IonItem)`
+  cursor: pointer;
+`
+
 
 
 const Menu: React.FC = observer(() => {
@@ -61,18 +72,33 @@ const Menu: React.FC = observer(() => {
       <IonContent>
         <IonList id="inbox-list">
           <IonListHeader>IC Scanner</IonListHeader>
+          <IonAccordionGroup>
+            <IonAccordion>
+              <FiltersAccordionHeaderBox slot="header" color="light">
+                <IonLabel>Filters</IonLabel>
+              </FiltersAccordionHeaderBox>
+              <div slot="content">
+                <IronCondorFiltersComponent/>
+              </div>
+            </IonAccordion>
+          </IonAccordionGroup>
 
-          <IronCondorFiltersComponent/>
         </IonList>
 
-        <IonList id="labels-list">
-          <IonListHeader>Tickers</IonListHeader>
-          {tickers.map((ticker) => {
-            return (
-                <TickerMenuItemComponent key={ticker.symbol} ticker={ticker} />
-            );
-          })}
-        </IonList>
+        <IonAccordionGroup>
+          <IonAccordion>
+            <FiltersAccordionHeaderBox slot="header" color="light">
+              <IonLabel>Tickers</IonLabel>
+            </FiltersAccordionHeaderBox>
+            <TickersBox slot="content">
+              {tickers.map((ticker) => {
+                return (
+                    <TickerMenuItemComponent key={ticker.symbol} ticker={ticker} />
+                );
+              })}
+            </TickersBox>
+          </IonAccordion>
+        </IonAccordionGroup>
 
       </IonContent>
     </IonMenu>
