@@ -117,6 +117,7 @@ export class TastyOptionsDataProvider implements IOptionsDataProvider {
             return;
         }
         this._tastyClient.quoteStreamer.unsubscribe(symbols);
+        /*
         runInAction(() => {
             for(const symbol of symbols) {
                 delete this.quotes[symbol];
@@ -124,6 +125,8 @@ export class TastyOptionsDataProvider implements IOptionsDataProvider {
                 delete this.greeks[symbol];
             }
         });
+
+         */
 
     }
 
