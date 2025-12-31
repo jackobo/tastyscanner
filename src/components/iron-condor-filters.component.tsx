@@ -5,12 +5,10 @@ import {IonChip, IonRange, IonToggle } from "@ionic/react";
 import styled from "styled-components";
 
 const FiltersContainerBox = styled.div`
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    display: flex;
     flex-direction: column;
     width: 100%;
-    column-gap: 16px;
-    row-gap: 8px;
+    gap: 16px;
     padding: 16px 8px;
 `
 
@@ -20,8 +18,30 @@ const FilterLabelBox = styled.div`
 `
 
 const FilterValueBox = styled(IonChip)`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    min-width: 50px;
+    
 `
+
+
+const StandardIronCondorFilterBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+`
+
+const RangeBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+`
+
 
 const WingsEditorBox = styled.div`
     display: flex;
@@ -29,7 +49,6 @@ const WingsEditorBox = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    column-span: 2/-1;
 `
 
 const WingValueComponent: React.FC<{value: number}> = observer((props) => {
@@ -61,17 +80,20 @@ interface StandardIronCondorFilterComponentProps {
 }
 const StandardIronCondorFilterComponent: React.FC<StandardIronCondorFilterComponentProps> = observer((props) => {
     return (
-        <React.Fragment>
+        <StandardIronCondorFilterBox>
             <FilterLabelBox>
                 {props.label}
             </FilterLabelBox>
-            <IonRange min={props.min} max={props.max} value={props.value} onIonChange={e => {
-                props.onValueChanged(e.detail.value as number)
-            }}/>
-            <FilterValueBox>
-                {props.value}
-            </FilterValueBox>
-        </React.Fragment>
+            <RangeBox>
+                <IonRange min={props.min} max={props.max} value={props.value} onIonChange={e => {
+                    props.onValueChanged(e.detail.value as number)
+                }}/>
+                <FilterValueBox>
+                    {props.value}
+                </FilterValueBox>
+            </RangeBox>
+
+        </StandardIronCondorFilterBox>
     )
 })
 

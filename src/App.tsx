@@ -39,7 +39,7 @@ import styled from "styled-components";
 setupIonicReact();
 
 const SplitPaneBox = styled(IonSplitPane)`
-  --side-max-width: 450px;
+  --side-max-width: 350px;
 `
 
 const App: React.FC = () => {
