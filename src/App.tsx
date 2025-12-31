@@ -29,25 +29,32 @@ import '@ionic/react/css/display.css';
 
 /* import '@ionic/react/css/palettes/dark.always.css'; */
 /* import '@ionic/react/css/palettes/dark.class.css'; */
+import React from 'react';
 import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import styled from "styled-components";
 
 setupIonicReact();
+
+const SplitPaneBox = styled(IonSplitPane)`
+  --side-max-width: 450px;
+`
 
 const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonSplitPane contentId="main">
+        <SplitPaneBox contentId="main">
           <Menu />
           <IonRouterOutlet id="main">
             <Route path="/" exact={true}>
               <Page />
             </Route>
           </IonRouterOutlet>
-        </IonSplitPane>
+
+        </SplitPaneBox>
       </IonReactRouter>
     </IonApp>
   );
