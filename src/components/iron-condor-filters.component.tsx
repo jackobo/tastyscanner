@@ -23,7 +23,7 @@ const FilterValueBox = styled(IonChip)`
     align-items: center;
     justify-content: center;
     text-align: center;
-    min-width: 50px;
+    min-width: 70px;
     
 `
 
@@ -71,7 +71,7 @@ const WingValueComponent: React.FC<{value: number}> = observer((props) => {
     )
 })
 
-interface StandardIronCondorFilterComponentProps {
+interface SingleValueEditorComponentProps {
     label: string;
     min: number;
     max: number;
@@ -79,18 +79,62 @@ interface StandardIronCondorFilterComponentProps {
     onValueChanged: (value: number) => void;
     formatValue?: (value: number) => string;
 }
-const StandardIronCondorFilterComponent: React.FC<StandardIronCondorFilterComponentProps> = observer((props) => {
+const SingleValueEditorComponent: React.FC<SingleValueEditorComponentProps> = observer((props) => {
     return (
         <StandardIronCondorFilterBox>
             <FilterLabelBox>
                 {props.label}
             </FilterLabelBox>
             <RangeBox>
-                <IonRange min={props.min} max={props.max} value={props.value} onIonChange={e => {
+                <IonRange pin={true} min={props.min} max={props.max} value={props.value} onIonChange={e => {
                     props.onValueChanged(e.detail.value as number)
                 }}/>
                 <FilterValueBox>
                     {props.formatValue ? props.formatValue(props.value) : props.value}
+                </FilterValueBox>
+            </RangeBox>
+
+        </StandardIronCondorFilterBox>
+    )
+})
+
+interface RangeEditorComponentProps {
+    label: string;
+    min: number;
+    max: number;
+    lower: number;
+    upper: number;
+    onValueChanged: (value: {lower: number; upper: number}) => void;
+    formatValue?: (value: number) => string;
+}
+
+const RangeEditorComponent: React.FC<RangeEditorComponentProps> = observer((props) => {
+
+    const formatValue = () => {
+        if(props.formatValue) {
+            return `${props.formatValue(props.lower)} - ${props.formatValue(props.upper)}`
+        }
+
+        return `${props.lower} - ${props.upper}`
+    }
+
+    return (
+        <StandardIronCondorFilterBox>
+            <FilterLabelBox>
+                {props.label}
+            </FilterLabelBox>
+            <RangeBox>
+                <IonRange dualKnobs={true}
+                          min={props.min}
+                          max={props.max}
+                          value={{lower: props.lower, upper: props.upper}}
+                          pin={true}
+                          onIonChange={e => {
+                              const range = e.detail.value as any;
+                    props.onValueChanged({lower: range.lower, upper: range.upper})
+                }}/>
+                <FilterValueBox>
+                    {formatValue()}
                 </FilterValueBox>
             </RangeBox>
 
@@ -105,39 +149,36 @@ export const IronCondorFiltersComponent: React.FC = observer(() => {
 
     return (
         <FiltersContainerBox>
-            <StandardIronCondorFilterComponent label="Max risk/reward"
+            <SingleValueEditorComponent label="Max risk/reward"
                                                min={1}
                                                max={10}
                                                value={filters.maxRiskRewardRatio}
                                                onValueChanged={value => filters.maxRiskRewardRatio = value}/>
 
 
-            <StandardIronCondorFilterComponent label="Min delta"
-                                               min={5}
-                                               max={49}
-                                               value={filters.minDelta}
-                                               onValueChanged={value => filters.minDelta = value}/>
+            <RangeEditorComponent label="Delta range"
+                                   min={5}
+                                   max={49}
+                                   lower={filters.minDelta}
+                                   upper={filters.maxDelta}
+                                   onValueChanged={value => {
+                                       filters.minDelta = value.lower;
+                                       filters.maxDelta = value.upper;
+                                   }}/>
 
 
-            <StandardIronCondorFilterComponent label="Max delta"
-                                               min={5}
-                                               max={49}
-                                               value={filters.maxDelta}
-                                               onValueChanged={value => filters.maxDelta = value}/>
+            <RangeEditorComponent label="DTE range"
+                                   min={0}
+                                   max={90}
+                                   lower={filters.minDaysToExpiration}
+                                   upper={filters.maxDaysToExpiration}
+                                   onValueChanged={value => {
+                                       filters.minDaysToExpiration = value.lower;
+                                       filters.maxDaysToExpiration = value.upper;
+                                   }}/>
 
-            <StandardIronCondorFilterComponent label="Min DTE"
-                                               min={0}
-                                               max={365}
-                                               value={filters.minDaysToExpiration}
-                                               onValueChanged={value => filters.minDaysToExpiration = value}/>
 
-            <StandardIronCondorFilterComponent label="Max DTE"
-                                               min={0}
-                                               max={365}
-                                               value={filters.maxDaysToExpiration}
-                                               onValueChanged={value => filters.maxDaysToExpiration = value}/>
-
-            <StandardIronCondorFilterComponent label="Max bid/ask spread"
+            <SingleValueEditorComponent label="Max bid/ask spread"
                                                min={0}
                                                max={10}
                                                value={filters.maxBidAskSpread}
