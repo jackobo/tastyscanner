@@ -9,6 +9,7 @@ export interface IMarketDataProviderService {
     getSymbolGreeks(symbol: string): IGreeksRawData | undefined;
     getUserWatchLists(): Promise<IWatchListRawData[]>;
     getPlatformWatchLists(): Promise<IWatchListRawData[]>;
+    getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null>;
 
 }
 
@@ -45,4 +46,14 @@ export interface IGreeksRawData {
 export interface IWatchListRawData {
     name: string;
     entries: string[];
+}
+
+export interface ISymbolMetricsRawData {
+    impliedVolatilityPercentile: number;
+    liquidityRank: number;
+    impliedVolatilityIndex: number;
+    impliedVolatilityIndexRank: number;
+    beta: number;
+
+
 }

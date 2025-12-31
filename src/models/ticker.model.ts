@@ -5,7 +5,7 @@ import {IServiceFactory} from "../services/service-factory.interface";
 import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interface";
 import {
     IGreeksRawData,
-    IQuoteRawData, ITradeRawData
+    IQuoteRawData, ISymbolMetricsRawData, ITradeRawData
 } from "../services/market-data-privider/market-data-provider.service.interface";
 
 export class TickerModel implements ITickerViewModel {
@@ -24,7 +24,16 @@ export class TickerModel implements ITickerViewModel {
         return this.getSymbolTrade(this.symbol)?.price ?? 0;
     }
 
+    public get ivRank(): number {
+        return Math.round((this._marketMetrics?.impliedVolatilityIndexRank ?? 0) * 10000) / 100;
+    }
+
+    public  get beta(): number {
+        return Math.round((this._marketMetrics?.beta ?? 0) * 100) / 100;
+    }
+
     public expirations: OptionsExpirationModel[] = [];
+    private _marketMetrics: ISymbolMetricsRawData | null = null;
 
     private _isLoading: boolean = true;
 
@@ -48,7 +57,12 @@ export class TickerModel implements ITickerViewModel {
     }
 
 
-    private async _loadOptionsChain(): Promise<void> {
+    private async _loadMarketData(): Promise<void> {
+
+        if(!this._marketMetrics) {
+            this._marketMetrics = await this.services.marketDataProvider.getSymbolMetrics(this.symbol);
+        }
+
         if(this.expirations.length > 0) {
             return;
         }
@@ -79,7 +93,7 @@ export class TickerModel implements ITickerViewModel {
     async start(): Promise<void> {
         this.isLoading = true;
         try {
-            await this._loadOptionsChain();
+            await this._loadMarketData();
 
             this.services.marketDataProvider.subscribe(this._getAllSymbols());
 

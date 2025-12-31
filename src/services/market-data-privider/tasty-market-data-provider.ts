@@ -4,9 +4,10 @@ import {
     IOptionChainRawData,
     IMarketDataProviderService,
     IQuoteRawData,
-    ITradeRawData, IWatchListRawData
+    ITradeRawData, IWatchListRawData, ISymbolMetricsRawData
 } from "./market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
+import {Check} from "../../utils/type-checking";
 
 export class TastyMarketDataProvider implements IMarketDataProviderService {
     constructor() {
@@ -133,7 +134,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
     private _streamEventHandler= (records: any[]) => {
         runInAction(() => {
             for(const record of records) {
-                
+
                 if(record.eventType === "Quote") {
                     //console.log(record);
                     this.quotes[record.eventSymbol] = record;
@@ -167,6 +168,45 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
             }
         })
 
+    }
+
+    async getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null> {
+        const result = await this._tastyClient.marketMetricsService.getMarketMetrics({symbols: symbol});
+
+        if(!Check.isArray(result) || result.length === 0) {
+            return null;
+        }
+
+        const data = result[0] as any;
+
+        return {
+            beta: data["beta"],
+            impliedVolatilityPercentile: data["implied-volatility-percentile"],
+            liquidityRank: data["liquidity-rank"],
+            impliedVolatilityIndex: data["implied-volatility-index"],
+            impliedVolatilityIndexRank: data["implied-volatility-index-rank"],
+        }
+
+
+        /*
+    "implied-volatility-percentile": 0,
+    "liquidity-rank": 0,
+    "option-expiration-implied-volatilities": [
+        {
+            "expiration-date": "2025-12-31T11:30:50.667Z",
+            "settlement-type": "string",
+            "option-chain-type": "string",
+            "implied-volatility": 0
+        }
+    ],
+    "implied-volatility-rank": 0,
+    "implied-volatility-index": 0,
+    "liquidity": 0,
+    "implied-volatility-index-5-day-change": 0,
+    "symbol": "string",
+    "liquidity-rating": 0
+
+     */
     }
 
 }

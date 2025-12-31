@@ -2,7 +2,7 @@ import {
     IGreeksRawData,
     IMarketDataProviderService,
     IOptionChainRawData,
-    IQuoteRawData,
+    IQuoteRawData, ISymbolMetricsRawData,
     ITradeRawData, IWatchListRawData
 } from "./market-data-provider.service.interface";
 import {TastyMarketDataProvider} from "./tasty-market-data-provider";
@@ -39,6 +39,10 @@ export class MarketDataProviderService implements IMarketDataProviderService {
 
     getPlatformWatchLists(): Promise<IWatchListRawData[]> {
         return this._currentProvider.getPlatformWatchLists();
+    }
+
+    getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null> {
+        return this._currentProvider.getSymbolMetrics(symbol);
     }
 
 }

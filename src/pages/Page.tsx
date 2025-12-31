@@ -26,6 +26,12 @@ const Page: React.FC = observer(() => {
                         <PageTitleBox>
                             <span>{ticker?.symbol}</span>
                             <span>{ticker?.currentPrice?.toFixed(2)}</span>
+                            <span>|</span>
+                            <span>IVR:</span>
+                            <span>{ticker?.ivRank}</span>
+                            <span>|</span>
+                            <span>Beta:</span>
+                            <span>{ticker?.beta?.toFixed(2)}</span>
                         </PageTitleBox>
 
                     </IonTitle>
