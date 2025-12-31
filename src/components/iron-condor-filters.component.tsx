@@ -77,6 +77,7 @@ interface StandardIronCondorFilterComponentProps {
     max: number;
     value: number;
     onValueChanged: (value: number) => void;
+    formatValue?: (value: number) => string;
 }
 const StandardIronCondorFilterComponent: React.FC<StandardIronCondorFilterComponentProps> = observer((props) => {
     return (
@@ -89,7 +90,7 @@ const StandardIronCondorFilterComponent: React.FC<StandardIronCondorFilterCompon
                     props.onValueChanged(e.detail.value as number)
                 }}/>
                 <FilterValueBox>
-                    {props.value}
+                    {props.formatValue ? props.formatValue(props.value) : props.value}
                 </FilterValueBox>
             </RangeBox>
 
@@ -140,6 +141,7 @@ export const IronCondorFiltersComponent: React.FC = observer(() => {
                                                min={0}
                                                max={10}
                                                value={filters.maxBidAskSpread}
+                                               formatValue={value => `${value}%`}
                                                onValueChanged={value => filters.maxBidAskSpread = value}/>
 
             <FilterLabelBox>
