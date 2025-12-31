@@ -45,7 +45,8 @@ const WingValueComponent: React.FC<{value: number}> = observer((props) => {
         }
     }
     return (
-        <IonToggle checked={isChecked} onIonChange={e => onToggleHandle(e.detail.checked)}>
+        <IonToggle checked={isChecked} labelPlacement={"stacked"}
+                   onIonChange={e => onToggleHandle(e.detail.checked)}>
             {`${props.value}$`}
         </IonToggle>
     )
