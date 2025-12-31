@@ -65,6 +65,6 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     get ironCondors(): IronCondorModel[] {
-        return this._ironCondorsBuilder.build().filter(ic => ic.riskRewardRatio <= this.services.settings.ironCondorFilters.maxRiskRewardRatio);
+        return this._ironCondorsBuilder.build().filter(ic => ic.riskRewardRatio > 0 && ic.riskRewardRatio <= this.services.settings.ironCondorFilters.maxRiskRewardRatio);
     }
 }
