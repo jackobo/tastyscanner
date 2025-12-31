@@ -97,8 +97,8 @@ const Menu: React.FC = observer(() => {
 
         </IonList>
 
-        <IonAccordionGroup>
-          <IonAccordion>
+        <IonAccordionGroup value="tickers">
+          <IonAccordion value="tickers">
             <FiltersAccordionHeaderBox slot="header" color="light">
               <IonLabel>Tickers</IonLabel>
             </FiltersAccordionHeaderBox>
