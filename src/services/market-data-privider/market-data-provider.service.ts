@@ -1,8 +1,9 @@
-import {IGreeksRawData,
+import {
+    IGreeksRawData,
     IMarketDataProviderService,
     IOptionChainRawData,
     IQuoteRawData,
-    ITradeRawData
+    ITradeRawData, IWatchListRawData
 } from "./market-data-provider.service.interface";
 import {TastyMarketDataProvider} from "./tasty-market-data-provider";
 
@@ -30,6 +31,14 @@ export class MarketDataProviderService implements IMarketDataProviderService {
     }
     getSymbolGreeks(symbol: string): IGreeksRawData | undefined {
         return this._currentProvider.getSymbolGreeks(symbol);
+    }
+
+    getUserWatchLists(): Promise<any> {
+        return this._currentProvider.getUserWatchLists();
+    }
+
+    getPlatformWatchLists(): Promise<IWatchListRawData[]> {
+        return this._currentProvider.getPlatformWatchLists();
     }
 
 }

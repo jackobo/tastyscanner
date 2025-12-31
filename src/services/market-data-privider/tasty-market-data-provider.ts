@@ -4,7 +4,7 @@ import {
     IOptionChainRawData,
     IMarketDataProviderService,
     IQuoteRawData,
-    ITradeRawData
+    ITradeRawData, IWatchListRawData
 } from "./market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 
@@ -133,6 +133,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
     private _streamEventHandler= (records: any[]) => {
         runInAction(() => {
             for(const record of records) {
+                
                 if(record.eventType === "Quote") {
                     //console.log(record);
                     this.quotes[record.eventSymbol] = record;
@@ -144,6 +145,28 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
             }
         })
+    }
+
+
+    async getUserWatchLists(): Promise<IWatchListRawData[]> {
+        const result = await this._tastyClient.watchlistsService.getAllWatchlists();
+        return result.map((wl: any) => {
+            return {
+                name: wl.name,
+                entries: wl["watchlist-entries"].map(e => e.symbol)
+            }
+        })
+    }
+    async getPlatformWatchLists(): Promise<IWatchListRawData[]> {
+        const result = await this._tastyClient.watchlistsService.getPublicWatchlists();
+
+        return result.map((wl: any) => {
+            return {
+                name: wl.name,
+                entries: wl["watchlist-entries"].map(e => e.symbol)
+            }
+        })
+
     }
 
 }

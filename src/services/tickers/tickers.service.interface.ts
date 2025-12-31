@@ -1,6 +1,7 @@
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 
 export interface ITickersService {
-    currentTicker: ITickerViewModel | null;
-    readonly tickers: ITickerViewModel[];
+    readonly currentTicker: ITickerViewModel | null;
+    setCurrentTicker(symbol: string): Promise<void>;
+    readonly recentTickers: ITickerViewModel[];
 }

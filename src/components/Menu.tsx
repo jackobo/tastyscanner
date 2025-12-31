@@ -1,3 +1,4 @@
+import React from "react";
 import {
   IonAccordion,
   IonAccordionGroup,
@@ -7,33 +8,19 @@ import {
   IonList,
   IonListHeader,
   IonMenu,
-  IonMenuToggle
+
   //IonNote,
 } from '@ionic/react';
 
 import './Menu.css';
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
-import {ITickerViewModel} from "../models/ticker.view-model.interface";
 import styled from "styled-components";
 import {IronCondorFiltersComponent} from "./iron-condor-filters.component";
+import {WatchListsComponent} from "./watch-lists.component";
+import {TickerMenuItemComponent} from "./ticker-menu-item.component";
 
-const MenuItemBox = styled(IonItem)`
-  cursor: pointer;
-`
 
-const TickerSymbolBox = styled.span`
-  font-weight: bold;
-  flex-grow: 1;
-`
-
-const MenuItemContentBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-`
 
 const TickersBox = styled.div`
   padding: 16px 0;
@@ -47,22 +34,6 @@ const MenuTitleBox = styled.div`
   padding: 8px 0;
 `
 
-const TickerMenuItemComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
-  const services = useServices();
-  const onClick = () => {
-    services.tickers.currentTicker = props.ticker;
-  }
-
-
-
-  return  <IonMenuToggle autoHide={false} onClick={onClick}>
-    <MenuItemBox className={props.ticker.symbol === services.tickers.currentTicker?.symbol ? 'selected' : ''} lines="none" detail={false}>
-      <MenuItemContentBox>
-        <TickerSymbolBox>{props.ticker.symbol}</TickerSymbolBox>
-      </MenuItemContentBox>
-    </MenuItemBox>
-  </IonMenuToggle>
-})
 
 const FiltersAccordionHeaderBox = styled(IonItem)`
   cursor: pointer;
@@ -73,7 +44,9 @@ const FiltersAccordionHeaderBox = styled(IonItem)`
 const Menu: React.FC = observer(() => {
   const services = useServices();
 
-  const tickers = services.tickers.tickers;
+  const tickers = services.tickers.recentTickers;
+
+
 
   return (
     <IonMenu contentId="main" type="overlay">
@@ -83,6 +56,7 @@ const Menu: React.FC = observer(() => {
             <MenuTitleBox>
               IC Scanner
             </MenuTitleBox>
+
           </IonListHeader>
           <IonAccordionGroup>
             <IonAccordion>
@@ -97,20 +71,23 @@ const Menu: React.FC = observer(() => {
 
         </IonList>
 
-        <IonAccordionGroup value="tickers">
-          <IonAccordion value="tickers">
+        <IonAccordionGroup value="recentTickers">
+          <IonAccordion value="recentTickers">
             <FiltersAccordionHeaderBox slot="header" color="light">
-              <IonLabel>Tickers</IonLabel>
+              <IonLabel>Recent Tickers</IonLabel>
             </FiltersAccordionHeaderBox>
+
             <TickersBox slot="content">
               {tickers.map((ticker) => {
                 return (
-                    <TickerMenuItemComponent key={ticker.symbol} ticker={ticker} />
+                    <TickerMenuItemComponent key={ticker.symbol} tickerSymbol={ticker.symbol} />
                 );
               })}
             </TickersBox>
           </IonAccordion>
         </IonAccordionGroup>
+
+        <WatchListsComponent/>
 
       </IonContent>
     </IonMenu>

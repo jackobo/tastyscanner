@@ -7,6 +7,8 @@ export interface IMarketDataProviderService {
     getSymbolQuote(symbol: string): IQuoteRawData | undefined;
     getSymbolTrade(symbol: string): ITradeRawData | undefined;
     getSymbolGreeks(symbol: string): IGreeksRawData | undefined;
+    getUserWatchLists(): Promise<IWatchListRawData[]>;
+    getPlatformWatchLists(): Promise<IWatchListRawData[]>;
 
 }
 
@@ -38,4 +40,9 @@ export interface IQuoteRawData {
 
 export interface IGreeksRawData {
     delta: number;
+}
+
+export interface IWatchListRawData {
+    name: string;
+    entries: string[];
 }
