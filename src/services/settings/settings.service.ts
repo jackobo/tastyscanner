@@ -7,6 +7,7 @@ export class SettingsService implements ISettingsService {
 
 export class IronCondorFiltersModel implements IronCondorFiltersViewModel {
     constructor() {
+        this._loadFromStorage();
         makeObservable<this, '_minDelta'
             | '_maxDelta'
             | '_maxRiskRewardRatio'
@@ -31,11 +32,16 @@ export class IronCondorFiltersModel implements IronCondorFiltersViewModel {
     _wings: number[] = [5, 10];
     _maxBidAskSpread: number = 5;
 
+    private _setProperty(setter: () => void): void {
+        runInAction(setter);
+        this._saveToStorage();
+    }
+    
     get minDelta(): number {
         return this._minDelta;
     }
     set minDelta(value) {
-        runInAction(() => this._minDelta = value);
+        this._setProperty(() => this._minDelta = value);
 
     }
 
@@ -43,35 +49,35 @@ export class IronCondorFiltersModel implements IronCondorFiltersViewModel {
         return this._maxDelta;
     }
     set maxDelta(value) {
-        runInAction(() => this._maxDelta = value);
+        this._setProperty(() => this._maxDelta = value);
     }
 
     get maxRiskRewardRatio(): number {
         return this._maxRiskRewardRatio;
     }
     set maxRiskRewardRatio(value) {
-        runInAction(() => this._maxRiskRewardRatio = value);
+        this._setProperty(() => this._maxRiskRewardRatio = value);
     }
 
     get minDaysToExpiration(): number {
         return this._minDaysToExpiration;
     }
     set minDaysToExpiration(value) {
-        runInAction(() => this._minDaysToExpiration = value);
+        this._setProperty(() => this._minDaysToExpiration = value);
     }
 
     get maxDaysToExpiration(): number {
         return this._maxDaysToExpiration;
     }
     set maxDaysToExpiration(value) {
-        runInAction(() => this._maxDaysToExpiration = value);
+        this._setProperty(() => this._maxDaysToExpiration = value);
     }
 
     get maxBidAskSpread(): number {
         return this._maxBidAskSpread;
     }
     set maxBidAskSpread(value) {
-        runInAction(() => this._maxBidAskSpread = value);
+        this._setProperty(() => this._maxBidAskSpread = value);
     }
 
     get availableWings(): number[] {
@@ -82,8 +88,27 @@ export class IronCondorFiltersModel implements IronCondorFiltersViewModel {
         return this._wings;
     }
     set wings(value) {
-        runInAction(() => this._wings = value);
+        this._setProperty(() => this._wings = value);
     }
 
+    private _saveToStorage(): void {
+        const data = {
+            ...this
+        }
+
+        localStorage.setItem('ironCondorFilters', JSON.stringify(data));
+    }
+
+    private _loadFromStorage(): void {
+        const json = localStorage.getItem('ironCondorFilters');
+        if(!json) {
+            return;
+        }
+
+        const data = JSON.parse(json);
+        for(const key of Object.keys(data)) {
+            this[key] = data[key];
+        }
+    }
 
 }
