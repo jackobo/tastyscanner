@@ -72,12 +72,13 @@ export class TickersService extends ServiceBase implements ITickersService {
     }
 
     private _addToRecentTickers(ticker: TickerModel): void {
-        const findIndex = this.recentTickers.findIndex(t => t.symbol === ticker.symbol);
-        if(findIndex >= 0) {
-            return;
-        }
+        const index = this.recentTickers.findIndex(t => t.symbol === ticker.symbol);
 
         runInAction(() => {
+            if(index >= 0) {
+                this.recentTickers.splice(index, 1);
+            }
+
             this.recentTickers.splice(0, 0, ticker);
             this._saveRecentTickers();
         });
