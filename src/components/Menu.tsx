@@ -50,13 +50,13 @@ const MenuTitleBox = styled.div`
 const TickerMenuItemComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
   const services = useServices();
   const onClick = () => {
-    services.optionsChains.currentTicker = props.ticker;
+    services.tickers.currentTicker = props.ticker;
   }
 
 
 
   return  <IonMenuToggle autoHide={false} onClick={onClick}>
-    <MenuItemBox className={props.ticker.symbol === services.optionsChains.currentTicker?.symbol ? 'selected' : ''} lines="none" detail={false}>
+    <MenuItemBox className={props.ticker.symbol === services.tickers.currentTicker?.symbol ? 'selected' : ''} lines="none" detail={false}>
       <MenuItemContentBox>
         <TickerSymbolBox>{props.ticker.symbol}</TickerSymbolBox>
       </MenuItemContentBox>
@@ -73,7 +73,7 @@ const FiltersAccordionHeaderBox = styled(IonItem)`
 const Menu: React.FC = observer(() => {
   const services = useServices();
 
-  const tickers = services.optionsChains.tickers;
+  const tickers = services.tickers.tickers;
 
   return (
     <IonMenu contentId="main" type="overlay">

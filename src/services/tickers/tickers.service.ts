@@ -1,13 +1,12 @@
 import { makeObservable, observable, runInAction } from "mobx";
 import {TickerModel} from "../../models/ticker.model";
-import {IOptionsChainService} from "./options-chain.service.interface";
+import {ITickersService} from "./tickers.service.interface";
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 import {ServiceBase} from "../service-base";
 import {IServiceFactory} from "../service-factory.interface";
-import {IOptionsDataProvider} from "./data-providers/options-data-provider.interface";
-import {TastyOptionsDataProvider} from "./data-providers/tasty-options-data-provider";
 
-export class OptionsChainService extends ServiceBase implements IOptionsChainService {
+
+export class TickersService extends ServiceBase implements ITickersService {
     constructor(services: IServiceFactory) {
         super(services);
 
@@ -16,14 +15,14 @@ export class OptionsChainService extends ServiceBase implements IOptionsChainSer
             tickers: observable.ref
         });
 
-        this._dataProvider = new TastyOptionsDataProvider();
 
-        this._dataProvider.start().then(() => {
+
+        this.services.marketDataProvider.start().then(() => {
             runInAction(() => {
                 this.tickers = [
-                    new TickerModel("SPY", this.services, this._dataProvider),
-                    new TickerModel("NVDA", this.services, this._dataProvider),
-                    new TickerModel("SLV", this.services, this._dataProvider)
+                    new TickerModel("SPY", this.services),
+                    new TickerModel("NVDA", this.services),
+                    new TickerModel("SLV", this.services)
                 ];
                 this._currentTicker = this.tickers[0];
             })
@@ -33,8 +32,6 @@ export class OptionsChainService extends ServiceBase implements IOptionsChainSer
 
     }
 
-
-    private readonly _dataProvider: IOptionsDataProvider;
 
     public tickers: TickerModel[] = [];
 

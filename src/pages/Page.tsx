@@ -14,7 +14,7 @@ const PageTitleBox = styled.div`
 
 const Page: React.FC = observer(() => {
     const services = useServices();
-    const ticker = services.optionsChains.currentTicker;
+    const ticker = services.tickers.currentTicker;
     return (
         <IonPage>
             <IonHeader>

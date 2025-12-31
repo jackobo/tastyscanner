@@ -151,7 +151,7 @@ const ExpirationIronCondorsComponent: React.FC<{expiration: IOptionsExpirationVe
 export const TickerIronCondorsComponent: React.FC = observer(() => {
     const services = useServices();
 
-    const ticker = services.optionsChains.currentTicker;
+    const ticker = services.tickers.currentTicker;
 
     if(!ticker) {
         return null;

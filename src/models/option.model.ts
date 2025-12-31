@@ -6,7 +6,7 @@ import {
     IGreeksRawData,
     IQuoteRawData,
     ITradeRawData
-} from "../services/options-chain/data-providers/options-data-provider.interface";
+} from "../services/market-data-privider/market-data-provider.service.interface";
 
 export abstract class OptionModel implements IOptionViewModel {
     constructor(public readonly symbol: string,

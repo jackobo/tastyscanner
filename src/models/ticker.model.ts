@@ -5,20 +5,20 @@ import {IServiceFactory} from "../services/service-factory.interface";
 import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interface";
 import {
     IGreeksRawData,
-    IOptionsDataProvider,
     IQuoteRawData, ITradeRawData
-} from "../services/options-chain/data-providers/options-data-provider.interface";
+} from "../services/market-data-privider/market-data-provider.service.interface";
 
 export class TickerModel implements ITickerViewModel {
     constructor(public readonly symbol: string,
-                public readonly services: IServiceFactory,
-                private readonly dataProvider: IOptionsDataProvider) {
+                public readonly services: IServiceFactory) {
 
         makeObservable<this, '_isLoading'>(this, {
             expirations: observable,
             _isLoading: observable.ref
         });
     }
+
+
 
     public get currentPrice(): number {
         return this.getSymbolTrade(this.symbol)?.price ?? 0;
@@ -37,14 +37,14 @@ export class TickerModel implements ITickerViewModel {
     }
 
     getSymbolTrade(symbol: string): ITradeRawData | undefined {
-        return this.dataProvider.getSymbolTrade(symbol);
+        return this.services.marketDataProvider.getSymbolTrade(symbol);
     }
 
     getSymbolQuote(symbol: string): IQuoteRawData | undefined {
-        return this.dataProvider.getSymbolQuote(symbol);
+        return this.services.marketDataProvider.getSymbolQuote(symbol);
     }
     getSymbolGreeks(symbol: string): IGreeksRawData | undefined {
-        return this.dataProvider.getSymbolGreeks(symbol);
+        return this.services.marketDataProvider.getSymbolGreeks(symbol);
     }
 
 
@@ -53,7 +53,7 @@ export class TickerModel implements ITickerViewModel {
             return;
         }
 
-        const optionsChain = await this.dataProvider.getOptionsChain(this.symbol);
+        const optionsChain = await this.services.marketDataProvider.getOptionsChain(this.symbol);
         const expirations: OptionsExpirationModel[] = []
 
         for(const optionChain of optionsChain) {
@@ -81,7 +81,7 @@ export class TickerModel implements ITickerViewModel {
         try {
             await this._loadOptionsChain();
 
-            this.dataProvider.subscribe(this._getAllSymbols());
+            this.services.marketDataProvider.subscribe(this._getAllSymbols());
 
         } finally {
             this.isLoading = false;
@@ -90,7 +90,7 @@ export class TickerModel implements ITickerViewModel {
     }
 
     async stop(): Promise<void> {
-        this.dataProvider.unsubscribe(this._getAllSymbols());
+        this.services.marketDataProvider.unsubscribe(this._getAllSymbols());
     }
 
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[] {

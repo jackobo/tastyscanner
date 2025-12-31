@@ -6,7 +6,7 @@ import {IronCondorModel} from "./iron-condor.model";
 import {computed, makeObservable } from "mobx";
 import {IronCondorsBuilder} from "./iron-condors-builder";
 import {IServiceFactory} from "../services/service-factory.interface";
-import {IOptionsExpirationRawData} from "../services/options-chain/data-providers/options-data-provider.interface";
+import {IOptionsExpirationRawData} from "../services/market-data-privider/market-data-provider.service.interface";
 
 export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     constructor(private readonly rawData: IOptionsExpirationRawData,

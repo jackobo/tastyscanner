@@ -2,13 +2,13 @@ import { makeObservable, observable, runInAction } from "mobx";
 import {
     IGreeksRawData,
     IOptionChainRawData,
-    IOptionsDataProvider,
+    IMarketDataProviderService,
     IQuoteRawData,
     ITradeRawData
-} from "./options-data-provider.interface";
+} from "./market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 
-export class TastyOptionsDataProvider implements IOptionsDataProvider {
+export class TastyMarketDataProvider implements IMarketDataProviderService {
     constructor() {
         this._tastyClient = new TastyTradeClient({
             ...TastyTradeClient.ProdConfig,

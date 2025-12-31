@@ -1,6 +1,6 @@
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 
-export interface IOptionsChainService {
+export interface ITickersService {
     currentTicker: ITickerViewModel | null;
     readonly tickers: ITickerViewModel[];
 }
