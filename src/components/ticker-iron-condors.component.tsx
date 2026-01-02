@@ -35,15 +35,23 @@ const ExpirationCondorsBox = styled.div`
     padding: 12px;
 `
 
-const CondorLegBox = styled.div<{$isSell: boolean}>`
+const CondorLegBaseBox = styled.div`
     display: grid;
-    grid-template-columns: auto auto 1fr 1fr auto;
+    grid-template-columns: 30px 24px 1fr 1fr auto auto;
     gap: 16px;
-    background-color: ${props => props.$isSell ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'};
-    color: ${props => props.$isSell ? 'var(--ion-color-danger-contrast)' : 'var(--ion-color-success-contrast)'};
     border-radius: 8px;
     padding: 4px 8px;
     text-align: center;
+`
+
+const CondorLegHeaderBox = styled(CondorLegBaseBox)`
+    background-color: var(--ion-color-medium);
+    color: var(--ion-color-medium-contrast);
+`
+
+const CondorLegBox = styled(CondorLegBaseBox)<{$isSell: boolean}>`
+    background-color: ${props => props.$isSell ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'};
+    color: ${props => props.$isSell ? 'var(--ion-color-danger-contrast)' : 'var(--ion-color-success-contrast)'};
 `
 
 const CondorLegsBox = styled.div`
@@ -94,6 +102,7 @@ const CondorLegComponent: React.FC<{option: IOptionViewModel; isSellOption: bool
             <StrikePriceBox>{props.option.strikePrice}</StrikePriceBox>
             <OptionPriceBox>{`${price.toFixed(2)}$`}</OptionPriceBox>
             <span>{props.option.delta + '\u0394'}</span>
+            <span>{props.option.bidAskSpread.toFixed(2) + '%'}</span>
         </CondorLegBox>
     )
 })
@@ -118,6 +127,14 @@ const CondorComponent: React.FC<{condor: IIronCondorViewModel}> = observer((prop
     return (
         <IonCard>
             <CondorLegsBox>
+                <CondorLegHeaderBox>
+                    <span></span>
+                    <span></span>
+                    <span>strike</span>
+                    <span>last</span>
+                    <span>{'\u0394'}</span>
+                    <span>spread</span>
+                </CondorLegHeaderBox>
                 <CondorLegComponent option={props.condor.btoPut} isSellOption={false}/>
                 <CondorLegComponent option={props.condor.stoPut} isSellOption={true}/>
                 <CondorLegComponent option={props.condor.stoCall} isSellOption={true}/>
