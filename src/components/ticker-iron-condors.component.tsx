@@ -101,14 +101,15 @@ const CondorLegComponent: React.FC<{option: IOptionViewModel; isSellOption: bool
 const CondorFooterComponent: React.FC<{condor: IIronCondorViewModel}> = observer((props) => {
     return (
         <CondorFooterBox>
-            <span>Wings:</span>
-            <span>{`${props.condor.wingsWidth}$`}</span>
-            <span>Credit:</span>
-            <span>{`${props.condor.credit.toFixed(2)}$`}</span>
             <span>Risk/Reward:</span>
             <span>{props.condor.riskRewardRatio}</span>
             <span>POP:</span>
             <span>{`${props.condor.pop}%`}</span>
+            <span>Wings:</span>
+            <span>{`${props.condor.wingsWidth}$`}</span>
+            <span>Credit:</span>
+            <span>{`${props.condor.credit.toFixed(2)}$`}</span>
+
         </CondorFooterBox>
     )
 })
