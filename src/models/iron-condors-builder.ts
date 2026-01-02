@@ -38,30 +38,40 @@ export class IronCondorsBuilder {
     }
 
     build(): IronCondorModel[] {
-        const puts = this.getPutsByDelta();
-        const calls = this.getCallsByDelta();
+        const puts = this.getPutsByDelta().groupByKey(put => put.delta.toString());
+        const calls = this.getCallsByDelta().groupByKey(call => call.delta.toString());
+
+        const putsDeltas = Object.keys(puts).map(d => parseFloat(d)).sort((a, b) => b - a);
+        const callsDeltas = Object.keys(calls).map(d => parseFloat(d)).sort((a, b) => b - a);
 
         const condors: IronCondorModel[] = [];
 
-        const maxIndex = Math.min(puts.length, calls.length) - 1;
+        const maxIndex = Math.min(putsDeltas.length, callsDeltas.length) - 1;
 
         for(let i = 0; i <= maxIndex; i++) {
-            const stoPut = puts[i];
-            const stoCall = calls[i];
-            for(const wingWidth of this.wings) {
-                const btoPut = this.expiration.getStrikeByPrice(stoPut.strike.strikePrice - wingWidth)?.put;
-                if(!btoPut) {
-                    continue;
-                }
-                const btoCall = this.expiration.getStrikeByPrice(stoCall.strike.strikePrice + wingWidth)?.call;
-                if(!btoCall) {
-                    continue;
-                }
-                if(this._hasGoodBidAskSpread([btoPut, stoPut, stoCall, btoCall])) {
-                    condors.push(new IronCondorModel(wingWidth, btoPut, stoPut, stoCall, btoCall));
+            const stoPuts = puts[putsDeltas[i].toString()];
+            const stoCalls = calls[callsDeltas[i].toString()];
+            for(const stoPut of stoPuts) {
+                for(const stoCall of stoCalls) {
+                    for(const wingWidth of this.wings) {
+                        const btoPut = this.expiration.getStrikeByPrice(stoPut.strike.strikePrice - wingWidth)?.put;
+                        if(!btoPut) {
+                            continue;
+                        }
+                        const btoCall = this.expiration.getStrikeByPrice(stoCall.strike.strikePrice + wingWidth)?.call;
+                        if(!btoCall) {
+                            continue;
+                        }
+                        if(this._hasGoodBidAskSpread([btoPut, stoPut, stoCall, btoCall])) {
+                            condors.push(new IronCondorModel(wingWidth, btoPut, stoPut, stoCall, btoCall));
+                        }
+
+                    }
                 }
 
+
             }
+
 
         }
 

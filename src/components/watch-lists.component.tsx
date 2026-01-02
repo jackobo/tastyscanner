@@ -25,9 +25,7 @@ const WatchListComponent: React.FC<{watchList: IWatchListRawData}> = observer((p
             <TickersBox slot="content">
                 {props.watchList.entries.map((ticker) => {
                     return (
-                        <TickerMenuItemComponent key={ticker} tickerSymbol={ticker}>
-                            {ticker}
-                        </TickerMenuItemComponent>
+                        <TickerMenuItemComponent key={ticker} tickerSymbol={ticker}/>
                     );
                 })}
             </TickersBox>
