@@ -82,9 +82,12 @@ export class StrategiesBuilder {
         const puts = this.getPutsByDelta();
         for(let i = 0; i < puts.length; i++) {
             const stoPut = puts[i];
+            if(stoPut.lastPrice <=0) {
+                continue;
+            }
             for(const wingWidth of this.wings) {
                 const btoPut = this.expiration.getStrikeByPrice(stoPut.strike.strikePrice - wingWidth)?.put;
-                if(!btoPut) {
+                if(!btoPut || btoPut.lastPrice <= 0) {
                     continue;
                 }
 
@@ -95,7 +98,7 @@ export class StrategiesBuilder {
             }
         }
 
-        return putSpreads;
+        return putSpreads.sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);
     }
 
     buildCallCreditSpreads(): CallCreditSpreadModel[] {
@@ -103,9 +106,12 @@ export class StrategiesBuilder {
         const calls = this.getCallsByDelta();
         for(let i = 0; i < calls.length; i++) {
             const stoCall = calls[i];
+            if(stoCall.lastPrice <=0) {
+                continue;
+            }
             for(const wingWidth of this.wings) {
                 const btoCall = this.expiration.getStrikeByPrice(stoCall.strike.strikePrice + wingWidth)?.call;
-                if(!btoCall) {
+                if(!btoCall || btoCall.lastPrice <= 0) {
                     continue;
                 }
 
@@ -116,7 +122,7 @@ export class StrategiesBuilder {
             }
         }
 
-        return callSpreads;
+        return callSpreads.sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);;
     }
 
     private _hasGoodBidAskSpread(options: OptionModel[]): boolean {
