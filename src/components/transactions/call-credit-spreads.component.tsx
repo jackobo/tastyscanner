@@ -9,6 +9,7 @@ import {StrategyHeaderComponent} from "./strategy-header.component";
 import {StrategyLegComponent} from "./strategy-leg.component";
 import {StrategyFooterComponent} from "./strategy-footer.component";
 import {ICreditSpreadViewModel} from "../../models/credit-spread.view-model.interface";
+import {NoStrategyAvailableBox} from "./boxes/no-strategy-available.box";
 
 
 const CallCreditSpreadComponent: React.FC<{putCreditSpread: ICreditSpreadViewModel}> = observer((props) => {
@@ -40,7 +41,11 @@ const ExpirationPutCreditSpreadsComponent: React.FC<{expiration: IOptionsExpirat
 export const CallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
     const expirations = props.ticker.getExpirationsWithCallCreditSpreads()
     if(expirations.length === 0) {
-        return null;
+        return (
+            <NoStrategyAvailableBox>
+                No call credit spreads available
+            </NoStrategyAvailableBox>
+        );
     }
 
     return  (

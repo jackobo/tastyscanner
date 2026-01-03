@@ -9,6 +9,7 @@ import {StrategyHeaderComponent} from "./strategy-header.component";
 import {StrategyLegComponent} from "./strategy-leg.component";
 import {StrategyFooterComponent} from "./strategy-footer.component";
 import {ICreditSpreadViewModel} from "../../models/credit-spread.view-model.interface";
+import {NoStrategyAvailableBox} from "./boxes/no-strategy-available.box";
 
 
 const PutCreditSpreadComponent: React.FC<{putCreditSpread: ICreditSpreadViewModel}> = observer((props) => {
@@ -40,7 +41,11 @@ const ExpirationPutCreditSpreadsComponent: React.FC<{expiration: IOptionsExpirat
 export const PutCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
     const expirations = props.ticker.getExpirationsWithPutCreditSpreads()
     if(expirations.length === 0) {
-        return null;
+        return (
+            <NoStrategyAvailableBox>
+                No put credit spreads available
+            </NoStrategyAvailableBox>
+        );
     }
 
     return  (

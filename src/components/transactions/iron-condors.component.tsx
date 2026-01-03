@@ -9,6 +9,7 @@ import {StrategyFooterComponent} from "./strategy-footer.component";
 import {ExpirationStrategiesComponent} from "./expiration-strategies.component";
 import {StrategyBox} from "./boxes/strategy.box";
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
+import {NoStrategyAvailableBox} from "./boxes/no-strategy-available.box";
 
 
 
@@ -43,7 +44,11 @@ export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel}> = observ
 
     const expirations = props.ticker.getExpirationsWithIronCondors()
     if(expirations.length === 0) {
-        return null;
+        return (
+            <NoStrategyAvailableBox>
+                No iron condors available
+            </NoStrategyAvailableBox>
+        )
     }
 
     return  (
