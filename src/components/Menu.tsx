@@ -54,7 +54,7 @@ const Menu: React.FC = observer(() => {
         <IonList id="inbox-list">
           <IonListHeader>
             <MenuTitleBox>
-              IC Scanner
+              Tasty Scanner
             </MenuTitleBox>
 
           </IonListHeader>
