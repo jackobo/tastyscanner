@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect} from "react";
 import {observer} from "mobx-react";
 import {useServices} from "../../hooks/use-services.hook";
 import {
@@ -25,17 +25,20 @@ const SpinnerContainerBox = styled.div`
     height: 100%;
 `
 
-
+const CONDORS_TAB = 'condors';
+const PUT_CREDIT_SPREAD_TAB = 'putCreditSpreads';
+const CALL_CREDIT_SPREAD_TAB = 'callCreditSpreads';
+const STRATEGIES_TABS_CSS_CLASS = "strategies-tabs";
 
 export const TickerStrategiesComponent: React.FC = observer(() => {
     const services = useServices();
 
 
     const ticker = services.tickers.currentTicker;
-    const currentTab = localStorage.getItem('currentStrategyTab') || 'condors';
+    const currentTab = localStorage.getItem('currentStrategyTab') || CONDORS_TAB;
 
     useEffect(() => {
-        const tabs = document.querySelector('.strategies-tabs') as HTMLIonTabsElement;
+        const tabs = document.querySelector(`.${STRATEGIES_TABS_CSS_CLASS}`) as HTMLIonTabsElement;
         tabs?.select(currentTab);
     });
 
@@ -55,26 +58,26 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
 
 
     return (
-        <IonTabs className={"strategies-tabs"}>
+        <IonTabs className={STRATEGIES_TABS_CSS_CLASS}>
 
             <IonTabBar slot="top"
                        onIonTabsDidChange={e => localStorage.setItem('currentStrategyTab', e.detail.tab)}>
-                <IonTabButton tab="condors">
+                <IonTabButton tab={CONDORS_TAB}>
                     <IonIcon />
                     Iron Condors
                 </IonTabButton>
-                <IonTabButton tab="putCreditSpreads">
+                <IonTabButton tab={PUT_CREDIT_SPREAD_TAB}>
                     <IonIcon />
                     PUT Credit Spreads
                 </IonTabButton>
-                <IonTabButton tab="callCreditSpreads">
+                <IonTabButton tab={CALL_CREDIT_SPREAD_TAB}>
                     <IonIcon />
                     CALL Credit Spreads
                 </IonTabButton>
             </IonTabBar>
 
-            <IonTab tab={"condors"}>
-                <IonPage id={"condors"}>
+            <IonTab tab={CONDORS_TAB}>
+                <IonPage id={CONDORS_TAB}>
                     <IonHeader>
                         <IonToolbar>
                             <IonTitle>{"Iron Condors"}</IonTitle>
@@ -87,8 +90,8 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
 
             </IonTab>
 
-            <IonTab tab={"putCreditSpreads"}>
-                <IonPage id={"putCreditSpreads"}>
+            <IonTab tab={PUT_CREDIT_SPREAD_TAB}>
+                <IonPage id={PUT_CREDIT_SPREAD_TAB}>
                     <IonHeader>
                         <IonToolbar>
                             <IonTitle>{"PUT Credit Spreads"}</IonTitle>
@@ -101,8 +104,8 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
 
             </IonTab>
 
-            <IonTab tab={"callCreditSpreads"}>
-                <IonPage id={"callCreditSpreads"}>
+            <IonTab tab={CALL_CREDIT_SPREAD_TAB}>
+                <IonPage id={CALL_CREDIT_SPREAD_TAB}>
                     <IonHeader>
                         <IonToolbar>
                             <IonTitle>{"CALL Credit Spreads"}</IonTitle>
