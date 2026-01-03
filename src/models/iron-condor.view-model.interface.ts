@@ -1,11 +1,7 @@
 import {IOptionViewModel} from "./option.view-model.interface";
+import {ITransactionViewModel} from "./transaction.view-model.interface";
 
-export interface IIronCondorViewModel {
-    readonly key: string;
-    readonly wingsWidth: number;
-    readonly credit: number;
-    readonly riskRewardRatio: number;
-    readonly pop: number;
+export interface IIronCondorViewModel extends ITransactionViewModel {
     readonly btoPut: IOptionViewModel;
     readonly stoPut: IOptionViewModel;
     readonly stoCall: IOptionViewModel;
