@@ -1,8 +1,7 @@
-import React, {PropsWithChildren} from "react";
+import React, {useEffect, useRef} from "react";
 import {observer} from "mobx-react";
 import {useServices} from "../../hooks/use-services.hook";
 import {
-    IonAccordionGroup,
     IonContent,
     IonHeader,
     IonIcon,
@@ -26,16 +25,19 @@ const SpinnerContainerBox = styled.div`
     height: 100%;
 `
 
-interface StrategiesTabComponentProps extends PropsWithChildren {
-    title: string;
-}
-
 
 
 export const TickerStrategiesComponent: React.FC = observer(() => {
     const services = useServices();
 
+
     const ticker = services.tickers.currentTicker;
+    const currentTab = localStorage.getItem('currentStrategyTab') || 'condors';
+
+    useEffect(() => {
+        const tabs = document.querySelector('.strategies-tabs') as HTMLIonTabsElement;
+        tabs?.select(currentTab);
+    });
 
     if(!ticker) {
         return null;
@@ -50,10 +52,13 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
         )
     }
 
-    return (
-        <IonTabs>
 
-            <IonTabBar slot="top">
+
+    return (
+        <IonTabs className={"strategies-tabs"}>
+
+            <IonTabBar slot="top"
+                       onIonTabsDidChange={e => localStorage.setItem('currentStrategyTab', e.detail.tab)}>
                 <IonTabButton tab="condors">
                     <IonIcon />
                     Iron Condors
