@@ -1,14 +1,14 @@
 import React from "react";
 import { observer } from "mobx-react";
 import {useServices} from "../hooks/use-services.hook";
-import {IonChip, IonRange, IonToggle } from "@ionic/react";
+import {IonChip, IonRadio, IonRadioGroup, IonRange, IonToggle} from "@ionic/react";
 import styled from "styled-components";
 
 const FiltersContainerBox = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 16px;
+    gap: 8px;
     padding: 16px 8px;
 `
 
@@ -49,6 +49,25 @@ const WingsEditorBox = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 8px;
+`
+
+const PriceToUseRadioGroupBox = styled(IonRadioGroup)`
+    
+    & .radio-group-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+`
+
+const SeparatorBox = styled.hr`
+    background-color: var(--ion-color-light-shade);
+    height: 1px;
+    margin-left: -12px;
+    margin-right: -12px;
+    box-sizing: border-box;
 `
 
 const WingValueComponent: React.FC<{value: number}> = observer((props) => {
@@ -155,6 +174,7 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
                                                value={filters.maxRiskRewardRatio}
                                                onValueChanged={value => filters.maxRiskRewardRatio = value}/>
 
+            <SeparatorBox/>
 
             <RangeEditorComponent label="Delta range"
                                    min={5}
@@ -166,6 +186,7 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
                                        filters.maxDelta = value.upper;
                                    }}/>
 
+            <SeparatorBox/>
 
             <RangeEditorComponent label="DTE range"
                                    min={0}
@@ -177,7 +198,7 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
                                        filters.maxDaysToExpiration = value.upper;
                                    }}/>
 
-
+            <SeparatorBox/>
             <SingleValueEditorComponent label="Max bid/ask spread"
                                                min={0}
                                                max={10}
@@ -185,12 +206,31 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
                                                formatValue={value => `${value}%`}
                                                onValueChanged={value => filters.maxBidAskSpread = value}/>
 
+            <SeparatorBox/>
             <FilterLabelBox>
                 Wings
             </FilterLabelBox>
             <WingsEditorBox>
                 {filters.availableWings.map(w => <WingValueComponent key={w} value={w}/>)}
             </WingsEditorBox>
+
+            <SeparatorBox/>
+
+            <FilterLabelBox>
+                Price to use
+            </FilterLabelBox>
+
+            <PriceToUseRadioGroupBox value={services.settings.strategyFilters.priceToUse}
+                                     onIonChange={e => services.settings.strategyFilters.priceToUse = e.detail.value}>
+                <IonRadio value={"last"}>
+                    Last price
+                </IonRadio>
+                <div style={{flexGrow: 1}}></div>
+                <IonRadio value={"mid"}>
+                    Mid price
+                </IonRadio>
+            </PriceToUseRadioGroupBox>
+
 
         </FiltersContainerBox>
     )

@@ -7,6 +7,7 @@ import {
     IQuoteRawData,
     ITradeRawData
 } from "../services/market-data-privider/market-data-provider.service.interface";
+import {IServiceFactory} from "../services/service-factory.interface";
 
 export abstract class OptionModel implements IOptionViewModel {
     constructor(public readonly symbol: string,
@@ -18,6 +19,10 @@ export abstract class OptionModel implements IOptionViewModel {
 
     protected get ticker(): TickerModel {
         return this.strike.ticker;
+    }
+
+    get services(): IServiceFactory {
+        return this.ticker.services;
     }
 
     protected get tradeData(): ITradeRawData | undefined {
@@ -58,8 +63,13 @@ export abstract class OptionModel implements IOptionViewModel {
     }
 
     get priceForStrategyBuilder(): number {
-        //return this.midPrice;
-        return this.lastPrice;
+        if(this.services.settings.strategyFilters.priceToUse === "mid") {
+            return this.midPrice;
+        } else {
+            return this.lastPrice;
+        }
+
+        //return this.lastPrice;
     }
 
     get bidAskSpread(): number {

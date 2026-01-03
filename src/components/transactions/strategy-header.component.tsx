@@ -15,7 +15,7 @@ export const StrategyHeaderComponent: React.FC = observer(() => {
             <span></span>
             <span></span>
             <span>strike</span>
-            <span>last</span>
+            <span>price</span>
             <span>{'\u0394'}</span>
             <span>spread</span>
         </StrategyHeaderBox>

@@ -1,4 +1,4 @@
-import {IStrategyFiltersViewModel, ISettingsService} from "./settings.service.interface";
+import {IStrategyFiltersViewModel, ISettingsService, PriceType} from "./settings.service.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 
 export class SettingsService implements ISettingsService {
@@ -13,14 +13,17 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
             | '_maxRiskRewardRatio'
             | '_minDaysToExpiration'
             | '_maxDaysToExpiration'
-            | '_maxBidAskSpread' | '_wings'>(this, {
+            | '_maxBidAskSpread'
+            | '_wings'
+            | '_priceToUse'>(this, {
             _minDelta: observable.ref,
             _maxDelta: observable.ref,
             _maxRiskRewardRatio: observable.ref,
             _minDaysToExpiration: observable.ref,
             _maxDaysToExpiration: observable.ref,
             _maxBidAskSpread: observable.ref,
-            _wings: observable.ref
+            _wings: observable.ref,
+            _priceToUse: observable.ref
         })
     }
 
@@ -30,6 +33,7 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     _minDaysToExpiration: number = 35;
     _maxDaysToExpiration: number = 60;
     _wings: number[] = [5, 10];
+    _priceToUse: PriceType = "last";
     _maxBidAskSpread: number = 5;
 
     private _setProperty(setter: () => void): void {
@@ -89,6 +93,14 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     }
     set wings(value) {
         this._setProperty(() => this._wings = value);
+    }
+
+    get priceToUse(): PriceType {
+        return this._priceToUse;
+    }
+
+    set priceToUse(value: PriceType) {
+        this._setProperty(() => this._priceToUse = value);
     }
 
     private _saveToStorage(): void {
