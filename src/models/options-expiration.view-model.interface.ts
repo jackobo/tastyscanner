@@ -3,6 +3,7 @@ import {IIronCondorViewModel} from "./iron-condor.view-model.interface";
 import {ICreditSpreadViewModel} from "./credit-spread.view-model.interface";
 
 export interface IOptionsExpirationVewModel {
+    readonly key: string;
     readonly expirationDate: string;
     readonly daysToExpiration: number;
     readonly expirationType: string;

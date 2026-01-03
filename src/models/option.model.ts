@@ -53,6 +53,15 @@ export abstract class OptionModel implements IOptionViewModel {
         return this.quoteData?.askPrice ?? 0;
     }
 
+    get midPrice(): number {
+        return Math.round(((this.bidPrice + this.askPrice) / 2) * 100) / 100;
+    }
+
+    get priceForStrategyBuilder(): number {
+        //return this.midPrice;
+        return this.lastPrice;
+    }
+
     get bidAskSpread(): number {
         return ((this.askPrice - this.bidPrice) / this.bidPrice) * 100;
     }

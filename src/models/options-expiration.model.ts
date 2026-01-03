@@ -32,6 +32,10 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
         return this.ticker.services;
     }
 
+    get key(): string {
+        return `${this.ticker.symbol}-${this.expirationDate}-${this.expirationType}`;
+    }
+
     get expirationDate(): string {
         return this.rawData.expirationDate;
     }

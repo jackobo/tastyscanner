@@ -12,7 +12,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     }
 
     get credit(): number {
-        const val = this.stoOption.lastPrice - this.btoOption.lastPrice;
+        const val = this.stoOption.priceForStrategyBuilder - this.btoOption.priceForStrategyBuilder;
         return Math.round(val * 100) / 100;
     }
 

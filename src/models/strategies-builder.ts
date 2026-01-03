@@ -29,7 +29,7 @@ export class StrategiesBuilder {
     }
 
     private _filterByDelta(options: OptionModel[]): OptionModel[] {
-        return options.filter(o => o.delta >= this.minDelta && o.delta <= this.maxDelta && o.lastPrice > 0)
+        return options.filter(o => o.delta >= this.minDelta && o.delta <= this.maxDelta && o.priceForStrategyBuilder > 0)
             .sort((a, b) => b.delta - a.delta);
     }
 
@@ -105,7 +105,7 @@ export class StrategiesBuilder {
 
         for(let i = 0; i < options.length; i++) {
             const stoOption = options[i];
-            if(stoOption.lastPrice <= 0) {
+            if(stoOption.priceForStrategyBuilder <= 0) {
                 continue;
             }
             for(const wingWidth of this.wings) {
@@ -114,7 +114,7 @@ export class StrategiesBuilder {
                     continue;
                 }
                 const btoOption =  getStrikeOption(strike);
-                if(!btoOption || btoOption.lastPrice <= 0) {
+                if(!btoOption || btoOption.priceForStrategyBuilder <= 0) {
                     continue;
                 }
 

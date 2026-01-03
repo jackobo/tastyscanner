@@ -48,7 +48,7 @@ export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel}> = observ
 
     return  (
         <IonAccordionGroup>
-            {expirations.map(expiration => <ExpirationIronCondorsComponent key={expiration.expirationDate} expiration={expiration}/>)}
+            {expirations.map(expiration => <ExpirationIronCondorsComponent key={expiration.key} expiration={expiration}/>)}
         </IonAccordionGroup>
     )
 })

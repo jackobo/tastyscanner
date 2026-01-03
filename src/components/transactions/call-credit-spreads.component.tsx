@@ -45,7 +45,7 @@ export const CallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel}> = 
 
     return  (
         <IonAccordionGroup>
-            {expirations.map(expiration => <ExpirationPutCreditSpreadsComponent key={expiration.expirationDate} expiration={expiration}/>)}
+            {expirations.map(expiration => <ExpirationPutCreditSpreadsComponent key={expiration.key} expiration={expiration}/>)}
         </IonAccordionGroup>
     )
 })

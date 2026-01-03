@@ -20,7 +20,7 @@ const StrategyLegBox = styled(StrategyLegBaseBox)<{$isSell: boolean}>`
 `
 
 export const StrategyLegComponent: React.FC<{option: IOptionViewModel; isSellOption: boolean}> = observer((props) => {
-    const price = props.isSellOption ? props.option.lastPrice : -1 * props.option.lastPrice
+    const price = props.isSellOption ? props.option.priceForStrategyBuilder : -1 * props.option.priceForStrategyBuilder
 
     return (
         <StrategyLegBox $isSell={props.isSellOption}>
