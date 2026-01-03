@@ -2,26 +2,13 @@ import React from 'react';
 import {IOptionsExpirationVewModel} from "../../models/options-expiration.view-model.interface";
 import {observer} from "mobx-react-lite";
 import {IIronCondorViewModel} from "../../models/iron-condor.view-model.interface";
-import styled from "styled-components";
-import {useServices} from "../../hooks/use-services.hook";
-import {IonAccordionGroup, IonCard, IonSpinner} from '@ionic/react';
+import {IonAccordionGroup, IonCard} from '@ionic/react';
 import {StrategyHeaderComponent} from "./strategy-header.component";
 import {StrategyLegComponent} from "./strategy-leg.component";
 import {StrategyFooterComponent} from "./strategy-footer.component";
 import {ExpirationStrategiesComponent} from "./expiration-strategies.component";
 import {StrategyBox} from "./boxes/strategy.box";
-
-
-
-
-const SpinnerContainerBox = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-`
-
+import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 
 
 
@@ -51,25 +38,13 @@ const ExpirationIronCondorsComponent: React.FC<{expiration: IOptionsExpirationVe
     );
 });
 
-export const IronCondorsComponent: React.FC = observer(() => {
-    const services = useServices();
+export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
 
-    const ticker = services.tickers.currentTicker;
 
-    if(!ticker) {
+    const expirations = props.ticker.getExpirationsWithIronCondors()
+    if(expirations.length === 0) {
         return null;
     }
-
-    if(ticker.isLoading) {
-        return (
-            <SpinnerContainerBox>
-                <IonSpinner name="circles"/>
-            </SpinnerContainerBox>
-
-        )
-    }
-
-    const expirations = ticker.getExpirationsWithIronCondors()
 
     return  <IonAccordionGroup>
         {expirations.map(expiration => <ExpirationIronCondorsComponent key={expiration.expirationDate} expiration={expiration}/>)}
