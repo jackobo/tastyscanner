@@ -1,7 +1,7 @@
 import {IOptionViewModel} from "./option.view-model.interface";
-import {ITransactionViewModel} from "./transaction.view-model.interface";
+import {IStrategyViewModel} from "./strategy.view-model.interface";
 
-export interface IIronCondorViewModel extends ITransactionViewModel {
+export interface IIronCondorViewModel extends IStrategyViewModel {
     readonly btoPut: IOptionViewModel;
     readonly stoPut: IOptionViewModel;
     readonly stoCall: IOptionViewModel;

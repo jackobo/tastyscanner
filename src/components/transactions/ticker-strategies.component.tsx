@@ -15,6 +15,8 @@ import {
 } from "@ionic/react";
 import styled from "styled-components";
 import {IronCondorsComponent} from "./iron-condors.component";
+import {PutCreditSpreadsComponent} from "./put-credit-spreads.component";
+import {CallCreditSpreadsComponent} from "./call-credit-spreads.component";
 
 const SpinnerContainerBox = styled.div`
     display: flex;
@@ -88,7 +90,7 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>
-                        <div>Put credit spreads</div>
+                        <PutCreditSpreadsComponent ticker={ticker}/>
                     </IonContent>
                 </IonPage>
 
@@ -102,7 +104,7 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>
-                        <div>Call credit spreads</div>
+                        <CallCreditSpreadsComponent ticker={ticker}/>
                     </IonContent>
                 </IonPage>
 

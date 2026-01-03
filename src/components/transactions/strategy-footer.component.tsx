@@ -1,7 +1,7 @@
 import React from "react";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
-import {ITransactionViewModel} from "../../models/transaction.view-model.interface";
+import {IStrategyViewModel} from "../../models/strategy.view-model.interface";
 
 const StrategyFooterBox = styled.div`
     display: grid;
@@ -13,7 +13,7 @@ const StrategyFooterBox = styled.div`
 `
 
 
-export const StrategyFooterComponent: React.FC<{transaction: ITransactionViewModel}> = observer((props) => {
+export const StrategyFooterComponent: React.FC<{transaction: IStrategyViewModel}> = observer((props) => {
     return (
         <StrategyFooterBox>
             <span>Risk/Reward:</span>

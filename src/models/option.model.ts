@@ -37,7 +37,12 @@ export abstract class OptionModel implements IOptionViewModel {
     }
 
     get lastPrice(): number {
-        return this.tradeData?.price ?? 0;
+        const p = this.tradeData?.price || 0;
+        if(Check.isNumber(p)) {
+            return p;
+        }
+
+        return 0;
     }
 
     get bidPrice(): number {

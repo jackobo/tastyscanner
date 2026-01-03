@@ -4,9 +4,11 @@ import {OptionStrikeModel} from "./option-strike.model";
 import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interface";
 import {IronCondorModel} from "./iron-condor.model";
 import {computed, makeObservable } from "mobx";
-import {IronCondorsBuilder} from "./iron-condors-builder";
+import {StrategiesBuilder} from "./strategies-builder";
 import {IServiceFactory} from "../services/service-factory.interface";
 import {IOptionsExpirationRawData} from "../services/market-data-privider/market-data-provider.service.interface";
+import {PutCreditSpreadModel} from "./put-credit-spread.model";
+import {IStrategyViewModel} from "./strategy.view-model.interface";
 
 export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     constructor(private readonly rawData: IOptionsExpirationRawData,
@@ -15,14 +17,16 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
             this._strikesMap[strike.strikePrice] = new OptionStrikeModel(strike.strikePrice, this, strike.callStreamerSymbol, strike.putStreamerSymbol);
         }
 
-        this._ironCondorsBuilder = new IronCondorsBuilder(this);
+        this._strategiesBuilder = new StrategiesBuilder(this);
 
         makeObservable(this, {
-            ironCondors: computed
+            ironCondors: computed,
+            putCreditSpreads: computed,
+            callCreditSpreads: computed
         });
     }
 
-    private readonly _ironCondorsBuilder: IronCondorsBuilder;
+    private readonly _strategiesBuilder: StrategiesBuilder;
 
     public get services(): IServiceFactory {
         return this.ticker.services;
@@ -64,7 +68,19 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
         return this._strikesMap[strikePrice];
     }
 
+    private _filterStrategies<T extends IStrategyViewModel>(strategies: T[]): T[] {
+        return strategies.filter(s => s.riskRewardRatio > 0 && s.riskRewardRatio <= this.services.settings.ironCondorFilters.maxRiskRewardRatio);
+    }
+
     get ironCondors(): IronCondorModel[] {
-        return this._ironCondorsBuilder.build().filter(ic => ic.riskRewardRatio > 0 && ic.riskRewardRatio <= this.services.settings.ironCondorFilters.maxRiskRewardRatio);
+        return this._filterStrategies(this._strategiesBuilder.buildIronCondors());
+    }
+
+    get putCreditSpreads(): PutCreditSpreadModel[] {
+        return this._filterStrategies(this._strategiesBuilder.buildPutCreditSpreads());
+    }
+
+    get callCreditSpreads(): PutCreditSpreadModel[] {
+        return this._filterStrategies(this._strategiesBuilder.buildCallCreditSpreads());
     }
 }

@@ -107,14 +107,22 @@ export class TickerModel implements ITickerViewModel {
         this.services.marketDataProvider.unsubscribe(this._getAllSymbols());
     }
 
+    private _filterExpirations(): IOptionsExpirationVewModel[] {
+        return this.expirations.filter(expiration =>
+            expiration.daysToExpiration >= this.services.settings.ironCondorFilters.minDaysToExpiration
+            && expiration.daysToExpiration <= this.services.settings.ironCondorFilters.maxDaysToExpiration);
+    }
+
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[] {
-        return this.expirations.filter(expiration => {
-            if(expiration.daysToExpiration < this.services.settings.ironCondorFilters.minDaysToExpiration
-                || expiration.daysToExpiration > this.services.settings.ironCondorFilters.maxDaysToExpiration) {
-                return false;
-            }
-            return expiration.ironCondors.length > 0;
-        }); //.filter(e => e.expirationDate === "2026-02-20");
+        return this._filterExpirations().filter(expiration => expiration.ironCondors.length > 0);
+    }
+
+    getExpirationsWithPutCreditSpreads(): IOptionsExpirationVewModel[] {
+        return this._filterExpirations().filter(expiration => expiration.putCreditSpreads.length > 0);
+    }
+
+    getExpirationsWithCallCreditSpreads(): IOptionsExpirationVewModel[] {
+        return this._filterExpirations().filter(expiration => expiration.callCreditSpreads.length > 0);
     }
 
 }

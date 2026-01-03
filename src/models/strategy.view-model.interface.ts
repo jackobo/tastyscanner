@@ -1,4 +1,4 @@
-export interface ITransactionViewModel {
+export interface IStrategyViewModel {
     readonly key: string;
     readonly wingsWidth: number;
     readonly credit: number;

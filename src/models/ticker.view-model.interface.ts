@@ -8,4 +8,6 @@ export interface ITickerViewModel {
     readonly isLoading: boolean;
     readonly expirations: IOptionsExpirationVewModel[];
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[];
+    getExpirationsWithPutCreditSpreads(): IOptionsExpirationVewModel[];
+    getExpirationsWithCallCreditSpreads(): IOptionsExpirationVewModel[];
 }
