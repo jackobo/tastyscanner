@@ -208,7 +208,7 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
 
             <SeparatorBox/>
             <FilterLabelBox>
-                Wings
+                Wings/Spread size
             </FilterLabelBox>
             <WingsEditorBox>
                 {filters.availableWings.map(w => <WingValueComponent key={w} value={w}/>)}
