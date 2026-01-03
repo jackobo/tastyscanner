@@ -4,6 +4,8 @@ import {OptionModel} from "./option.model";
 import {IServiceFactory} from "../services/service-factory.interface";
 import {PutCreditSpreadModel} from "./put-credit-spread.model";
 import {CallCreditSpreadModel} from "./call-credit-spread.model";
+import {CreditSpreadModel} from "./credit-spread.model";
+import {OptionStrikeModel} from "./option-strike.model";
 
 
 export class StrategiesBuilder {
@@ -78,51 +80,52 @@ export class StrategiesBuilder {
     }
 
     buildPutCreditSpreads(): PutCreditSpreadModel[] {
-        const putSpreads: PutCreditSpreadModel[] = [];
-        const puts = this.getPutsByDelta();
-        for(let i = 0; i < puts.length; i++) {
-            const stoPut = puts[i];
-            if(stoPut.lastPrice <=0) {
-                continue;
-            }
-            for(const wingWidth of this.wings) {
-                const btoPut = this.expiration.getStrikeByPrice(stoPut.strike.strikePrice - wingWidth)?.put;
-                if(!btoPut || btoPut.lastPrice <= 0) {
-                    continue;
-                }
+        return this._buildCreditSpreads(this.getPutsByDelta(),
+                                        -1,
+                                        strike => strike.put,
+                                        (spreadSize, stoOption, btoOption) => new PutCreditSpreadModel(spreadSize, stoOption, btoOption));
 
-                if(this._hasGoodBidAskSpread([btoPut, stoPut])) {
-                    putSpreads.push(new PutCreditSpreadModel(wingWidth, stoPut, btoPut));
-                }
-
-            }
-        }
-
-        return putSpreads.sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);
     }
 
     buildCallCreditSpreads(): CallCreditSpreadModel[] {
-        const callSpreads: CallCreditSpreadModel[] = [];
-        const calls = this.getCallsByDelta();
-        for(let i = 0; i < calls.length; i++) {
-            const stoCall = calls[i];
-            if(stoCall.lastPrice <=0) {
+
+        return this._buildCreditSpreads(this.getCallsByDelta(),
+                                        1,
+                                        strike => strike.call,
+                                        (spreadSize, stoOption, btoOption) => new CallCreditSpreadModel(spreadSize, stoOption, btoOption));
+
+
+    }
+
+    private _buildCreditSpreads<TCreditSpread extends CreditSpreadModel>(options: OptionModel[],
+                                                                         wingIncrementSign: -1 | 1,
+                                                                         getStrikeOption: (strike: OptionStrikeModel) => OptionModel,
+                                                                         createSpread:(spreadSize: number, stoOption: OptionModel, btoOption: OptionModel) => TCreditSpread): TCreditSpread[] {
+        const creditSpreads: TCreditSpread[] = [];
+
+        for(let i = 0; i < options.length; i++) {
+            const stoOption = options[i];
+            if(stoOption.lastPrice <= 0) {
                 continue;
             }
             for(const wingWidth of this.wings) {
-                const btoCall = this.expiration.getStrikeByPrice(stoCall.strike.strikePrice + wingWidth)?.call;
-                if(!btoCall || btoCall.lastPrice <= 0) {
+                const strike = this.expiration.getStrikeByPrice(stoOption.strike.strikePrice + (wingIncrementSign * wingWidth));
+                if(!strike) {
+                    continue;
+                }
+                const btoOption =  getStrikeOption(strike);
+                if(!btoOption || btoOption.lastPrice <= 0) {
                     continue;
                 }
 
-                if(this._hasGoodBidAskSpread([stoCall, btoCall])) {
-                    callSpreads.push(new CallCreditSpreadModel(wingWidth, stoCall, btoCall));
+                if(this._hasGoodBidAskSpread([stoOption, btoOption])) {
+                    creditSpreads.push(createSpread(wingWidth, stoOption, btoOption));
                 }
 
             }
         }
 
-        return callSpreads.sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);;
+        return creditSpreads.sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);
     }
 
     private _hasGoodBidAskSpread(options: OptionModel[]): boolean {
