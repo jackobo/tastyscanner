@@ -1,11 +1,11 @@
-import {IronCondorFiltersViewModel, ISettingsService} from "./settings.service.interface";
+import {IStrategyFiltersViewModel, ISettingsService} from "./settings.service.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 
 export class SettingsService implements ISettingsService {
-    readonly ironCondorFilters = new IronCondorFiltersModel();
+    readonly strategyFilters = new StrategyFiltersModel();
 }
 
-export class IronCondorFiltersModel implements IronCondorFiltersViewModel {
+export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     constructor() {
         this._loadFromStorage();
         makeObservable<this, '_minDelta'
@@ -96,11 +96,11 @@ export class IronCondorFiltersModel implements IronCondorFiltersViewModel {
             ...this
         }
 
-        localStorage.setItem('ironCondorFilters', JSON.stringify(data));
+        localStorage.setItem('strategyFilters', JSON.stringify(data));
     }
 
     private _loadFromStorage(): void {
-        const json = localStorage.getItem('ironCondorFilters');
+        const json = localStorage.getItem('strategyFilters');
         if(!json) {
             return;
         }

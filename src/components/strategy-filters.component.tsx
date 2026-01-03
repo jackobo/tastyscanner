@@ -53,14 +53,14 @@ const WingsEditorBox = styled.div`
 
 const WingValueComponent: React.FC<{value: number}> = observer((props) => {
     const services = useServices();
-    const isChecked = services.settings.ironCondorFilters.wings.includes(props.value);
+    const isChecked = services.settings.strategyFilters.wings.includes(props.value);
     const onToggleHandle = (checked: boolean) => {
-        const wings = [...services.settings.ironCondorFilters.wings];
+        const wings = [...services.settings.strategyFilters.wings];
         if(checked) {
             wings.push(props.value);
-            services.settings.ironCondorFilters.wings = wings.sort((a, b) => a - b);
+            services.settings.strategyFilters.wings = wings.sort((a, b) => a - b);
         } else {
-            services.settings.ironCondorFilters.wings = wings.filter(w => w !== props.value);
+            services.settings.strategyFilters.wings = wings.filter(w => w !== props.value);
         }
     }
     return (
@@ -142,10 +142,10 @@ const RangeEditorComponent: React.FC<RangeEditorComponentProps> = observer((prop
     )
 })
 
-export const IronCondorFiltersComponent: React.FC = observer(() => {
+export const StrategyFiltersComponent: React.FC = observer(() => {
     const services = useServices();
 
-    const filters = services.settings.ironCondorFilters;
+    const filters = services.settings.strategyFilters;
 
     return (
         <FiltersContainerBox>

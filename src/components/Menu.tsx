@@ -16,7 +16,7 @@ import './Menu.css';
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
 import styled from "styled-components";
-import {IronCondorFiltersComponent} from "./iron-condor-filters.component";
+import {StrategyFiltersComponent} from "./strategy-filters.component";
 import {WatchListsComponent} from "./watch-lists.component";
 import {TickerMenuItemComponent} from "./ticker-menu-item.component";
 
@@ -64,7 +64,7 @@ const Menu: React.FC = observer(() => {
                 <IonLabel>Filters</IonLabel>
               </FiltersAccordionHeaderBox>
               <FiltersBox slot="content">
-                <IronCondorFiltersComponent/>
+                <StrategyFiltersComponent/>
               </FiltersBox>
             </IonAccordion>
           </IonAccordionGroup>
