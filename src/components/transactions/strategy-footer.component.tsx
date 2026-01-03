@@ -3,7 +3,7 @@ import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {ITransactionViewModel} from "../../models/transaction.view-model.interface";
 
-const TransactionFooterBox = styled.div`
+const StrategyFooterBox = styled.div`
     display: grid;
     grid-template-columns: 1fr 0.5fr 1fr 1fr;
     row-gap: 8px;
@@ -13,9 +13,9 @@ const TransactionFooterBox = styled.div`
 `
 
 
-export const TransactionFooterComponent: React.FC<{transaction: ITransactionViewModel}> = observer((props) => {
+export const StrategyFooterComponent: React.FC<{transaction: ITransactionViewModel}> = observer((props) => {
     return (
-        <TransactionFooterBox>
+        <StrategyFooterBox>
             <span>Risk/Reward:</span>
             <span>{props.transaction.riskRewardRatio}</span>
             <span>POP:</span>
@@ -24,6 +24,6 @@ export const TransactionFooterComponent: React.FC<{transaction: ITransactionView
             <span>{`${props.transaction.wingsWidth}$`}</span>
             <span>Credit:</span>
             <span>{`${props.transaction.credit.toFixed(2)}$`}</span>
-        </TransactionFooterBox>
+        </StrategyFooterBox>
     )
 })

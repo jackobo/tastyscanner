@@ -16,12 +16,12 @@ const ExpirationHeaderItemContentBox = styled.div`
     padding: 8px 16px;
 `
 
-const TransactionsCountBox = styled(IonChip)`
+const StrategiesCountBox = styled(IonChip)`
     --background: var(--ion-color-tertiary);
     --color: var(--ion-color-tertiary-contrast);
 `
 
-const TransactionsBoxBox = styled.div`
+const StrategiesBox = styled.div`
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
@@ -30,20 +30,20 @@ const TransactionsBoxBox = styled.div`
 
 
 
-interface ExpirationTransactionsComponentProps extends PropsWithChildren {
+interface ExpirationStrategiesComponentProps extends PropsWithChildren {
     expiration: IOptionsExpirationVewModel;
     transactionsCount: number;
 }
 
-export const ExpirationTransactionsComponent: React.FC<ExpirationTransactionsComponentProps> = observer((props) => {
+export const ExpirationStrategiesComponent: React.FC<ExpirationStrategiesComponentProps> = observer((props) => {
     return (
         <IonAccordion value={props.expiration.expirationDate}>
 
             <ExpirationHeaderItemBox slot="header" color="light">
                 <ExpirationHeaderItemContentBox>
-                    <TransactionsCountBox>
+                    <StrategiesCountBox>
                         {props.transactionsCount}
-                    </TransactionsCountBox>
+                    </StrategiesCountBox>
                     <IonLabel>
                         {`${props.expiration.expirationDate} (${props.expiration.daysToExpiration} days) - ${props.expiration.expirationType}`}
                     </IonLabel>
@@ -51,9 +51,9 @@ export const ExpirationTransactionsComponent: React.FC<ExpirationTransactionsCom
                 </ExpirationHeaderItemContentBox>
             </ExpirationHeaderItemBox>
 
-            <TransactionsBoxBox slot="content">
+            <StrategiesBox slot="content">
                 {props.children}
-            </TransactionsBoxBox>
+            </StrategiesBox>
 
         </IonAccordion>
     )

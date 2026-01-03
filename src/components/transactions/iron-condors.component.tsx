@@ -5,11 +5,11 @@ import {IIronCondorViewModel} from "../../models/iron-condor.view-model.interfac
 import styled from "styled-components";
 import {useServices} from "../../hooks/use-services.hook";
 import {IonAccordionGroup, IonCard, IonSpinner} from '@ionic/react';
-import {TransactionHeaderComponent} from "./transaction-header.component";
-import {TransactionLegComponent} from "./transaction-leg.component";
+import {StrategyHeaderComponent} from "./strategy-header.component";
+import {StrategyLegComponent} from "./strategy-leg.component";
 
-import {TransactionFooterComponent} from "./transaction-footer.component";
-import {ExpirationTransactionsComponent} from "./expiration-transactions.component";
+import {StrategyFooterComponent} from "./strategy-footer.component";
+import {ExpirationStrategiesComponent} from "./expiration-strategies.component";
 
 
 const CondorBox = styled.div`
@@ -34,12 +34,12 @@ const CondorComponent: React.FC<{condor: IIronCondorViewModel}> = observer((prop
     return (
         <IonCard>
             <CondorBox>
-                <TransactionHeaderComponent/>
-                <TransactionLegComponent option={props.condor.btoPut} isSellOption={false}/>
-                <TransactionLegComponent option={props.condor.stoPut} isSellOption={true}/>
-                <TransactionLegComponent option={props.condor.stoCall} isSellOption={true}/>
-                <TransactionLegComponent option={props.condor.btoCall} isSellOption={false}/>
-                <TransactionFooterComponent transaction={props.condor}/>
+                <StrategyHeaderComponent/>
+                <StrategyLegComponent option={props.condor.btoPut} isSellOption={false}/>
+                <StrategyLegComponent option={props.condor.stoPut} isSellOption={true}/>
+                <StrategyLegComponent option={props.condor.stoCall} isSellOption={true}/>
+                <StrategyLegComponent option={props.condor.btoCall} isSellOption={false}/>
+                <StrategyFooterComponent transaction={props.condor}/>
             </CondorBox>
         </IonCard>
     )
@@ -50,13 +50,13 @@ const ExpirationIronCondorsComponent: React.FC<{expiration: IOptionsExpirationVe
     const condors = props.expiration.ironCondors;
 
     return (
-        <ExpirationTransactionsComponent expiration={props.expiration} transactionsCount={condors.length}>
+        <ExpirationStrategiesComponent expiration={props.expiration} transactionsCount={condors.length}>
             {condors.map(condor => <CondorComponent key={condor.key} condor={condor}/>)}
-        </ExpirationTransactionsComponent>
+        </ExpirationStrategiesComponent>
     );
 });
 
-export const TickerIronCondorsComponent: React.FC = observer(() => {
+export const IronCondorsComponent: React.FC = observer(() => {
     const services = useServices();
 
     const ticker = services.tickers.currentTicker;
