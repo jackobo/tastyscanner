@@ -19,6 +19,10 @@ const ExpirationHeaderItemContentBox = styled.div`
 const StrategiesCountBox = styled(IonChip)`
     --background: var(--ion-color-tertiary);
     --color: var(--ion-color-tertiary-contrast);
+    min-width: 50px;
+    text-align: center;
+    justify-content: center;
+    
 `
 
 const StrategiesBox = styled.div`

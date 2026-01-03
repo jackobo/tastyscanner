@@ -1,7 +1,18 @@
-import React from "react";
+import React, {PropsWithChildren} from "react";
 import {observer} from "mobx-react";
 import {useServices} from "../../hooks/use-services.hook";
-import {IonSpinner} from "@ionic/react";
+import {
+    IonAccordionGroup,
+    IonContent,
+    IonHeader,
+    IonIcon,
+    IonPage,
+    IonSpinner,
+    IonTab, IonTabBar, IonTabButton,
+    IonTabs,
+    IonTitle,
+    IonToolbar
+} from "@ionic/react";
 import styled from "styled-components";
 import {IronCondorsComponent} from "./iron-condors.component";
 
@@ -12,6 +23,11 @@ const SpinnerContainerBox = styled.div`
     width: 100%;
     height: 100%;
 `
+
+interface StrategiesTabComponentProps extends PropsWithChildren {
+    title: string;
+}
+
 
 
 export const TickerStrategiesComponent: React.FC = observer(() => {
@@ -33,6 +49,67 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
     }
 
     return (
-        <IronCondorsComponent ticker={ticker} />
+        <IonTabs>
+
+            <IonTabBar slot="top">
+                <IonTabButton tab="condors">
+                    <IonIcon />
+                    Iron Condors
+                </IonTabButton>
+                <IonTabButton tab="putCreditSpreads">
+                    <IonIcon />
+                    PUT Credit Spreads
+                </IonTabButton>
+                <IonTabButton tab="callCreditSpreads">
+                    <IonIcon />
+                    CALL Credit Spreads
+                </IonTabButton>
+            </IonTabBar>
+
+            <IonTab tab={"condors"}>
+                <IonPage id={"condors"}>
+                    <IonHeader>
+                        <IonToolbar>
+                            <IonTitle>{"Iron Condors"}</IonTitle>
+                        </IonToolbar>
+                    </IonHeader>
+                    <IonContent>
+                        <IronCondorsComponent ticker={ticker} />
+                    </IonContent>
+                </IonPage>
+
+            </IonTab>
+
+            <IonTab tab={"putCreditSpreads"}>
+                <IonPage id={"putCreditSpreads"}>
+                    <IonHeader>
+                        <IonToolbar>
+                            <IonTitle>{"PUT Credit Spreads"}</IonTitle>
+                        </IonToolbar>
+                    </IonHeader>
+                    <IonContent>
+                        <div>Put credit spreads</div>
+                    </IonContent>
+                </IonPage>
+
+            </IonTab>
+
+            <IonTab tab={"callCreditSpreads"}>
+                <IonPage id={"callCreditSpreads"}>
+                    <IonHeader>
+                        <IonToolbar>
+                            <IonTitle>{"CALL Credit Spreads"}</IonTitle>
+                        </IonToolbar>
+                    </IonHeader>
+                    <IonContent>
+                        <div>Call credit spreads</div>
+                    </IonContent>
+                </IonPage>
+
+            </IonTab>
+
+
+        </IonTabs>
+
     )
 })

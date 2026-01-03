@@ -2,7 +2,7 @@ import React from 'react';
 import {IOptionsExpirationVewModel} from "../../models/options-expiration.view-model.interface";
 import {observer} from "mobx-react-lite";
 import {IIronCondorViewModel} from "../../models/iron-condor.view-model.interface";
-import {IonAccordionGroup, IonCard} from '@ionic/react';
+import {IonAccordionGroup, IonCard, IonHeader, IonPage, IonTab, IonToolbar} from '@ionic/react';
 import {StrategyHeaderComponent} from "./strategy-header.component";
 import {StrategyLegComponent} from "./strategy-leg.component";
 import {StrategyFooterComponent} from "./strategy-footer.component";
@@ -46,7 +46,9 @@ export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel}> = observ
         return null;
     }
 
-    return  <IonAccordionGroup>
-        {expirations.map(expiration => <ExpirationIronCondorsComponent key={expiration.expirationDate} expiration={expiration}/>)}
-    </IonAccordionGroup>
+    return  (
+        <IonAccordionGroup>
+            {expirations.map(expiration => <ExpirationIronCondorsComponent key={expiration.expirationDate} expiration={expiration}/>)}
+        </IonAccordionGroup>
+    )
 })
