@@ -110,7 +110,8 @@ export class TickerModel implements ITickerViewModel {
     private _filterExpirations(): IOptionsExpirationVewModel[] {
         return this.expirations.filter(expiration =>
             expiration.daysToExpiration >= this.services.settings.strategyFilters.minDaysToExpiration
-            && expiration.daysToExpiration <= this.services.settings.strategyFilters.maxDaysToExpiration);
+            && expiration.daysToExpiration <= this.services.settings.strategyFilters.maxDaysToExpiration)
+            .sort((a, b) => a.daysToExpiration - b.daysToExpiration)    ;
     }
 
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[] {
