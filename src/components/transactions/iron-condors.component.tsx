@@ -7,17 +7,12 @@ import {useServices} from "../../hooks/use-services.hook";
 import {IonAccordionGroup, IonCard, IonSpinner} from '@ionic/react';
 import {StrategyHeaderComponent} from "./strategy-header.component";
 import {StrategyLegComponent} from "./strategy-leg.component";
-
 import {StrategyFooterComponent} from "./strategy-footer.component";
 import {ExpirationStrategiesComponent} from "./expiration-strategies.component";
+import {StrategyBox} from "./boxes/strategy.box";
 
 
-const CondorBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 24px;
-`
+
 
 const SpinnerContainerBox = styled.div`
     display: flex;
@@ -33,14 +28,14 @@ const SpinnerContainerBox = styled.div`
 const CondorComponent: React.FC<{condor: IIronCondorViewModel}> = observer((props) => {
     return (
         <IonCard>
-            <CondorBox>
+            <StrategyBox>
                 <StrategyHeaderComponent/>
                 <StrategyLegComponent option={props.condor.btoPut} isSellOption={false}/>
                 <StrategyLegComponent option={props.condor.stoPut} isSellOption={true}/>
                 <StrategyLegComponent option={props.condor.stoCall} isSellOption={true}/>
                 <StrategyLegComponent option={props.condor.btoCall} isSellOption={false}/>
                 <StrategyFooterComponent transaction={props.condor}/>
-            </CondorBox>
+            </StrategyBox>
         </IonCard>
     )
 })
