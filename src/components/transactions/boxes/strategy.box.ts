@@ -13,4 +13,10 @@ export const StrategyBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: b
         background-color: var(--ion-color-primary-tint);
         color: var(--ion-color-primary-contrast);
     `}
+
+    ${props => props.$isBestRiskReward && props.$isBestPop && css`
+        background: linear-gradient(to right, var(--ion-color-primary-tint), var(--ion-color-warning-tint));
+        color: var(--ion-color-primary-contrast);
+    `}
+    
 `
