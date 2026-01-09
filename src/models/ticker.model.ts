@@ -13,11 +13,17 @@ export class TickerModel implements ITickerViewModel {
     constructor(public readonly symbol: string,
                 public readonly services: IServiceFactory) {
 
-        makeObservable<this, '_isLoading'>(this, {
+        makeObservable<this, '_isLoading' | '_marketMetrics'>(this, {
             expirations: observable,
-            _isLoading: observable.ref
+            _isLoading: observable.ref,
+            _marketMetrics: observable.ref
         });
     }
+
+    public expirations: OptionsExpirationModel[] = [];
+    private _marketMetrics: ISymbolMetricsRawData | null = null;
+
+    private _isLoading: boolean = true;
 
 
 
@@ -48,10 +54,6 @@ export class TickerModel implements ITickerViewModel {
         return Math.round((earningsDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
     }
 
-    public expirations: OptionsExpirationModel[] = [];
-    private _marketMetrics: ISymbolMetricsRawData | null = null;
-
-    private _isLoading: boolean = true;
 
     get isLoading(): boolean {
         return this._isLoading;
@@ -76,7 +78,10 @@ export class TickerModel implements ITickerViewModel {
     private async _loadMarketData(): Promise<void> {
 
         if(!this._marketMetrics) {
-            this._marketMetrics = await this.services.marketDataProvider.getSymbolMetrics(this.symbol);
+            const mm = await this.services.marketDataProvider.getSymbolMetrics(this.symbol);
+            runInAction(() => {
+                this._marketMetrics = mm;
+            });
         }
 
         if(this.expirations.length > 0) {

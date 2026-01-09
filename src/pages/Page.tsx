@@ -5,8 +5,6 @@ import './Page.css';
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
 import styled from 'styled-components';
-import {ITickerViewModel} from "../models/ticker.view-model.interface";
-import {Check} from "../utils/type-checking";
 
 const PageTitleBox = styled.div`
     display: flex;
@@ -15,27 +13,7 @@ const PageTitleBox = styled.div`
     gap: 8px
 `
 
-const TickerEarningsDateComponent: React.FC<{ticker: ITickerViewModel | null}> = observer((props) => {
-    if(!props.ticker) {
-        return null;
-    }
-    if(Check.isNullOrUndefined(props.ticker.daysUntilEarnings)) {
-        return null;
-    }
 
-    if(props.ticker.daysUntilEarnings < 0) {
-        return null;
-    }
-
-    return (
-        <>
-            <span>|</span>
-            <span>Earnings date:</span>
-            <span>{props.ticker.earningsDate}</span>
-        </>
-    )
-
-})
 
 const Page: React.FC = observer(() => {
     const services = useServices();
@@ -57,7 +35,6 @@ const Page: React.FC = observer(() => {
                             <span>|</span>
                             <span>Beta:</span>
                             <span>{ticker?.beta?.toFixed(2)}</span>
-                            <TickerEarningsDateComponent ticker={ticker}/>
                         </PageTitleBox>
 
                     </IonTitle>
