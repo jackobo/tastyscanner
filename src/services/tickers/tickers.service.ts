@@ -80,6 +80,9 @@ export class TickersService extends ServiceBase implements ITickersService {
             }
 
             this.recentTickers.splice(0, 0, ticker);
+            if(this.recentTickers.length > 10) {
+                this.recentTickers.splice(10, this.recentTickers.length - 10);
+            }
             this._saveRecentTickers();
         });
 
