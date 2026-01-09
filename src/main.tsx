@@ -9,10 +9,19 @@ const serviceFactory = new ServiceFactory();
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
+/*
 root.render(
   <React.StrictMode>
       <ServiceFactoryContext.Provider value={serviceFactory}>
           <App />
       </ServiceFactoryContext.Provider>
   </React.StrictMode>
+);
+
+ */
+
+root.render(
+    <ServiceFactoryContext.Provider value={serviceFactory}>
+        <App />
+    </ServiceFactoryContext.Provider>
 );

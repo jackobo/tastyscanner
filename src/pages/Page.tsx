@@ -5,6 +5,7 @@ import './Page.css';
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
 import styled, {css} from 'styled-components';
+import {TradingViewWidgetComponent} from "../components/ticker-chart.component";
 
 const PageTitleBox = styled.div`
     display: flex;
@@ -55,7 +56,6 @@ const Page: React.FC = observer(() => {
                                 <span>IVR:</span>
                                 <span>{ticker?.ivRank}</span>
                             </IVRankBox>
-
                             <span>|</span>
                             <span>Beta:</span>
                             <span>{ticker?.beta?.toFixed(2)}</span>
@@ -66,11 +66,7 @@ const Page: React.FC = observer(() => {
             </IonHeader>
 
             <IonContent fullscreen>
-                <IonHeader collapse="condense">
-                    <IonToolbar>
-                        <IonTitle size="large">asdfasdfasfds</IonTitle>
-                    </IonToolbar>
-                </IonHeader>
+                <TradingViewWidgetComponent symbol={ticker?.symbol}/>
                 <ExploreContainer />
             </IonContent>
         </IonPage>
