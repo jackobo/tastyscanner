@@ -2,7 +2,7 @@ import {
     IGreeksRawData,
     IMarketDataProviderService,
     IOptionChainRawData,
-    IQuoteRawData, ISymbolMetricsRawData,
+    IQuoteRawData, ISymbolInfoRawData, ISymbolMetricsRawData,
     ITradeRawData, IWatchListRawData
 } from "./market-data-provider.service.interface";
 import {TastyMarketDataProvider} from "./tasty-market-data-provider";
@@ -44,5 +44,7 @@ export class MarketDataProviderService implements IMarketDataProviderService {
     getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null> {
         return this._currentProvider.getSymbolMetrics(symbol);
     }
-
+    async getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData> {
+        return this._currentProvider.getSymbolInfo(symbol);
+    }
 }

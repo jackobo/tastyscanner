@@ -10,7 +10,9 @@ export interface ITickerViewModel {
     readonly expirations: IOptionsExpirationVewModel[];
     readonly earningsDate: string;
     readonly daysUntilEarnings: NullableNumber;
+    readonly listedMarket: string;
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[];
     getExpirationsWithPutCreditSpreads(): IOptionsExpirationVewModel[];
     getExpirationsWithCallCreditSpreads(): IOptionsExpirationVewModel[];
+
 }

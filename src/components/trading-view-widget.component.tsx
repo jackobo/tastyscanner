@@ -1,16 +1,27 @@
 // TradingViewWidget.jsx
 import React, { useEffect, useRef } from 'react';
 import {observer} from "mobx-react";
-import {NullableUndefinedString} from "../utils/nullable-types";
 
-export const  TradingViewWidgetComponent: React.FC<{symbol: NullableUndefinedString}> = observer((props) => {
+function getMarketCode(listedMarket: string) {
+    switch (listedMarket) {
+        case 'XNAS':
+            return 'NASDAQ';
+        default:
+            return listedMarket;
+    }
+}
+
+export const  TradingViewWidgetComponent: React.FC<{symbol: string; listedMarket: string}> = observer((props) => {
     const container = useRef<HTMLDivElement | null>(null);
+
+    const market = getMarketCode(props.listedMarket);
 
     useEffect(
         () => {
 
-            console.log("Chart for " + props.symbol);
+
             if(!props.symbol) return;
+            if(!props.listedMarket) return;
 
             const existingScript = document.getElementById("tradingview_widget_script");
             if(existingScript) {
@@ -36,7 +47,7 @@ export const  TradingViewWidgetComponent: React.FC<{symbol: NullableUndefinedStr
           "locale": "en",
           "save_image": true,
           "style": "1",
-          "symbol": "NASDAQ:${props.symbol}",
+          "symbol": "${market}:${props.symbol}",
           "theme": "light",
           "timezone": "Etc/UTC",
           "backgroundColor": "#ffffff",
@@ -49,7 +60,7 @@ export const  TradingViewWidgetComponent: React.FC<{symbol: NullableUndefinedStr
         }`;
             container.current?.appendChild(script);
         },
-        [props.symbol]
+        [props.symbol, market]
     );
 
     return (

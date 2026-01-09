@@ -5,7 +5,7 @@ import {IServiceFactory} from "../services/service-factory.interface";
 import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interface";
 import {
     IGreeksRawData,
-    IQuoteRawData, ISymbolMetricsRawData, ITradeRawData
+    IQuoteRawData, ISymbolInfoRawData, ISymbolMetricsRawData, ITradeRawData
 } from "../services/market-data-provider/market-data-provider.service.interface";
 import {NullableNumber} from "../utils/nullable-types";
 
@@ -13,15 +13,17 @@ export class TickerModel implements ITickerViewModel {
     constructor(public readonly symbol: string,
                 public readonly services: IServiceFactory) {
 
-        makeObservable<this, '_isLoading' | '_marketMetrics'>(this, {
+        makeObservable<this, '_isLoading' | '_marketMetrics' | '_symbolInfo'>(this, {
             expirations: observable,
             _isLoading: observable.ref,
-            _marketMetrics: observable.ref
+            _marketMetrics: observable.ref,
+            _symbolInfo: observable.ref,
         });
     }
 
     public expirations: OptionsExpirationModel[] = [];
     private _marketMetrics: ISymbolMetricsRawData | null = null;
+    private _symbolInfo: ISymbolInfoRawData | null = null;
 
     private _isLoading: boolean = true;
 
@@ -42,6 +44,10 @@ export class TickerModel implements ITickerViewModel {
 
     public get earningsDate(): string {
         return this._marketMetrics?.earnings?.expectedReportDate ?? "";
+    }
+
+    public  get listedMarket(): string {
+        return this._symbolInfo?.listedMarket ?? "";
     }
 
     public get daysUntilEarnings(): NullableNumber {
@@ -81,6 +87,13 @@ export class TickerModel implements ITickerViewModel {
             const mm = await this.services.marketDataProvider.getSymbolMetrics(this.symbol);
             runInAction(() => {
                 this._marketMetrics = mm;
+            });
+        }
+
+        if(!this._symbolInfo) {
+            const si = await this.services.marketDataProvider.getSymbolInfo(this.symbol);
+            runInAction(() => {
+                this._symbolInfo = si;
             });
         }
 

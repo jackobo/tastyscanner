@@ -4,7 +4,7 @@ import {
     IOptionChainRawData,
     IMarketDataProviderService,
     IQuoteRawData,
-    ITradeRawData, IWatchListRawData, ISymbolMetricsRawData, ISymbolEarningsRawData
+    ITradeRawData, IWatchListRawData, ISymbolMetricsRawData, ISymbolEarningsRawData, ISymbolInfoRawData
 } from "./market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {Check} from "../../utils/type-checking";
@@ -71,10 +71,62 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
         }
     }
 
-
+    async getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData> {
+        const response = await this._tastyClient.instrumentsService.getSingleEquity(symbol);
+        return {
+            listedMarket: response['listed-market'],
+            description: response['description']
+        }
+        /*
+        {
+    "id": 7824,
+    "active": true,
+    "borrow-rate": "0.0",
+    "bypass-manual-review": false,
+    "country-of-incorporation": "US",
+    "country-of-taxation": "USA",
+    "cusip": "02079K305",
+    "description": "ALPHABET INC CLASS A COMMON STOCK",
+    "instrument-type": "Equity",
+    "is-closing-only": false,
+    "is-etf": false,
+    "is-fractional-quantity-eligible": true,
+    "is-fraud-risk": false,
+    "is-illiquid": false,
+    "is-index": false,
+    "is-options-closing-only": false,
+    "lendability": "Easy To Borrow",
+    "listed-market": "XNAS",
+    "market-time-instrument-collection": "Equity",
+    "overnight-trading-permitted": true,
+    "short-description": "ALPHABET INC",
+    "streamer-symbol": "GOOGL",
+    "symbol": "GOOGL",
+    "option-tick-sizes": [
+        {
+            "threshold": "3.0",
+            "value": "0.01"
+        },
+        {
+            "value": "0.05"
+        }
+    ],
+    "tick-sizes": [
+        {
+            "threshold": "1.0",
+            "value": "0.0001"
+        },
+        {
+            "value": "0.01"
+        }
+    ]
+}
+         */
+    }
 
     private _tastyClient: TastyTradeClient;
     async getOptionsChain(symbol: string): Promise<IOptionChainRawData[]> {
+
         const optionsChain = await this._tastyClient.instrumentsService.getNestedOptionChain(symbol);
         const result: IOptionChainRawData[] = [];
         for(const optionChain of optionsChain) {

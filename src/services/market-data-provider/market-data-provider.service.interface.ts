@@ -10,6 +10,7 @@ export interface IMarketDataProviderService {
     getUserWatchLists(): Promise<IWatchListRawData[]>;
     getPlatformWatchLists(): Promise<IWatchListRawData[]>;
     getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null>;
+    getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData>;
 
 }
 
@@ -60,7 +61,9 @@ export interface ISymbolMetricsRawData {
     impliedVolatilityIndexRank: number;
     beta: number;
     earnings?: ISymbolEarningsRawData;
+}
 
-
-
+export interface ISymbolInfoRawData {
+    description: string;
+    listedMarket: string;
 }

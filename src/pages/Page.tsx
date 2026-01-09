@@ -65,7 +65,7 @@ const TickerChartComponent: React.FC<{ticker: ITickerViewModel | null}> = observ
             <IonAccordion>
                 <TickerChartHeaderBox slot="header">Chart</TickerChartHeaderBox>
                 <TickerChartContainerBox slot="content">
-                    <TradingViewWidgetComponent symbol={props.ticker.symbol}/>
+                    <TradingViewWidgetComponent symbol={props.ticker.symbol} listedMarket={props.ticker.listedMarket}/>
                 </TickerChartContainerBox>
             </IonAccordion>
         </IonAccordionGroup>
