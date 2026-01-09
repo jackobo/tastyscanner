@@ -6,7 +6,7 @@ import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interf
 import {
     IGreeksRawData,
     IQuoteRawData, ISymbolMetricsRawData, ITradeRawData
-} from "../services/market-data-privider/market-data-provider.service.interface";
+} from "../services/market-data-provider/market-data-provider.service.interface";
 
 export class TickerModel implements ITickerViewModel {
     constructor(public readonly symbol: string,

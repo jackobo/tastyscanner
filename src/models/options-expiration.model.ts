@@ -6,7 +6,7 @@ import {IronCondorModel} from "./iron-condor.model";
 import {computed, makeObservable } from "mobx";
 import {StrategiesBuilder} from "./strategies-builder";
 import {IServiceFactory} from "../services/service-factory.interface";
-import {IOptionsExpirationRawData} from "../services/market-data-privider/market-data-provider.service.interface";
+import {IOptionsExpirationRawData} from "../services/market-data-provider/market-data-provider.service.interface";
 import {PutCreditSpreadModel} from "./put-credit-spread.model";
 import {IStrategyViewModel} from "./strategy.view-model.interface";
 

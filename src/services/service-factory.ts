@@ -4,8 +4,8 @@ import {Lazy} from "../utils/lazy";
 import {TickersService} from "./tickers/tickers.service";
 import {ISettingsService} from "./settings/settings.service.interface";
 import {SettingsService} from "./settings/settings.service";
-import {IMarketDataProviderService} from "./market-data-privider/market-data-provider.service.interface";
-import {MarketDataProviderService} from "./market-data-privider/market-data-provider.service";
+import {IMarketDataProviderService} from "./market-data-provider/market-data-provider.service.interface";
+import {MarketDataProviderService} from "./market-data-provider/market-data-provider.service";
 
 export class ServiceFactory implements IServiceFactory {
 
