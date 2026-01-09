@@ -3,6 +3,7 @@ import {NullableNumber} from "../utils/nullable-types";
 
 export interface ITickerViewModel {
     readonly symbol: string;
+    readonly description: string;
     readonly currentPrice: number;
     readonly ivRank: number;
     readonly beta: number;
@@ -11,6 +12,7 @@ export interface ITickerViewModel {
     readonly earningsDate: string;
     readonly daysUntilEarnings: NullableNumber;
     readonly listedMarket: string;
+
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[];
     getExpirationsWithPutCreditSpreads(): IOptionsExpirationVewModel[];
     getExpirationsWithCallCreditSpreads(): IOptionsExpirationVewModel[];

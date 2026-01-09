@@ -6,6 +6,12 @@ function getMarketCode(listedMarket: string) {
     switch (listedMarket) {
         case 'XNAS':
             return 'NASDAQ';
+        case 'XNYS':
+            return 'NYSE';
+        case 'OTC':
+            return 'TVC';
+        case 'ARCX':
+            return '';
         default:
             return listedMarket;
     }
@@ -16,12 +22,17 @@ export const  TradingViewWidgetComponent: React.FC<{symbol: string; listedMarket
 
     const market = getMarketCode(props.listedMarket);
 
+    let symbol = props.symbol;
+
+    if(market) {
+       symbol = `${market}:${symbol}`;
+    }
+
     useEffect(
         () => {
 
 
             if(!props.symbol) return;
-            if(!props.listedMarket) return;
 
             const existingScript = document.getElementById("tradingview_widget_script");
             if(existingScript) {
@@ -47,7 +58,7 @@ export const  TradingViewWidgetComponent: React.FC<{symbol: string; listedMarket
           "locale": "en",
           "save_image": true,
           "style": "1",
-          "symbol": "${market}:${props.symbol}",
+          "symbol": "${symbol}",
           "theme": "light",
           "timezone": "Etc/UTC",
           "backgroundColor": "#ffffff",
@@ -67,7 +78,7 @@ export const  TradingViewWidgetComponent: React.FC<{symbol: string; listedMarket
         <div className="tradingview-widget-container" ref={container} style={{ height: "100%", width: "100%" }}>
 
             <div className="tradingview-widget-copyright">
-                <a href={`https://www.tradingview.com/symbols/NASDAQ-${props.symbol}/`} rel="noopener nofollow" target="_blank">
+                <a href={`https://www.tradingview.com/symbols/${symbol.replace(':', '-')}/`} rel="noopener nofollow" target="_blank">
                     <span className="blue-text">{props.symbol} stock chart</span>
                 </a>
                 <span className="trademark"> by TradingView</span>

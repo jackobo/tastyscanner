@@ -28,6 +28,9 @@ export class TickerModel implements ITickerViewModel {
     private _isLoading: boolean = true;
 
 
+    public get description(): string {
+        return this._symbolInfo?.description ?? "";
+    }
 
     public get currentPrice(): number {
         return this.getSymbolTrade(this.symbol)?.price ?? 0;

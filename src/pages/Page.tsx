@@ -49,11 +49,16 @@ const IVRankBox = styled.div<{$ivr: number}>`
 
 const TickerChartHeaderBox = styled(IonItem)`
     cursor: pointer;
-    --background: var(--ion-color-medium);
-    --color: var(--ion-color-medium-contrast);
+    --background: var(--ion-color-light-shade);
+    --color: var(--ion-color-light-contrast);
 `
 const TickerChartContainerBox = styled.div`
     height: calc(100vh - 200px);
+`
+
+const TickerDescriptionBox = styled.span`
+    flex-grow: 1;
+    text-align: right;
 `
 
 const TickerChartComponent: React.FC<{ticker: ITickerViewModel | null}> = observer((props) => {
@@ -95,6 +100,9 @@ const Page: React.FC = observer(() => {
                             <span>|</span>
                             <span>Beta:</span>
                             <span>{ticker?.beta?.toFixed(2)}</span>
+                            <TickerDescriptionBox>
+                                {ticker?.description}
+                            </TickerDescriptionBox>
                         </PageTitleBox>
 
                     </IonTitle>
