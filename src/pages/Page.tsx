@@ -4,15 +4,36 @@ import ExploreContainer from '../components/ExploreContainer';
 import './Page.css';
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 const PageTitleBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 8px
+    gap: 8px;
 `
+const computeIvrColor = (ivr: number) => {
+    if(ivr <= 30) {
+        return css`
+            color: var(--ion-color-danger);
+        `
+    } else if (ivr > 40) {
+        return css`
+            color: var(--ion-color-success);
+        `
+    }
+    return css`
+            color: var(--ion-color-dark);
+        `;
+}
 
+const IVRankBox = styled.div<{$ivr: number}>`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    ${props => computeIvrColor(props.$ivr)}
+`
 
 
 const Page: React.FC = observer(() => {
@@ -30,8 +51,11 @@ const Page: React.FC = observer(() => {
                             <span>{ticker?.symbol}</span>
                             <span>{ticker?.currentPrice?.toFixed(2)}</span>
                             <span>|</span>
-                            <span>IVR:</span>
-                            <span>{ticker?.ivRank}</span>
+                            <IVRankBox $ivr={ticker?.ivRank ?? 0}>
+                                <span>IVR:</span>
+                                <span>{ticker?.ivRank}</span>
+                            </IVRankBox>
+
                             <span>|</span>
                             <span>Beta:</span>
                             <span>{ticker?.beta?.toFixed(2)}</span>
