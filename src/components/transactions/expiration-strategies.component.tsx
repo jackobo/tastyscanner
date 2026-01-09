@@ -1,12 +1,26 @@
 import React, {PropsWithChildren} from "react";
 import {observer} from "mobx-react";
-import {IOptionsExpirationVewModel} from "../../models/options-expiration.view-model.interface";
+import {
+    IOptionsExpirationVewModel,
+    OptionExpirationTypeEnum
+} from "../../models/options-expiration.view-model.interface";
 import {IonAccordion, IonChip, IonItem, IonLabel} from "@ionic/react";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 
-const ExpirationHeaderItemBox = styled(IonItem)`
+const ExpirationHeaderItemBox = styled(IonItem)<{ $expirationType: OptionExpirationTypeEnum}>`
     cursor: pointer;
-    
+    ${props => props.$expirationType === OptionExpirationTypeEnum.Regular
+            ? css`
+                --background: var(--ion-color-light-shade);
+                --color: var(--ion-color-light-contrast);
+                --background-activated: red;
+            `
+            : css`
+                --background: var(--ion-color-light);
+                --color: var(--ion-color-light-contrast);
+                --background-activated: red;
+            `
+    }
 `
 const ExpirationHeaderItemContentBox = styled.div`
     display: flex;
@@ -14,6 +28,7 @@ const ExpirationHeaderItemContentBox = styled.div`
     align-items: center;
     gap: 20px;
     padding: 8px 16px;
+     
 `
 
 const StrategiesCountBox = styled(IonChip)`
@@ -43,7 +58,7 @@ export const ExpirationStrategiesComponent: React.FC<ExpirationStrategiesCompone
     return (
         <IonAccordion value={props.expiration.expirationDate}>
 
-            <ExpirationHeaderItemBox slot="header" color="light">
+            <ExpirationHeaderItemBox slot="header" $expirationType={props.expiration.expirationType}>
                 <ExpirationHeaderItemContentBox>
                     <StrategiesCountBox>
                         {props.transactionsCount}
