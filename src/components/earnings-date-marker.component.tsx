@@ -1,6 +1,6 @@
 import React from "react";
 import {observer} from "mobx-react";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import {ITickerViewModel} from "../models/ticker.view-model.interface";
 import {EarningsDatePositionEnum} from "./transactions/helper-functions";
 
@@ -12,25 +12,42 @@ const ContainerBox = styled.div`
     padding: 8px 0;
 `
 
-const LineBox= styled.div`
+const LineBox= styled.div<{$isLowEarningDays: boolean}>`
     flex-grow: 1;
     height: 2px;
-    background-color: var(--ion-color-danger);
+    ${props => props.$isLowEarningDays 
+            ? css`
+                background-color: var(--ion-color-danger);
+            `  
+            : css`
+                background-color: var(--ion-color-medium);
+            `
+    };
+    
 `
 
-const EarningsDateBox = styled.div`
-    background-color: var(--ion-color-danger);
-    color: var(--ion-color-danger-contrast);
+const EarningsDateBox = styled.div<{$isLowEarningDays: boolean}>`
+    
     padding: 4px 8px;
     border-radius: 8px;
     font-size: 0.8rem;
+    ${props => props.$isLowEarningDays
+            ? css`
+                background-color: var(--ion-color-danger);
+                color: var(--ion-color-danger-contrast);
+            `
+            : css`
+                background-color: var(--ion-color-medium);
+                color: var(--ion-color-medium-contrast);
+            `
+    };
 `
 
 export const EarningsDateMarkerComponent: React.FC<{earningsDate: string; daysUntilEarnings: number}> = observer((props) => {
     return (
         <ContainerBox>
-            <LineBox/>
-            <EarningsDateBox>
+            <LineBox $isLowEarningDays={props.daysUntilEarnings <= 20}/>
+            <EarningsDateBox $isLowEarningDays={props.daysUntilEarnings <= 20}>
                 {`Earnings date: ${props.earningsDate} (${props.daysUntilEarnings} days)`}
             </EarningsDateBox>
         </ContainerBox>
@@ -43,7 +60,7 @@ export const EarningsDateMarkerBeforeExpirationComponent: React.FC<{ticker: ITic
     }
 
     return (
-        <EarningsDateMarkerComponent earningsDate={props.ticker.earningsDate} daysUntilEarnings={props.ticker.daysUntilEarnings}/>
+        <EarningsDateMarkerComponent earningsDate={props.ticker.earningsDate} daysUntilEarnings={props.ticker.daysUntilEarnings ?? 0}/>
     )
 
 })
@@ -54,7 +71,7 @@ export const EarningsDateMarkerAfterExpirationComponent: React.FC<{ticker: ITick
     }
 
     return (
-        <EarningsDateMarkerComponent earningsDate={props.ticker.earningsDate} daysUntilEarnings={props.ticker.daysUntilEarnings}/>
+        <EarningsDateMarkerComponent earningsDate={props.ticker.earningsDate} daysUntilEarnings={props.ticker.daysUntilEarnings ?? 0}/>
     )
 
 })
