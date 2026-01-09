@@ -13,12 +13,10 @@ const ExpirationHeaderItemBox = styled(IonItem)<{ $expirationType: OptionExpirat
             ? css`
                 --background: var(--ion-color-light-shade);
                 --color: var(--ion-color-light-contrast);
-                --background-activated: red;
             `
             : css`
                 --background: var(--ion-color-light);
                 --color: var(--ion-color-light-contrast);
-                --background-activated: red;
             `
     }
 `

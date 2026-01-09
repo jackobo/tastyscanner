@@ -2,8 +2,6 @@ import React from 'react';
 import './ExploreContainer.css';
 import styled from "styled-components";
 import {observer} from "mobx-react-lite";
-//import {OptionsChainComponent} from "./tickers.component";
-import {IronCondorsComponent} from "./transactions/iron-condors.component";
 import {TickerStrategiesComponent} from "./transactions/ticker-strategies.component";
 
 const ContainerBox = styled.div`
@@ -20,7 +18,6 @@ const ExploreContainer: React.FC = observer(() => {
 
     return (
         <ContainerBox>
-            {/*<OptionsChainComponent/>*/}
             <TickerStrategiesComponent/>
         </ContainerBox>
 

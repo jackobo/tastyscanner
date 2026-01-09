@@ -1,11 +1,22 @@
 import React from "react";
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import {
+    IonAccordion,
+    IonAccordionGroup,
+    IonButtons,
+    IonContent,
+    IonHeader, IonItem,
+    IonMenuButton,
+    IonPage,
+    IonTitle,
+    IonToolbar
+} from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
 import './Page.css';
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
 import styled, {css} from 'styled-components';
-import {TradingViewWidgetComponent} from "../components/ticker-chart.component";
+import {TradingViewWidgetComponent} from "../components/trading-view-widget.component";
+import {ITickerViewModel} from "../models/ticker.view-model.interface";
 
 const PageTitleBox = styled.div`
     display: flex;
@@ -36,6 +47,31 @@ const IVRankBox = styled.div<{$ivr: number}>`
     ${props => computeIvrColor(props.$ivr)}
 `
 
+const TickerChartHeaderBox = styled(IonItem)`
+    cursor: pointer;
+    --background: var(--ion-color-medium);
+    --color: var(--ion-color-medium-contrast);
+`
+const TickerChartContainerBox = styled.div`
+    height: calc(100vh - 120px);
+`
+
+const TickerChartComponent: React.FC<{ticker: ITickerViewModel | null}> = observer((props) => {
+    if(!props.ticker) {
+        return null;
+    }
+    return (
+        <IonAccordionGroup>
+            <IonAccordion>
+                <TickerChartHeaderBox slot="header">Chart</TickerChartHeaderBox>
+                <TickerChartContainerBox slot="content">
+                    <TradingViewWidgetComponent symbol={props.ticker.symbol}/>
+                </TickerChartContainerBox>
+            </IonAccordion>
+        </IonAccordionGroup>
+    )
+
+})
 
 const Page: React.FC = observer(() => {
     const services = useServices();
@@ -66,7 +102,7 @@ const Page: React.FC = observer(() => {
             </IonHeader>
 
             <IonContent fullscreen>
-                <TradingViewWidgetComponent symbol={ticker?.symbol}/>
+                <TickerChartComponent ticker={ticker}/>
                 <ExploreContainer />
             </IonContent>
         </IonPage>
