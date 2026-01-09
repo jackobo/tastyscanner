@@ -2,7 +2,7 @@ import React from 'react';
 import {IOptionsExpirationVewModel} from "../../models/options-expiration.view-model.interface";
 import {observer} from "mobx-react-lite";
 import {IIronCondorViewModel} from "../../models/iron-condor.view-model.interface";
-import {IonAccordionGroup, IonCard, IonHeader, IonPage, IonTab, IonToolbar} from '@ionic/react';
+import {IonAccordionGroup, IonCard} from '@ionic/react';
 import {StrategyHeaderComponent} from "./strategy-header.component";
 import {StrategyLegComponent} from "./strategy-leg.component";
 import {StrategyFooterComponent} from "./strategy-footer.component";
@@ -10,6 +10,11 @@ import {ExpirationStrategiesComponent} from "./expiration-strategies.component";
 import {StrategyBox} from "./boxes/strategy.box";
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 import {NoStrategyAvailableBox} from "./boxes/no-strategy-available.box";
+import {EarningsDatePositionEnum, getEarningsDateRenderPosition} from "./helper-functions";
+import {
+    EarningsDateMarkerAfterExpirationComponent,
+    EarningsDateMarkerBeforeExpirationComponent,
+} from "../earnings-date-marker.component";
 
 
 
@@ -28,14 +33,19 @@ const CondorComponent: React.FC<{condor: IIronCondorViewModel}> = observer((prop
     )
 })
 
-const ExpirationIronCondorsComponent: React.FC<{expiration: IOptionsExpirationVewModel}> = observer((props) => {
+const ExpirationIronCondorsComponent: React.FC<{expiration: IOptionsExpirationVewModel; ticker: ITickerViewModel; earningsDatePosition: EarningsDatePositionEnum}> = observer((props) => {
 
     const condors = props.expiration.ironCondors;
 
     return (
-        <ExpirationStrategiesComponent expiration={props.expiration} transactionsCount={condors.length}>
-            {condors.map(condor => <CondorComponent key={condor.key} condor={condor}/>)}
-        </ExpirationStrategiesComponent>
+        <React.Fragment>
+            <EarningsDateMarkerBeforeExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
+            <ExpirationStrategiesComponent expiration={props.expiration} transactionsCount={condors.length}>
+                {condors.map(condor => <CondorComponent key={condor.key} condor={condor}/>)}
+            </ExpirationStrategiesComponent>
+            <EarningsDateMarkerAfterExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
+        </React.Fragment>
+
     );
 });
 
@@ -53,7 +63,10 @@ export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel}> = observ
 
     return  (
         <IonAccordionGroup>
-            {expirations.map(expiration => <ExpirationIronCondorsComponent key={expiration.key} expiration={expiration}/>)}
+            {expirations.map((expiration, index) => <ExpirationIronCondorsComponent key={expiration.key}
+                                                                                    ticker={props.ticker}
+                                                                                    expiration={expiration}
+                                                                                    earningsDatePosition={getEarningsDateRenderPosition(props.ticker, expirations, index)}/>)}
         </IonAccordionGroup>
     )
 })

@@ -10,30 +10,39 @@ import {StrategyLegComponent} from "./strategy-leg.component";
 import {StrategyFooterComponent} from "./strategy-footer.component";
 import {ICreditSpreadViewModel} from "../../models/credit-spread.view-model.interface";
 import {NoStrategyAvailableBox} from "./boxes/no-strategy-available.box";
+import {
+    EarningsDateMarkerAfterExpirationComponent,
+    EarningsDateMarkerBeforeExpirationComponent
+} from "../earnings-date-marker.component";
+import {EarningsDatePositionEnum, getEarningsDateRenderPosition} from "./helper-functions";
 
 
-const CallCreditSpreadComponent: React.FC<{putCreditSpread: ICreditSpreadViewModel}> = observer((props) => {
+const CallCreditSpreadComponent: React.FC<{callCreditSpread: ICreditSpreadViewModel}> = observer((props) => {
 
     return (
         <IonCard>
             <StrategyBox>
                 <StrategyHeaderComponent/>
-                <StrategyLegComponent option={props.putCreditSpread.stoOption} isSellOption={true}/>
-                <StrategyLegComponent option={props.putCreditSpread.btoOption} isSellOption={false}/>
-                <StrategyFooterComponent transaction={props.putCreditSpread}/>
+                <StrategyLegComponent option={props.callCreditSpread.stoOption} isSellOption={true}/>
+                <StrategyLegComponent option={props.callCreditSpread.btoOption} isSellOption={false}/>
+                <StrategyFooterComponent transaction={props.callCreditSpread}/>
             </StrategyBox>
         </IonCard>
     )
 })
 
-const ExpirationPutCreditSpreadsComponent: React.FC<{expiration: IOptionsExpirationVewModel}> = observer((props) => {
+const ExpirationCallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel; expiration: IOptionsExpirationVewModel; earningsDatePosition: EarningsDatePositionEnum}> = observer((props) => {
 
-    const putCreditSpreads = props.expiration.callCreditSpreads;
+    const callCreditSpreads = props.expiration.callCreditSpreads;
 
     return (
-        <ExpirationStrategiesComponent expiration={props.expiration} transactionsCount={putCreditSpreads.length}>
-            {putCreditSpreads.map(putCreditSpread => <CallCreditSpreadComponent key={putCreditSpread.key} putCreditSpread={putCreditSpread}/>)}
-        </ExpirationStrategiesComponent>
+        <React.Fragment>
+            <EarningsDateMarkerBeforeExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
+            <ExpirationStrategiesComponent expiration={props.expiration} transactionsCount={callCreditSpreads.length}>
+                {callCreditSpreads.map(callCreditSpread => <CallCreditSpreadComponent key={callCreditSpread.key} callCreditSpread={callCreditSpread}/>)}
+            </ExpirationStrategiesComponent>
+            <EarningsDateMarkerAfterExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
+        </React.Fragment>
     );
 });
 
@@ -50,7 +59,9 @@ export const CallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel}> = 
 
     return  (
         <IonAccordionGroup>
-            {expirations.map(expiration => <ExpirationPutCreditSpreadsComponent key={expiration.key} expiration={expiration}/>)}
+            {expirations.map((expiration, index) => <ExpirationCallCreditSpreadsComponent key={expiration.key}
+                                                                                         expiration={expiration} ticker={props.ticker}
+                                                                                         earningsDatePosition={getEarningsDateRenderPosition(props.ticker, expirations, index)}/>)}
         </IonAccordionGroup>
     )
 })
