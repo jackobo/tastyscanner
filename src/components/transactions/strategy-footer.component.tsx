@@ -9,7 +9,6 @@ const StrategyFooterBox = styled.div`
     row-gap: 8px;
     column-gap: 16px;
     font-weight: bold;
-    color: var(--ion-color-primary);
 `
 
 

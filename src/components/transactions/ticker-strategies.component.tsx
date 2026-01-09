@@ -30,6 +30,70 @@ const PUT_CREDIT_SPREAD_TAB = 'putCreditSpreads';
 const CALL_CREDIT_SPREAD_TAB = 'callCreditSpreads';
 const STRATEGIES_TABS_CSS_CLASS = "strategies-tabs";
 
+const TabHeaderTitleBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;;
+`
+
+const LegendContainerBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    flex-grow: 1;
+    gap: 8px;
+    width: 100%;
+    font-size: 0.8rem;
+`
+
+const LegendBox = styled.div`
+    padding: 8px;
+    border-radius: 8px;
+    min-width: 100px;
+    text-align: center;
+`
+
+const BestRiskRewardLegendBox = styled(LegendBox)`
+    background-color: var(--ion-color-primary-tint);
+    color: var(--ion-color-primary-contrast);
+`
+
+const BestPopLegendBox = styled(LegendBox)`
+    background-color: var(--ion-color-warning-tint);
+    color: var(--ion-color-warning-contrast);
+`
+
+
+
+const TabHeaderComponent: React.FC<{title: string}> = observer((props) => {
+    return (
+        <IonHeader>
+            <IonToolbar>
+                <IonTitle>
+                    <TabHeaderTitleBox>
+                        <span>
+                            {props.title}
+                        </span>
+                        <LegendContainerBox>
+                            <BestRiskRewardLegendBox>
+                                Best risk/reward
+                            </BestRiskRewardLegendBox>
+                            <BestPopLegendBox>
+                                Best POP
+                            </BestPopLegendBox>
+                        </LegendContainerBox>
+
+                    </TabHeaderTitleBox>
+
+                </IonTitle>
+            </IonToolbar>
+        </IonHeader>
+    )
+})
+
+
 export const TickerStrategiesComponent: React.FC = observer(() => {
     const services = useServices();
 
@@ -78,11 +142,7 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
 
             <IonTab tab={CONDORS_TAB}>
                 <IonPage id={CONDORS_TAB}>
-                    <IonHeader>
-                        <IonToolbar>
-                            <IonTitle>{"Iron Condors"}</IonTitle>
-                        </IonToolbar>
-                    </IonHeader>
+                    <TabHeaderComponent title={"Iron Condors"}/>
                     <IonContent>
                         <IronCondorsComponent ticker={ticker} />
                     </IonContent>
@@ -92,11 +152,7 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
 
             <IonTab tab={PUT_CREDIT_SPREAD_TAB}>
                 <IonPage id={PUT_CREDIT_SPREAD_TAB}>
-                    <IonHeader>
-                        <IonToolbar>
-                            <IonTitle>{"PUT Credit Spreads"}</IonTitle>
-                        </IonToolbar>
-                    </IonHeader>
+                    <TabHeaderComponent title={"PUT Credit Spreads"}/>
                     <IonContent>
                         <PutCreditSpreadsComponent ticker={ticker}/>
                     </IonContent>
@@ -106,11 +162,7 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
 
             <IonTab tab={CALL_CREDIT_SPREAD_TAB}>
                 <IonPage id={CALL_CREDIT_SPREAD_TAB}>
-                    <IonHeader>
-                        <IonToolbar>
-                            <IonTitle>{"CALL Credit Spreads"}</IonTitle>
-                        </IonToolbar>
-                    </IonHeader>
+                    <TabHeaderComponent title={"CALL Credit Spreads"}/>
                     <IonContent>
                         <CallCreditSpreadsComponent ticker={ticker}/>
                     </IonContent>

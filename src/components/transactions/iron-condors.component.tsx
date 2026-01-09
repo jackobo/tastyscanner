@@ -18,10 +18,11 @@ import {
 
 
 
-const CondorComponent: React.FC<{condor: IIronCondorViewModel}> = observer((props) => {
+const CondorComponent: React.FC<{condor: IIronCondorViewModel; bestPop: number; bestRiskReward: number}> = observer((props) => {
     return (
         <IonCard>
-            <StrategyBox>
+            <StrategyBox $isBestRiskReward={props.condor.riskRewardRatio === props.bestRiskReward}
+                         $isBestPop={props.condor.pop === props.bestPop}>
                 <StrategyHeaderComponent/>
                 <StrategyLegComponent option={props.condor.btoPut} isSellOption={false}/>
                 <StrategyLegComponent option={props.condor.stoPut} isSellOption={true}/>
@@ -36,12 +37,14 @@ const CondorComponent: React.FC<{condor: IIronCondorViewModel}> = observer((prop
 const ExpirationIronCondorsComponent: React.FC<{expiration: IOptionsExpirationVewModel; ticker: ITickerViewModel; earningsDatePosition: EarningsDatePositionEnum}> = observer((props) => {
 
     const condors = props.expiration.ironCondors;
+    const bestPop = Math.max(...condors.map(condor => condor.pop));
+    const bestRiskReward = Math.min(...condors.map(condor => condor.riskRewardRatio));
 
     return (
         <React.Fragment>
             <EarningsDateMarkerBeforeExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
             <ExpirationStrategiesComponent expiration={props.expiration} transactionsCount={condors.length}>
-                {condors.map(condor => <CondorComponent key={condor.key} condor={condor}/>)}
+                {condors.map(condor => <CondorComponent key={condor.key} condor={condor} bestPop={bestPop} bestRiskReward={bestRiskReward}/>)}
             </ExpirationStrategiesComponent>
             <EarningsDateMarkerAfterExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
         </React.Fragment>
