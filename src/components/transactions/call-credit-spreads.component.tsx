@@ -17,11 +17,12 @@ import {
 import {EarningsDatePositionEnum, getEarningsDateRenderPosition} from "./helper-functions";
 
 
-const CallCreditSpreadComponent: React.FC<{callCreditSpread: ICreditSpreadViewModel}> = observer((props) => {
+const CallCreditSpreadComponent: React.FC<{callCreditSpread: ICreditSpreadViewModel; bestPop: number; bestRiskReward: number}> = observer((props) => {
 
     return (
         <IonCard>
-            <StrategyBox>
+            <StrategyBox $isBestRiskReward={props.callCreditSpread.riskRewardRatio === props.bestRiskReward}
+                         $isBestPop={props.callCreditSpread.pop === props.bestPop}>
                 <StrategyHeaderComponent/>
                 <StrategyLegComponent option={props.callCreditSpread.stoOption} isSellOption={true}/>
                 <StrategyLegComponent option={props.callCreditSpread.btoOption} isSellOption={false}/>
@@ -34,12 +35,13 @@ const CallCreditSpreadComponent: React.FC<{callCreditSpread: ICreditSpreadViewMo
 const ExpirationCallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel; expiration: IOptionsExpirationVewModel; earningsDatePosition: EarningsDatePositionEnum}> = observer((props) => {
 
     const callCreditSpreads = props.expiration.callCreditSpreads;
-
+    const bestPop = Math.max(...callCreditSpreads.map(condor => condor.pop));
+    const bestRiskReward = Math.min(...callCreditSpreads.map(condor => condor.riskRewardRatio));
     return (
         <React.Fragment>
             <EarningsDateMarkerBeforeExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
             <ExpirationStrategiesComponent expiration={props.expiration} transactionsCount={callCreditSpreads.length}>
-                {callCreditSpreads.map(callCreditSpread => <CallCreditSpreadComponent key={callCreditSpread.key} callCreditSpread={callCreditSpread}/>)}
+                {callCreditSpreads.map(callCreditSpread => <CallCreditSpreadComponent key={callCreditSpread.key} callCreditSpread={callCreditSpread} bestPop={bestPop} bestRiskReward={bestRiskReward}/>)}
             </ExpirationStrategiesComponent>
             <EarningsDateMarkerAfterExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
         </React.Fragment>
