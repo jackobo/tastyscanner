@@ -39,7 +39,11 @@ const FiltersAccordionHeaderBox = styled(IonItem)`
   cursor: pointer;
 `
 
-
+const IonListBox = styled(IonList)`
+  &&& {
+    padding-top: 0;
+  }
+`
 
 const Menu: React.FC = observer(() => {
   const services = useServices();
@@ -51,7 +55,7 @@ const Menu: React.FC = observer(() => {
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
-        <IonList id="inbox-list">
+        <IonListBox id="inbox-list">
           <IonListHeader>
             <MenuTitleBox>
               Tasty Scanner
@@ -69,7 +73,7 @@ const Menu: React.FC = observer(() => {
             </IonAccordion>
           </IonAccordionGroup>
 
-        </IonList>
+        </IonListBox>
 
         <IonAccordionGroup value="recentTickers">
           <IonAccordion value="recentTickers">
