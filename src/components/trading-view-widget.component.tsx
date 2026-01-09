@@ -66,7 +66,10 @@ export const  TradingViewWidgetComponent: React.FC<{symbol: string; listedMarket
           "watchlist": [],
           "withdateranges": false,
           "compareSymbols": [],
-          "studies": [],
+          "studies": [
+            "STD;Bollinger_Bands",
+            "STD;Stochastic_RSI"
+          ],
           "autosize": true
         }`;
             container.current?.appendChild(script);

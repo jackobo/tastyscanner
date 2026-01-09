@@ -51,7 +51,7 @@ const WingsEditorBox = styled.div`
     gap: 8px;
 `
 
-const PriceToUseRadioGroupBox = styled(IonRadioGroup)`
+const RadioGroupBox = styled(IonRadioGroup)`
     
     & .radio-group-wrapper {
         display: flex;
@@ -60,6 +60,15 @@ const PriceToUseRadioGroupBox = styled(IonRadioGroup)`
         justify-content: space-between;
     }
     
+`
+
+const ByEarningDateRadioGroupBox = styled(RadioGroupBox)`
+    & .radio-group-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: unset;
+        gap: 8px;
+    }
 `
 
 const SeparatorBox = styled.hr`
@@ -220,7 +229,7 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
                 Price to use
             </FilterLabelBox>
 
-            <PriceToUseRadioGroupBox value={services.settings.strategyFilters.priceToUse}
+            <RadioGroupBox value={services.settings.strategyFilters.priceToUse}
                                      onIonChange={e => services.settings.strategyFilters.priceToUse = e.detail.value}>
                 <IonRadio value={"last"}>
                     Last price
@@ -229,8 +238,29 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
                 <IonRadio value={"mid"}>
                     Mid price
                 </IonRadio>
-            </PriceToUseRadioGroupBox>
+            </RadioGroupBox>
 
+            <SeparatorBox/>
+
+            <FilterLabelBox>
+                Filter expirations by earnings date
+            </FilterLabelBox>
+
+            <ByEarningDateRadioGroupBox value={services.settings.strategyFilters.byEarningsDate}
+                           onIonChange={e => services.settings.strategyFilters.byEarningsDate = e.detail.value}>
+                <IonRadio value={"all"} labelPlacement="end">
+                    No filter
+                </IonRadio>
+
+                <IonRadio value={"before"} labelPlacement="end">
+                    Before earnings
+                </IonRadio>
+
+                <IonRadio value={"after"} labelPlacement="end">
+                    After earnings
+                </IonRadio>
+
+            </ByEarningDateRadioGroupBox>
 
         </FiltersContainerBox>
     )

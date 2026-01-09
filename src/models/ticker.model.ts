@@ -144,10 +144,32 @@ export class TickerModel implements ITickerViewModel {
         this.services.marketDataProvider.unsubscribe(this._getAllSymbols());
     }
 
+    private _shouldIncludeExpiration(expiration: OptionsExpirationModel): boolean {
+        const filters = this.services.settings.strategyFilters;
+        if(expiration.daysToExpiration < filters.minDaysToExpiration
+            || expiration.daysToExpiration > filters.maxDaysToExpiration) {
+            return false;
+        }
+
+        const daysUntilEarnings = this.daysUntilEarnings ?? 0;
+
+        if(daysUntilEarnings <= 0) {
+            return true;
+        }
+
+        switch (filters.byEarningsDate) {
+            case 'before':
+                return expiration.daysToExpiration < daysUntilEarnings;
+            case 'after':
+                return expiration.daysToExpiration > daysUntilEarnings;
+            default:
+                return true;
+        }
+
+    }
+
     private _filterExpirations(): IOptionsExpirationVewModel[] {
-        return this.expirations.filter(expiration =>
-            expiration.daysToExpiration >= this.services.settings.strategyFilters.minDaysToExpiration
-            && expiration.daysToExpiration <= this.services.settings.strategyFilters.maxDaysToExpiration)
+        return this.expirations.filter(expiration => this._shouldIncludeExpiration(expiration))
             .sort((a, b) => a.daysToExpiration - b.daysToExpiration);
     }
 

@@ -5,6 +5,8 @@ export interface ISettingsService {
 
 export type PriceType = 'mid' | 'last';
 
+export type ByEarningsDate = 'before' | 'after' | 'all';
+
 export interface IStrategyFiltersViewModel {
     minDelta: number;
     maxDelta: number;
@@ -15,5 +17,6 @@ export interface IStrategyFiltersViewModel {
     wings: number[];
     priceToUse: PriceType;
     readonly availableWings: number[];
+    byEarningsDate: ByEarningsDate;
 }
 
