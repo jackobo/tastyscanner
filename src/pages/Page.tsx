@@ -53,7 +53,7 @@ const TickerChartHeaderBox = styled(IonItem)`
     --color: var(--ion-color-medium-contrast);
 `
 const TickerChartContainerBox = styled.div`
-    height: calc(100vh - 120px);
+    height: calc(100vh - 200px);
 `
 
 const TickerChartComponent: React.FC<{ticker: ITickerViewModel | null}> = observer((props) => {
