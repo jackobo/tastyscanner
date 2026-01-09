@@ -7,6 +7,8 @@ export interface ITickerViewModel {
     readonly beta: number;
     readonly isLoading: boolean;
     readonly expirations: IOptionsExpirationVewModel[];
+    readonly earningsDate: string;
+    readonly daysUntilEarnings: number;
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[];
     getExpirationsWithPutCreditSpreads(): IOptionsExpirationVewModel[];
     getExpirationsWithCallCreditSpreads(): IOptionsExpirationVewModel[];

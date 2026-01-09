@@ -4,7 +4,7 @@ import {
     IOptionChainRawData,
     IMarketDataProviderService,
     IQuoteRawData,
-    ITradeRawData, IWatchListRawData, ISymbolMetricsRawData
+    ITradeRawData, IWatchListRawData, ISymbolMetricsRawData, ISymbolEarningsRawData
 } from "./market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {Check} from "../../utils/type-checking";
@@ -179,12 +179,23 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
         const data = result[0] as any;
 
+        const earningsRawData = data["earnings"];
+
+        let earnings: ISymbolEarningsRawData | undefined;
+
+        if(earningsRawData) {
+            earnings = {
+                expectedReportDate: earningsRawData["expected-report-date"],
+                actualEarningsPerShare: earningsRawData["actual-eps"],
+            }
+        }
         return {
             beta: data["beta"],
             impliedVolatilityPercentile: data["implied-volatility-percentile"],
             liquidityRank: data["liquidity-rank"],
             impliedVolatilityIndex: data["implied-volatility-index"],
             impliedVolatilityIndexRank: data["implied-volatility-index-rank"],
+            earnings: earnings
         }
 
 

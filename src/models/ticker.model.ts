@@ -7,6 +7,7 @@ import {
     IGreeksRawData,
     IQuoteRawData, ISymbolMetricsRawData, ITradeRawData
 } from "../services/market-data-provider/market-data-provider.service.interface";
+import {NullableNumber} from "../utils/nullable-types";
 
 export class TickerModel implements ITickerViewModel {
     constructor(public readonly symbol: string,
@@ -28,8 +29,23 @@ export class TickerModel implements ITickerViewModel {
         return Math.round((this._marketMetrics?.impliedVolatilityIndexRank ?? 0) * 10000) / 100;
     }
 
+
     public  get beta(): number {
         return Math.round((this._marketMetrics?.beta ?? 0) * 100) / 100;
+    }
+
+    public get earningsDate(): string {
+        return this._marketMetrics?.earnings?.expectedReportDate ?? "";
+    }
+
+    public get daysUntilEarnings(): NullableNumber {
+        const earningsDateStr = this.earningsDate;
+        if(!earningsDateStr) {
+            return null;
+        }
+
+        const earningsDate = new Date(earningsDateStr);
+        return Math.round((earningsDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
     }
 
     public expirations: OptionsExpirationModel[] = [];

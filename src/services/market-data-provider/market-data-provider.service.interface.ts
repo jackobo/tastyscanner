@@ -48,12 +48,19 @@ export interface IWatchListRawData {
     entries: string[];
 }
 
+export interface ISymbolEarningsRawData {
+    expectedReportDate: string;
+    actualEarningsPerShare: string;
+}
+
 export interface ISymbolMetricsRawData {
     impliedVolatilityPercentile: number;
     liquidityRank: number;
     impliedVolatilityIndex: number;
     impliedVolatilityIndexRank: number;
     beta: number;
+    earnings?: ISymbolEarningsRawData;
+
 
 
 }
