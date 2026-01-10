@@ -52,6 +52,7 @@ const FieldsGridBox = styled.div`
     display: grid;
     grid-template-columns: 1.5fr repeat(5, 1fr);
     row-gap: 4px;
+    padding: 0 16px;
 `
 
 
@@ -86,10 +87,10 @@ const MidPriceValueBox = styled(ReadonlyFieldValueBox)`
     padding: 8px;
     border: 1px solid var(--ion-color-light-shade);
     border-radius: 8px;
-    width: calc(100% - 30px);
 `
 
 const ValueEditorContainerBox = styled.div`
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -137,6 +138,9 @@ const ChevronRightBox = styled(ChevronBox)`
 `
 
 const LockerBox = styled.div`
+    position: absolute;
+    right: 0;
+    transform: translateX(calc(100% + 4px));
     cursor: pointer;
     font-size: 1.3rem;
 `
