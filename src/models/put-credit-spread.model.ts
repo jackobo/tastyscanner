@@ -10,5 +10,8 @@ export class PutCreditSpreadModel extends CreditSpreadModel {
         super(wingsWidth, stoPut, btoPut, services);
     }
 
+    get strategyName(): string {
+        return "CALL credit spread";
+    }
 
 }

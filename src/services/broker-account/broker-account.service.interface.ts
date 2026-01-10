@@ -3,11 +3,14 @@ export interface IBrokerAccountViewModel {
     sendOrder(order: IBrokerOrder): Promise<void>;
 }
 
+export type OrderType = "Limit" | "Market" | "Marketable Limit" | "Notional Market" | "Stop or Stop Limit"
+export type PriceEffect = "Credit" | "Debit";
+export type TimeInForce = "Day" | "Ext" | "Ext Overnight"  | "GTC" | "GTC Ext" | "GTC Ext Overnight" | "GTD" | "IOC";
 export interface IBrokerOrder {
     price: number;
-    priceEffect: "Credit" | "Debit";
-    orderType: "Limit" | "Market" | "Marketable Limit" | "Notional Market" | "Stop or Stop Limit";
-    timeInForce: "Day" | "Ext" | "Ext Overnight"  | "GTC" | "GTC Ext" | "GTC Ext Overnight" | "GTD" | "IOC";
+    priceEffect: PriceEffect;
+    orderType: OrderType;
+    timeInForce: TimeInForce;
     legs: IBrokerOrderLeg[];
 
 }

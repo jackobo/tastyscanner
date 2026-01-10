@@ -1,4 +1,7 @@
+import {OrderType, TimeInForce} from "../services/broker-account/broker-account.service.interface";
+
 export interface IStrategyViewModel {
+    readonly strategyName: string;
     readonly key: string;
     readonly wingsWidth: number;
     readonly credit: number;
@@ -10,4 +13,6 @@ export interface IStrategyViewModel {
 export interface IStrategySendOrderParams {
     quantity: number;
     price?: number;
+    timeInForce: TimeInForce;
+    orderType: OrderType;
 }

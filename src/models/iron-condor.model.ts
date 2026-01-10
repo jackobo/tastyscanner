@@ -12,6 +12,10 @@ export class IronCondorModel implements IIronCondorViewModel {
                 private readonly services: IServiceFactory) {
     }
 
+    get strategyName(): string {
+        return "Iron Condor";
+    }
+
     get key(): string {
         return `${this.wingsWidth}${this.btoPut.strikePrice}${this.stoPut.strikePrice}${this.stoCall.strikePrice}${this.btoCall.strikePrice}`;
     }
@@ -41,8 +45,8 @@ export class IronCondorModel implements IIronCondorViewModel {
         await account.sendOrder({
             price: orderParams.price ?? this.credit,
             priceEffect: "Credit",
-            timeInForce: "GTC",
-            orderType: "Limit",
+            timeInForce: orderParams.timeInForce,
+            orderType: orderParams.orderType,
             legs: [
                 {
                     instrumentType: "Equity Option",

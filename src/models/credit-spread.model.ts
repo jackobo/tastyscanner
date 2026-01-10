@@ -10,6 +10,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
                 protected readonly services: IServiceFactory) {
     }
 
+    abstract get strategyName(): string;
 
     get key(): string {
         return `${this.wingsWidth}${this.stoOption.strikePrice}${this.btoOption.strikePrice}`;
@@ -40,8 +41,8 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
         await account.sendOrder({
             price: orderParams.price ?? this.credit,
             priceEffect: "Credit",
-            timeInForce: "GTC",
-            orderType: "Limit",
+            timeInForce: orderParams.timeInForce,
+            orderType: orderParams.orderType,
             legs: [
                 {
                     instrumentType: "Equity Option",
