@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import styled, {css} from "styled-components";
 import {ITickerViewModel} from "../models/ticker.view-model.interface";
-import {EarningsDatePositionEnum} from "./transactions/helper-functions";
+import {EarningsDatePositionEnum} from "./strategies/helper-functions";
 
 const ContainerBox = styled.div`
     display: flex;
