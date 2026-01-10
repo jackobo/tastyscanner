@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {IStrategyViewModel} from "../../models/strategy.view-model.interface";
-import {IonButton, IonModal} from "@ionic/react";
+import {IonButton} from "@ionic/react";
 import {SendOrderDialogComponent} from "./send-order-dialog.component";
 
 const StrategyFooterBox = styled.div`
