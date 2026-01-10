@@ -1,10 +1,10 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {ITickerViewModel} from "../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../../models/ticker.view-model.interface";
 import {IonAccordionGroup} from "@ionic/react";
-import {NoOptionsStrategyAvailableBox} from "./boxes/no-options-strategy-available.box";
-import {getEarningsDateRenderPosition} from "./helper-functions";
-import {OptionsExpirationStrategiesComponent} from "./options-expiration-strategies.component";
+import {NoOptionsStrategyAvailableBox} from "../boxes/no-options-strategy-available.box";
+import {getEarningsDateRenderPosition} from "../helper-functions";
+import {OptionsExpirationStrategiesComponent} from "../options-expiration-strategies.component";
 
 
 

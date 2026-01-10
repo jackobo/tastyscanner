@@ -15,9 +15,9 @@ import {
     IonToolbar
 } from "@ionic/react";
 import styled from "styled-components";
-import {IronCondorsComponent} from "./iron-condors.component";
-import {PutCreditSpreadsComponent} from "./put-credit-spreads.component";
-import {CallCreditSpreadsComponent} from "./call-credit-spreads.component";
+import {IronCondorsComponent} from "./condors/iron-condors.component";
+import {PutCreditSpreadsComponent} from "./credit-spreads/put-credit-spreads.component";
+import {CallCreditSpreadsComponent} from "./credit-spreads/call-credit-spreads.component";
 import {RawLocalStorageKeys} from "../../services/storage/raw-local-storage/raw-local-storage-keys";
 
 const SpinnerContainerBox = styled.div`
@@ -97,7 +97,7 @@ const TabHeaderComponent: React.FC<{title: string}> = observer((props) => {
 })
 
 
-export const TickerStrategiesComponent: React.FC = observer(() => {
+export const TickerOptionsStrategiesComponent: React.FC = observer(() => {
     const services = useServices();
 
 

@@ -1,6 +1,9 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {IOptionsExpirationVewModel} from "../../models/options-expiration.view-model.interface";
+import {
+    IOptionsExpirationVewModel,
+    OptionExpirationTypeEnum
+} from "../../models/options-expiration.view-model.interface";
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 import {EarningsDatePositionEnum} from "./helper-functions";
 import {IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
@@ -8,8 +11,58 @@ import {
     EarningsDateMarkerAfterExpirationComponent,
     EarningsDateMarkerBeforeExpirationComponent
 } from "../earnings-date-marker.component";
-import {ExpirationStrategiesComponent} from "./expiration-strategies.component";
 import {OptionsStrategyComponent} from "./options-strategy.component";
+import {IonAccordion, IonChip, IonItem, IonLabel} from "@ionic/react";
+import styled, {css} from "styled-components";
+
+function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
+    switch (expirationType) {
+        case OptionExpirationTypeEnum.Regular:
+            return css`
+                --background: var(--ion-color-light-shade);
+                --color: var(--ion-color-light-contrast);
+            `;
+        case OptionExpirationTypeEnum.Quarterly:
+            return css`
+                --background: var(--ion-color-medium-tint);
+                --color: var(--ion-color-medium-contrast);
+            `
+        default:
+            return css`
+                --background: var(--ion-color-light);
+                --color: var(--ion-color-light-contrast);
+            `
+    }
+}
+
+const ExpirationHeaderItemBox = styled(IonItem)<{ $expirationType: OptionExpirationTypeEnum}>`
+    cursor: pointer;
+    ${props =>computeHeaderColor(props.$expirationType)}
+`
+const ExpirationHeaderItemContentBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    padding: 8px 16px;
+     
+`
+
+const StrategiesCountBox = styled(IonChip)`
+    --background: var(--ion-color-tertiary);
+    --color: var(--ion-color-tertiary-contrast);
+    min-width: 50px;
+    text-align: center;
+    justify-content: center;
+    
+`
+
+const StrategiesBox = styled.div`
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 12px;
+`
 
 interface OptionsExpirationStrategiesComponentProps {
     ticker: ITickerViewModel;
@@ -25,11 +78,30 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
     return (
         <React.Fragment>
             <EarningsDateMarkerBeforeExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
-            <ExpirationStrategiesComponent expiration={props.expiration} strategiesCount={strategies.length}>
-                {strategies.map(condor => (<OptionsStrategyComponent key={condor.key}
-                                                                  strategy={condor} bestPop={bestPop}
-                                                                  bestRiskReward={bestRiskReward}/>))}
-            </ExpirationStrategiesComponent>
+
+            <IonAccordion value={props.expiration.expirationDate}>
+
+                <ExpirationHeaderItemBox slot="header" $expirationType={props.expiration.expirationType}>
+                    <ExpirationHeaderItemContentBox>
+                        <StrategiesCountBox>
+                            {strategies.length}
+                        </StrategiesCountBox>
+                        <IonLabel>
+                            {`${props.expiration.expirationDate} (${props.expiration.daysToExpiration} days) - ${props.expiration.expirationType}`}
+                        </IonLabel>
+
+                    </ExpirationHeaderItemContentBox>
+                </ExpirationHeaderItemBox>
+
+                <StrategiesBox slot="content">
+                    {strategies.map(condor => (<OptionsStrategyComponent key={condor.key}
+                                                                         strategy={condor} bestPop={bestPop}
+                                                                         bestRiskReward={bestRiskReward}/>))}
+                </StrategiesBox>
+
+            </IonAccordion>
+
+
             <EarningsDateMarkerAfterExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
         </React.Fragment>
 
