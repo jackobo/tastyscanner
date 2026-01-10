@@ -6,7 +6,7 @@ import {TickerModel} from "./ticker.model";
 
 export class OptionStrikeModel implements IOptionStrikeViewModel {
     constructor(public readonly strikePrice: number,
-                private readonly expiration: OptionsExpirationModel,
+                public readonly expiration: OptionsExpirationModel,
                 callId: string,
                 callStreamerSymbol: string,
                 putId: string,

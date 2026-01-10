@@ -38,6 +38,14 @@ export abstract class OptionModel implements IOptionViewModel {
         return this.ticker.getSymbolGreeks(this.streamerSymbol);
     }
 
+    get expirationDate(): string {
+        return this.strike.expiration.expirationDate;
+    }
+
+    get daysToExpiration(): number {
+        return this.strike.expiration.daysToExpiration;
+    }
+
     get strikePrice(): number {
         return this.strike.strikePrice;
     }

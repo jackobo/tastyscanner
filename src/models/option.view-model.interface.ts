@@ -4,4 +4,6 @@ export interface IOptionViewModel {
     readonly priceForStrategyBuilder: number;
     readonly delta: number;
     readonly bidAskSpread: number;
+    readonly expirationDate: string;
+    readonly daysToExpiration: number;
 }

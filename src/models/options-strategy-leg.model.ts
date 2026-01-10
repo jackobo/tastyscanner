@@ -9,4 +9,12 @@ export class OptionsStrategyLegModel implements IOptionsStrategyLegViewModel {
     get key(): string {
         return `${this.option.strikePrice}_${this.option.optionType}_${this.legType}`;
     }
+
+    get isSell(): boolean {
+        return this.legType === 'STO';
+    }
+
+    get isBuy(): boolean {
+        return this.legType === 'BTO';
+    }
 }

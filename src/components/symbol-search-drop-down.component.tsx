@@ -66,6 +66,10 @@ const DropDownItemContainerBox = styled.div`
     }
 `
 
+const DropDownInputBox = styled(InputBaseBox)`
+    max-width: 150px;
+`
+
 
 interface DropDownItemComponentProps {
     item: ISearchTickerResultItem;
@@ -159,7 +163,7 @@ export const SymbolSearchDropDownComponent: React.FC = observer(() => {
 
     return (
         <ComponentContainerBox>
-            <InputBaseBox ref={inputElementRef} value={query} onChange={(e) => onChange(e.target.value ?? "")} onFocus={onFocus}/>
+            <DropDownInputBox ref={inputElementRef} value={query} onChange={(e) => onChange(e.target.value ?? "")} onFocus={onFocus}/>
             <SearchIconBox>
                 <IonIcon icon={searchOutline}/>
             </SearchIconBox>

@@ -5,7 +5,6 @@ export const InputBaseBox = styled.input`
     border-radius: 8px;
     border: 1px solid var(--ion-color-light-shade);
     outline: none;
-    max-width: 150px;
     &:focus {
         border-color: var(--ion-color-medium);
     }
