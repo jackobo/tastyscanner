@@ -129,7 +129,7 @@ export class StrategiesBuilder {
     }
 
     private _hasGoodBidAskSpread(options: OptionModel[]): boolean {
-        return !options.some(o => o.bidAskSpread > this.services.settings.strategyFilters.maxBidAskSpread)
+        return !options.some(o => o.bidAskSpread < 0 || o.bidAskSpread > this.services.settings.strategyFilters.maxBidAskSpread)
     }
 
 }

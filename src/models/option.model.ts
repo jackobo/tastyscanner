@@ -74,6 +74,9 @@ export abstract class OptionModel implements IOptionViewModel {
     }
 
     get bidAskSpread(): number {
+        if(this.bidPrice === 0) {
+            return 999999;
+        }
         return ((this.askPrice - this.bidPrice) / this.bidPrice) * 100;
     }
 
