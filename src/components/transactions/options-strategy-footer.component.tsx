@@ -1,7 +1,7 @@
 import React from "react";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
-import {IStrategyViewModel} from "../../models/strategy.view-model.interface";
+import {IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
 import {IonButton} from "@ionic/react";
 import {SendOrderDialogComponent} from "./send-order-dialog.component";
 
@@ -23,7 +23,7 @@ const ButtonBox = styled.div`
 `
 
 
-export const OptionsStrategyFooterComponent: React.FC<{strategy: IStrategyViewModel}> = observer((props) => {
+export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrategyViewModel}> = observer((props) => {
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const onTrade = async () => {
         setIsModalOpen(true);

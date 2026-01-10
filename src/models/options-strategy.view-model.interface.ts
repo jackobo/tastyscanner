@@ -2,7 +2,7 @@ import {OrderType, TimeInForce} from "../services/broker-account/broker-account.
 import {IOptionsStrategyLegViewModel} from "./options-strategy-leg.view-model.interface";
 
 
-export interface IStrategyViewModel {
+export interface IOptionsStrategyViewModel {
     readonly strategyName: string;
     readonly key: string;
     readonly wingsWidth: number;
@@ -10,11 +10,11 @@ export interface IStrategyViewModel {
     readonly riskRewardRatio: number;
     readonly pop: number;
     readonly legs: IOptionsStrategyLegViewModel[];
-    sendOrder(options: IStrategySendOrderParams): Promise<void>;
+    sendOrder(options: IOptionsStrategySendOrderParams): Promise<void>;
 }
 
 
-export interface IStrategySendOrderParams {
+export interface IOptionsStrategySendOrderParams {
     quantity: number;
     price?: number;
     timeInForce: TimeInForce;

@@ -1,7 +1,7 @@
 import {ICreditSpreadViewModel} from "./credit-spread.view-model.interface";
 import {OptionModel} from "./option.model";
 import {IServiceFactory} from "../services/service-factory.interface";
-import {IStrategySendOrderParams} from "./strategy.view-model.interface";
+import {IOptionsStrategySendOrderParams} from "./options-strategy.view-model.interface";
 import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
 
 export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
@@ -33,7 +33,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
 
     }
 
-    async sendOrder(orderParams: IStrategySendOrderParams): Promise<void> {
+    async sendOrder(orderParams: IOptionsStrategySendOrderParams): Promise<void> {
         const account = this.services.brokerAccount.currentAccount;
         //TODO show error
         if(!account) {

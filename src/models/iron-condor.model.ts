@@ -1,7 +1,7 @@
 import {OptionModel} from "./option.model";
 import {IIronCondorViewModel} from "./iron-condor.view-model.interface";
 import {IServiceFactory} from "../services/service-factory.interface";
-import {IStrategySendOrderParams} from "./strategy.view-model.interface";
+import {IOptionsStrategySendOrderParams} from "./options-strategy.view-model.interface";
 import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
 
 export class IronCondorModel implements IIronCondorViewModel {
@@ -45,7 +45,7 @@ export class IronCondorModel implements IIronCondorViewModel {
         ]
     }
 
-    async sendOrder(orderParams: IStrategySendOrderParams): Promise<void> {
+    async sendOrder(orderParams: IOptionsStrategySendOrderParams): Promise<void> {
         const account = this.services.brokerAccount.currentAccount;
         //TODO show error
         if(!account) {

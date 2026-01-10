@@ -60,7 +60,7 @@ const StrategiesBox = styled.div`
 
 interface ExpirationStrategiesComponentProps extends PropsWithChildren {
     expiration: IOptionsExpirationVewModel;
-    transactionsCount: number;
+    strategiesCount: number;
 }
 
 export const ExpirationStrategiesComponent: React.FC<ExpirationStrategiesComponentProps> = observer((props) => {
@@ -70,7 +70,7 @@ export const ExpirationStrategiesComponent: React.FC<ExpirationStrategiesCompone
             <ExpirationHeaderItemBox slot="header" $expirationType={props.expiration.expirationType}>
                 <ExpirationHeaderItemContentBox>
                     <StrategiesCountBox>
-                        {props.transactionsCount}
+                        {props.strategiesCount}
                     </StrategiesCountBox>
                     <IonLabel>
                         {`${props.expiration.expirationDate} (${props.expiration.daysToExpiration} days) - ${props.expiration.expirationType}`}

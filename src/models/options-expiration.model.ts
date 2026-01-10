@@ -8,7 +8,7 @@ import {StrategiesBuilder} from "./strategies-builder";
 import {IServiceFactory} from "../services/service-factory.interface";
 import {IOptionsExpirationRawData} from "../services/market-data-provider/market-data-provider.service.interface";
 import {PutCreditSpreadModel} from "./put-credit-spread.model";
-import {IStrategyViewModel} from "./strategy.view-model.interface";
+import {IOptionsStrategyViewModel} from "./options-strategy.view-model.interface";
 
 export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     constructor(private readonly rawData: IOptionsExpirationRawData,
@@ -72,7 +72,7 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
         return this._strikesMap[strikePrice];
     }
 
-    private _filterStrategies<T extends IStrategyViewModel>(strategies: T[]): T[] {
+    private _filterStrategies<T extends IOptionsStrategyViewModel>(strategies: T[]): T[] {
         return strategies.filter(s => s.riskRewardRatio > 0 && s.riskRewardRatio <= this.services.settings.strategyFilters.maxRiskRewardRatio);
     }
 

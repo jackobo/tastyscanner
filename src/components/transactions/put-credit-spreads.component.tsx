@@ -2,36 +2,9 @@ import React from "react";
 import {observer} from "mobx-react";
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 import {IonAccordionGroup} from "@ionic/react";
-import {IOptionsExpirationVewModel} from "../../models/options-expiration.view-model.interface";
-import {ExpirationStrategiesComponent} from "./expiration-strategies.component";
 import {NoOptionsStrategyAvailableBox} from "./boxes/no-options-strategy-available.box";
-import {
-    EarningsDateMarkerAfterExpirationComponent,
-    EarningsDateMarkerBeforeExpirationComponent
-} from "../earnings-date-marker.component";
-import {EarningsDatePositionEnum, getEarningsDateRenderPosition} from "./helper-functions";
-import {OptionsStrategyComponent} from "./options-strategy.component";
-
-
-
-const ExpirationPutCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel; expiration: IOptionsExpirationVewModel; earningsDatePosition: EarningsDatePositionEnum}> = observer((props) => {
-
-    const putCreditSpreads = props.expiration.putCreditSpreads;
-    const bestPop = Math.max(...putCreditSpreads.map(condor => condor.pop));
-    const bestRiskReward = Math.min(...putCreditSpreads.map(condor => condor.riskRewardRatio));
-    return (
-        <React.Fragment>
-            <EarningsDateMarkerBeforeExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
-            <ExpirationStrategiesComponent expiration={props.expiration} transactionsCount={putCreditSpreads.length}>
-                {putCreditSpreads.map(putCreditSpread => <OptionsStrategyComponent key={putCreditSpread.key} strategy={putCreditSpread}
-                                                                                                                                  bestPop={bestPop}
-                                                                                                                                  bestRiskReward={bestRiskReward}/>)}
-            </ExpirationStrategiesComponent>
-            <EarningsDateMarkerAfterExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
-        </React.Fragment>
-    );
-
-});
+import {getEarningsDateRenderPosition} from "./helper-functions";
+import {OptionsExpirationStrategiesComponent} from "./options-expiration-strategies.component";
 
 
 export const PutCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
@@ -46,8 +19,11 @@ export const PutCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel}> = o
 
     return  (
         <IonAccordionGroup>
-            {expirations.map((expiration, index) => <ExpirationPutCreditSpreadsComponent key={expiration.key}
-                                                                                         expiration={expiration} ticker={props.ticker}
+            {expirations.map((expiration, index) => <OptionsExpirationStrategiesComponent
+                                                                                         key={expiration.key}
+                                                                                         ticker={props.ticker}
+                                                                                         expiration={expiration}
+                                                                                         strategies={expiration.putCreditSpreads}
                                                                                          earningsDatePosition={getEarningsDateRenderPosition(props.ticker, expirations, index)}/>)}
         </IonAccordionGroup>
     )

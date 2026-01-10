@@ -1,4 +1,4 @@
-import {IStrategyViewModel} from "../../models/strategy.view-model.interface";
+import {IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
 import React from "react";
 import {observer} from "mobx-react";
 import {IonCard} from "@ionic/react";
@@ -29,7 +29,7 @@ export const StrategyBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: b
 `
 
 export interface OptionsStrategyComponentProps {
-    strategy: IStrategyViewModel;
+    strategy: IOptionsStrategyViewModel;
     bestPop: number;
     bestRiskReward: number
 }

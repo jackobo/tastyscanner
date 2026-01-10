@@ -1,5 +1,5 @@
 import React from "react";
-import {IStrategySendOrderParams, IStrategyViewModel} from "../../models/strategy.view-model.interface";
+import {IOptionsStrategySendOrderParams, IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
 import {IonButton, IonIcon, IonModal} from "@ionic/react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
@@ -102,7 +102,7 @@ const PriceLockerBox = styled.div`
 
 interface SendOrderDialogComponentProps {
     isOpen: boolean;
-    strategy: IStrategyViewModel;
+    strategy: IOptionsStrategyViewModel;
     onDitDismiss: () => void;
 }
 
@@ -119,7 +119,7 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
 
 
     const sendOrder = async () => {
-        const orderParams: IStrategySendOrderParams = {
+        const orderParams: IOptionsStrategySendOrderParams = {
             quantity: quantity,
             orderType: orderType,
             timeInForce: timeInForce

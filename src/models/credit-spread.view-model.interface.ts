@@ -1,7 +1,7 @@
-import {IStrategyViewModel} from "./strategy.view-model.interface";
+import {IOptionsStrategyViewModel} from "./options-strategy.view-model.interface";
 import {IOptionViewModel} from "./option.view-model.interface";
 
-export interface ICreditSpreadViewModel extends IStrategyViewModel {
+export interface ICreditSpreadViewModel extends IOptionsStrategyViewModel {
     readonly stoOption: IOptionViewModel;
     readonly btoOption: IOptionViewModel;
 }
