@@ -4,5 +4,10 @@ export interface IStrategyViewModel {
     readonly credit: number;
     readonly riskRewardRatio: number;
     readonly pop: number;
-    sendOrder(): Promise<void>;
+    sendOrder(options: IStrategySendOrderParams): Promise<void>;
+}
+
+export interface IStrategySendOrderParams {
+    quantity: number;
+    price?: number;
 }

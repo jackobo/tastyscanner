@@ -1,6 +1,7 @@
 import {ICreditSpreadViewModel} from "./credit-spread.view-model.interface";
 import {OptionModel} from "./option.model";
 import {IServiceFactory} from "../services/service-factory.interface";
+import {IStrategySendOrderParams} from "./strategy.view-model.interface";
 
 export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     constructor(public readonly wingsWidth: number,
@@ -29,7 +30,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
 
     }
 
-    async sendOrder(): Promise<void> {
+    async sendOrder(orderParams: IStrategySendOrderParams): Promise<void> {
         const account = this.services.brokerAccount.currentAccount;
         //TODO show error
         if(!account) {
@@ -37,7 +38,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
         }
 
         await account.sendOrder({
-            price: this.credit,
+            price: orderParams.price ?? this.credit,
             priceEffect: "Credit",
             timeInForce: "GTC",
             orderType: "Limit",
@@ -45,13 +46,13 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
                 {
                     instrumentType: "Equity Option",
                     action: "Buy to Open",
-                    quantity: 1,
+                    quantity: orderParams.quantity,
                     symbol: this.btoOption.id
                 },
                 {
                     instrumentType: "Equity Option",
                     action: "Sell to Open",
-                    quantity: 1,
+                    quantity: orderParams.quantity,
                     symbol: this.stoOption.id
                 }
             ]

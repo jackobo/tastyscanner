@@ -2,7 +2,8 @@ import React from "react";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {IStrategyViewModel} from "../../models/strategy.view-model.interface";
-import {IonButton} from "@ionic/react";
+import {IonButton, IonModal} from "@ionic/react";
+import {SendOrderDialogComponent} from "./send-order-dialog.component";
 
 const StrategyFooterBox = styled.div`
     display: grid;
@@ -23,8 +24,15 @@ const ButtonBox = styled.div`
 
 
 export const StrategyFooterComponent: React.FC<{strategy: IStrategyViewModel}> = observer((props) => {
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
     const onTrade = async () => {
-        await props.strategy.sendOrder();
+        setIsModalOpen(true);
+        /*
+        await props.strategy.sendOrder({
+            quantity: 1
+        });
+
+         */
     }
     return (
         <StrategyFooterBox>
@@ -38,9 +46,10 @@ export const StrategyFooterComponent: React.FC<{strategy: IStrategyViewModel}> =
             <span>{`${props.strategy.credit.toFixed(2)}$`}</span>
             <ButtonBox>
                 <IonButton color={"success"} onClick={onTrade}>
-                    Send order
+                    Trade
                 </IonButton>
             </ButtonBox>
+            <SendOrderDialogComponent isOpen={isModalOpen} strategy={props.strategy} onDitDismiss={() => setIsModalOpen(false)}/>
         </StrategyFooterBox>
     )
 })

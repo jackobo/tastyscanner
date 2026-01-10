@@ -1,6 +1,7 @@
 import {OptionModel} from "./option.model";
 import {IIronCondorViewModel} from "./iron-condor.view-model.interface";
 import {IServiceFactory} from "../services/service-factory.interface";
+import {IStrategySendOrderParams} from "./strategy.view-model.interface";
 
 export class IronCondorModel implements IIronCondorViewModel {
     constructor(public readonly wingsWidth: number,
@@ -30,7 +31,7 @@ export class IronCondorModel implements IIronCondorViewModel {
 
     }
 
-    async sendOrder(): Promise<void> {
+    async sendOrder(orderParams: IStrategySendOrderParams): Promise<void> {
         const account = this.services.brokerAccount.currentAccount;
         //TODO show error
         if(!account) {
@@ -38,7 +39,7 @@ export class IronCondorModel implements IIronCondorViewModel {
         }
 
         await account.sendOrder({
-            price: this.credit,
+            price: orderParams.price ?? this.credit,
             priceEffect: "Credit",
             timeInForce: "GTC",
             orderType: "Limit",
@@ -46,25 +47,25 @@ export class IronCondorModel implements IIronCondorViewModel {
                 {
                     instrumentType: "Equity Option",
                     action: "Buy to Open",
-                    quantity: 1,
+                    quantity: orderParams.quantity,
                     symbol: this.btoPut.id
                 },
                 {
                     instrumentType: "Equity Option",
                     action: "Sell to Open",
-                    quantity: 1,
+                    quantity: orderParams.quantity,
                     symbol: this.stoPut.id
                 },
                 {
                     instrumentType: "Equity Option",
                     action: "Sell to Open",
-                    quantity: 1,
+                    quantity: orderParams.quantity,
                     symbol: this.stoCall.id
                 },
                 {
                     instrumentType: "Equity Option",
                     action: "Buy to Open",
-                    quantity: 1,
+                    quantity: orderParams.quantity,
                     symbol: this.btoCall.id
                 }
             ]

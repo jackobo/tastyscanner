@@ -9,6 +9,7 @@ import {DropDownPopperModel} from "../models/popper/drop-down-popper.model";
 import {isClickInsideElement} from "../utils/is-click-inside-element";
 import {IonIcon} from "@ionic/react";
 import {searchOutline} from "ionicons/icons";
+import {InputBaseBox} from "./input-base.box";
 
 const ComponentContainerBox = styled.div`
     position: relative;
@@ -22,18 +23,7 @@ const SearchIconBox = styled.div`
     right: 8px;
 `
 
-const InputBox = styled.input`
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid var(--ion-color-light-shade);
-    outline: none;
-    max-width: 150px;
-    &:focus {
-        border-color: var(--ion-color-medium);
-    }
 
-
-`
 
 const DropDownContainerBox = styled.div<{$isOpen: boolean}>`
     display: ${props => props.$isOpen ? 'block' : 'none'};
@@ -169,7 +159,7 @@ export const SymbolSearchDropDownComponent: React.FC = observer(() => {
 
     return (
         <ComponentContainerBox>
-            <InputBox ref={inputElementRef} value={query} onChange={(e) => onChange(e.target.value ?? "")} onFocus={onFocus}/>
+            <InputBaseBox ref={inputElementRef} value={query} onChange={(e) => onChange(e.target.value ?? "")} onFocus={onFocus}/>
             <SearchIconBox>
                 <IonIcon icon={searchOutline}/>
             </SearchIconBox>
