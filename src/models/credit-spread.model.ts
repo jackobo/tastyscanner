@@ -25,4 +25,8 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
         return 100 - this.stoOption.delta;
 
     }
+
+    async sendOrder(): Promise<void> {
+
+    }
 }

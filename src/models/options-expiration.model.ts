@@ -14,7 +14,7 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     constructor(private readonly rawData: IOptionsExpirationRawData,
                 public readonly ticker: TickerModel) {
         for(const strike of rawData.strikes) {
-            this._strikesMap[strike.strikePrice] = new OptionStrikeModel(strike.strikePrice, this, strike.callStreamerSymbol, strike.putStreamerSymbol);
+            this._strikesMap[strike.strikePrice] = new OptionStrikeModel(strike.strikePrice, this, strike.callId, strike.callStreamerSymbol, strike.putId, strike.putStreamerSymbol);
         }
 
         this._strategiesBuilder = new StrategiesBuilder(this);
@@ -54,8 +54,8 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     getAllSymbols(): string[] {
-        return this.strikes.map(s => s.call.symbol)
-                           .concat(this.strikes.map(s => s.put.symbol));
+        return this.strikes.map(s => s.call.streamerSymbol)
+                           .concat(this.strikes.map(s => s.put.streamerSymbol));
     }
 
     public getOTMPuts(): OptionModel[] {

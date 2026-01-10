@@ -134,6 +134,8 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
         const optionsChain = await this._tastyClient.instrumentsService.getNestedOptionChain(symbol);
         const result: IOptionChainRawData[] = [];
+        console.log("OptionsChain", optionsChain);
+
         for(const optionChain of optionsChain) {
             result.push({
                 expirations: optionChain.expirations.map((expiration: any) => {
@@ -145,7 +147,9 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
                             return {
                                 strikePrice: parseFloat(strike["strike-price"]),
+                                callId: strike["call"],
                                 callStreamerSymbol: strike["call-streamer-symbol"],
+                                putId: strike["put"],
                                 putStreamerSymbol: strike["put-streamer-symbol"]
                             }
                         }) ?? []
@@ -291,7 +295,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
     async getAccounts(): Promise<IAccountRawData[]> {
         const accounts: any[] = await this._tastyClient.accountsAndCustomersService.getCustomerAccounts()
-
+        //this._tastyClient.orderService.createOrder("123")
         return accounts.map(acc => {
             return {
                 accountNumber: acc.account["account-number"]

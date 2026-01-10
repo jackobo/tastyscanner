@@ -1,12 +1,14 @@
 import {OptionModel} from "./option.model";
 import {IIronCondorViewModel} from "./iron-condor.view-model.interface";
+import {IServiceFactory} from "../services/service-factory.interface";
 
 export class IronCondorModel implements IIronCondorViewModel {
     constructor(public readonly wingsWidth: number,
                 public readonly btoPut: OptionModel,
                 public readonly stoPut: OptionModel,
                 public readonly stoCall: OptionModel,
-                public readonly btoCall: OptionModel) {
+                public readonly btoCall: OptionModel,
+                private readonly services: IServiceFactory) {
     }
 
     get key(): string {
@@ -25,6 +27,10 @@ export class IronCondorModel implements IIronCondorViewModel {
 
     get pop(): number {
         return 100 - Math.max(this.stoPut.delta,  this.stoCall.delta);
+
+    }
+
+    async sendOrder(): Promise<void> {
 
     }
 

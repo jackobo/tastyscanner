@@ -29,6 +29,8 @@ export interface IOptionsExpirationRawData {
 
 export interface IOptionStrikeRawData {
     strikePrice: number;
+    callId: string;
+    putId: string;
     callStreamerSymbol: string;
     putStreamerSymbol: string;
 }

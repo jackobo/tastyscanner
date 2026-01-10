@@ -67,7 +67,7 @@ export class StrategiesBuilder {
                             continue;
                         }
                         if(this._hasGoodBidAskSpread([btoPut, stoPut, stoCall, btoCall])) {
-                            condors.push(new IronCondorModel(wingWidth, btoPut, stoPut, stoCall, btoCall));
+                            condors.push(new IronCondorModel(wingWidth, btoPut, stoPut, stoCall, btoCall, this.services));
                         }
 
                     }

@@ -10,7 +10,8 @@ import {
 import {IServiceFactory} from "../services/service-factory.interface";
 
 export abstract class OptionModel implements IOptionViewModel {
-    constructor(public readonly symbol: string,
+    constructor(public readonly id: string,
+                public readonly streamerSymbol: string,
                 public readonly strike: OptionStrikeModel) {
     }
 
@@ -26,15 +27,15 @@ export abstract class OptionModel implements IOptionViewModel {
     }
 
     protected get tradeData(): ITradeRawData | undefined {
-        return this.ticker.getSymbolTrade(this.symbol);
+        return this.ticker.getSymbolTrade(this.streamerSymbol);
     }
 
     protected get quoteData(): IQuoteRawData | undefined {
-        return this.ticker.getSymbolQuote(this.symbol);
+        return this.ticker.getSymbolQuote(this.streamerSymbol);
     }
 
     protected get greeksData(): IGreeksRawData | undefined {
-        return this.ticker.getSymbolGreeks(this.symbol);
+        return this.ticker.getSymbolGreeks(this.streamerSymbol);
     }
 
     get strikePrice(): number {
