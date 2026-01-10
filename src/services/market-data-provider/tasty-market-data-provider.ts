@@ -9,7 +9,7 @@ import {
     ISymbolMetricsRawData,
     ISymbolEarningsRawData,
     ISymbolInfoRawData,
-    ISearchSymbolItemRawData, IAccountRawData
+    ISearchSymbolItemRawData, IAccountRawData, IOrderRequest
 } from "./market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {Check} from "../../utils/type-checking";
@@ -20,7 +20,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
             ...TastyTradeClient.ProdConfig,
             clientSecret: import.meta.env.VITE_CLIENT_SECRET,
             refreshToken: import.meta.env.VITE_REFRESH_TOKEN,
-            oauthScopes: ['read']
+            oauthScopes: ['read', 'trade']
         });
         this._tastyClient.quoteStreamer.addEventListener(this._streamEventHandler);
 
@@ -134,7 +134,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
         const optionsChain = await this._tastyClient.instrumentsService.getNestedOptionChain(symbol);
         const result: IOptionChainRawData[] = [];
-        console.log("OptionsChain", optionsChain);
+
 
         for(const optionChain of optionsChain) {
             result.push({
@@ -301,5 +301,23 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
                 accountNumber: acc.account["account-number"]
             }
         });
+    }
+
+    async sendOrder(accountNumber: string, order: IOrderRequest): Promise<void> {
+        const orderData = {
+            "order-type": order.orderType,
+            "time-in-force": order.timeInForce,
+            "price": order.price,
+            "price-effect": order.priceEffect,
+            "legs": order.legs.map(leg => {
+                return {
+                    "action": leg.action,
+                    "instrument-type": leg.instrumentType,
+                    "quantity": leg.quantity,
+                    "symbol": leg.symbol
+                }
+            })
+        }
+        await this._tastyClient.orderService.createOrder(accountNumber, orderData);
     }
 }

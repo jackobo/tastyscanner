@@ -26,7 +26,7 @@ const CallCreditSpreadComponent: React.FC<{callCreditSpread: ICreditSpreadViewMo
                 <StrategyHeaderComponent/>
                 <StrategyLegComponent option={props.callCreditSpread.stoOption} isSellOption={true}/>
                 <StrategyLegComponent option={props.callCreditSpread.btoOption} isSellOption={false}/>
-                <StrategyFooterComponent transaction={props.callCreditSpread}/>
+                <StrategyFooterComponent strategy={props.callCreditSpread}/>
             </StrategyBox>
         </IonCard>
     )

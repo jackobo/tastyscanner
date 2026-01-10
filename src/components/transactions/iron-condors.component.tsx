@@ -19,16 +19,18 @@ import {
 
 
 const CondorComponent: React.FC<{condor: IIronCondorViewModel; bestPop: number; bestRiskReward: number}> = observer((props) => {
+    const isBestRiskReward = props.condor.riskRewardRatio === props.bestRiskReward;
+    const isBestPop = props.condor.pop === props.bestPop;
     return (
         <IonCard>
-            <StrategyBox $isBestRiskReward={props.condor.riskRewardRatio === props.bestRiskReward}
-                         $isBestPop={props.condor.pop === props.bestPop}>
+            <StrategyBox $isBestRiskReward={isBestRiskReward}
+                         $isBestPop={isBestPop}>
                 <StrategyHeaderComponent/>
                 <StrategyLegComponent option={props.condor.btoPut} isSellOption={false}/>
                 <StrategyLegComponent option={props.condor.stoPut} isSellOption={true}/>
                 <StrategyLegComponent option={props.condor.stoCall} isSellOption={true}/>
                 <StrategyLegComponent option={props.condor.btoCall} isSellOption={false}/>
-                <StrategyFooterComponent transaction={props.condor}/>
+                <StrategyFooterComponent strategy={props.condor}/>
             </StrategyBox>
         </IonCard>
     )

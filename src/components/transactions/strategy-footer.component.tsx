@@ -2,6 +2,7 @@ import React from "react";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {IStrategyViewModel} from "../../models/strategy.view-model.interface";
+import {IonButton} from "@ionic/react";
 
 const StrategyFooterBox = styled.div`
     display: grid;
@@ -11,18 +12,35 @@ const StrategyFooterBox = styled.div`
     font-weight: bold;
 `
 
+const ButtonBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    grid-column: 1 / -1;
+`
 
-export const StrategyFooterComponent: React.FC<{transaction: IStrategyViewModel}> = observer((props) => {
+
+export const StrategyFooterComponent: React.FC<{strategy: IStrategyViewModel}> = observer((props) => {
+    const onTrade = async () => {
+        await props.strategy.sendOrder();
+    }
     return (
         <StrategyFooterBox>
             <span>Risk/Reward:</span>
-            <span>{props.transaction.riskRewardRatio}</span>
+            <span>{props.strategy.riskRewardRatio}</span>
             <span>POP:</span>
-            <span>{`${props.transaction.pop}%`}</span>
+            <span>{`${props.strategy.pop}%`}</span>
             <span>Wings:</span>
-            <span>{`${props.transaction.wingsWidth}$`}</span>
+            <span>{`${props.strategy.wingsWidth}$`}</span>
             <span>Credit:</span>
-            <span>{`${props.transaction.credit.toFixed(2)}$`}</span>
+            <span>{`${props.strategy.credit.toFixed(2)}$`}</span>
+            <ButtonBox>
+                <IonButton color={"success"} onClick={onTrade}>
+                    Send order
+                </IonButton>
+            </ButtonBox>
         </StrategyFooterBox>
     )
 })

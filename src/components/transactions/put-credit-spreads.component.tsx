@@ -26,7 +26,7 @@ const PutCreditSpreadComponent: React.FC<{putCreditSpread: ICreditSpreadViewMode
                 <StrategyHeaderComponent/>
                 <StrategyLegComponent option={props.putCreditSpread.btoOption} isSellOption={false}/>
                 <StrategyLegComponent option={props.putCreditSpread.stoOption} isSellOption={true}/>
-                <StrategyFooterComponent transaction={props.putCreditSpread}/>
+                <StrategyFooterComponent strategy={props.putCreditSpread}/>
             </StrategyBox>
         </IonCard>
     )

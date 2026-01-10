@@ -31,7 +31,41 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     async sendOrder(): Promise<void> {
+        const account = this.services.brokerAccount.currentAccount;
+        //TODO show error
+        if(!account) {
+            return;
+        }
 
+        await account.sendOrder({
+            price: this.credit,
+            legs: [
+                {
+                    instrumentType: "Equity Option",
+                    action: "Buy to Open",
+                    quantity: 1,
+                    symbol: this.btoPut.id
+                },
+                {
+                    instrumentType: "Equity Option",
+                    action: "Sell to Open",
+                    quantity: 1,
+                    symbol: this.stoPut.id
+                },
+                {
+                    instrumentType: "Equity Option",
+                    action: "Sell to Open",
+                    quantity: 1,
+                    symbol: this.stoCall.id
+                },
+                {
+                    instrumentType: "Equity Option",
+                    action: "Buy to Open",
+                    quantity: 1,
+                    symbol: this.btoCall.id
+                }
+            ]
+        });
     }
 
 }

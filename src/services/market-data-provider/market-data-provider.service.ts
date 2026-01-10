@@ -2,7 +2,7 @@ import {
     IAccountRawData,
     IGreeksRawData,
     IMarketDataProviderService,
-    IOptionChainRawData,
+    IOptionChainRawData, IOrderRequest,
     IQuoteRawData, ISearchSymbolItemRawData, ISymbolInfoRawData, ISymbolMetricsRawData,
     ITradeRawData, IWatchListRawData
 } from "./market-data-provider.service.interface";
@@ -55,5 +55,9 @@ export class MarketDataProviderService implements IMarketDataProviderService {
 
     async getAccounts(): Promise<IAccountRawData[]> {
         return await this._currentProvider.getAccounts();
+    }
+
+    sendOrder(accountNumber: string, order: IOrderRequest): Promise<void> {
+        return this._currentProvider.sendOrder(accountNumber, order);
     }
 }
