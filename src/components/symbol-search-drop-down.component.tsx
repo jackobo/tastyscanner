@@ -52,7 +52,6 @@ const DropDownContainerBox = styled.div<{$isOpen: boolean}>`
 const SymbolBox = styled.div`
     font-weight: bold;
     color: var(--ion-color-primary);
-}
 `
 
 const DropDownItemContainerBox = styled.div`
