@@ -11,7 +11,6 @@ import {
     IonToolbar
 } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
-import './Page.css';
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
 import styled, {css} from 'styled-components';
