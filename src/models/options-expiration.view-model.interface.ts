@@ -3,8 +3,9 @@ import {IIronCondorViewModel} from "./iron-condor.view-model.interface";
 import {ICreditSpreadViewModel} from "./credit-spread.view-model.interface";
 
 export enum OptionExpirationTypeEnum {
-    Regular = "Regular",
     Weekly = "Weekly",
+    Regular = "Regular",
+    Quarterly = "Quarterly",
 
 }
 

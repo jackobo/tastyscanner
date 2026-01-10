@@ -7,18 +7,29 @@ import {
 import {IonAccordion, IonChip, IonItem, IonLabel} from "@ionic/react";
 import styled, {css} from "styled-components";
 
-const ExpirationHeaderItemBox = styled(IonItem)<{ $expirationType: OptionExpirationTypeEnum}>`
-    cursor: pointer;
-    ${props => props.$expirationType === OptionExpirationTypeEnum.Regular
-            ? css`
+function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
+    switch (expirationType) {
+        case OptionExpirationTypeEnum.Regular:
+            return css`
                 --background: var(--ion-color-light-shade);
                 --color: var(--ion-color-light-contrast);
+            `;
+        case OptionExpirationTypeEnum.Quarterly:
+            return css`
+                --background: var(--ion-color-medium-tint);
+                --color: var(--ion-color-medium-contrast);
             `
-            : css`
+        default:
+            return css`
                 --background: var(--ion-color-light);
                 --color: var(--ion-color-light-contrast);
             `
     }
+}
+
+const ExpirationHeaderItemBox = styled(IonItem)<{ $expirationType: OptionExpirationTypeEnum}>`
+    cursor: pointer;
+    ${props =>computeHeaderColor(props.$expirationType)}
 `
 const ExpirationHeaderItemContentBox = styled.div`
     display: flex;
