@@ -6,6 +6,10 @@ import {ISettingsService} from "./settings/settings.service.interface";
 import {SettingsService} from "./settings/settings.service";
 import {IMarketDataProviderService} from "./market-data-provider/market-data-provider.service.interface";
 import {MarketDataProviderService} from "./market-data-provider/market-data-provider.service";
+import {ILanguageService} from "./language/language.service.interface";
+import {LanguageService} from "./language/language.service";
+import {ILoggerService} from "./logger/logger.service.interface";
+import {ConsoleLoggerService} from "./logger/console-logger.service";
 
 export class ServiceFactory implements IServiceFactory {
 
@@ -24,4 +28,13 @@ export class ServiceFactory implements IServiceFactory {
         return this._marketDataProvider.value;
     }
 
+    private _language: Lazy<ILanguageService> = new Lazy<ILanguageService>(() => new LanguageService());
+    get language(): ILanguageService {
+        return this._language.value;
+    }
+
+    private _logger: Lazy<ILoggerService> = new Lazy<ILoggerService>(() => new ConsoleLoggerService());
+    get logger(): ILoggerService {
+        return this._logger.value;
+    }
 }

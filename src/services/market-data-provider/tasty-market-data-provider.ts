@@ -4,7 +4,12 @@ import {
     IOptionChainRawData,
     IMarketDataProviderService,
     IQuoteRawData,
-    ITradeRawData, IWatchListRawData, ISymbolMetricsRawData, ISymbolEarningsRawData, ISymbolInfoRawData
+    ITradeRawData,
+    IWatchListRawData,
+    ISymbolMetricsRawData,
+    ISymbolEarningsRawData,
+    ISymbolInfoRawData,
+    ISearchSymbolItemRawData
 } from "./market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {Check} from "../../utils/type-checking";
@@ -272,4 +277,15 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
      */
     }
 
+    async searchSymbol(query: string): Promise<ISearchSymbolItemRawData[]> {
+        const result: any[] = (await this._tastyClient.symbolSearchService.getSymbolData(query)) ?? [];
+
+        return result.map((r: any) => {
+            return {
+                symbol: r.symbol,
+                description: r.description,
+            }
+        })
+
+    }
 }

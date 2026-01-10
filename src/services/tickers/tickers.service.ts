@@ -1,6 +1,6 @@
 import { makeObservable, observable, runInAction } from "mobx";
 import {TickerModel} from "../../models/ticker.model";
-import {ITickersService} from "./tickers.service.interface";
+import {ISearchTickerResultItem, ITickersService} from "./tickers.service.interface";
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 import {ServiceBase} from "../service-base";
 import {IServiceFactory} from "../service-factory.interface";
@@ -86,6 +86,17 @@ export class TickersService extends ServiceBase implements ITickersService {
             this._saveRecentTickers();
         });
 
+    }
+
+   async searchTicker(query: string): Promise<ISearchTickerResultItem[]> {
+        const result = await this.services.marketDataProvider.searchSymbol(query);
+
+        return result.map(item => {
+            return {
+                symbol: item.symbol,
+                description: item.description
+            }
+        });
     }
 
 }

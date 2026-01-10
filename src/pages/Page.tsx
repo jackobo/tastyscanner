@@ -16,6 +16,7 @@ import {useServices} from "../hooks/use-services.hook";
 import styled, {css} from 'styled-components';
 import {TradingViewWidgetComponent} from "../components/trading-view-widget.component";
 import {ITickerViewModel} from "../models/ticker.view-model.interface";
+import {SymbolSearchDropDownComponent} from "../components/symbol-search-drop-down.component";
 
 const PageTitleBox = styled.div`
     display: flex;
@@ -60,6 +61,8 @@ const TickerDescriptionBox = styled.span`
     text-align: right;
 `
 
+
+
 const TickerChartComponent: React.FC<{ticker: ITickerViewModel | null}> = observer((props) => {
     if(!props.ticker) {
         return null;
@@ -89,7 +92,7 @@ const Page: React.FC = observer(() => {
                     </IonButtons>
                     <IonTitle>
                         <PageTitleBox>
-                            <span>{ticker?.symbol}</span>
+                            <SymbolSearchDropDownComponent/>
                             <span>{ticker?.currentPrice?.toFixed(2)}</span>
                             <span>|</span>
                             <IVRankBox $ivr={ticker?.ivRank ?? 0}>

@@ -1,0 +1,171 @@
+import React, {useEffect, useRef, useState} from "react";
+import ReactDOM from 'react-dom';
+import {useServices} from "../hooks/use-services.hook";
+import {observer} from "mobx-react";
+import {reaction} from "mobx";
+import styled from "styled-components";
+import {ISearchTickerResultItem} from "../services/tickers/tickers.service.interface";
+import {DropDownPopperModel} from "../models/popper/drop-down-popper.model";
+import {isClickInsideElement} from "../utils/is-click-inside-element";
+import {IonIcon} from "@ionic/react";
+import {searchOutline} from "ionicons/icons";
+
+const ComponentContainerBox = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+`
+
+const SearchIconBox = styled.div`
+    position: absolute;
+    right: 8px;
+`
+
+const InputBox = styled.input`
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--ion-color-light-shade);
+    outline: none;
+    max-width: 150px;
+    &:focus {
+        border-color: var(--ion-color-medium);
+    }
+
+
+`
+
+const DropDownContainerBox = styled.div<{$isOpen: boolean}>`
+    display: ${props => props.$isOpen ? 'block' : 'none'};
+    min-width: 400px;
+    max-width: 400px;
+    min-height: 150px;
+    max-height: 500px;
+    z-index: 1000;
+    border: 1px solid var(--ion-color-light-shade);
+    background-color: var(--ion-color-light);
+    border-radius: 8px;
+    padding: 8px;
+    overflow-y: auto;
+`
+
+const DropDownItemContainerBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-bottom: 1px solid var(--ion-color-medium-tint);
+    padding: 8px;
+    cursor: pointer;
+    &:last-of-type {
+        border-bottom: none;
+    }
+    
+    &:hover {
+        background-color: var(--ion-color-dark);
+        color: var(--ion-color-dark-contrast);
+    }
+`
+
+interface DropDownItemComponentProps {
+    item: ISearchTickerResultItem;
+    onSelected: (item: ISearchTickerResultItem) => void;
+}
+const DropDownItemComponent: React.FC<DropDownItemComponentProps> = observer((props) => {
+    const onClickHandle = () => {
+        props.onSelected(props.item);
+    }
+    return (
+        <DropDownItemContainerBox onClick={onClickHandle}>
+            <div>{props.item.symbol}</div>
+            <div>{props.item.description}</div>
+        </DropDownItemContainerBox>
+    )
+})
+
+export const SymbolSearchDropDownComponent: React.FC = observer(() => {
+    const services = useServices();
+    const [query, setQuery] = useState(services.tickers.currentTicker?.symbol ?? "");
+    const [results, setResults] = useState<ISearchTickerResultItem[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
+    const dropDownPopperModelRef = useRef(new DropDownPopperModel({
+        sameWidthAsElementToAttach: false
+    }));
+    const dropDownContainerRef = useRef<HTMLDivElement | null>(null);
+    const inputElementRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const r = reaction(() => services.tickers.currentTicker, () => {
+            setQuery(services.tickers.currentTicker?.symbol ?? "");
+        });
+        return () => r();
+    }, [services.tickers.currentTicker]);
+
+    useEffect(() => {
+        const dropDownModel = dropDownPopperModelRef.current;
+        if(dropDownContainerRef.current && inputElementRef.current && !dropDownModel.isReady) {
+            dropDownModel.init(inputElementRef.current, dropDownContainerRef.current);
+        }
+
+        const onDocumentClickHandler = (event: MouseEvent) => {
+            if(dropDownContainerRef.current && inputElementRef.current) {
+                if(!isClickInsideElement(event, dropDownContainerRef.current)
+                    && !isClickInsideElement(event, inputElementRef.current)) {
+                    setIsOpen(false);
+                }
+            }
+        }
+
+        document.addEventListener('click', onDocumentClickHandler);
+
+        return (() => {
+            if(dropDownModel.isReady) {
+                dropDownModel.dispose();
+            }
+
+            document.removeEventListener('click', onDocumentClickHandler);
+        });
+    }, []);
+
+    const search = async (query: string) => {
+        const result = await services.tickers.searchTicker(query);
+        setResults(result);
+    }
+
+    const onChange = async (q: string) => {
+        setQuery(q);
+        setIsOpen(true);
+        await search(q);
+
+    }
+
+    const onFocus = async () => {
+        inputElementRef.current?.select();
+        setIsOpen(true);
+        await search(query);
+    }
+
+    const onItemSelected = async (item: ISearchTickerResultItem) => {
+        setIsOpen(false);
+        await services.tickers.setCurrentTicker(item.symbol);
+    }
+    const renderDropDown = () => {
+        return ReactDOM.createPortal((
+            <DropDownContainerBox ref={dropDownContainerRef} $isOpen={isOpen}>
+                {results.map((item) => (<DropDownItemComponent key={item.symbol} item={item} onSelected={onItemSelected}/>))}
+            </DropDownContainerBox>
+        ), document.body)
+    }
+
+    return (
+        <ComponentContainerBox>
+            <InputBox ref={inputElementRef} value={query} onChange={(e) => onChange(e.target.value ?? "")} onFocus={onFocus}/>
+            <SearchIconBox>
+                <IonIcon icon={searchOutline}/>
+            </SearchIconBox>
+            {renderDropDown()}
+        </ComponentContainerBox>
+    )
+
+
+})
+

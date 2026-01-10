@@ -11,6 +11,7 @@ export interface IMarketDataProviderService {
     getPlatformWatchLists(): Promise<IWatchListRawData[]>;
     getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null>;
     getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData>;
+    searchSymbol(query: string): Promise<ISearchSymbolItemRawData[]>;
 
 }
 
@@ -66,4 +67,9 @@ export interface ISymbolMetricsRawData {
 export interface ISymbolInfoRawData {
     description: string;
     listedMarket: string;
+}
+
+export interface ISearchSymbolItemRawData {
+    symbol: string;
+    description: string;
 }
