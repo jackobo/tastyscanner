@@ -12,8 +12,7 @@ const AccountsBox = styled.div`
     font-size: 1rem;
     width: 100%;
     border-bottom: 1px solid var(--ion-color-light-shade);
-    padding-bottom: 16px;
-    gap: 8px;
+    padding-bottom: 8px;
 `
 
 
