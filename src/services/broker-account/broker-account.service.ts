@@ -14,7 +14,15 @@ export class BrokerAccountService extends ServiceBase implements IBrokerAccountS
         services.marketDataProvider.getAccounts().then(accounts => {
             runInAction(() => {
                 this.accounts = accounts.map(acc => new BrokerAccountModel(acc.accountNumber, services));
-                this.currentAccount = this.accounts[0] ?? null;
+                const lastUsedAccount = localStorage.getItem("currentBrokerAccount");
+                if(lastUsedAccount) {
+                    this.setCurrentAccount(lastUsedAccount);
+                }
+
+                if(!this.currentAccount) {
+                    this.currentAccount = this.accounts[0] ?? null;
+                }
+
             })
         });
     }
@@ -25,5 +33,10 @@ export class BrokerAccountService extends ServiceBase implements IBrokerAccountS
         runInAction(() => {
             this.currentAccount = this.accounts.find(acc => acc.accountNumber === accountNumber) ?? null;
         });
+
+        if(this.currentAccount) {
+            localStorage.setItem("currentBrokerAccount", this.currentAccount.accountNumber);
+        }
+
     }
 }
