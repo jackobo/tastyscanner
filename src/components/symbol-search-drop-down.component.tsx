@@ -49,6 +49,12 @@ const DropDownContainerBox = styled.div<{$isOpen: boolean}>`
     overflow-y: auto;
 `
 
+const SymbolBox = styled.div`
+    font-weight: bold;
+    color: var(--ion-color-primary);
+}
+`
+
 const DropDownItemContainerBox = styled.div`
     display: flex;
     flex-direction: column;
@@ -56,6 +62,7 @@ const DropDownItemContainerBox = styled.div`
     border-bottom: 1px solid var(--ion-color-medium-tint);
     padding: 8px;
     cursor: pointer;
+    gap: 4px;
     &:last-of-type {
         border-bottom: none;
     }
@@ -63,8 +70,13 @@ const DropDownItemContainerBox = styled.div`
     &:hover {
         background-color: var(--ion-color-dark);
         color: var(--ion-color-dark-contrast);
+        ${SymbolBox} {
+            color: var(--ion-color-dark-contrast);
+        }
+        
     }
 `
+
 
 interface DropDownItemComponentProps {
     item: ISearchTickerResultItem;
@@ -76,7 +88,7 @@ const DropDownItemComponent: React.FC<DropDownItemComponentProps> = observer((pr
     }
     return (
         <DropDownItemContainerBox onClick={onClickHandle}>
-            <div>{props.item.symbol}</div>
+            <SymbolBox>{props.item.symbol}</SymbolBox>
             <div>{props.item.description}</div>
         </DropDownItemContainerBox>
     )
