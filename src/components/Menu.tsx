@@ -90,7 +90,7 @@ const Menu: React.FC = observer(() => {
         <IonAccordionGroup value="recentTickers">
           <IonAccordion value="recentTickers">
             <FiltersAccordionHeaderBox slot="header" color="light">
-              <IonLabel>Recent Tickers</IonLabel>
+              <IonLabel>Recent symbols</IonLabel>
             </FiltersAccordionHeaderBox>
 
             <TickersBox slot="content">
