@@ -16,6 +16,7 @@ const TickersBox = styled.div`
 `
 
 const WatchListComponent: React.FC<{watchList: IWatchListRawData}> = observer((props) => {
+    const entries = props.watchList.entries.sort((e1, e2) => e1.localeCompare(e2))
     return (
         <IonAccordion value={props.watchList.name}>
             <AccordionHeaderBox slot="header" color="light">
@@ -23,7 +24,7 @@ const WatchListComponent: React.FC<{watchList: IWatchListRawData}> = observer((p
             </AccordionHeaderBox>
 
             <TickersBox slot="content">
-                {props.watchList.entries.map((ticker) => {
+                {entries.map((ticker) => {
                     return (
                         <TickerMenuItemComponent key={ticker} tickerSymbol={ticker}/>
                     );
