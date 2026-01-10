@@ -12,6 +12,7 @@ export interface IMarketDataProviderService {
     getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null>;
     getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData>;
     searchSymbol(query: string): Promise<ISearchSymbolItemRawData[]>;
+    getAccounts(): Promise<IAccountRawData[]>
 
 }
 
@@ -72,4 +73,8 @@ export interface ISymbolInfoRawData {
 export interface ISearchSymbolItemRawData {
     symbol: string;
     description: string;
+}
+
+export interface IAccountRawData {
+    accountNumber: string;
 }

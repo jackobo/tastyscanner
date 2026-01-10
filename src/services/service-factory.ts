@@ -10,8 +10,15 @@ import {ILanguageService} from "./language/language.service.interface";
 import {LanguageService} from "./language/language.service";
 import {ILoggerService} from "./logger/logger.service.interface";
 import {ConsoleLoggerService} from "./logger/console-logger.service";
+import {IBrokerAccountService} from "./broker-account/broker-account.service.interface";
+import {BrokerAccountService} from "./broker-account/broker-account.service";
 
 export class ServiceFactory implements IServiceFactory {
+
+    constructor() {
+
+        this._brokerAccount.forceInit();
+    }
 
     private _tickers: Lazy<ITickersService> = new Lazy<ITickersService>(() => new TickersService(this));
     get tickers(): ITickersService {
@@ -37,4 +44,11 @@ export class ServiceFactory implements IServiceFactory {
     get logger(): ILoggerService {
         return this._logger.value;
     }
+
+    private _brokerAccount: Lazy<IBrokerAccountService> = new Lazy<IBrokerAccountService>(() => new BrokerAccountService(this));
+    get brokerAccount(): IBrokerAccountService {
+        return this._brokerAccount.value;
+    }
+
+
 }

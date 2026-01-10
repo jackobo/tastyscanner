@@ -1,4 +1,5 @@
 import {
+    IAccountRawData,
     IGreeksRawData,
     IMarketDataProviderService,
     IOptionChainRawData,
@@ -50,5 +51,9 @@ export class MarketDataProviderService implements IMarketDataProviderService {
 
     searchSymbol(query: string): Promise<ISearchSymbolItemRawData[]> {
         return this._currentProvider.searchSymbol(query);
+    }
+
+    async getAccounts(): Promise<IAccountRawData[]> {
+        return await this._currentProvider.getAccounts();
     }
 }

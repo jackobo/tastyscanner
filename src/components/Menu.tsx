@@ -19,8 +19,16 @@ import styled from "styled-components";
 import {StrategyFiltersComponent} from "./strategy-filters.component";
 import {WatchListsComponent} from "./watch-lists.component";
 import {TickerMenuItemComponent} from "./ticker-menu-item.component";
+import {BrokerAccountsComponent} from "./broker-accounts.component";
 
-
+const MenuHeaderContentBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 0 0 16px 0;
+`
 
 const TickersBox = styled.div`
   padding: 16px 0;
@@ -31,7 +39,9 @@ const FiltersBox = styled.div`
 `
 
 const MenuTitleBox = styled.div`
-  padding: 8px 0;
+  width: 100%;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ion-color-light-shade);
 `
 
 
@@ -69,9 +79,12 @@ const Menu: React.FC = observer(() => {
       <IonContent>
         <IonListBox id="inbox-list">
           <IonListHeader>
-            <MenuTitleBox>
-              Tasty Scanner
-            </MenuTitleBox>
+            <MenuHeaderContentBox>
+              <MenuTitleBox>
+                Tasty Scanner
+              </MenuTitleBox>
+              <BrokerAccountsComponent/>
+            </MenuHeaderContentBox>
 
           </IonListHeader>
           <IonAccordionGroup>

@@ -9,7 +9,7 @@ import {
     ISymbolMetricsRawData,
     ISymbolEarningsRawData,
     ISymbolInfoRawData,
-    ISearchSymbolItemRawData
+    ISearchSymbolItemRawData, IAccountRawData
 } from "./market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {Check} from "../../utils/type-checking";
@@ -193,7 +193,6 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
             for(const record of records) {
 
                 if(record.eventType === "Quote") {
-                    //console.log(record);
                     this.quotes[record.eventSymbol] = record;
                 } else if(record.eventType === "Trade") {
                     this.trades[record.eventSymbol] = record;
@@ -278,6 +277,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
     }
 
     async searchSymbol(query: string): Promise<ISearchSymbolItemRawData[]> {
+
         const result: any[] = (await this._tastyClient.symbolSearchService.getSymbolData(query)) ?? [];
 
         return result.map((r: any) => {
@@ -287,5 +287,15 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
             }
         })
 
+    }
+
+    async getAccounts(): Promise<IAccountRawData[]> {
+        const accounts: any[] = await this._tastyClient.accountsAndCustomersService.getCustomerAccounts()
+
+        return accounts.map(acc => {
+            return {
+                accountNumber: acc.account["account-number"]
+            }
+        });
     }
 }
