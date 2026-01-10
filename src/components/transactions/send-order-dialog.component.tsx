@@ -8,6 +8,7 @@ import {closeOutline, lockClosedOutline, lockOpenOutline} from "ionicons/icons";
 import {OrderType, TimeInForce} from "../../services/broker-account/broker-account.service.interface";
 import {NullableString} from "../../utils/nullable-types";
 import {Check} from "../../utils/type-checking";
+import {useServices} from "../../hooks/use-services.hook";
 
 const ContentBox = styled.div`
     display: flex;
@@ -106,10 +107,16 @@ interface SendOrderDialogComponentProps {
 }
 
 export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> = observer((props) => {
+    const services = useServices();
     const [targetPrice, setTargetPrice] = React.useState<NullableString>(null);
     const [quantity, setQuantity] = React.useState<number>(1);
     const [orderType] = React.useState<OrderType>("Limit");
     const [timeInForce] = React.useState<TimeInForce>("Day");
+
+    const tradePrice = targetPrice ?? props.strategy.credit.toString();
+
+    const isPriceLocked = Boolean(targetPrice);
+
 
     const sendOrder = async () => {
         const orderParams: IStrategySendOrderParams = {
@@ -143,9 +150,6 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
         setQuantity(Math.max(1, q));
     }
 
-    const tradePrice = targetPrice ?? props.strategy.credit.toString();
-
-    const isPriceLocked = Boolean(targetPrice);
 
     const renderLockerIcon = () => {
         if(isPriceLocked) {
@@ -176,7 +180,7 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                 </HeaderBox>
                 <BodyBox>
                     <FieldsGridBox>
-                        <FieldLabelBox>Current price</FieldLabelBox>
+                        <FieldLabelBox>{`${services.settings.strategyFilters.priceToUse} price`} </FieldLabelBox>
                         <ReadonlyFieldValueBox>
                             {props.strategy.credit}
                         </ReadonlyFieldValueBox>
