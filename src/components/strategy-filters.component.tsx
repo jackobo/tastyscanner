@@ -9,7 +9,7 @@ const FiltersContainerBox = styled.div`
     flex-direction: column;
     width: 100%;
     gap: 8px;
-    padding: 16px 8px;
+    padding: 16px;
 `
 
 const FilterLabelBox = styled.div`
