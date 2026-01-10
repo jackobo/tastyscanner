@@ -7,10 +7,10 @@ export class BrokerAccountModel implements IBrokerAccountViewModel {
 
     async sendOrder(order: IBrokerOrder): Promise<void> {
         await this.services.marketDataProvider.sendOrder(this.accountNumber, {
-            orderType: "Limit",
+            orderType: order.orderType,
             price: order.price,
-            priceEffect: "Credit",
-            timeInForce: "GTC",
+            priceEffect: order.priceEffect,
+            timeInForce: order.timeInForce,
             legs: order.legs.map(l => {
                 return {
                     symbol: l.symbol,

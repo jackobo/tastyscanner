@@ -38,6 +38,9 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
 
         await account.sendOrder({
             price: this.credit,
+            priceEffect: "Credit",
+            timeInForce: "GTC",
+            orderType: "Limit",
             legs: [
                 {
                     instrumentType: "Equity Option",
