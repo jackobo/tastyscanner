@@ -1,6 +1,7 @@
 import {OptionModel} from "./option.model";
 import {CreditSpreadModel} from "./credit-spread.model";
 import {IServiceFactory} from "../services/service-factory.interface";
+import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
 
 export class CallCreditSpreadModel extends CreditSpreadModel {
     constructor(wingsWidth: number,
@@ -12,6 +13,13 @@ export class CallCreditSpreadModel extends CreditSpreadModel {
 
     get strategyName(): string {
         return "CALL credit spread";
+    }
+
+    get legs(): OptionsStrategyLegModel[] {
+        return [
+            new OptionsStrategyLegModel(this.stoOption, "STO"),
+            new OptionsStrategyLegModel(this.btoOption, "BTO")
+        ];
     }
 
 }

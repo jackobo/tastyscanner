@@ -23,16 +23,10 @@ const ButtonBox = styled.div`
 `
 
 
-export const StrategyFooterComponent: React.FC<{strategy: IStrategyViewModel}> = observer((props) => {
+export const OptionsStrategyFooterComponent: React.FC<{strategy: IStrategyViewModel}> = observer((props) => {
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const onTrade = async () => {
         setIsModalOpen(true);
-        /*
-        await props.strategy.sendOrder({
-            quantity: 1
-        });
-
-         */
     }
     return (
         <StrategyFooterBox>

@@ -4,33 +4,14 @@ import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 import {IonAccordionGroup, IonCard} from "@ionic/react";
 import {IOptionsExpirationVewModel} from "../../models/options-expiration.view-model.interface";
 import {ExpirationStrategiesComponent} from "./expiration-strategies.component";
-import {StrategyBox} from "./boxes/strategy.box";
-import {StrategyHeaderComponent} from "./strategy-header.component";
-import {StrategyLegComponent} from "./strategy-leg.component";
-import {StrategyFooterComponent} from "./strategy-footer.component";
-import {ICreditSpreadViewModel} from "../../models/credit-spread.view-model.interface";
-import {NoStrategyAvailableBox} from "./boxes/no-strategy-available.box";
+import {NoOptionsStrategyAvailableBox} from "./boxes/no-options-strategy-available.box";
 import {
     EarningsDateMarkerAfterExpirationComponent,
     EarningsDateMarkerBeforeExpirationComponent
 } from "../earnings-date-marker.component";
 import {EarningsDatePositionEnum, getEarningsDateRenderPosition} from "./helper-functions";
+import {OptionsStrategyComponent} from "./options-strategy.component";
 
-
-const CallCreditSpreadComponent: React.FC<{callCreditSpread: ICreditSpreadViewModel; bestPop: number; bestRiskReward: number}> = observer((props) => {
-
-    return (
-        <IonCard>
-            <StrategyBox $isBestRiskReward={props.callCreditSpread.riskRewardRatio === props.bestRiskReward}
-                         $isBestPop={props.callCreditSpread.pop === props.bestPop}>
-                <StrategyHeaderComponent/>
-                <StrategyLegComponent option={props.callCreditSpread.stoOption} isSellOption={true}/>
-                <StrategyLegComponent option={props.callCreditSpread.btoOption} isSellOption={false}/>
-                <StrategyFooterComponent strategy={props.callCreditSpread}/>
-            </StrategyBox>
-        </IonCard>
-    )
-})
 
 const ExpirationCallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel; expiration: IOptionsExpirationVewModel; earningsDatePosition: EarningsDatePositionEnum}> = observer((props) => {
 
@@ -41,7 +22,9 @@ const ExpirationCallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel; 
         <React.Fragment>
             <EarningsDateMarkerBeforeExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
             <ExpirationStrategiesComponent expiration={props.expiration} transactionsCount={callCreditSpreads.length}>
-                {callCreditSpreads.map(callCreditSpread => <CallCreditSpreadComponent key={callCreditSpread.key} callCreditSpread={callCreditSpread} bestPop={bestPop} bestRiskReward={bestRiskReward}/>)}
+                {callCreditSpreads.map(callCreditSpread => (<OptionsStrategyComponent key={callCreditSpread.key}
+                                                                                                          strategy={callCreditSpread}
+                                                                                                          bestPop={bestPop} bestRiskReward={bestRiskReward}/>))}
             </ExpirationStrategiesComponent>
             <EarningsDateMarkerAfterExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
         </React.Fragment>
@@ -53,9 +36,9 @@ export const CallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel}> = 
     const expirations = props.ticker.getExpirationsWithCallCreditSpreads()
     if(expirations.length === 0) {
         return (
-            <NoStrategyAvailableBox>
+            <NoOptionsStrategyAvailableBox>
                 No call credit spreads available
-            </NoStrategyAvailableBox>
+            </NoOptionsStrategyAvailableBox>
         );
     }
 

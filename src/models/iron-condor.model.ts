@@ -2,6 +2,7 @@ import {OptionModel} from "./option.model";
 import {IIronCondorViewModel} from "./iron-condor.view-model.interface";
 import {IServiceFactory} from "../services/service-factory.interface";
 import {IStrategySendOrderParams} from "./strategy.view-model.interface";
+import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
 
 export class IronCondorModel implements IIronCondorViewModel {
     constructor(public readonly wingsWidth: number,
@@ -33,6 +34,15 @@ export class IronCondorModel implements IIronCondorViewModel {
     get pop(): number {
         return 100 - Math.max(this.stoPut.delta,  this.stoCall.delta);
 
+    }
+
+    get legs(): OptionsStrategyLegModel[] {
+        return [
+            new OptionsStrategyLegModel(this.btoPut, "BTO"),
+            new OptionsStrategyLegModel(this.stoPut, "STO"),
+            new OptionsStrategyLegModel(this.stoCall, "STO"),
+            new OptionsStrategyLegModel(this.btoCall, "BTO"),
+        ]
     }
 
     async sendOrder(orderParams: IStrategySendOrderParams): Promise<void> {

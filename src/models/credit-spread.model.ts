@@ -2,6 +2,7 @@ import {ICreditSpreadViewModel} from "./credit-spread.view-model.interface";
 import {OptionModel} from "./option.model";
 import {IServiceFactory} from "../services/service-factory.interface";
 import {IStrategySendOrderParams} from "./strategy.view-model.interface";
+import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
 
 export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     constructor(public readonly wingsWidth: number,
@@ -11,6 +12,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     }
 
     abstract get strategyName(): string;
+    abstract get legs(): OptionsStrategyLegModel[];
 
     get key(): string {
         return `${this.wingsWidth}${this.stoOption.strikePrice}${this.btoOption.strikePrice}`;
