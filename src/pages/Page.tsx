@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
     IonAccordion,
     IonAccordionGroup,
@@ -17,6 +17,7 @@ import styled, {css} from 'styled-components';
 import {TradingViewWidgetComponent} from "../components/trading-view-widget.component";
 import {ITickerViewModel} from "../models/ticker.view-model.interface";
 import {SymbolSearchDropDownComponent} from "../components/symbol-search-drop-down.component";
+import {Check} from "../utils/type-checking";
 
 const PageTitleBox = styled.div`
     display: flex;
@@ -64,15 +65,18 @@ const TickerDescriptionBox = styled.span`
 
 
 const TickerChartComponent: React.FC<{ticker: ITickerViewModel | null}> = observer((props) => {
+    const [isExpanded, setIsExpanded] = useState(false);
     if(!props.ticker) {
         return null;
     }
     return (
-        <IonAccordionGroup>
+        <IonAccordionGroup onIonChange={(e) => {
+            setIsExpanded(!Check.isNullOrUndefined(e.detail.value));
+        }}>
             <IonAccordion>
                 <TickerChartHeaderBox slot="header">Chart</TickerChartHeaderBox>
                 <TickerChartContainerBox slot="content">
-                    <TradingViewWidgetComponent symbol={props.ticker.symbol} listedMarket={props.ticker.listedMarket}/>
+                    {isExpanded && <TradingViewWidgetComponent symbol={props.ticker.symbol} listedMarket={props.ticker.listedMarket}/>}
                 </TickerChartContainerBox>
             </IonAccordion>
         </IonAccordionGroup>
