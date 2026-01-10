@@ -1,12 +1,19 @@
-import {IStrategyFiltersViewModel, ISettingsService, PriceType, ByEarningsDate} from "./settings.service.interface";
+import {ByEarningsDate, ISettingsService, IStrategyFiltersViewModel, PriceType} from "./settings.service.interface";
 import {makeObservable, observable, runInAction} from "mobx";
+import {ServiceBase} from "../service-base";
+import {IServiceFactory} from "../service-factory.interface";
+import {RawLocalStorageKeys} from "../storage/raw-local-storage/raw-local-storage-keys";
 
-export class SettingsService implements ISettingsService {
-    readonly strategyFilters = new StrategyFiltersModel();
+export class SettingsService extends ServiceBase implements ISettingsService {
+    constructor(services: IServiceFactory) {
+        super(services);
+        this.strategyFilters = new StrategyFiltersModel(services)
+    }
+    readonly strategyFilters:StrategyFiltersModel ;
 }
 
 export class StrategyFiltersModel implements IStrategyFiltersViewModel {
-    constructor() {
+    constructor(private readonly services: IServiceFactory) {
         this._loadFromStorage();
         makeObservable<this, '_minDelta'
             | '_maxDelta'
@@ -119,18 +126,18 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
             ...this
         }
 
-        localStorage.setItem('strategyFilters', JSON.stringify(data));
+        this.services.rawLocalStorage.setJson(RawLocalStorageKeys.strategyFilters, data);
     }
 
     private _loadFromStorage(): void {
-        const json = localStorage.getItem('strategyFilters');
+        const json = this.services.rawLocalStorage.getJson(RawLocalStorageKeys.strategyFilters);
         if(!json) {
             return;
         }
 
-        const data = JSON.parse(json);
-        for(const key of Object.keys(data)) {
-            this[key] = data[key];
+
+        for(const key of Object.keys(json)) {
+            this[key] = json[key];
         }
     }
 

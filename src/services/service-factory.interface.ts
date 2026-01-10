@@ -4,6 +4,7 @@ import {IMarketDataProviderService} from "./market-data-provider/market-data-pro
 import {ILanguageService} from "./language/language.service.interface";
 import {ILoggerService} from "./logger/logger.service.interface";
 import {IBrokerAccountService} from "./broker-account/broker-account.service.interface";
+import {IRawLocalStorageService} from "./storage/raw-local-storage/raw-local-storage.service.interface";
 
 export interface IServiceFactory {
     readonly tickers: ITickersService;
@@ -12,4 +13,5 @@ export interface IServiceFactory {
     readonly language: ILanguageService;
     readonly logger: ILoggerService;
     readonly brokerAccount: IBrokerAccountService;
+    readonly rawLocalStorage: IRawLocalStorageService;
 }

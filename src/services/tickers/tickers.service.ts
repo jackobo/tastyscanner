@@ -1,9 +1,10 @@
-import { makeObservable, observable, runInAction } from "mobx";
+import {makeObservable, observable, runInAction} from "mobx";
 import {TickerModel} from "../../models/ticker.model";
 import {ISearchTickerResultItem, ITickersService} from "./tickers.service.interface";
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 import {ServiceBase} from "../service-base";
 import {IServiceFactory} from "../service-factory.interface";
+import {RawLocalStorageKeys} from "../storage/raw-local-storage/raw-local-storage-keys";
 
 
 export class TickersService extends ServiceBase implements ITickersService {
@@ -57,18 +58,14 @@ export class TickersService extends ServiceBase implements ITickersService {
     }
 
     private _saveRecentTickers(): void {
-        localStorage.setItem("recentTickers", JSON.stringify(this.recentTickers.map(t => t.symbol)));
+        this.services.rawLocalStorage.setJson(RawLocalStorageKeys.recentTickers, this.recentTickers.map(t => t.symbol));
     }
 
     private _loadRecentTickers(): void {
-        const symbolsJson = localStorage.getItem("recentTickers");
-        if(symbolsJson) {
-            const symbols = JSON.parse(symbolsJson);
-            runInAction(() => {
-                this.recentTickers = symbols.map(s => new TickerModel(s, this.services));
-            })
-
-        }
+        const symbols = this.services.rawLocalStorage.getJson<string[]>(RawLocalStorageKeys.recentTickers) ?? [];
+        runInAction(() => {
+            this.recentTickers = symbols.map(s => new TickerModel(s, this.services));
+        });
     }
 
     private _addToRecentTickers(ticker: TickerModel): void {

@@ -3,6 +3,7 @@ import {IBrokerAccountService, IBrokerAccountViewModel} from "./broker-account.s
 import {IServiceFactory} from "../service-factory.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 import {BrokerAccountModel} from "./broker-account.model";
+import {RawLocalStorageKeys} from "../storage/raw-local-storage/raw-local-storage-keys";
 
 export class BrokerAccountService extends ServiceBase implements IBrokerAccountService {
     constructor(services: IServiceFactory) {
@@ -14,7 +15,7 @@ export class BrokerAccountService extends ServiceBase implements IBrokerAccountS
         services.marketDataProvider.getAccounts().then(accounts => {
             runInAction(() => {
                 this.accounts = accounts.map(acc => new BrokerAccountModel(acc.accountNumber, services));
-                const lastUsedAccount = localStorage.getItem("currentBrokerAccount");
+                const lastUsedAccount = services.rawLocalStorage.getItem(RawLocalStorageKeys.currentBrokerAccount);
                 if(lastUsedAccount) {
                     this.setCurrentAccount(lastUsedAccount);
                 }
@@ -35,7 +36,7 @@ export class BrokerAccountService extends ServiceBase implements IBrokerAccountS
         });
 
         if(this.currentAccount) {
-            localStorage.setItem("currentBrokerAccount", this.currentAccount.accountNumber);
+            this.services.rawLocalStorage.setItem(RawLocalStorageKeys.currentBrokerAccount, this.currentAccount.accountNumber);
         }
 
     }

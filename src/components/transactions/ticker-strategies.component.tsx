@@ -7,7 +7,9 @@ import {
     IonIcon,
     IonPage,
     IonSpinner,
-    IonTab, IonTabBar, IonTabButton,
+    IonTab,
+    IonTabBar,
+    IonTabButton,
     IonTabs,
     IonTitle,
     IonToolbar
@@ -16,6 +18,7 @@ import styled from "styled-components";
 import {IronCondorsComponent} from "./iron-condors.component";
 import {PutCreditSpreadsComponent} from "./put-credit-spreads.component";
 import {CallCreditSpreadsComponent} from "./call-credit-spreads.component";
+import {RawLocalStorageKeys} from "../../services/storage/raw-local-storage/raw-local-storage-keys";
 
 const SpinnerContainerBox = styled.div`
     display: flex;
@@ -99,7 +102,7 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
 
 
     const ticker = services.tickers.currentTicker;
-    const currentTab = localStorage.getItem('currentStrategyTab') || CONDORS_TAB;
+    const currentTab = services.rawLocalStorage.getItem(RawLocalStorageKeys.currentStrategyTab) || CONDORS_TAB;
 
     useEffect(() => {
         const tabs = document.querySelector(`.${STRATEGIES_TABS_CSS_CLASS}`) as HTMLIonTabsElement;
@@ -125,7 +128,7 @@ export const TickerStrategiesComponent: React.FC = observer(() => {
         <IonTabs className={STRATEGIES_TABS_CSS_CLASS}>
 
             <IonTabBar slot="top"
-                       onIonTabsDidChange={e => localStorage.setItem('currentStrategyTab', e.detail.tab)}>
+                       onIonTabsDidChange={e => services.rawLocalStorage.setItem(RawLocalStorageKeys.currentStrategyTab, e.detail.tab)}>
                 <IonTabButton tab={CONDORS_TAB}>
                     <IonIcon />
                     Iron Condors

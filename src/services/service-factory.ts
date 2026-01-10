@@ -12,6 +12,8 @@ import {ILoggerService} from "./logger/logger.service.interface";
 import {ConsoleLoggerService} from "./logger/console-logger.service";
 import {IBrokerAccountService} from "./broker-account/broker-account.service.interface";
 import {BrokerAccountService} from "./broker-account/broker-account.service";
+import {IRawLocalStorageService} from "./storage/raw-local-storage/raw-local-storage.service.interface";
+import {RawLocalStorageService} from "./storage/raw-local-storage/raw-local-storage.service";
 
 export class ServiceFactory implements IServiceFactory {
 
@@ -25,7 +27,7 @@ export class ServiceFactory implements IServiceFactory {
         return this._tickers.value;
     }
 
-    private _settings: Lazy<ISettingsService> = new Lazy<ISettingsService>(() => new SettingsService());
+    private _settings: Lazy<ISettingsService> = new Lazy<ISettingsService>(() => new SettingsService(this));
     get settings(): ISettingsService {
         return this._settings.value;
     }
@@ -50,5 +52,9 @@ export class ServiceFactory implements IServiceFactory {
         return this._brokerAccount.value;
     }
 
+    private _rawLocalStorage: Lazy<IRawLocalStorageService> = new Lazy<IRawLocalStorageService>(() => new RawLocalStorageService(this));
+    get rawLocalStorage(): IRawLocalStorageService {
+        return this._rawLocalStorage.value;
+    }
 
 }
