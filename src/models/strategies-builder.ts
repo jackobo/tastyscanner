@@ -83,7 +83,7 @@ export class StrategiesBuilder {
         return this._buildCreditSpreads(this.getPutsByDelta(),
                                         -1,
                                         strike => strike.put,
-                                        (spreadSize, stoOption, btoOption) => new PutCreditSpreadModel(spreadSize, stoOption, btoOption));
+                                        (spreadSize, stoOption, btoOption) => new PutCreditSpreadModel(spreadSize, stoOption, btoOption, this.services));
 
     }
 
@@ -92,7 +92,7 @@ export class StrategiesBuilder {
         return this._buildCreditSpreads(this.getCallsByDelta(),
                                         1,
                                         strike => strike.call,
-                                        (spreadSize, stoOption, btoOption) => new CallCreditSpreadModel(spreadSize, stoOption, btoOption));
+                                        (spreadSize, stoOption, btoOption) => new CallCreditSpreadModel(spreadSize, stoOption, btoOption, this.services));
 
 
     }
