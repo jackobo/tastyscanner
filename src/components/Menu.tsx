@@ -45,6 +45,18 @@ const IonListBox = styled(IonList)`
   }
 `
 
+const WatchListsLabelBox = styled.div`
+  padding: 12px;
+  width: 100%;
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: var(--ion-color-medium);
+  color: var(--ion-color-medium-contrast);
+  margin-top: 20px;
+  
+  border-radius: 4px;
+`
+
 const Menu: React.FC = observer(() => {
   const services = useServices();
 
@@ -90,6 +102,10 @@ const Menu: React.FC = observer(() => {
             </TickersBox>
           </IonAccordion>
         </IonAccordionGroup>
+
+        <WatchListsLabelBox>
+          WATCH LISTS
+        </WatchListsLabelBox>
 
         <WatchListsComponent/>
 
