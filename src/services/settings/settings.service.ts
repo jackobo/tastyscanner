@@ -46,52 +46,52 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     _maxBidAskSpread: number = 5;
     _byEarningsDate: ByEarningsDate = "all";
 
-    private _setProperty(setter: () => void): void {
-        runInAction(setter);
-        this._saveToStorage();
+
+    private _setProperty(propName: keyof this, value: any): void {
+        runInAction(() => this[propName] = value);
+        this._saveToStorage(propName, value);
     }
     
     get minDelta(): number {
         return this._minDelta;
     }
     set minDelta(value) {
-        this._setProperty(() => this._minDelta = value);
-
+        this._setProperty("_minDelta", value);
     }
 
     get maxDelta(): number {
         return this._maxDelta;
     }
     set maxDelta(value) {
-        this._setProperty(() => this._maxDelta = value);
+        this._setProperty("_maxDelta", value);
     }
 
     get maxRiskRewardRatio(): number {
         return this._maxRiskRewardRatio;
     }
     set maxRiskRewardRatio(value) {
-        this._setProperty(() => this._maxRiskRewardRatio = value);
+        this._setProperty("_maxRiskRewardRatio", value);
     }
 
     get minDaysToExpiration(): number {
         return this._minDaysToExpiration;
     }
     set minDaysToExpiration(value) {
-        this._setProperty(() => this._minDaysToExpiration = value);
+        this._setProperty("_minDaysToExpiration", value);
     }
 
     get maxDaysToExpiration(): number {
         return this._maxDaysToExpiration;
     }
     set maxDaysToExpiration(value) {
-        this._setProperty(() => this._maxDaysToExpiration = value);
+        this._setProperty("_maxDaysToExpiration", value);
     }
 
     get maxBidAskSpread(): number {
         return this._maxBidAskSpread;
     }
     set maxBidAskSpread(value) {
-        this._setProperty(() => this._maxBidAskSpread = value);
+        this._setProperty("_maxBidAskSpread", value);
     }
 
     get availableWings(): number[] {
@@ -102,7 +102,7 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
         return this._wings;
     }
     set wings(value) {
-        this._setProperty(() => this._wings = value);
+        this._setProperty("_wings", value);
     }
 
     get priceToUse(): PriceType {
@@ -110,7 +110,7 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     }
 
     set priceToUse(value: PriceType) {
-        this._setProperty(() => this._priceToUse = value);
+        this._setProperty("_priceToUse", value);
     }
 
     get byEarningsDate(): ByEarningsDate {
@@ -118,26 +118,21 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     }
 
     set byEarningsDate(value: ByEarningsDate) {
-        this._setProperty(() => this._byEarningsDate = value);
+        this._setProperty("_byEarningsDate", value);
     }
 
-    private _saveToStorage(): void {
-        const data = {
-            ...this
-        }
+    private _storedData: any = {};
 
-        this.services.rawLocalStorage.setJson(RawLocalStorageKeys.strategyFilters, data);
+    private _saveToStorage(propName: keyof this, value: any): void {
+        this._storedData[propName] = value;
+        this.services.rawLocalStorage.setJson(RawLocalStorageKeys.strategyFilters, this._storedData);
     }
 
     private _loadFromStorage(): void {
-        const json = this.services.rawLocalStorage.getJson(RawLocalStorageKeys.strategyFilters);
-        if(!json) {
-            return;
-        }
+        this._storedData = this.services.rawLocalStorage.getJson(RawLocalStorageKeys.strategyFilters) ?? {};
 
-
-        for(const key of Object.keys(json)) {
-            this[key] = json[key];
+        for(const key of Object.keys(this._storedData)) {
+            this[key] = this._storedData[key];
         }
     }
 
