@@ -6,6 +6,7 @@ export enum OptionExpirationTypeEnum {
     Weekly = "Weekly",
     Regular = "Regular",
     Quarterly = "Quarterly",
+    EndOfMonth = "End-Of-Month"
 
 }
 

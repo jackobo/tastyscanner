@@ -23,6 +23,7 @@ function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
                 --color: var(--ion-color-light-contrast);
             `;
         case OptionExpirationTypeEnum.Quarterly:
+        case OptionExpirationTypeEnum.EndOfMonth:
             return css`
                 --background: var(--ion-color-medium-tint);
                 --color: var(--ion-color-medium-contrast);
