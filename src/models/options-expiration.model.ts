@@ -93,24 +93,48 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     getStrikeBelow(strikePrice: number): OptionStrikeModel | null {
-
-        for(let i = this.strikes.length - 1; i >= 0; i--) {
-            if(this.strikes[i].strikePrice <= strikePrice) {
-                return this.strikes[i];
-            }
-        }
-        return null;
+        return this._findClosestStrike(strikePrice, true);
     }
 
     getStrikeAbove(strikePrice: number): OptionStrikeModel | null {
+        return this._findClosestStrike(strikePrice, false);
+    }
 
-        for(let i = 0; i < this.strikes.length; i++) {
-            if(this.strikes[i].strikePrice >= strikePrice) {
-                return this.strikes[i];
+    private _findClosestStrike(strikePrice: number, findGreatest: boolean): OptionStrikeModel | null {
+
+        const strikes = this.strikes;
+
+        if (strikes.length === 0) return null;
+
+        let left = 0;
+        let right = strikes.length - 1;
+        let result: OptionStrikeModel | null = null;
+
+        while (left <= right) {
+            const mid = Math.floor((left + right) / 2);
+
+            if (findGreatest) {
+                //Find the highest strike that is less than or equal with strikePrice
+                if (strikes[mid].strikePrice <= strikePrice) {
+                    result = strikes[mid];
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            } else {
+                // Find the lower strike that is bigger than or equal with strikePrice
+                if (strikes[mid].strikePrice >= strikePrice) {
+                    result = strikes[mid];
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
             }
         }
-        return null;
+
+        return result;
     }
+
 
 
 }
