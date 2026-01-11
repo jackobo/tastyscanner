@@ -47,6 +47,12 @@ export interface IQuoteRawData {
 
 export interface IGreeksRawData {
     delta: number;
+    volatility: number;
+    theta: number;
+    gamma: number;
+    rho: number;
+    vega: number;
+    time: number;
 }
 
 export interface IWatchListRawData {

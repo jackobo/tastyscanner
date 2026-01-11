@@ -17,6 +17,8 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
             this._strikesMap[strike.strikePrice] = new OptionStrikeModel(strike.strikePrice, this, strike.callId, strike.callStreamerSymbol, strike.putId, strike.putStreamerSymbol);
         }
 
+        this._sortedStrikes = Object.values(this._strikesMap).sort((a, b) => a.strikePrice - b.strikePrice);
+
         this._strategiesBuilder = new StrategiesBuilder(this);
 
         makeObservable(this, {
@@ -49,8 +51,10 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     private readonly _strikesMap: Record<number, OptionStrikeModel> = {};
+    private readonly _sortedStrikes: OptionStrikeModel[];
+
     public get strikes(): OptionStrikeModel[] {
-        return Object.values(this._strikesMap);
+        return this._sortedStrikes;
     }
 
     getAllSymbols(): string[] {
@@ -87,4 +91,26 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     get callCreditSpreads(): PutCreditSpreadModel[] {
         return this._filterStrategies(this._strategiesBuilder.buildCallCreditSpreads());
     }
+
+    getStrikeBelow(strikePrice: number): OptionStrikeModel | null {
+
+        for(let i = this.strikes.length - 1; i >= 0; i--) {
+            if(this.strikes[i].strikePrice <= strikePrice) {
+                return this.strikes[i];
+            }
+        }
+        return null;
+    }
+
+    getStrikeAbove(strikePrice: number): OptionStrikeModel | null {
+
+        for(let i = 0; i < this.strikes.length; i++) {
+            if(this.strikes[i].strikePrice >= strikePrice) {
+                return this.strikes[i];
+            }
+        }
+        return null;
+    }
+
+
 }

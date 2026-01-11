@@ -38,6 +38,7 @@ export abstract class OptionModel implements IOptionViewModel {
         return this.ticker.getSymbolGreeks(this.streamerSymbol);
     }
 
+
     get expirationDate(): string {
         return this.strike.expiration.expirationDate;
     }
@@ -95,6 +96,10 @@ export abstract class OptionModel implements IOptionViewModel {
         }
 
         return Math.round(Math.abs(delta) * 100);
+    }
+
+    get volatility(): number {
+        return this.greeksData?.volatility ?? 0;
     }
 }
 

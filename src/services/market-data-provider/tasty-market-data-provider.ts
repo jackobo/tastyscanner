@@ -14,6 +14,7 @@ import {
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {Check} from "../../utils/type-checking";
 
+
 export class TastyMarketDataProvider implements IMarketDataProviderService {
     constructor() {
         this._tastyClient = new TastyTradeClient({
@@ -73,6 +74,13 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
         return {
             delta: greeks.delta,
+            volatility: greeks.volatility,
+            theta: greeks.theta,
+            gamma: greeks.gamma,
+            vega: greeks.vega,
+            rho: greeks.rho,
+            time: greeks.time
+
         }
     }
 
@@ -151,7 +159,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
                                 callStreamerSymbol: strike["call-streamer-symbol"],
                                 putId: strike["put"],
                                 putStreamerSymbol: strike["put-streamer-symbol"]
-                            }
+                            };
                         }) ?? []
                     }
                 })
@@ -201,6 +209,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
                 } else if(record.eventType === "Trade") {
                     this.trades[record.eventSymbol] = record;
                 } else if(record.eventType === "Greeks") {
+                    //console.log(record);
                     this.greeks[record.eventSymbol] = record;
                 }
 
