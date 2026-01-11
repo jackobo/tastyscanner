@@ -11,6 +11,7 @@ import {IonIcon} from "@ionic/react";
 import {searchOutline} from "ionicons/icons";
 import {InputBaseBox} from "./input-base.box";
 
+
 const ComponentContainerBox = styled.div`
     position: relative;
     display: flex;
@@ -97,6 +98,7 @@ export const SymbolSearchDropDownComponent: React.FC = observer(() => {
     }));
     const dropDownContainerRef = useRef<HTMLDivElement | null>(null);
     const inputElementRef = useRef<HTMLInputElement>(null);
+    const tickerSearchDebounceTimerRef = useRef<any>(null);
 
     useEffect(() => {
         const r = reaction(() => services.tickers.currentTicker, () => {
@@ -128,12 +130,22 @@ export const SymbolSearchDropDownComponent: React.FC = observer(() => {
             }
 
             document.removeEventListener('click', onDocumentClickHandler);
+            if(tickerSearchDebounceTimerRef.current) {
+                clearTimeout(tickerSearchDebounceTimerRef.current);
+            }
         });
     }, []);
 
     const search = async (query: string) => {
-        const result = await services.tickers.searchTicker(query);
-        setResults(result);
+        if(tickerSearchDebounceTimerRef.current) {
+            clearTimeout(tickerSearchDebounceTimerRef.current);
+        }
+
+        tickerSearchDebounceTimerRef.current = setTimeout(async () => {
+            const result = await services.tickers.searchTicker(query);
+            setResults(result);
+        }, 200);
+
     }
 
     const onChange = async (q: string) => {
