@@ -80,7 +80,7 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
         <React.Fragment>
             <EarningsDateMarkerBeforeExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
 
-            <IonAccordion value={props.expiration.expirationDate}>
+            <IonAccordion value={props.expiration.key}>
 
                 <ExpirationHeaderItemBox slot="header" $expirationType={props.expiration.expirationType}>
                     <ExpirationHeaderItemContentBox>
