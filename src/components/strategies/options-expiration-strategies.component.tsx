@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {observer} from "mobx-react";
 import {
     IOptionsExpirationVewModel,
@@ -14,7 +14,6 @@ import {
 import {OptionsStrategyComponent} from "./options-strategy.component";
 import {IonAccordion, IonChip, IonItem, IonLabel} from "@ionic/react";
 import styled, {css} from "styled-components";
-import {SendOrderDialogComponent} from "./send-order-dialog.component";
 
 function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
     switch (expirationType) {

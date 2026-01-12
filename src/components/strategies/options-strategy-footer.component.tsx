@@ -3,7 +3,7 @@ import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
 import {IonButton} from "@ionic/react";
-import {SendOrderDialogComponent} from "./send-order-dialog.component";
+
 
 const StrategyFooterBox = styled.div`
     display: grid;

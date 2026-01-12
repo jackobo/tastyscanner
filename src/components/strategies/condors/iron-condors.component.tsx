@@ -1,5 +1,4 @@
 import React from 'react';
-import {IOptionsExpirationVewModel} from "../../../models/options-expiration.view-model.interface";
 import {observer} from "mobx-react-lite";
 import {IonAccordionGroup} from '@ionic/react';
 import {ITickerViewModel} from "../../../models/ticker.view-model.interface";
