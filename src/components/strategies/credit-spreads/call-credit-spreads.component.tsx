@@ -5,11 +5,12 @@ import {IonAccordionGroup} from "@ionic/react";
 import {NoOptionsStrategyAvailableBox} from "../boxes/no-options-strategy-available.box";
 import {getEarningsDateRenderPosition} from "../helper-functions";
 import {OptionsExpirationStrategiesComponent} from "../options-expiration-strategies.component";
+import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 
 
 
 
-export const CallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
+export const CallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel; onTrade: (strategy: IOptionsStrategyViewModel) => void;}> = observer((props) => {
     const expirations = props.ticker.getExpirationsWithCallCreditSpreads()
     if(expirations.length === 0) {
         return (
@@ -26,6 +27,7 @@ export const CallCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel}> = 
                                                                                          ticker={props.ticker}
                                                                                          expiration={expiration}
                                                                                          strategies={expiration.callCreditSpreads}
+                                                                                         onTrade={props.onTrade}
                                                                                          earningsDatePosition={getEarningsDateRenderPosition(props.ticker, expirations, index)}/>)}
         </IonAccordionGroup>
     )

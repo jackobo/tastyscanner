@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {observer} from "mobx-react";
 import {
     IOptionsExpirationVewModel,
@@ -14,6 +14,7 @@ import {
 import {OptionsStrategyComponent} from "./options-strategy.component";
 import {IonAccordion, IonChip, IonItem, IonLabel} from "@ionic/react";
 import styled, {css} from "styled-components";
+import {SendOrderDialogComponent} from "./send-order-dialog.component";
 
 function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
     switch (expirationType) {
@@ -70,11 +71,16 @@ interface OptionsExpirationStrategiesComponentProps {
     expiration: IOptionsExpirationVewModel;
     strategies: IOptionsStrategyViewModel[];
     earningsDatePosition: EarningsDatePositionEnum;
+    onTrade: (strategy: IOptionsStrategyViewModel) => void;
 }
 export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStrategiesComponentProps> = observer((props) => {
+
+
     const strategies = props.strategies;
     const bestPop = Math.max(...strategies.map(strategy => strategy.pop));
     const bestRiskReward = Math.min(...strategies.map(strategy => strategy.riskRewardRatio));
+
+
 
     return (
         <React.Fragment>
@@ -97,13 +103,14 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                 <StrategiesBox slot="content">
                     {strategies.map(condor => (<OptionsStrategyComponent key={condor.key}
                                                                          strategy={condor} bestPop={bestPop}
-                                                                         bestRiskReward={bestRiskReward}/>))}
+                                                                         bestRiskReward={bestRiskReward} onOpenTradeModal={props.onTrade}/>))}
                 </StrategiesBox>
 
             </IonAccordion>
 
 
             <EarningsDateMarkerAfterExpirationComponent ticker={props.ticker} position={props.earningsDatePosition}/>
+
         </React.Fragment>
 
     );

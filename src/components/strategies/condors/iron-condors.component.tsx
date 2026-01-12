@@ -6,10 +6,11 @@ import {ITickerViewModel} from "../../../models/ticker.view-model.interface";
 import {NoOptionsStrategyAvailableBox} from "../boxes/no-options-strategy-available.box";
 import {getEarningsDateRenderPosition} from "../helper-functions";
 import {OptionsExpirationStrategiesComponent} from "../options-expiration-strategies.component";
+import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 
 
 
-export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel}> = observer((props) => {
+export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel; onTrade: (strategy: IOptionsStrategyViewModel) => void;}> = observer((props) => {
 
     const expirations = props.ticker.getExpirationsWithIronCondors()
     if(expirations.length === 0) {
@@ -27,6 +28,7 @@ export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel}> = observ
                                                                                     ticker={props.ticker}
                                                                                     expiration={expiration}
                                                                                     strategies={expiration.ironCondors}
+                                                                                    onTrade={props.onTrade}
                                                                                     earningsDatePosition={getEarningsDateRenderPosition(props.ticker, expirations, index)}/>)}
         </IonAccordionGroup>
     )

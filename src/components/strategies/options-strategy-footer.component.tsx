@@ -23,11 +23,8 @@ const ButtonBox = styled.div`
 `
 
 
-export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrategyViewModel}> = observer((props) => {
-    const [isModalOpen, setIsModalOpen] = React.useState(false);
-    const onTrade = async () => {
-        setIsModalOpen(true);
-    }
+export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrategyViewModel; onOpenTradeDialog: () => void}> = observer((props) => {
+
     return (
         <StrategyFooterBox>
             <span>Risk/Reward:</span>
@@ -39,11 +36,11 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
             <span>Credit:</span>
             <span>{`${props.strategy.credit.toFixed(2)}$`}</span>
             <ButtonBox>
-                <IonButton color={"success"} onClick={onTrade}>
+                <IonButton color={"success"} onClick={() => props.onOpenTradeDialog()}>
                     Trade
                 </IonButton>
             </ButtonBox>
-            <SendOrderDialogComponent isOpen={isModalOpen} strategy={props.strategy} onDitDismiss={() => setIsModalOpen(false)}/>
+
         </StrategyFooterBox>
     )
 })

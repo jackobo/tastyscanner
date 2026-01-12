@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {observer} from "mobx-react";
 import {useServices} from "../../hooks/use-services.hook";
 import {
@@ -19,6 +19,8 @@ import {IronCondorsComponent} from "./condors/iron-condors.component";
 import {PutCreditSpreadsComponent} from "./credit-spreads/put-credit-spreads.component";
 import {CallCreditSpreadsComponent} from "./credit-spreads/call-credit-spreads.component";
 import {RawLocalStorageKeys} from "../../services/storage/raw-local-storage/raw-local-storage-keys";
+import {IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
+import {SendOrderDialogComponent} from "./send-order-dialog.component";
 
 const SpinnerContainerBox = styled.div`
     display: flex;
@@ -99,7 +101,7 @@ const TabHeaderComponent: React.FC<{title: string}> = observer((props) => {
 
 export const TickerOptionsStrategiesComponent: React.FC = observer(() => {
     const services = useServices();
-
+    const [currentStrategy, setCurrentStrategy] = useState<IOptionsStrategyViewModel | null>(null);
 
     const ticker = services.tickers.currentTicker;
     const currentTab = services.rawLocalStorage.getItem(RawLocalStorageKeys.currentStrategyTab) || CONDORS_TAB;
@@ -120,6 +122,10 @@ export const TickerOptionsStrategiesComponent: React.FC = observer(() => {
             </SpinnerContainerBox>
 
         )
+    }
+
+    const onTrade = async (strategy: IOptionsStrategyViewModel) => {
+        setCurrentStrategy(strategy);
     }
 
 
@@ -147,7 +153,7 @@ export const TickerOptionsStrategiesComponent: React.FC = observer(() => {
                 <IonPage id={CONDORS_TAB}>
                     <TabHeaderComponent title={"Iron Condors"}/>
                     <IonContent>
-                        <IronCondorsComponent ticker={ticker} />
+                        <IronCondorsComponent ticker={ticker} onTrade={onTrade} />
                     </IonContent>
                 </IonPage>
 
@@ -157,7 +163,7 @@ export const TickerOptionsStrategiesComponent: React.FC = observer(() => {
                 <IonPage id={PUT_CREDIT_SPREAD_TAB}>
                     <TabHeaderComponent title={"PUT Credit Spreads"}/>
                     <IonContent>
-                        <PutCreditSpreadsComponent ticker={ticker}/>
+                        <PutCreditSpreadsComponent ticker={ticker} onTrade={onTrade}/>
                     </IonContent>
                 </IonPage>
 
@@ -167,13 +173,15 @@ export const TickerOptionsStrategiesComponent: React.FC = observer(() => {
                 <IonPage id={CALL_CREDIT_SPREAD_TAB}>
                     <TabHeaderComponent title={"CALL Credit Spreads"}/>
                     <IonContent>
-                        <CallCreditSpreadsComponent ticker={ticker}/>
+                        <CallCreditSpreadsComponent ticker={ticker} onTrade={onTrade}/>
                     </IonContent>
                 </IonPage>
 
             </IonTab>
 
-
+            {currentStrategy && <SendOrderDialogComponent isOpen={Boolean(currentStrategy)}
+                                                          strategy={currentStrategy}
+                                                          onDitDismiss={() => setCurrentStrategy(null)}/>}
         </IonTabs>
 
     )
