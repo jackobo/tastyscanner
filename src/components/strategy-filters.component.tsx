@@ -181,6 +181,7 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
                                                min={1}
                                                max={10}
                                                value={filters.maxRiskRewardRatio}
+                                               formatValue={value => `${value}/1`}
                                                onValueChanged={value => filters.maxRiskRewardRatio = value}/>
 
             <SeparatorBox/>
