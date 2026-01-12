@@ -10,6 +10,7 @@ export const PutCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel; onTr
     return (
         <AllExpirationsStrategiesComponent ticker={props.ticker}
                                            getExpirations={() => props.ticker.getExpirationsWithPutCreditSpreads()}
+                                           getExpirationStrategies={(expiration) => expiration.putCreditSpreads}
                                            noStrategiesAvailableMessage="No put credit spreads available"
                                            onTrade={props.onTrade}/>
     );

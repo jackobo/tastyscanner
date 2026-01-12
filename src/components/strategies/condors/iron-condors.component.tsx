@@ -11,6 +11,7 @@ export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel; onTrade: 
     return (
         <AllExpirationsStrategiesComponent ticker={props.ticker}
                                            getExpirations={() => props.ticker.getExpirationsWithIronCondors()}
+                                           getExpirationStrategies={(expiration) => expiration.ironCondors}
                                            noStrategiesAvailableMessage="No iron condors available"
                                            onTrade={props.onTrade}/>
     )
