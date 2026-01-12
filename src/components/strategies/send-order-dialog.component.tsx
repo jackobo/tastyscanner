@@ -8,7 +8,6 @@ import {chevronDown, chevronUp, closeOutline, lockClosedOutline, lockOpenOutline
 import {OrderType, TimeInForce} from "../../services/broker-account/broker-account.service.interface";
 import {NullableString} from "../../utils/nullable-types";
 import {Check} from "../../utils/type-checking";
-import {useServices} from "../../hooks/use-services.hook";
 import {IOptionsStrategyLegViewModel} from "../../models/options-strategy-leg.view-model.interface";
 
 const ContentBox = styled.div`
@@ -313,7 +312,6 @@ interface SendOrderDialogComponentProps {
 }
 
 export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> = observer((props) => {
-    const services = useServices();
     const [limitPrice, setLimitPrice] = React.useState<NullableString>(null);
     const [quantity, setQuantity] = React.useState<number>(1);
     const [orderType] = React.useState<OrderType>("Limit");

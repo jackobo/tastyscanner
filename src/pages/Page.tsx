@@ -2,7 +2,7 @@ import React from "react";
 import {
     IonButtons,
     IonContent,
-    IonHeader, IonItem,
+    IonHeader,
     IonMenuButton,
     IonPage,
     IonTitle,
