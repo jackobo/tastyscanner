@@ -1,7 +1,5 @@
-import React, {useState} from "react";
+import React from "react";
 import {
-    IonAccordion,
-    IonAccordionGroup,
     IonButtons,
     IonContent,
     IonHeader, IonItem,
@@ -14,10 +12,8 @@ import ExploreContainer from '../components/ExploreContainer';
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
 import styled, {css} from 'styled-components';
-import {TradingViewWidgetComponent} from "../components/trading-view-widget.component";
-import {ITickerViewModel} from "../models/ticker.view-model.interface";
 import {SymbolSearchDropDownComponent} from "../components/symbol-search-drop-down.component";
-import {Check} from "../utils/type-checking";
+import {TickerChartComponent} from "../components/ticker-chart.component";
 
 const PageTitleBox = styled.div`
     display: flex;
@@ -48,14 +44,6 @@ const IVRankBox = styled.div<{$ivr: number}>`
     ${props => computeIvrColor(props.$ivr)}
 `
 
-const TickerChartHeaderBox = styled(IonItem)`
-    cursor: pointer;
-    --background: var(--ion-color-light-shade);
-    --color: var(--ion-color-light-contrast);
-`
-const TickerChartContainerBox = styled.div`
-    height: calc(100vh - 200px);
-`
 
 const TickerDescriptionBox = styled.span`
     flex-grow: 1;
@@ -64,25 +52,7 @@ const TickerDescriptionBox = styled.span`
 
 
 
-const TickerChartComponent: React.FC<{ticker: ITickerViewModel | null}> = observer((props) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    if(!props.ticker) {
-        return null;
-    }
-    return (
-        <IonAccordionGroup onIonChange={(e) => {
-            setIsExpanded(!Check.isNullOrUndefined(e.detail.value));
-        }}>
-            <IonAccordion>
-                <TickerChartHeaderBox slot="header">Chart</TickerChartHeaderBox>
-                <TickerChartContainerBox slot="content">
-                    {isExpanded && <TradingViewWidgetComponent symbol={props.ticker.symbol} listedMarket={props.ticker.listedMarket}/>}
-                </TickerChartContainerBox>
-            </IonAccordion>
-        </IonAccordionGroup>
-    )
 
-})
 
 const Page: React.FC = observer(() => {
     const services = useServices();
