@@ -1,4 +1,4 @@
-import {ByEarningsDate, ISettingsService, IStrategyFiltersViewModel, PriceType} from "./settings.service.interface";
+import {ByEarningsDate, ISettingsService, IStrategyFiltersViewModel} from "./settings.service.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 import {ServiceBase} from "../service-base";
 import {IServiceFactory} from "../service-factory.interface";
@@ -42,7 +42,6 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     _minDaysToExpiration: number = 35;
     _maxDaysToExpiration: number = 60;
     _wings: number[] = [5, 10];
-    _priceToUse: PriceType = "last";
     _maxBidAskSpread: number = 5;
     _byEarningsDate: ByEarningsDate = "all";
 
@@ -105,13 +104,6 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
         this._setProperty("_wings", value);
     }
 
-    get priceToUse(): PriceType {
-        return this._priceToUse;
-    }
-
-    set priceToUse(value: PriceType) {
-        this._setProperty("_priceToUse", value);
-    }
 
     get byEarningsDate(): ByEarningsDate {
         return this._byEarningsDate;

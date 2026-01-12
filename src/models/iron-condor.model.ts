@@ -22,7 +22,7 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     get credit(): number {
-        const val = this.stoPut.priceForStrategyBuilder + this.stoCall.priceForStrategyBuilder - this.btoCall.priceForStrategyBuilder - this.btoPut.priceForStrategyBuilder;
+        const val = this.stoPut.midPrice + this.stoCall.midPrice - this.btoCall.midPrice - this.btoPut.midPrice;
         return Math.round(val * 100) / 100;
     }
 

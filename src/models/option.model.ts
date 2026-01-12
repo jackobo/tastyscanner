@@ -72,15 +72,6 @@ export abstract class OptionModel implements IOptionViewModel {
         return Math.round(((this.bidPrice + this.askPrice) / 2) * 100) / 100;
     }
 
-    get priceForStrategyBuilder(): number {
-        if(this.services.settings.strategyFilters.priceToUse === "mid") {
-            return this.midPrice;
-        } else {
-            return this.lastPrice;
-        }
-
-        //return this.lastPrice;
-    }
 
     get bidAskSpread(): number {
         if(this.bidPrice === 0) {

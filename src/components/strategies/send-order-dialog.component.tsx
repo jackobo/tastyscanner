@@ -191,7 +191,7 @@ const LegComponent: React.FC<{leg: IOptionsStrategyLegViewModel}> = observer((pr
             <LegTypeCellBox $isSell={props.leg.isSell}>
                 {props.leg.legType}
             </LegTypeCellBox>
-            <LegPriceCellBox>{props.leg.isSell ? props.leg.option.priceForStrategyBuilder : -1 * props.leg.option.priceForStrategyBuilder}</LegPriceCellBox>
+            <LegPriceCellBox>{props.leg.isSell ? props.leg.option.midPrice : -1 * props.leg.option.midPrice}</LegPriceCellBox>
         </>
     )
 })
@@ -371,7 +371,7 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
 
                         <MidPriceBox>
                             <FieldLabelBox>
-                                {`${services.settings.strategyFilters.priceToUse} price`}
+                                {`Mid price`}
                             </FieldLabelBox>
                             <MidPriceValueBox>
                                 {props.strategy.credit}

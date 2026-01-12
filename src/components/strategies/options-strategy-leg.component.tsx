@@ -22,7 +22,7 @@ const StrategyLegBox = styled(OptionsStrategyLegBaseBox)<{$isSell: boolean}>`
 
 export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegViewModel}> = observer((props) => {
     const isSellOption = props.leg.legType === "STO";
-    const price = isSellOption ? props.leg.option.priceForStrategyBuilder : -1 * props.leg.option.priceForStrategyBuilder
+    const price = isSellOption ? props.leg.option.midPrice : -1 * props.leg.option.midPrice
 
     return (
         <StrategyLegBox $isSell={isSellOption}>

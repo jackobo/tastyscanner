@@ -230,16 +230,6 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
                 Price to use
             </FilterLabelBox>
 
-            <RadioGroupBox value={services.settings.strategyFilters.priceToUse}
-                                     onIonChange={e => services.settings.strategyFilters.priceToUse = e.detail.value}>
-                <IonRadio value={"last"}>
-                    Last price
-                </IonRadio>
-                <div style={{flexGrow: 1}}></div>
-                <IonRadio value={"mid"}>
-                    Mid price
-                </IonRadio>
-            </RadioGroupBox>
 
             <SeparatorBox/>
 
