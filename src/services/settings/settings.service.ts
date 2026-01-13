@@ -22,7 +22,6 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
             | '_maxDaysToExpiration'
             | '_maxBidAskSpread'
             | '_wings'
-            | '_priceToUse'
             | '_byEarningsDate'>(this, {
             _minDelta: observable.ref,
             _maxDelta: observable.ref,
@@ -31,7 +30,6 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
             _maxDaysToExpiration: observable.ref,
             _maxBidAskSpread: observable.ref,
             _wings: observable.ref,
-            _priceToUse: observable.ref,
             _byEarningsDate: observable.ref
         })
     }
