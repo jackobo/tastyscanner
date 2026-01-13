@@ -30,7 +30,8 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
             _maxDaysToExpiration: observable.ref,
             _maxBidAskSpread: observable.ref,
             _wings: observable.ref,
-            _byEarningsDate: observable.ref
+            _byEarningsDate: observable.ref,
+            lastUpdate: observable.ref
         })
     }
 
@@ -42,11 +43,13 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     _wings: number[] = [5, 10];
     _maxBidAskSpread: number = 5;
     _byEarningsDate: ByEarningsDate = "all";
+    lastUpdate: number = Date.now()
 
 
     private _setProperty(propName: keyof this, value: any): void {
         runInAction(() => this[propName] = value);
         this._saveToStorage(propName, value);
+        runInAction(() => this.lastUpdate = Date.now());
     }
     
     get minDelta(): number {

@@ -16,5 +16,6 @@ export interface IStrategyFiltersViewModel {
     wings: number[];
     readonly availableWings: number[];
     byEarningsDate: ByEarningsDate;
+    readonly lastUpdate: number;
 }
 
