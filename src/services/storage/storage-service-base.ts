@@ -13,20 +13,12 @@ export abstract class StorageServiceBase<TKey extends string> extends ServiceBas
 
 
     protected abstract _composeKey(key: TKey, discriminator: UndefinedString): string;
-    protected abstract _clearLargeStorageConsumersData(): void;
 
 
     setItem(key: TKey, value: string, options?: IStorageOptions): void {
 
         const composedKey = this._composeKey(key, options?.discriminator);
-        try {
-            this.realStorage.setItem(composedKey, value);
-        } catch (err) {
-            this.services.logger.error(`Failed to write to ${this._storageName}: key = ${composedKey} | value = ${value}`, err);
-            this._clearLargeStorageConsumersData();
-            //try again
-            this.realStorage.setItem(composedKey, value);
-        }
+        this.realStorage.setItem(composedKey, value);
     }
 
     getItem(key: TKey, options?: IStorageOptions): NullableString {

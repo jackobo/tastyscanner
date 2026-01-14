@@ -85,8 +85,11 @@ export abstract class OptionModel implements IOptionViewModel {
         if(Check.isNullOrUndefined(delta)) {
             return 0;
         }
+        return Math.round(delta * 100);
+    }
 
-        return Math.round(Math.abs(delta) * 100);
+    get absoluteDelta(): number {
+        return Math.abs(this.delta);
     }
 
     get volatility(): number {

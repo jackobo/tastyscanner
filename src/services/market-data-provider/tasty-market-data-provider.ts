@@ -223,7 +223,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
         return result.map((wl: any) => {
             return {
                 name: wl.name,
-                entries: wl["watchlist-entries"].map(e => e.symbol)
+                entries: wl["watchlist-entries"].map((e: any) => e.symbol)
             }
         })
     }
@@ -233,7 +233,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
         return result.map((wl: any) => {
             return {
                 name: wl.name,
-                entries: wl["watchlist-entries"].map(e => e.symbol)
+                entries: wl["watchlist-entries"].map((e: any) => e.symbol)
             }
         })
 

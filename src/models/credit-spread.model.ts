@@ -29,7 +29,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     }
 
     get pop(): number {
-        return 100 - this.stoOption.delta;
+        return 100 - this.stoOption.absoluteDelta;
 
     }
 

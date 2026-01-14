@@ -125,7 +125,7 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
         this._storedData = this.services.rawLocalStorage.getJson(RawLocalStorageKeys.strategyFilters) ?? {};
 
         for(const key of Object.keys(this._storedData)) {
-            this[key] = this._storedData[key];
+            (this as any)[key] = this._storedData[key];
         }
     }
 

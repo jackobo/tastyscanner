@@ -3,6 +3,7 @@ export interface IOptionViewModel {
     readonly strikePrice: number;
     readonly midPrice: number;
     readonly delta: number;
+    readonly absoluteDelta: number;
     readonly bidAskSpread: number;
     readonly expirationDate: string;
     readonly daysToExpiration: number;
