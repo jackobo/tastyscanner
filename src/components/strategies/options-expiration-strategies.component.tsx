@@ -80,6 +80,10 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
     const bestRiskReward = Math.min(...strategies.map(strategy => strategy.riskRewardRatio));
 
 
+    let label = `${props.expiration.expirationDate} (${props.expiration.daysToExpiration} days) - ${props.expiration.expirationType}`;
+    if(props.expiration.settlementType === 'AM') {
+        label +=  ` [${props.expiration.settlementType}]`
+    }
 
     return (
         <React.Fragment>
@@ -93,7 +97,7 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                             {strategies.length}
                         </StrategiesCountBox>
                         <IonLabel>
-                            {`${props.expiration.expirationDate} (${props.expiration.daysToExpiration} days) - ${props.expiration.expirationType}`}
+                            {label}
                         </IonLabel>
 
                     </ExpirationHeaderItemContentBox>

@@ -25,6 +25,7 @@ export interface IOptionsExpirationRawData {
     expirationDate: string;
     daysToExpiration: number;
     expirationType: string;
+    settlementType: string;
     strikes: IOptionStrikeRawData[];
 }
 

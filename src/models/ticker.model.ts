@@ -109,12 +109,15 @@ export class TickerModel implements ITickerViewModel {
 
         for(const optionChain of optionsChain) {
             for(const expiration of optionChain.expirations) {
-                expirations.push(new OptionsExpirationModel(expiration, this))
+                if(expiration.daysToExpiration <= 730) { //maximum 2 years is enough
+                    expirations.push(new OptionsExpirationModel(expiration, this))
+                }
+
             }
         }
 
         runInAction(() => {
-            this.expirations = expirations;
+            this.expirations = expirations.sort((a, b) => a.daysToExpiration - b.daysToExpiration);
         });
     }
 

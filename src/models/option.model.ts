@@ -14,6 +14,7 @@ export abstract class OptionModel implements IOptionViewModel {
     constructor(public readonly id: string,
                 public readonly streamerSymbol: string,
                 public readonly strike: OptionStrikeModel) {
+
         makeObservable(this, {
             tradeData: computed,
             quoteData: computed,

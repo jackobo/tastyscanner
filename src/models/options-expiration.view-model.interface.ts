@@ -10,10 +10,13 @@ export enum OptionExpirationTypeEnum {
 
 }
 
+export type OptionExpirationSettlementType = 'AM' | 'PM';
+
 export interface IOptionsExpirationVewModel {
     readonly key: string;
     readonly expirationDate: string;
     readonly daysToExpiration: number;
+    readonly settlementType: OptionExpirationSettlementType;
     readonly expirationType: OptionExpirationTypeEnum;
     readonly strikes: IOptionStrikeViewModel[];
     readonly ironCondors: IIronCondorViewModel[];

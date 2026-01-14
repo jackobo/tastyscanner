@@ -151,6 +151,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
                         expirationDate: expiration["expiration-date"],
                         daysToExpiration: expiration["days-to-expiration"],
                         expirationType: expiration["expiration-type"],
+                        settlementType: expiration["settlement-type"],
                         strikes: expiration["strikes"]?.map((strike: any) => {
 
                             return {

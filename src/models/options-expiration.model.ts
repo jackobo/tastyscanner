@@ -1,7 +1,11 @@
 import {OptionModel} from "./option.model";
 import {TickerModel} from "./ticker.model";
 import {OptionStrikeModel} from "./option-strike.model";
-import {IOptionsExpirationVewModel, OptionExpirationTypeEnum} from "./options-expiration.view-model.interface";
+import {
+    IOptionsExpirationVewModel,
+    OptionExpirationSettlementType,
+    OptionExpirationTypeEnum
+} from "./options-expiration.view-model.interface";
 import {IronCondorModel} from "./iron-condor.model";
 import {computed, makeObservable } from "mobx";
 import {StrategiesBuilder} from "./strategies-builder";
@@ -35,7 +39,7 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     get key(): string {
-        return `${this.ticker.symbol}-${this.expirationDate}-${this.daysToExpiration}-${this.expirationType}`;
+        return `${this.ticker.symbol}-${this.expirationDate}-${this.daysToExpiration}-${this.expirationType}-${this.settlementType}`;
     }
 
     get expirationDate(): string {
@@ -48,6 +52,10 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
 
     get expirationType(): OptionExpirationTypeEnum {
         return this.rawData.expirationType as OptionExpirationTypeEnum;
+    }
+
+    get settlementType(): OptionExpirationSettlementType {
+        return this.rawData.settlementType as OptionExpirationSettlementType;
     }
 
     private readonly _strikesMap: Record<number, OptionStrikeModel> = {};
