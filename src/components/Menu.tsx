@@ -2,7 +2,7 @@ import React from "react";
 import {
   IonAccordion,
   IonAccordionGroup,
-  IonContent,
+  IonContent, IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -20,6 +20,7 @@ import {StrategyFiltersComponent} from "./strategy-filters.component";
 import {WatchListsComponent} from "./watch-lists.component";
 import {TickerMenuItemComponent} from "./ticker-menu-item.component";
 import {BrokerAccountsComponent} from "./broker-accounts.component";
+import {filterOutline} from "ionicons/icons";
 
 const MenuHeaderContentBox = styled.div`
   display: flex;
@@ -90,6 +91,7 @@ const Menu: React.FC = observer(() => {
           <IonAccordionGroup>
             <IonAccordion>
               <FiltersAccordionHeaderBox slot="header" color="light">
+                <IonIcon slot="start" icon={filterOutline}/>
                 <IonLabel>Filters</IonLabel>
               </FiltersAccordionHeaderBox>
               <FiltersBox slot="content">
@@ -100,7 +102,7 @@ const Menu: React.FC = observer(() => {
 
         </IonListBox>
 
-        <IonAccordionGroup value="recentTickers">
+        <IonAccordionGroup>
           <IonAccordion value="recentTickers">
             <FiltersAccordionHeaderBox slot="header" color="light">
               <IonLabel>Recent symbols</IonLabel>
