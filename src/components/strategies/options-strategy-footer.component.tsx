@@ -35,6 +35,10 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
             <span>{`${props.strategy.wingsWidth}$`}</span>
             <span>Credit:</span>
             <span>{`${props.strategy.credit.toFixed(2)}$`}</span>
+            <span>Delta:</span>
+            <span>{props.strategy.delta}</span>
+            <span>Theta:</span>
+            <span>{props.strategy.theta}</span>
             <ButtonBox>
                 <IonButton color={"success"} onClick={() => props.onOpenTradeDialog()}>
                     Trade

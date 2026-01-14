@@ -8,11 +8,17 @@ import {
     ITradeRawData
 } from "../services/market-data-provider/market-data-provider.service.interface";
 import {IServiceFactory} from "../services/service-factory.interface";
+import {computed, makeObservable} from "mobx";
 
 export abstract class OptionModel implements IOptionViewModel {
     constructor(public readonly id: string,
                 public readonly streamerSymbol: string,
                 public readonly strike: OptionStrikeModel) {
+        makeObservable(this, {
+            tradeData: computed,
+            quoteData: computed,
+            greeksData: computed
+        })
     }
 
     abstract get isOutOfMoney(): boolean;
@@ -26,15 +32,15 @@ export abstract class OptionModel implements IOptionViewModel {
         return this.ticker.services;
     }
 
-    protected get tradeData(): ITradeRawData | undefined {
+    get tradeData(): ITradeRawData | undefined {
         return this.ticker.getSymbolTrade(this.streamerSymbol);
     }
 
-    protected get quoteData(): IQuoteRawData | undefined {
+    get quoteData(): IQuoteRawData | undefined {
         return this.ticker.getSymbolQuote(this.streamerSymbol);
     }
 
-    protected get greeksData(): IGreeksRawData | undefined {
+    get greeksData(): IGreeksRawData | undefined {
         return this.ticker.getSymbolGreeks(this.streamerSymbol);
     }
 
@@ -80,16 +86,29 @@ export abstract class OptionModel implements IOptionViewModel {
         return ((this.askPrice - this.bidPrice) / this.bidPrice) * 100;
     }
 
-    get delta(): number {
+    get rawDelta(): number {
+        return this.greeksData?.delta ?? 0;
+
+
+    }
+    get absoluteRawDelta(): number {
+        return Math.abs(this.rawDelta);
+    }
+
+    get deltaPercent(): number {
         const delta = this.greeksData?.delta;
         if(Check.isNullOrUndefined(delta)) {
             return 0;
         }
-        return Math.round(delta * 100);
+        return Math.round(this.rawDelta * 100);
     }
 
-    get absoluteDelta(): number {
-        return Math.abs(this.delta);
+    get absoluteDeltaPercent(): number {
+        return Math.abs(this.deltaPercent);
+    }
+
+    get theta(): number {
+        return this.greeksData?.theta ?? 0;
     }
 
     get volatility(): number {

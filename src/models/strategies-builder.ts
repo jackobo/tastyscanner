@@ -29,8 +29,8 @@ export class StrategiesBuilder {
     }
 
     private _filterByDelta(options: OptionModel[]): OptionModel[] {
-        return options.filter(o => o.absoluteDelta >= this.minDelta && o.absoluteDelta <= this.maxDelta && o.midPrice > 0)
-            .sort((a, b) => b.absoluteDelta - a.absoluteDelta);
+        return options.filter(o => o.absoluteDeltaPercent >= this.minDelta && o.absoluteDeltaPercent <= this.maxDelta && o.midPrice > 0)
+            .sort((a, b) => b.absoluteDeltaPercent - a.absoluteDeltaPercent);
     }
 
     getPutsByDelta(): OptionModel[] {
@@ -42,8 +42,8 @@ export class StrategiesBuilder {
     }
 
     buildIronCondors(): IronCondorModel[] {
-        const puts = this.getPutsByDelta().groupByKey(put => put.absoluteDelta.toString());
-        const calls = this.getCallsByDelta().groupByKey(call => call.absoluteDelta.toString());
+        const puts = this.getPutsByDelta().groupByKey(put => put.absoluteDeltaPercent.toString());
+        const calls = this.getCallsByDelta().groupByKey(call => call.absoluteDeltaPercent.toString());
 
         const putsDeltas = Object.keys(puts).map(d => parseFloat(d)).sort((a, b) => b - a);
         const callsDeltas = Object.keys(calls).map(d => parseFloat(d)).sort((a, b) => b - a);

@@ -3,6 +3,7 @@ import {observer} from "mobx-react";
 import styled from "styled-components";
 import {OptionsStrategyLegBaseBox} from "./boxes/options-strategy-leg-base.box";
 import {IOptionsStrategyLegViewModel} from "../../models/options-strategy-leg.view-model.interface";
+import {DELTA_SYMBOL} from "../../utils/global-constants";
 
 
 const OptionPriceBox = styled.span`
@@ -30,7 +31,7 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
             <span>{props.leg.option.optionType}</span>
             <StrikePriceBox>{props.leg.option.strikePrice}</StrikePriceBox>
             <OptionPriceBox>{`${price.toFixed(2)}$`}</OptionPriceBox>
-            <span>{props.leg.option.delta + '\u0394'}</span>
+            <span>{props.leg.option.deltaPercent + DELTA_SYMBOL}</span>
             <span>{props.leg.option.bidAskSpread.toFixed(2) + '%'}</span>
         </StrategyLegBox>
     )

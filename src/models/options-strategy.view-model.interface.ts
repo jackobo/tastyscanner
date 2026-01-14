@@ -9,6 +9,8 @@ export interface IOptionsStrategyViewModel {
     readonly credit: number;
     readonly riskRewardRatio: number;
     readonly pop: number;
+    readonly delta: number;
+    readonly theta: number;
     readonly legs: IOptionsStrategyLegViewModel[];
     sendOrder(options: IOptionsStrategySendOrderParams): Promise<void>;
 }

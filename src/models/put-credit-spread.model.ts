@@ -21,4 +21,9 @@ export class PutCreditSpreadModel extends CreditSpreadModel {
             new OptionsStrategyLegModel(this.stoOption, "STO")
         ];
     }
+
+    get delta(): number {
+        return  Math.round((this.stoOption.absoluteDeltaPercent - this.btoOption.absoluteDeltaPercent) * 10000) / 100;
+    }
+
 }

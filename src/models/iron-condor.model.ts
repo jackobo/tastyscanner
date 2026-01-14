@@ -41,8 +41,8 @@ export class IronCondorModel implements IIronCondorViewModel {
         const breakEvenCall = this.stoCall.strike.expiration.getStrikeAbove(callBreakEven)?.call;
 
 
-        const putBreakEventDelta = breakEvenPut?.absoluteDelta ?? 0;
-        const callBreakEventDelta = breakEvenCall?.absoluteDelta ?? 0;
+        const putBreakEventDelta = breakEvenPut?.absoluteDeltaPercent ?? 0;
+        const callBreakEventDelta = breakEvenCall?.absoluteDeltaPercent ?? 0;
 
         return 100 - (putBreakEventDelta + callBreakEventDelta);
 
@@ -97,6 +97,14 @@ export class IronCondorModel implements IIronCondorViewModel {
                 }
             ]
         });
+    }
+
+    get delta(): number {
+        return  Math.round((this.stoPut.absoluteRawDelta + this.btoCall.absoluteRawDelta - this.btoPut.absoluteRawDelta - this.stoCall.absoluteRawDelta) * 10000) / 100;
+    }
+
+    get theta(): number {
+        return Math.round((this.btoPut.theta + this.btoCall.theta - this.stoPut.theta - this.stoCall.theta) * 10000) / 100;
     }
 
 }
