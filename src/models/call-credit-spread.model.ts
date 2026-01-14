@@ -22,9 +22,6 @@ export class CallCreditSpreadModel extends CreditSpreadModel {
         ];
     }
 
-    get delta(): number {
-        return  Math.round((this.btoOption.absoluteRawDelta - this.stoOption.absoluteRawDelta) * 10000) / 100;
-    }
 
 
 

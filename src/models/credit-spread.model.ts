@@ -13,7 +13,6 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
 
     abstract get strategyName(): string;
     abstract get legs(): OptionsStrategyLegModel[];
-    abstract get delta(): number;
 
 
     get key(): string {
@@ -63,6 +62,11 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
             ]
         });
     }
+
+    get delta(): number {
+        return  Math.round((this.btoOption.rawDelta - this.stoOption.rawDelta) * 10000) / 100;
+    }
+
 
     get theta(): number {
         return Math.round((this.btoOption.theta - this.stoOption.theta) * 10000)/100;
