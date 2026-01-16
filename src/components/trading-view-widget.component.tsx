@@ -24,7 +24,7 @@ export const  TradingViewWidgetComponent: React.FC<{symbol: string; listedMarket
 
     let symbol = props.symbol;
 
-    if(market) {
+    if(market && symbol) {
        symbol = `${market}:${symbol}`;
     }
 
@@ -32,7 +32,7 @@ export const  TradingViewWidgetComponent: React.FC<{symbol: string; listedMarket
         () => {
 
 
-            if(!props.symbol) return;
+            if(!symbol) return;
 
             const existingScript = document.getElementById("tradingview_widget_script");
             if(existingScript) {
@@ -64,7 +64,7 @@ export const  TradingViewWidgetComponent: React.FC<{symbol: string; listedMarket
           "backgroundColor": "#ffffff",
           "gridColor": "rgba(46, 46, 46, 0.06)",
           "watchlist": [],
-          "withdateranges": false,
+          "withdateranges": true,
           "compareSymbols": [],
           "studies": [
             "STD;Bollinger_Bands",
@@ -74,7 +74,7 @@ export const  TradingViewWidgetComponent: React.FC<{symbol: string; listedMarket
         }`;
             container.current?.appendChild(script);
         },
-        [props.symbol, market]
+        [symbol, market]
     );
 
     return (
