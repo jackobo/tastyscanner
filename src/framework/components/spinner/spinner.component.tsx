@@ -1,6 +1,7 @@
 import React from "react";
 import {observer} from "mobx-react";
 import styled, {keyframes} from "styled-components";
+import {SpinnerFullSizeContainerBox} from "./spinner-full-size-container.box";
 
 
 const rotateAnimation = keyframes`
@@ -51,8 +52,19 @@ const SpinnerBox = styled.span`
 
 interface SpinnerComponentProps {
     className?: string;
+    fillContainer?: boolean;
 }
 export const SpinnerComponent: React.FC<SpinnerComponentProps> = observer((props) => {
+
+    if(props.fillContainer) {
+        return (
+            <SpinnerFullSizeContainerBox>
+                <SpinnerContainerBox className={props.className}>
+                    <SpinnerBox/>
+                </SpinnerContainerBox>
+            </SpinnerFullSizeContainerBox>
+        )
+    }
 
     return (
         <SpinnerContainerBox className={props.className}>

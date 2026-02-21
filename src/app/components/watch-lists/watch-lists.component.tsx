@@ -6,6 +6,7 @@ import { IonItem, IonLabel } from "@ionic/react";
 import styled from "styled-components";
 import {IWatchListRawData} from "../../services/market-data-provider/market-data-provider.service.interface";
 import {TickerMenuItemComponent} from "../ticker/ticker-menu-item.component";
+import {IonSpinnerComponent} from "../../../framework/components/spinner/ion-spinner.component";
 
 const AccordionHeaderBox = styled(IonItem)`
   cursor: pointer;
@@ -36,14 +37,20 @@ const WatchListComponent: React.FC<{watchList: IWatchListRawData}> = observer((p
 
 
 export const WatchListsComponent: React.FC = observer(() => {
-    const [watchLists, setWatchLists] = useState<IWatchListRawData[]>();
+    const [watchLists, setWatchLists] = useState<IWatchListRawData[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const services = useServices();
 
     useEffect(() => {
         services.marketDataProvider.getUserWatchLists().then(data => {
             setWatchLists(data);
+            setIsLoading(false);
         });
     }, [services.marketDataProvider]);
+
+    if(isLoading) {
+        return (<IonSpinnerComponent fillContainer={true}/>)
+    }
 
     return (
         <IonAccordionGroup>

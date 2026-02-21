@@ -170,8 +170,18 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
     }
 
 
-    private _executeTastyApi<TResult>(apiCall: (tastyClient: TastyTradeClient) => Promise<TResult>): Promise<TResult> {
-        return this._getTastyClient().then(apiCall);
+    private async _executeTastyApi<TResult>(apiCall: (tastyClient: TastyTradeClient) => Promise<TResult>): Promise<TResult> {
+        try {
+            const tastyClient = await this._getTastyClient();
+            return await apiCall(tastyClient);
+        } catch (err) {
+            await this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translate("Failed to call Tasty API. Please check your network connection or your credentials in the app settings.")
+            });
+            throw err;
+        }
+
+
     }
 
     async getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData> {
