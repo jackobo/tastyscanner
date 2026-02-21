@@ -19,6 +19,7 @@ const StrikePriceBox = styled.span`
 const StrategyLegBox = styled(OptionsStrategyLegBaseBox)<{$isSell: boolean}>`
     background-color: ${props => props.$isSell ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'};
     color: ${props => props.$isSell ? 'var(--ion-color-danger-contrast)' : 'var(--ion-color-success-contrast)'};
+    padding: var(--ion-space-8);
 `
 
 export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegViewModel}> = observer((props) => {

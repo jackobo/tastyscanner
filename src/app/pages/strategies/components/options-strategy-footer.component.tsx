@@ -23,6 +23,7 @@ const ButtonBox = styled.div`
     justify-content: flex-end;
     width: 100%;
     grid-column: 1 / -1;
+    margin-top: var(--ion-space-8);
 `
 
 

@@ -59,22 +59,14 @@ const StrategiesCountBox = styled(IonChip)`
 `
 
 const StrategiesBox = styled.div`
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    padding: 12px;
-    ${props => props.theme.containerMediaQuery.xlAndBelow} {
-        grid-template-columns: repeat(3, 1fr)
-    }
-
-    ${props => props.theme.containerMediaQuery.lAndBelow} {
-        grid-template-columns: repeat(2, 1fr)
-    }
-
-    ${props => props.theme.containerMediaQuery.mAndBelow} {
-        grid-template-columns: 1fr;
-    }
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--ion-space-30);
+    padding: var(--ion-space-30);
+    justify-content: center;
 `
+
 
 interface OptionsExpirationStrategiesComponentProps {
     ticker: ITickerViewModel;
@@ -118,6 +110,7 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                                                                          strategy={condor} bestPop={bestPop}
                                                                          bestRiskReward={bestRiskReward}/>))}
                 </StrategiesBox>
+
 
             </IonAccordion>
 

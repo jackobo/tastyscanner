@@ -1,17 +1,18 @@
 import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 import React from "react";
 import {observer} from "mobx-react";
-import {IonCard} from "@ionic/react";
 import {OptionsStrategyHeaderComponent} from "./options-strategy-header.component";
 import {OptionsStrategyLegComponent} from "./options-strategy-leg.component";
 import {OptionsStrategyFooterComponent} from "./options-strategy-footer.component";
 import styled, {css} from "styled-components";
+import {CardBox} from "../../../../framework/components/card/card.box";
 
-export const StrategyBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}>`
+export const StrategyBox = styled(CardBox)<{$isBestPop: boolean; $isBestRiskReward: boolean}>`
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 24px;
+    font-size: var(--ion-font-size-body2);
     ${props => props.$isBestPop && css`
         background-color: var(--ion-color-warning-tint);
         color: var(--ion-color-warning-contrast);
@@ -32,18 +33,18 @@ export interface OptionsStrategyComponentProps {
     strategy: IOptionsStrategyViewModel;
     bestPop: number;
     bestRiskReward: number;
+    className?: string;
 }
 export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> = observer(props => {
     const isBestRiskReward = props.strategy.riskRewardRatio === props.bestRiskReward;
     const isBestPop = props.strategy.pop === props.bestPop;
     return (
-        <IonCard>
-            <StrategyBox $isBestRiskReward={isBestRiskReward}
-                         $isBestPop={isBestPop}>
-                <OptionsStrategyHeaderComponent/>
-                {props.strategy.legs.map(leg => (<OptionsStrategyLegComponent key={leg.key} leg={leg}/>))}
-                <OptionsStrategyFooterComponent strategy={props.strategy}/>
-            </StrategyBox>
-        </IonCard>
+        <StrategyBox $isBestRiskReward={isBestRiskReward}
+                     $isBestPop={isBestPop}
+                     className={props.className}>
+            <OptionsStrategyHeaderComponent/>
+            {props.strategy.legs.map(leg => (<OptionsStrategyLegComponent key={leg.key} leg={leg}/>))}
+            <OptionsStrategyFooterComponent strategy={props.strategy}/>
+        </StrategyBox>
     )
 })

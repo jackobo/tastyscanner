@@ -7,6 +7,7 @@ import {DELTA_SYMBOL} from "../../../utils/global-constants";
 const HeaderBox = styled(OptionsStrategyLegBaseBox)`
     background-color: var(--ion-color-medium);
     color: var(--ion-color-medium-contrast);
+    padding: var(--ion-space-8);
 `
 
 
