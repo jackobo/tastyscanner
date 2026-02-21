@@ -1,6 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
-import {useServices} from "../hooks/use-services.hook";
+import {useServices} from "../../../hooks/use-services.hook";
 import {IonChip, IonRadio, IonRadioGroup, IonRange, IonToggle} from "@ionic/react";
 import styled from "styled-components";
 

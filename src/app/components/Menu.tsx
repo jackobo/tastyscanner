@@ -15,7 +15,7 @@ import {
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
 import styled from "styled-components";
-import {StrategyFiltersComponent} from "./strategy-filters.component";
+import {StrategyFiltersComponent} from "./side-menu/filters/strategy-filters.component";
 import {WatchListsComponent} from "./watch-lists.component";
 import {TickerMenuItemComponent} from "./ticker-menu-item.component";
 import {BrokerAccountsComponent} from "./broker-accounts.component";

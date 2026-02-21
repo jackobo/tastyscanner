@@ -2,7 +2,7 @@ import {ISideMenuItemViewModel, SideMenuRenderResult} from "./side-menu-item.vie
 import {IAppServiceFactory} from "../../../../../app/services/app-service-factory.interface";
 
 export abstract class SideMenuItemBaseModel implements ISideMenuItemViewModel {
-    protected constructor(protected readonly services: IAppServiceFactory) {
+    constructor(protected readonly services: IAppServiceFactory) {
 
     }
 

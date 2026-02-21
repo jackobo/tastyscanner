@@ -1,4 +1,5 @@
 import React from 'react';
+import './app/theme/variables.css'
 import { createRoot } from 'react-dom/client';
 import {AppServiceFactory} from "./app/services/app-service-factory";
 import { AppServiceFactoryContext } from './app/react-contexts/app-service-factory-context';
