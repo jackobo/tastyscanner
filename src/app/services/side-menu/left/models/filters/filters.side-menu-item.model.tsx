@@ -1,38 +1,29 @@
-import {SideMenuItemBaseModel} from "../../../../../../framework/services/side-menu/left/models/side-menu-item-base.model";
 import { SideMenuRenderResult } from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
-import {IFiltersSideMenuItemViewModel} from "./filters.side-menu-item.view-model.interface";
-import {FiltersRightSideMenuRendererModel} from "../../../right/models/filters/filters-right-side-menu-renderer.model";
-import {Lazy} from "../../../../../../framework/utils/lazy";
-import {
-    FiltersSideMenuItemComponent
-} from "../../../../../components/side-menu/filters/filters.side-menu-item.component";
+import {FiltersRightSideMenuRendererModel} from "./filters-right-side-menu-renderer.model";
+import {RightSideTriggerMenuItemModel} from "../right-side-trigger.menu-item.model";
+import {IonIcon} from "@ionic/react";
+import {filterOutline} from "ionicons/icons";
+import React from "react";
 
-export class FiltersSideMenuItemModel extends SideMenuItemBaseModel implements IFiltersSideMenuItemViewModel {
+export class FiltersSideMenuItemModel extends RightSideTriggerMenuItemModel<FiltersRightSideMenuRendererModel> {
+
     get key(): string {
         return "Filters";
     }
 
 
-    render(): SideMenuRenderResult {
+    renderIcon(): React.ReactElement | null {
         return (
-            <FiltersSideMenuItemComponent menuItem={this}/>
+            <IonIcon icon={filterOutline}/>
         )
     }
+    renderMenuItemContent(): SideMenuRenderResult {
+        return this.services.language.translate('Filters');
+    }
 
-    private _rightSideMenuRenderer: Lazy<FiltersRightSideMenuRendererModel> = new Lazy<FiltersRightSideMenuRendererModel>(() => {
+
+    createRightSideMenuRenderer(): FiltersRightSideMenuRendererModel {
         return new FiltersRightSideMenuRendererModel(this.services);
-    });
-
-    get rightSideMenuRenderer(): FiltersRightSideMenuRendererModel {
-        return this._rightSideMenuRenderer.value;
-    }
-
-    get isOpen(): boolean {
-        return this.services.rightSideMenu.currentRenderer === this.rightSideMenuRenderer;
-    }
-
-    async open(): Promise<void>{
-        await this.rightSideMenuRenderer.open();
     }
 
 }

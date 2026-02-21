@@ -1,39 +1,31 @@
-import {IWatchListsSideMenuItemViewModel} from "./watch-lists.side-menu-item.view-model";
-import {
-    SideMenuItemBaseModel
-} from "../../../../../../framework/services/side-menu/left/models/side-menu-item-base.model";
+import React from "react";
 import { SideMenuRenderResult } from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {
-    WatchListsSideMenuItemComponent
-} from "../../../../../components/side-menu/watch-lists/watch-lists.side-menu-item.component";
-import {Lazy} from "../../../../../../framework/utils/lazy";
-import {
     WatchListsRightSideMenuRendererModel
-} from "../../../right/models/watch-lists/watch-lists-right-side-menu-renderer.model";
+} from "./watch-lists-right-side-menu-renderer.model";
+import {RightSideTriggerMenuItemModel} from "../right-side-trigger.menu-item.model";
+import {IonIcon} from "@ionic/react";
+import {eyeOutline} from "ionicons/icons";
 
-export class WatchListsSideMenuItem extends SideMenuItemBaseModel implements IWatchListsSideMenuItemViewModel {
+export class WatchListsSideMenuItem extends RightSideTriggerMenuItemModel<WatchListsRightSideMenuRendererModel> {
+
     get key(): string {
         return "WatchLists"
     }
-    render(): SideMenuRenderResult {
+
+    renderIcon(): React.ReactElement | null {
         return (
-            <WatchListsSideMenuItemComponent menuItem={this}/>
+            <IonIcon icon={eyeOutline}/>
         )
     }
 
-    private _rightSideMenuRenderer: Lazy<WatchListsRightSideMenuRendererModel> = new Lazy<WatchListsRightSideMenuRendererModel>(() => {
+    renderMenuItemContent(): SideMenuRenderResult {
+        return this.services.language.translate('Watch lists')
+    }
+
+    createRightSideMenuRenderer(): WatchListsRightSideMenuRendererModel {
         return new WatchListsRightSideMenuRendererModel(this.services);
-    });
-
-    get rightSideMenuRenderer(): WatchListsRightSideMenuRendererModel {
-        return this._rightSideMenuRenderer.value;
     }
 
-    get isOpen(): boolean {
-        return this.services.rightSideMenu.currentRenderer === this.rightSideMenuRenderer;
-    }
 
-    async open(): Promise<void>{
-        await this.rightSideMenuRenderer.open();
-    }
 }

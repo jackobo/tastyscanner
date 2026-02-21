@@ -26,8 +26,4 @@ export class WatchListsRightSideMenuRendererModel implements ISideMenuContentRen
         return (<WatchListsComponent/>)
     }
 
-    async open(): Promise<void> {
-        await this.services.rightSideMenu.open(this);
-    }
-
 }

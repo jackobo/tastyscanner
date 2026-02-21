@@ -25,8 +25,4 @@ export class FiltersRightSideMenuRendererModel implements ISideMenuContentRender
         return (<StrategyFiltersComponent/>)
     }
 
-    async open(): Promise<void> {
-        await this.services.rightSideMenu.open(this);
-    }
-
 }
