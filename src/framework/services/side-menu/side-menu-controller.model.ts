@@ -8,32 +8,34 @@ export class SideMenuControllerModel implements ISideMenuControllerViewModel {
         makeObservable(this, {
             isOpen: observable.ref
         });
-        this._updateIsOpen();
 
+        menuController.isOpen(this.menuId).then(isOpen => {
+            this._setIsOpen(isOpen);
+        });
     }
 
     isOpen: boolean = false;
 
+    private _setIsOpen(value: boolean): void {
+        runInAction(() => {
+            this.isOpen = value;
+        })
+    }
+
     async toggle(): Promise<void> {
         await menuController.toggle(this.menuId);
-        await this._updateIsOpen();
+
+        this._setIsOpen(!this.isOpen);
     }
 
     async open(): Promise<void> {
         await menuController.open(this.menuId);
-        await this._updateIsOpen();
+        this._setIsOpen(true);
     }
 
     async close(): Promise<void> {
         await menuController.close(this.menuId);
-        await this._updateIsOpen();
-    }
-
-    protected async _updateIsOpen(): Promise<void> {
-        const open = await menuController.isOpen(this.menuId);
-        runInAction(() => {
-            this.isOpen = open;
-        })
+        this._setIsOpen(false);
     }
 
 }

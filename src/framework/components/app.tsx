@@ -69,14 +69,16 @@ export const App: React.FC<AppProps> = observer((props) => {
                     <div id={MAIN_CONTENT}>
                         {services.navigator.currentRoute.render()}
                     </div>
-                    <RightSideMenuComponent menuId={services.rightSideMenu.stickySideMenuId}
+                    <RightSideMenuComponent key={services.rightSideMenu.stickySideMenuId}
+                                            menuId={services.rightSideMenu.stickySideMenuId}
                                             getCurrentRenderer={() => services.rightSideMenu.currentStickyRenderer}/>
                 </IonSplitPaneBox>
 
 
             </IonReactRouter>
 
-            <RightSideMenuComponent menuId={services.rightSideMenu.nonStickySideMenuId}
+            <RightSideMenuComponent key={services.rightSideMenu.nonStickySideMenuId}
+                                    menuId={services.rightSideMenu.nonStickySideMenuId}
                                     getCurrentRenderer={() => services.rightSideMenu.currentNonStickyRenderer}/>
             <DialogsContainerComponent/>
             <ToastContainerBox />

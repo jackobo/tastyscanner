@@ -56,7 +56,10 @@ export const RightSideMenuComponent: React.FC<{getCurrentRenderer: () => ISideMe
     }
 
     return (
-        <IonMenuBox menuId={props.menuId} contentId={services.rightSideMenu.contentId} side="end" type="overlay">
+        <IonMenuBox menuId={props.menuId}
+                    contentId={services.rightSideMenu.contentId}
+                    side="end"
+                    type="overlay">
             <IonHeader>
                 <IonToolbar>
                     <ToolBarContentBox>

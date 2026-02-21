@@ -67,9 +67,9 @@ export class RightSideMenuService extends FrameworkServiceBase implements IRight
 
     isOpen(renderer: ISideMenuContentRenderer): boolean {
         if(renderer.isSticky) {
-            return this.stickyController.isOpen && this.stickyController.currentRenderer === renderer;
+            return this.stickyController.currentRenderer === renderer;
         } else {
-            return this.nonStickyController.isOpen && this.nonStickyController.currentRenderer === renderer;
+            return this.nonStickyController.currentRenderer === renderer;
         }
     }
 
