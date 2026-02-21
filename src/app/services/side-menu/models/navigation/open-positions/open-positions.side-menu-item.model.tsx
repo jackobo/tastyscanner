@@ -18,7 +18,7 @@ export class OpenPositionsSideMenuItemModel extends RouteBaseSideMenuItemModel {
     }
 
     renderContent(): SideMenuRenderResult {
-        return "Open positions";
+        return "Positions";
     }
 
 
