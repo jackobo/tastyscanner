@@ -1,7 +1,7 @@
 import React from "react";
 import {
     SideMenuRenderResult
-} from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
+} from "../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 
 
 export interface IRightSideTriggerMenuItemViewModel {

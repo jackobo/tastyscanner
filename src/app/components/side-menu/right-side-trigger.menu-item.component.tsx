@@ -5,7 +5,7 @@ import {
 } from "../../../framework/components/side-menu/left/standard-side-menu-item.component";
 import {
     IRightSideTriggerMenuItemViewModel
-} from "../../services/side-menu/left/models/right-side-triggers/right-side-trigger.menu-item.view-model.interface";
+} from "../../services/side-menu/models/right-side-triggers/right-side-trigger.menu-item.view-model.interface";
 import styled from "styled-components";
 import {IonIcon} from "@ionic/react";
 import {checkmarkOutline} from "ionicons/icons";

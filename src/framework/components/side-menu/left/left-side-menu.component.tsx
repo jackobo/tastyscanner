@@ -42,11 +42,12 @@ const IonListHeaderBox = styled(IonListHeader)`
   min-height: 20px;
   --background: linear-gradient(to right, var(--ion-color-primary), var(--ion-color-tertiary));
   --color: var(--ion-color-primary-contrast);
-  padding: 16px;
+  padding: var(--ion-space-16);
   width: 100%;
 `
 
 const MenuItemsGroupBox = styled(IonList)`
+  margin-top: var(--ion-space-16);
   border-top: 1px solid var(--ion-color-border);
 `
 

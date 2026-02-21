@@ -1,5 +1,5 @@
 import React from "react";
-import { SideMenuRenderResult } from "../../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
+import { SideMenuRenderResult } from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {
     WatchListsRightSideMenuRendererModel
 } from "./watch-lists-right-side-menu-renderer.model";
@@ -24,7 +24,7 @@ export class WatchListsSideMenuItem extends RightSideTriggerMenuItemModel<WatchL
     }
 
     createRightSideMenuRenderer(): WatchListsRightSideMenuRendererModel {
-        return new WatchListsRightSideMenuRendererModel(this.services);
+        return new WatchListsRightSideMenuRendererModel(this.services, this);
     }
 
 

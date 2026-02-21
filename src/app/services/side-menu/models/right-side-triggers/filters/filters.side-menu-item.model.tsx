@@ -1,4 +1,4 @@
-import { SideMenuRenderResult } from "../../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
+import { SideMenuRenderResult } from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {FiltersRightSideMenuRendererModel} from "./filters-right-side-menu-renderer.model";
 import {RightSideTriggerMenuItemModel} from "../right-side-trigger.menu-item.model";
 import {IonIcon} from "@ionic/react";
@@ -23,7 +23,7 @@ export class FiltersSideMenuItemModel extends RightSideTriggerMenuItemModel<Filt
 
 
     createRightSideMenuRenderer(): FiltersRightSideMenuRendererModel {
-        return new FiltersRightSideMenuRendererModel(this.services);
+        return new FiltersRightSideMenuRendererModel(this.services, this);
     }
 
 }

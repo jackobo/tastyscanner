@@ -16,7 +16,7 @@ import {IAppNavigatorService} from "./navigator/app-navigator.service.interface"
 import {AppNavigatorService} from "./navigator/app-navigator.service";
 import {FrameworkServiceFactory} from "../../framework/services/framework-service-factory";
 import {ILeftSideMenuService} from "../../framework/services/side-menu/left/left-side-menu.service.interface";
-import {LeftSideMenuService} from "./side-menu/left/left-side-menu.service";
+import {LeftSideMenuService} from "./side-menu/left-side-menu.service";
 import {Lazy} from "../../framework/utils/lazy";
 
 export class AppServiceFactory extends FrameworkServiceFactory implements IAppServiceFactory {

@@ -2,14 +2,14 @@ import React from "react";
 import {IRightSideTriggerMenuItemViewModel} from "./right-side-trigger.menu-item.view-model.interface";
 import {
     ISideMenuContentRenderer
-} from "../../../../../../framework/services/side-menu/side-menu-content-renderer.interface";
-import {Lazy} from "../../../../../../framework/utils/lazy";
-import {IAppServiceFactory} from "../../../../app-service-factory.interface";
-import {SideMenuItemBaseModel} from "../../../../../../framework/services/side-menu/left/models/side-menu-item-base.model";
-import { SideMenuRenderResult } from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
+} from "../../../../../framework/services/side-menu/side-menu-content-renderer.interface";
+import {Lazy} from "../../../../../framework/utils/lazy";
+import {IAppServiceFactory} from "../../../app-service-factory.interface";
+import {SideMenuItemBaseModel} from "../../../../../framework/services/side-menu/left/models/side-menu-item-base.model";
+import { SideMenuRenderResult } from "../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {
     RightSideTriggerMenuItemComponent
-} from "../../../../../components/side-menu/right-side-trigger.menu-item.component";
+} from "../../../../components/side-menu/right-side-trigger.menu-item.component";
 
 export abstract class RightSideTriggerMenuItemModel<TRightSideMenuRenderer extends ISideMenuContentRenderer> extends SideMenuItemBaseModel implements IRightSideTriggerMenuItemViewModel {
 
