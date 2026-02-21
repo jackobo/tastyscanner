@@ -1,10 +1,10 @@
-import {ByEarningsDate, ISettingsService, IStrategyFiltersViewModel} from "./settings.service.interface";
+import {ByEarningsDate, IStrategySettingsService, IStrategyFiltersViewModel} from "./strategy-settings.service.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 import {AppServiceBase} from "../app-service-base";
 import {IAppServiceFactory} from "../app-service-factory.interface";
 import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";
 
-export class SettingsService extends AppServiceBase implements ISettingsService {
+export class StrategySettingsService extends AppServiceBase implements IStrategySettingsService {
     constructor(services: IAppServiceFactory) {
         super(services);
         this.strategyFilters = new StrategyFiltersModel(services)

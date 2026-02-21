@@ -1,5 +1,5 @@
 
-export interface ISettingsService {
+export interface IStrategySettingsService {
     readonly strategyFilters: IStrategyFiltersViewModel;
 }
 

@@ -18,7 +18,7 @@ export class AppSettingsSideMenuItemModel extends RightSideTriggerMenuItemModel<
         )
     }
     renderMenuItemContent(): SideMenuRenderResult {
-        return this.services.language.translate('App settings');
+        return this.services.language.translate('App strategy-settings');
     }
 
 

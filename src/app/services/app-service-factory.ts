@@ -1,8 +1,8 @@
 import { ITickersService } from "./tickers/tickers.service.interface";
 import {IAppServiceFactory} from "./app-service-factory.interface";
 import {TickersService} from "./tickers/tickers.service";
-import {ISettingsService} from "./settings/settings.service.interface";
-import {SettingsService} from "./settings/settings.service";
+import {IStrategySettingsService} from "./strategy-settings/strategy-settings.service.interface";
+import {StrategySettingsService} from "./strategy-settings/strategy-settings.service";
 import {IMarketDataProviderService} from "./market-data-provider/market-data-provider.service.interface";
 import {MarketDataProviderService} from "./market-data-provider/market-data-provider.service";
 import {IBrokerAccountService} from "./broker-account/broker-account.service.interface";
@@ -53,8 +53,8 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
         return this._tickers.value;
     }
 
-    private _settings: Lazy<ISettingsService> = new Lazy<ISettingsService>(() => new SettingsService(this));
-    get settings(): ISettingsService {
+    private _settings: Lazy<IStrategySettingsService> = new Lazy<IStrategySettingsService>(() => new StrategySettingsService(this));
+    get settings(): IStrategySettingsService {
         return this._settings.value;
     }
 

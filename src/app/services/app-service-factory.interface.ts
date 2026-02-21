@@ -1,5 +1,5 @@
 import {ITickersService} from "./tickers/tickers.service.interface";
-import {ISettingsService} from "./settings/settings.service.interface";
+import {IStrategySettingsService} from "./strategy-settings/strategy-settings.service.interface";
 import {IMarketDataProviderService} from "./market-data-provider/market-data-provider.service.interface";
 import {ILanguageService} from "../../framework/services/language/language.service.interface";
 import {IBrokerAccountService} from "./broker-account/broker-account.service.interface";
@@ -14,7 +14,7 @@ export interface IAppServiceFactory extends IFrameworkServiceFactory {
     readonly sessionStorage: IStorageService<AppSessionStorageKeys>;
     readonly navigator: IAppNavigatorService;
     readonly tickers: ITickersService;
-    readonly settings: ISettingsService;
+    readonly settings: IStrategySettingsService;
     readonly marketDataProvider: IMarketDataProviderService;
     readonly language: ILanguageService;
     readonly brokerAccount: IBrokerAccountService;
