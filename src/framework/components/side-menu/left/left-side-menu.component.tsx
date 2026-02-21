@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  IonContent,
+  IonContent, IonHeader,
   IonList,
   IonListHeader,
   IonMenu,
@@ -26,10 +26,6 @@ const IonMenuBox = styled(IonMenu)`
   --padding-bottom: 20px;
 `
 
-const IonListBox = styled(IonList)`
-  padding: 0;
-`
-
 const IonListHeaderBox = styled(IonListHeader)`
   display: flex;
   flex-direction: column;
@@ -44,6 +40,10 @@ const IonListHeaderBox = styled(IonListHeader)`
   --color: var(--ion-color-primary-contrast);
   padding: var(--ion-space-16);
   width: 100%;
+`
+
+const MainMenusListBox = styled(IonList)`
+  padding:  var(--ion-space-12) 0 0 0;
 `
 
 const MenuItemsGroupBox = styled(IonList)`
@@ -83,18 +83,16 @@ export const LeftSideMenuComponent: React.FC<{appTitle: string}> = observer((pro
 
   return (
       <IonMenuBox contentId={MAIN_CONTENT} type="overlay" menuId={LEFT_SIDE_MENU}>
+        <IonHeader>
+          <IonListHeaderBox>
+            {props.appTitle}
+          </IonListHeaderBox>
+
+        </IonHeader>
         <IonContent>
-          <IonListBox>
-            <IonListHeaderBox>
-              <span>
-                {props.appTitle}
-              </span>
-
-            </IonListHeaderBox>
-
+          <MainMenusListBox>
             {menuItems.map(renderMenuItem)}
-
-          </IonListBox>
+          </MainMenusListBox>
 
           {menuItemsGroups.map(renderGroup)}
 
