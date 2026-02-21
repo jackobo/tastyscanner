@@ -5,6 +5,8 @@ import {IAppServiceFactory} from "../app-service-factory.interface";
 import {FormFields} from "../../../framework/models/forms/form-field.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";
+import {AppSettingsDialogComponent} from "../../components/app-settings/app-settings-dialog.component";
+import {DialogCloseButtonBehavior} from "../../../framework/services/dialog/dialog-enums";
 
 export class AppSettingsService extends AppServiceBase implements IAppSettingsService {
     constructor(services: IAppServiceFactory) {
@@ -13,7 +15,11 @@ export class AppSettingsService extends AppServiceBase implements IAppSettingsSe
         this._form = new AppSettingsForm(services);
         makeObservable<this, '_currentSettings'>(this, {
             _currentSettings: observable.ref
-        })
+        });
+
+        if(!this._currentSettings) {
+            this._showSettingsDialog();
+        }
     }
 
     private readonly _form: AppSettingsForm;
@@ -50,6 +56,13 @@ export class AppSettingsService extends AppServiceBase implements IAppSettingsSe
 
     discardChanges(): void {
         this._form.cancelChanges();
+    }
+
+    private async _showSettingsDialog(): Promise<void> {
+        await this.services.dialog.showStandardDialog({
+            closeButtonBehavior: DialogCloseButtonBehavior.None,
+            render: dialogHandler => (<AppSettingsDialogComponent dialogHandler={dialogHandler}/>)
+        })
     }
 }
 

@@ -23,11 +23,18 @@ const ButtonsContainerBox = styled.div`
     justify-content: space-evenly;
 `
 
-export const AppSettingsComponent: React.FC = observer(() => {
+interface AppSettingsComponentProps {
+    onSave?: () => void;
+}
+
+export const AppSettingsComponent: React.FC<AppSettingsComponentProps> = observer((props) => {
     const services = useServices();
     const fields = services.appSettings.fields;
     const onSave = () => {
         services.appSettings.save();
+        if(props.onSave) {
+            props.onSave();
+        }
     }
 
     const onCancel = () => {

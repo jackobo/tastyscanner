@@ -25,7 +25,9 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
 
     constructor() {
         super();
+        this._appSettings.forceInit();
         this._brokerageAccount.forceInit();
+
     }
 
     private _localStorage: Lazy<IStorageService<AppLocalStorageKeys>> = new Lazy<IStorageService<AppLocalStorageKeys>>(() => new LocalStorageService<AppLocalStorageKeys>());
