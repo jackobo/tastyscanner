@@ -2,7 +2,10 @@ import React from "react";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
-import {IonButton} from "@ionic/react";
+import {useServices} from "../../../hooks/use-services.hook";
+import {SendOrderDialogComponent} from "./send-order/send-order-dialog.component";
+import {DialogCloseButtonBehavior} from "../../../../framework/services/dialog/dialog-enums";
+import {SuccessButton} from "../../../../framework/components/buttons/success-button";
 
 
 const StrategyFooterBox = styled.div`
@@ -23,7 +26,14 @@ const ButtonBox = styled.div`
 `
 
 
-export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrategyViewModel; onOpenTradeDialog: () => void}> = observer((props) => {
+export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrategyViewModel}> = observer((props) => {
+    const services = useServices();
+    const onTrade = async () => {
+        await services.dialog.showStandardDialog({
+            closeButtonBehavior: DialogCloseButtonBehavior.Reject,
+            render: dialogHandler => (<SendOrderDialogComponent dialogHandler={dialogHandler} strategy={props.strategy}/>)
+        })
+    }
 
     return (
         <StrategyFooterBox>
@@ -40,9 +50,9 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
             <span>Theta:</span>
             <span>{props.strategy.theta}</span>
             <ButtonBox>
-                <IonButton color={"success"} onClick={() => props.onOpenTradeDialog()}>
-                    Trade
-                </IonButton>
+                <SuccessButton onClick={onTrade}>
+                    { services.language.translate("Trade")}
+                </SuccessButton>
             </ButtonBox>
 
         </StrategyFooterBox>

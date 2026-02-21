@@ -32,7 +32,6 @@ export interface OptionsStrategyComponentProps {
     strategy: IOptionsStrategyViewModel;
     bestPop: number;
     bestRiskReward: number;
-    onOpenTradeModal: (strategy: IOptionsStrategyViewModel) => void;
 }
 export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> = observer(props => {
     const isBestRiskReward = props.strategy.riskRewardRatio === props.bestRiskReward;
@@ -43,7 +42,7 @@ export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> =
                          $isBestPop={isBestPop}>
                 <OptionsStrategyHeaderComponent/>
                 {props.strategy.legs.map(leg => (<OptionsStrategyLegComponent key={leg.key} leg={leg}/>))}
-                <OptionsStrategyFooterComponent strategy={props.strategy} onOpenTradeDialog={() => props.onOpenTradeModal(props.strategy)}/>
+                <OptionsStrategyFooterComponent strategy={props.strategy}/>
             </StrategyBox>
         </IonCard>
     )

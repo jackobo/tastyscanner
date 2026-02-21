@@ -15,7 +15,7 @@ export class PutCreditSpreadsTabModel extends StrategyBaseTab {
 
     protected renderTickerStrategies(ticker: ITickerViewModel): React.ReactElement {
         return (
-            <PutCreditSpreadsComponent ticker={ticker} onTrade={() => {}}/>
+            <PutCreditSpreadsComponent ticker={ticker}/>
         )
     }
 

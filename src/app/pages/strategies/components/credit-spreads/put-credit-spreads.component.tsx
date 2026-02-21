@@ -5,14 +5,13 @@ import {IOptionsStrategyViewModel} from "../../../../models/options-strategy.vie
 import {AllExpirationsStrategiesComponent} from "../all-expirations-strategies.component";
 
 
-export const PutCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel; onTrade: (strategy: IOptionsStrategyViewModel) => void;}> = observer((props) => {
+export const PutCreditSpreadsComponent: React.FC<{ticker: ITickerViewModel;}> = observer((props) => {
 
     return (
         <AllExpirationsStrategiesComponent ticker={props.ticker}
                                            getExpirations={() => props.ticker.getExpirationsWithPutCreditSpreads()}
                                            getExpirationStrategies={(expiration) => expiration.putCreditSpreads}
-                                           noStrategiesAvailableMessage="No put credit spreads available"
-                                           onTrade={props.onTrade}/>
+                                           noStrategiesAvailableMessage="No put credit spreads available"/>
     );
 
 })

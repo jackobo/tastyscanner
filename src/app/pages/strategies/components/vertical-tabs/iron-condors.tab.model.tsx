@@ -14,7 +14,7 @@ export class IronCondorsTabModel extends StrategyBaseTab {
 
     renderTickerStrategies(ticker: ITickerViewModel): React.ReactElement {
         return (
-            <IronCondorsComponent ticker={ticker} onTrade={() => {}} />
+            <IronCondorsComponent ticker={ticker}/>
         )
     }
 

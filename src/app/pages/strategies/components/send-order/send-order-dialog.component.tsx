@@ -1,45 +1,29 @@
 import React from "react";
-import {IOptionsStrategySendOrderParams, IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
-import {IonButton, IonIcon, IonModal} from "@ionic/react";
+import {IOptionsStrategySendOrderParams, IOptionsStrategyViewModel} from "../../../../models/options-strategy.view-model.interface";
+import {IonIcon} from "@ionic/react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
-import {InputBaseBox} from "../../../components/input-base.box";
-import {chevronDown, chevronUp, closeOutline, lockClosedOutline, lockOpenOutline} from "ionicons/icons";
-import {OrderType, TimeInForce} from "../../../services/brokerage-account/brokerage-account.service.interface";
-import {IOptionsStrategyLegViewModel} from "../../../models/options-strategy-leg.view-model.interface";
-import {NullableString} from "../../../../framework/types/nullable-types";
-import {Check} from "../../../../framework/utils/type-checking";
-
-const ContentBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-`
-
-const HeaderBox = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    width: 100%;
-    padding: 16px;
-    border-bottom: 1px solid var(--ion-color-light-shade);
-`
-const TitleBox = styled.div`
-    flex-grow: 1;
-`
-
-
-const BodyBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
-    flex-grow: 1;
-    justify-content: center;
-    justify-items: center;
-`
-
+import {InputBaseBox} from "../../../../components/input-base.box";
+import {chevronDown, chevronUp, lockClosedOutline, lockOpenOutline} from "ionicons/icons";
+import {OrderType, TimeInForce} from "../../../../services/brokerage-account/brokerage-account.service.interface";
+import {IOptionsStrategyLegViewModel} from "../../../../models/options-strategy-leg.view-model.interface";
+import {NullableString} from "../../../../../framework/types/nullable-types";
+import {Check} from "../../../../../framework/utils/type-checking";
+import {
+    StandardDialogPageComponent
+} from "../../../../../framework/components/modal/page/standard-dialog-page.component";
+import {IDialogHandler} from "../../../../../framework/services/dialog/dialog.service.interface";
+import {
+    StandardDialogHeaderComponent
+} from "../../../../../framework/components/modal/header/standard-dialog-header.component";
+import {useServices} from "../../../../hooks/use-services.hook";
+import {
+    StandardDialogContentComponent
+} from "../../../../../framework/components/modal/content/standard-dialog-content.component";
+import {
+    StandardDialogFooterComponent
+} from "../../../../../framework/components/modal/footer/standard-dialog-footer.component";
+import {PrimaryButton} from "../../../../../framework/components/buttons/primary-button";
 
 const SpacerBox = styled.div`
     grid-column: 1/-1;
@@ -52,23 +36,6 @@ const FieldsGridBox = styled.div`
     grid-template-columns: 1.5fr repeat(5, 1fr);
     row-gap: 4px;
     padding: 0 16px;
-`
-
-
-
-const FooterBox = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    width: 100%;
-    background-color: var(--ion-color-light);
-    padding: 16px;
-    
-`
-
-const CloseButtonBox = styled.div`
-    cursor: pointer;
-    font-size: 1.5rem;
 `
 
 const FieldLabelBox = styled.div`
@@ -306,12 +273,12 @@ const ValueEditorComponent: React.FC<ValueEditorComponentProps> = observer((prop
 
 
 interface SendOrderDialogComponentProps {
-    isOpen: boolean;
+    dialogHandler: IDialogHandler;
     strategy: IOptionsStrategyViewModel;
-    onDitDismiss: () => void;
 }
 
 export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> = observer((props) => {
+    const services = useServices();
     const [limitPrice, setLimitPrice] = React.useState<NullableString>(null);
     const [quantity, setQuantity] = React.useState<number>(1);
     const [orderType] = React.useState<OrderType>("Limit");
@@ -337,8 +304,16 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
             orderParams.price = parseFloat(limitPrice);
         }
 
-        await props.strategy.sendOrder(orderParams);
-        props.onDitDismiss();
+        //TODO - better handle error reporting
+        try {
+            await props.strategy.sendOrder(orderParams);
+            props.dialogHandler.accept();
+        } catch (err) {
+            await services.toaster.showErrorToast({
+                renderContent: () => services.language.translate('Failed to send order')
+            })
+        }
+
     }
 
     const onQuantityChange = (value: NullableString) => {
@@ -350,77 +325,67 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
     }
 
     return (
-        <IonModal isOpen={props.isOpen} onDidDismiss={props.onDitDismiss}>
-            <ContentBox>
-                <HeaderBox>
-                    <TitleBox>
-                        {props.strategy.strategyName}
-                    </TitleBox>
-                    <CloseButtonBox onClick={props.onDitDismiss}>
-                        <IonIcon icon={closeOutline}/>
-                    </CloseButtonBox>
-                </HeaderBox>
-                <BodyBox>
-                    <FieldsGridBox>
+        <StandardDialogPageComponent>
+            <StandardDialogHeaderComponent dialogHandler={props.dialogHandler} title={services.language.translate("Place new order")}/>
+            <StandardDialogContentComponent dialogHandler={props.dialogHandler}>
+                <FieldsGridBox>
 
-                        {props.strategy.legs.map(leg => (<LegComponent key={leg.key} leg={leg}/>))}
+                    {props.strategy.legs.map(leg => (<LegComponent key={leg.key} leg={leg}/>))}
 
-                        <SpacerBox/>
+                    <SpacerBox/>
 
-                        <MidPriceBox>
-                            <FieldLabelBox>
-                                {`Mid price`}
-                            </FieldLabelBox>
-                            <MidPriceValueBox>
-                                {props.strategy.credit}
-                            </MidPriceValueBox>
-                        </MidPriceBox>
+                    <MidPriceBox>
+                        <FieldLabelBox>
+                            {`Mid price`}
+                        </FieldLabelBox>
+                        <MidPriceValueBox>
+                            {props.strategy.credit}
+                        </MidPriceValueBox>
+                    </MidPriceBox>
 
-                        <SpacerBox/>
+                    <SpacerBox/>
 
-                        <ValueEditorComponent  value={ limitPrice}
-                                               defaultValue={props.strategy.credit.toString()}
-                                               onValueChanged={setLimitPrice}
-                                               parseValue={value => parseFloat(value ?? "")}
-                                               label={"Limit Price"}
-                                               offset={0.01}
-                                               onLockerClick={onLockerClick}/>
+                    <ValueEditorComponent  value={ limitPrice}
+                                           defaultValue={props.strategy.credit.toString()}
+                                           onValueChanged={setLimitPrice}
+                                           parseValue={value => parseFloat(value ?? "")}
+                                           label={"Limit Price"}
+                                           offset={0.01}
+                                           onLockerClick={onLockerClick}/>
 
 
 
 
-                        <SpacerBox/>
+                    <SpacerBox/>
 
-                        <ValueEditorComponent  value={ quantity.toString()}
-                                               defaultValue={"1"}
-                                               onValueChanged={onQuantityChange}
-                                               parseValue={value => parseInt(value ?? "1")}
-                                               label={"Quantity"}
-                                               offset={1}/>
+                    <ValueEditorComponent  value={ quantity.toString()}
+                                           defaultValue={"1"}
+                                           onValueChanged={onQuantityChange}
+                                           parseValue={value => parseInt(value ?? "1")}
+                                           label={"Quantity"}
+                                           offset={1}/>
 
 
 
-                        <SpacerBox/>
+                    <SpacerBox/>
 
-                        <OrderTypeBox>
-                            <FieldLabelBox>Order Type</FieldLabelBox>
-                            <ReadonlyFieldValueBox>{orderType}</ReadonlyFieldValueBox>
-                        </OrderTypeBox>
+                    <OrderTypeBox>
+                        <FieldLabelBox>Order Type</FieldLabelBox>
+                        <ReadonlyFieldValueBox>{orderType}</ReadonlyFieldValueBox>
+                    </OrderTypeBox>
 
-                        <TimeInForceBox>
-                            <FieldLabelBox>Time in force</FieldLabelBox>
-                            <ReadonlyFieldValueBox>{timeInForce}</ReadonlyFieldValueBox>
-                        </TimeInForceBox>
+                    <TimeInForceBox>
+                        <FieldLabelBox>Time in force</FieldLabelBox>
+                        <ReadonlyFieldValueBox>{timeInForce}</ReadonlyFieldValueBox>
+                    </TimeInForceBox>
 
-                    </FieldsGridBox>
-
-                </BodyBox>
-                <FooterBox>
-                    <IonButton color={"success"} onClick={sendOrder}>
-                        Send order
-                    </IonButton>
-                </FooterBox>
-            </ContentBox>
-        </IonModal>
-    )
+                </FieldsGridBox>
+            </StandardDialogContentComponent>
+            <StandardDialogFooterComponent dialogHandler={props.dialogHandler}>
+                <PrimaryButton onClick={sendOrder}>
+                    {services.language.translate("Send order")}
+                </PrimaryButton>
+            </StandardDialogFooterComponent>
+        </StandardDialogPageComponent>
+    );
 })

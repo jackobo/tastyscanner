@@ -6,14 +6,13 @@ import {AllExpirationsStrategiesComponent} from "../all-expirations-strategies.c
 
 
 
-export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel; onTrade: (strategy: IOptionsStrategyViewModel) => void;}> = observer((props) => {
+export const IronCondorsComponent: React.FC<{ticker: ITickerViewModel;}> = observer((props) => {
 
     return (
         <AllExpirationsStrategiesComponent ticker={props.ticker}
                                            getExpirations={() => props.ticker.getExpirationsWithIronCondors()}
                                            getExpirationStrategies={(expiration) => expiration.ironCondors}
-                                           noStrategiesAvailableMessage="No iron condors available"
-                                           onTrade={props.onTrade}/>
+                                           noStrategiesAvailableMessage="No iron condors available"/>
     )
 
 })

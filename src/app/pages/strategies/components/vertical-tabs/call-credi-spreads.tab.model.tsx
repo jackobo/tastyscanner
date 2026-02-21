@@ -14,7 +14,7 @@ export class CallCreditSpreadsTabModel extends StrategyBaseTab {
     }
 
     renderTickerStrategies(ticker: ITickerViewModel): React.ReactElement {
-        return (<CallCreditSpreadsComponent ticker={ticker} onTrade={() => {}}/>);
+        return (<CallCreditSpreadsComponent ticker={ticker}/>);
     }
 
 }
