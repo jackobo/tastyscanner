@@ -6,7 +6,7 @@ import {
 
 export interface IRightSideTriggerMenuItemViewModel {
     readonly isOpen: boolean;
-    open(): Promise<void>;
+    onClick(): Promise<void>;
     renderIcon(): React.ReactElement | null;
     renderMenuItemContent(): SideMenuRenderResult;
 }

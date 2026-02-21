@@ -55,6 +55,6 @@ export const RightSideTriggerMenuItemComponent: React.FC<{menuItem: IRightSideTr
         <StandardSideMenuItemComponent renderIcon={() => props.menuItem.renderIcon()}
                                        renderContent={renderContent}
                                        isSelected={() => false}
-                                       onClick={() => props.menuItem.open()}/>
+                                       onClick={() => props.menuItem.onClick()}/>
     )
 })

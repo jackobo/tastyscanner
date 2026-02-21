@@ -40,8 +40,13 @@ export abstract class RightSideTriggerMenuItemModel<TRightSideMenuRenderer exten
         return this.services.rightSideMenu.currentRenderer === this.rightSideMenuRenderer;
     }
 
-    async open(): Promise<void>{
-        await this.services.rightSideMenu.open(this.rightSideMenuRenderer);
+    async onClick(): Promise<void>{
+        if(this.isOpen) {
+            await this.services.rightSideMenu.close();
+        } else {
+            await this.services.rightSideMenu.open(this.rightSideMenuRenderer);
+        }
+
     }
 
 }
