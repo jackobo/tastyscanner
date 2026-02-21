@@ -12,7 +12,6 @@ import {
   //IonNote,
 } from '@ionic/react';
 
-import './Menu.css';
 import {observer} from "mobx-react-lite";
 import {useServices} from "../hooks/use-services.hook";
 import styled from "styled-components";

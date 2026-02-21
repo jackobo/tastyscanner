@@ -63,7 +63,7 @@ export const LeftSideMenuComponent: React.FC = observer(() => {
           <IonListBox>
             <IonListHeaderBox>
               <span>
-                Casino Features Admin
+                Tasty Scanner
               </span>
 
             </IonListHeaderBox>
