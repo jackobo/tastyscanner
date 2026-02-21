@@ -5,5 +5,6 @@ import {IRoute} from "../../../../framework/services/navigator/models/route.inte
 
 export interface IApplicationRoutes extends IApplicationRoutesBase {
     openPositions: IRoute
+    chart: IRoute;
 }
 

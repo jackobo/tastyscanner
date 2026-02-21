@@ -3,22 +3,22 @@ import {IAppServiceFactory} from "../../../../../app-service-factory.interface";
 import {SideMenuRenderResult} from "../../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {IonIcon} from "@ionic/react";
 import React from "react";
-import {homeOutline} from "ionicons/icons";
+import {statsChartOutline} from "ionicons/icons";
 
-export class HomeSideMenuItemModel extends RouteBaseSideMenuItemModel {
+export class ChartSideMenuItemModel extends RouteBaseSideMenuItemModel {
     constructor(services: IAppServiceFactory) {
-        super(services.navigator.routes.home, services);
+        super(services.navigator.routes.chart, services);
     }
 
     renderIcon(): React.ReactElement {
 
         return (
-            <IonIcon slot="start" icon={homeOutline}/>
+            <IonIcon slot="start" icon={statsChartOutline}/>
         )
     }
 
     renderContent(): SideMenuRenderResult {
-        return "Home";
+        return "Chart";
     }
 
 

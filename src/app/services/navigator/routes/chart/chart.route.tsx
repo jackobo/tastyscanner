@@ -1,16 +1,11 @@
-import React from "react";
 import {RootRouteModel} from "../../../../../framework/services/navigator/models/root-route.model";
-
 import {IFrameworkServiceFactory} from "../../../../../framework/services/framework-service-factory.interface";
-import {StrategiesPage} from "../../../../pages/strategies/strategies.page";
 
+import React from "react";
+import {ChartPage} from "../../../../pages/chart/chart.page";
 
-export class HomepageRoute extends RootRouteModel {
+export class ChartRoute  extends RootRouteModel {
     constructor(services: IFrameworkServiceFactory) {
-        super('/', services, () => <StrategiesPage/>);
-    }
-
-    get isHome(): boolean {
-        return true;
+        super('/chart', services, () => <ChartPage/>);
     }
 }

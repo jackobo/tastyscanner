@@ -3,22 +3,22 @@ import {IAppServiceFactory} from "../../../../../app-service-factory.interface";
 import {SideMenuRenderResult} from "../../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {IonIcon} from "@ionic/react";
 import React from "react";
-import {briefcaseOutline} from "ionicons/icons";
+import {layersOutline} from "ionicons/icons";
 
-export class OpenPositionsSideMenuItemModel extends RouteBaseSideMenuItemModel {
+export class StrategiesSideMenuItemModel extends RouteBaseSideMenuItemModel {
     constructor(services: IAppServiceFactory) {
-        super(services.navigator.routes.openPositions, services);
+        super(services.navigator.routes.home, services);
     }
 
     renderIcon(): React.ReactElement {
 
         return (
-            <IonIcon slot="start" icon={briefcaseOutline}/>
+            <IonIcon slot="start" icon={layersOutline}/>
         )
     }
 
     renderContent(): SideMenuRenderResult {
-        return "Open positions";
+        return "Strategies";
     }
 
 
