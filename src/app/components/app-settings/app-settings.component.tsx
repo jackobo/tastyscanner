@@ -1,12 +1,12 @@
 import React from "react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
-import {useServices} from "../../../hooks/use-services.hook";
+import {useServices} from "../../hooks/use-services.hook";
 import {
     StringFieldEditorComponent
-} from "../../../../framework/components/forms/string-field/string-field-editor.component";
-import {PrimaryButton} from "../../../../framework/components/buttons/primary-button";
-import {PrimaryButtonInverted} from "../../../../framework/components/buttons/primary-button-inverted";
+} from "../../../framework/components/forms/string-field/string-field-editor.component";
+import {PrimaryButton} from "../../../framework/components/buttons/primary-button";
+import {PrimaryButtonInverted} from "../../../framework/components/buttons/primary-button-inverted";
 
 const ContainerBox = styled.div`
     display: flex;

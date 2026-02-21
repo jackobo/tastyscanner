@@ -4,7 +4,7 @@ import {useServices} from "../../../hooks/use-services.hook";
 import {
     StandardSideMenuItemComponent
 } from "../../../../framework/components/side-menu/left/standard-side-menu-item.component";
-import {BrokerageAccountDropDownComponent} from "./brokerage-account-drop-down.component";
+import {BrokerageAccountDropDownComponent} from "../../brokerage-account/brokerage-account-drop-down.component";
 import styled from "styled-components";
 
 const ContainerBox = styled.div`

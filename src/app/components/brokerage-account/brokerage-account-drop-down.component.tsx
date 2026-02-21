@@ -1,13 +1,13 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {useServices} from "../../../hooks/use-services.hook";
+import {useServices} from "../../hooks/use-services.hook";
 import {
     StandardDropDownListItemModel
-} from "../../../../framework/components/forms/standard-drop-down/list-view/models/item/standard-drop-down-list-item.model";
+} from "../../../framework/components/forms/standard-drop-down/list-view/models/item/standard-drop-down-list-item.model";
 import {
     StandardDropDownComponent
-} from "../../../../framework/components/forms/standard-drop-down/standard-drop-down.component";
-import {IFormField} from "../../../../framework/models/forms/form-field.interface";
+} from "../../../framework/components/forms/standard-drop-down/standard-drop-down.component";
+import {IFormField} from "../../../framework/models/forms/form-field.interface";
 
 
 interface BrokerageAccountDropDownComponentProps {
