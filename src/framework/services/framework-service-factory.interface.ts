@@ -13,6 +13,8 @@ import {FrameworkSessionStorageKeys} from "./storage/session-storage/framework-s
 import {ILeftSideMenuService} from "./side-menu/left/left-side-menu.service.interface";
 import {IRightSideMenuService} from "./side-menu/right/right-side-menu.service.interface";
 import {IMediaChecks} from "./media-query/media-queries.interface";
+import {IFrameworkThemeService} from "./theme/framework-theme.service.interface";
+import {FrameworkTheme} from "./theme/framework-theme";
 
 export interface IFrameworkServiceFactory {
     readonly logger: ILoggerService;
@@ -29,5 +31,6 @@ export interface IFrameworkServiceFactory {
     readonly leftSideMenu: ILeftSideMenuService;
     readonly rightSideMenu: IRightSideMenuService;
     readonly screenMediaQuery: IMediaChecks;
+    readonly theme: IFrameworkThemeService<FrameworkTheme>;
 
 }

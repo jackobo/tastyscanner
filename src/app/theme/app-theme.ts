@@ -1,7 +1,6 @@
 import 'styled-components';
-import {IMediaQueries} from "../../framework/services/media-query/media-queries.interface";
+import {FrameworkTheme} from "../../framework/services/theme/framework-theme";
 
-export interface AppTheme {
-    containerMediaQuery: IMediaQueries;
-    screenMediaQuery: IMediaQueries;
+export interface AppTheme extends FrameworkTheme {
+
 }

@@ -5,18 +5,17 @@ import {createRoot} from "react-dom/client";
 import {FrameworkServiceFactoryContext} from "./react-contexts/framework-service-factory-context";
 import {App} from "./components/app";
 import { ScreenMediaQueriesChecksContext } from './react-contexts/scren-media-queries-checks.context';
-import {DefaultTheme, ThemeProvider} from "styled-components";
+import {ThemeProvider} from "styled-components";
 
-export interface IRenderAppOptions<TServiceFactory extends IFrameworkServiceFactory, TTheme extends DefaultTheme> {
+export interface IRenderAppOptions<TServiceFactory extends IFrameworkServiceFactory> {
     rootElementId: string;
     appTitle: string;
     serviceFactory: TServiceFactory;
     appServiceFactoryContext: React.Context<TServiceFactory>;
     renderGlobalStyles:() => React.ReactElement;
-    theme: TTheme
 }
 
-export function renderApp<TServiceFactory extends IFrameworkServiceFactory, TTheme extends DefaultTheme>(options: IRenderAppOptions<TServiceFactory, TTheme>) {
+export function renderApp<TServiceFactory extends IFrameworkServiceFactory>(options: IRenderAppOptions<TServiceFactory>) {
     const container = document.getElementById(options.rootElementId);
     if(!container) {
         throw new Error(`Container with id ${options.rootElementId} not found`);
@@ -29,7 +28,7 @@ export function renderApp<TServiceFactory extends IFrameworkServiceFactory, TThe
                 <AppServiceFactoryContext value={options.serviceFactory}>
                     <ScreenMediaQueriesChecksContext.Provider value={options.serviceFactory.screenMediaQuery}>
                         <ScreenMediaQueriesChecksContext.Provider value={options.serviceFactory.screenMediaQuery}>
-                            <ThemeProvider theme={options.theme}>
+                            <ThemeProvider theme={options.serviceFactory.theme as any}>
                                 {options.renderGlobalStyles()}
                                 <App appTitle={options.appTitle}/>
                             </ThemeProvider>

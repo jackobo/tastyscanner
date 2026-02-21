@@ -20,8 +20,9 @@ import {LeftSideMenuService} from "./side-menu/left-side-menu.service";
 import {Lazy} from "../../framework/utils/lazy";
 import {IAppSettingsService} from "./app-settings/app-settings.service.interface";
 import {AppSettingsService} from "./app-settings/app-settings.service";
-import {IThemeService} from "./theme/theme.service.interface";
-import {ThemeService} from "./theme/theme.service";
+import {IFrameworkThemeService} from "../../framework/services/theme/framework-theme.service.interface";
+import {AppTheme} from "../theme/app-theme";
+import {AppThemeService} from "./theme/app-theme.service";
 
 export class AppServiceFactory extends FrameworkServiceFactory implements IAppServiceFactory {
 
@@ -55,6 +56,12 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
         return this._leftSideMenu.value;
     }
 
+    private _theme: Lazy<IFrameworkThemeService<AppTheme>> = new Lazy<IFrameworkThemeService<AppTheme>>(() => new AppThemeService());
+    get theme(): IFrameworkThemeService<AppTheme> {
+        return this._theme.value;
+    }
+
+
     private _tickers: Lazy<ITickersService> = new Lazy<ITickersService>(() => new TickersService(this));
     get tickers(): ITickersService {
         return this._tickers.value;
@@ -80,10 +87,6 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
         return this._brokerageAccount.value;
     }
 
-    private _theme: Lazy<IThemeService> = new Lazy<IThemeService>(() => new ThemeService());
-    get theme(): IThemeService {
-        return this._theme.value;
-    }
 
 
 

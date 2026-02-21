@@ -26,5 +26,4 @@ renderApp({
     serviceFactory: serviceFactory,
     appServiceFactoryContext: AppServiceFactoryContext,
     renderGlobalStyles: () => (<GlobalStyles/>),
-    theme: serviceFactory.theme.currentTheme
 });
