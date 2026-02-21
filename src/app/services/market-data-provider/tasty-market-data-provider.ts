@@ -18,7 +18,6 @@ import {IAppSettingsFields} from "../app-settings/app-settings.service.interface
 
 
 
-
 export class TastyMarketDataProvider implements IMarketDataProviderService {
     constructor(private readonly services: IAppServiceFactory) {
 
@@ -34,12 +33,24 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
 
         reaction(() => this.services.appSettings.currentSettings, async (appSettings) => {
-            await this._connectToTasty(appSettings);
+            if(this._currentTastyClient) {
+                this._currentTastyClient.quoteStreamer.removeEventListener(this._streamEventHandler);
+                this._currentTastyClient.quoteStreamer.disconnect();
+                this._currentTastyClient.session.clear();
+                this._connectToTastyPromise = new Promise((resolve) => {
+                    this._connectToTastyPromiseResolver = resolve;
+                });
+            }
+
+            this._currentTastyClient = await this._connectToTasty(appSettings);
+
         }, {
             fireImmediately: true
         })
 
     }
+
+    private _currentTastyClient: TastyTradeClient | null = null;
 
     public quotes: Record<string, any> = {};
     public trades: Record<string, any> = {};
@@ -48,8 +59,44 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
     private _connectToTastyPromise: Promise<TastyTradeClient>;
     private _connectToTastyPromiseResolver: null | ((value: TastyTradeClient | PromiseLike<TastyTradeClient>) => void) = null;
 
-    private async _connectToTasty(appSettings: IAppSettingsFields | null): Promise<void> {
+    private _lastSymbols: string[] = [];
 
+    private async _connectToTasty(appSettings: IAppSettingsFields | null): Promise<TastyTradeClient | null> {
+
+
+        const config = await this._createTastyClientConfig(appSettings);
+        if(!config) {
+            return null;
+        }
+
+        const tastyClient = new TastyTradeClient(config);
+
+        tastyClient.quoteStreamer.addEventListener(this._streamEventHandler);
+
+        try {
+            await tastyClient.quoteStreamer.connect();
+        } catch(e) {
+            tastyClient.quoteStreamer.removeEventListener(this._streamEventHandler);
+            await this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translate("Failed to connect to Tasty API. Please check your credentials in the app settings.")
+            });
+            return null;
+        }
+
+        if(this._lastSymbols.length > 0) {
+            this._subscribeToSymbols(this._lastSymbols, tastyClient);
+        }
+
+        if(this._connectToTastyPromiseResolver) {
+            this._connectToTastyPromiseResolver(tastyClient);
+        }
+
+
+        return tastyClient;
+
+    }
+
+    private async _createTastyClientConfig(appSettings: IAppSettingsFields | null) {
         const clientSecret = import.meta.env.VITE_CLIENT_SECRET || appSettings?.tastyClientSecret;
         const refreshToken = import.meta.env.VITE_REFRESH_TOKEN || appSettings?.tastyRefreshToken;
 
@@ -58,23 +105,15 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
                 renderContent: () => this.services.language.translate("Tasty API credentials are not set. Please set them in the app settings.")
             })
 
-            return;
+            return null;
         }
 
-        const tastyClient = new TastyTradeClient({
+        return {
             ...TastyTradeClient.ProdConfig,
             clientSecret: clientSecret,
             refreshToken: refreshToken,
             oauthScopes: ['read', 'trade']
-        });
-
-        tastyClient.quoteStreamer.addEventListener(this._streamEventHandler);
-        await tastyClient.quoteStreamer.connect();
-
-        if(this._connectToTastyPromiseResolver) {
-            this._connectToTastyPromiseResolver(tastyClient);
         }
-
     }
 
     private async _getTastyClient(): Promise<TastyTradeClient> {
@@ -230,18 +269,21 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
     subscribe(symbols: string[]): void {
         this._executeTastyApi(async (tastyClient) => {
-            tastyClient.quoteStreamer.subscribe(symbols, [
-                MarketDataSubscriptionType.Quote,
-                MarketDataSubscriptionType.Trade,
-                //MarketDataSubscriptionType.Summary,
-                //MarketDataSubscriptionType.Profile,
-                MarketDataSubscriptionType.Greeks,
-                //MarketDataSubscriptionType.Underlying
-            ]);
+            this._subscribeToSymbols(symbols, tastyClient)
         })
+    }
 
+    private _subscribeToSymbols(symbols: string[], tastyClient: TastyTradeClient): void {
+        tastyClient.quoteStreamer.subscribe(symbols, [
+            MarketDataSubscriptionType.Quote,
+            MarketDataSubscriptionType.Trade,
+            //MarketDataSubscriptionType.Summary,
+            //MarketDataSubscriptionType.Profile,
+            MarketDataSubscriptionType.Greeks,
+            //MarketDataSubscriptionType.Underlying
+        ]);
 
-
+        this._lastSymbols = symbols;
     }
 
     unsubscribe(symbols: string[]): void {
