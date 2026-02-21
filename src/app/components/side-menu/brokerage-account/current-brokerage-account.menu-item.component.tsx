@@ -6,15 +6,38 @@ import {
 } from "../../../../framework/components/side-menu/left/standard-side-menu-item.component";
 import {BrokerageAccountDropDownComponent} from "../../brokerage-account/brokerage-account-drop-down.component";
 import styled from "styled-components";
+import {IonSpinnerComponent} from "../../../../framework/components/spinner/ion-spinner.component";
 
 const ContainerBox = styled.div`
+  
     padding-bottom: var(--ion-space-8);
     border-bottom: 1px solid var(--ion-color-border);
+    
+`
+
+const SpinnerContainerBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ion-space-8);
+    width: 100%;
+    min-height: 80px;
 `
 
 export const CurrentBrokerageAccountMenuItemComponent: React.FC = observer(() => {
     const services = useServices();
     const brokerageAccount = services.brokerageAccount;
+
+    const renderSpinner = () => {
+        return (
+            <SpinnerContainerBox>
+                <IonSpinnerComponent/>
+                <span>{services.language.translate('Loading accounts...')}</span>
+            </SpinnerContainerBox>
+
+        )
+    }
 
     const renderDropDown = () => {
         return (
@@ -22,9 +45,17 @@ export const CurrentBrokerageAccountMenuItemComponent: React.FC = observer(() =>
         )
     }
 
+    const renderContent = () => {
+        if(brokerageAccount.accountsLoadingInProgress) {
+            return renderSpinner();
+        } else {
+            return renderDropDown();
+        }
+    }
+
     return (
         <ContainerBox>
-            <StandardSideMenuItemComponent renderContent={renderDropDown} isSelected={() => false} />
+            <StandardSideMenuItemComponent renderContent={renderContent} isSelected={() => false} />
         </ContainerBox>
 
     )

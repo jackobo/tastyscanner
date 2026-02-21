@@ -28,6 +28,7 @@ export interface IBrokerageAccountService {
     readonly accounts: IBrokerageAccountViewModel[];
     readonly currentAccount: IBrokerageAccountViewModel | null;
     readonly fields: FormFields<IBrokerageAccountSettingsFields>;
+    readonly accountsLoadingInProgress: boolean
     setCurrentAccount(accountNumber: string): void;
 }
 

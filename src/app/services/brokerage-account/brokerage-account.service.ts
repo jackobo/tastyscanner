@@ -11,12 +11,14 @@ import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";
 import {AppFormModel} from "../../models/forms/app-form.model";
 import {FormFields} from "../../../framework/models/forms/form-field.interface";
 
+
 export class BrokerageAccountService extends AppServiceBase implements IBrokerageAccountService {
     constructor(services: IAppServiceFactory) {
         super(services);
         makeObservable(this, {
             accounts: observable.ref,
-            currentAccount: observable.ref
+            currentAccount: observable.ref,
+            accountsLoadingInProgress: observable.ref
         });
 
         this._form =  new BrokerageAccountSettingsForm(this.services);
@@ -27,20 +29,10 @@ export class BrokerageAccountService extends AppServiceBase implements IBrokerag
             }
         })
 
-        services.marketDataProvider.getAccounts().then(accounts => {
+        this._loadAccounts().finally(() => {
             runInAction(() => {
-                this.accounts = accounts.map(acc => new BrokerageAccountModel(acc.accountNumber, services));
-                const lastUsedAccount = services.localStorage.getItem(AppLocalStorageKeys.currentBrokerAccount);
-                if (lastUsedAccount) {
-                    this.setCurrentAccount(lastUsedAccount);
-                }
-
-                if (!this.currentAccount) {
-                    this.currentAccount = this.accounts[0] ?? null;
-                }
-                this._form.fields.accountNumber.setValue(this.currentAccount?.accountNumber ?? null);
-                this._form.commitChanges();
-            })
+                this.accountsLoadingInProgress = false
+            });
         });
     }
 
@@ -49,6 +41,8 @@ export class BrokerageAccountService extends AppServiceBase implements IBrokerag
     accounts: BrokerageAccountModel[] = [];
 
     currentAccount: IBrokerageAccountViewModel | null = null;
+
+    accountsLoadingInProgress: boolean = true;
 
     get fields(): FormFields<IBrokerageAccountSettingsFields> {
         return this._form.fields;
@@ -65,13 +59,32 @@ export class BrokerageAccountService extends AppServiceBase implements IBrokerag
 
 
     }
+
+
+    private async _loadAccounts(): Promise<void> {
+        const accounts = await this.services.marketDataProvider.getAccounts();
+
+        runInAction(() => {
+            this.accounts = accounts.map(acc => new BrokerageAccountModel(acc.accountNumber, this.services));
+            const lastUsedAccount = this.services.localStorage.getItem(AppLocalStorageKeys.currentBrokerAccount);
+            if (lastUsedAccount) {
+                this.setCurrentAccount(lastUsedAccount);
+            }
+
+            if (!this.currentAccount) {
+                this.currentAccount = this.accounts[0] ?? null;
+            }
+            this._form.fields.accountNumber.setValue(this.currentAccount?.accountNumber ?? null);
+            this._form.commitChanges();
+        })
+    }
 }
 
 class BrokerageAccountSettingsForm extends AppFormModel<IBrokerageAccountSettingsFields> {
     protected _createFields(): FormFields<IBrokerageAccountSettingsFields> {
         return {
             accountNumber: this._createField<string>({
-                fieldName: () => this.services.language.translate('Account number'),
+                fieldName: () => this.services.language.translate('Current account'),
             })
         };
     }
