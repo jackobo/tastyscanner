@@ -42,12 +42,15 @@ const HeaderBox = styled(IonHeader)`
   width: 100%;
 `
 
+const ContentBox = styled(IonContent)`
+  --padding-top: var(--ion-space-8);
+`
+
 const MainMenusListBox = styled(IonList)`
-  padding:  var(--ion-space-12) 0 0 0;
+  padding:  0;
 `
 
 const MenuItemsGroupBox = styled(IonList)`
-  margin-top: var(--ion-space-16);
   border-top: 1px solid var(--ion-color-border);
 `
 
@@ -87,14 +90,14 @@ export const LeftSideMenuComponent: React.FC<{appTitle: string}> = observer((pro
           {props.appTitle}
         </HeaderBox>
 
-        <IonContent>
+        <ContentBox>
           <MainMenusListBox>
             {menuItems.map(renderMenuItem)}
           </MainMenusListBox>
 
           {menuItemsGroups.map(renderGroup)}
 
-        </IonContent>
+        </ContentBox>
       </IonMenuBox>
   );
 });
