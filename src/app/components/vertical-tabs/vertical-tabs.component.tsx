@@ -5,11 +5,13 @@ import styled, {css} from "styled-components";
 
 const TabsContainerBox = styled.div`
     display: flex;
-    height: 100%;
+    min-height: 100%;
 `;
 
 
 const TabsSidebarBox = styled.div`
+    position: sticky;
+    top: calc(-1 * var(--ion-space-20) + 4px);
     display: flex;
     flex-direction: column;
     border-top-left-radius: 8px;
