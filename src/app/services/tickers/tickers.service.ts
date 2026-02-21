@@ -18,7 +18,7 @@ export class TickersService extends AppServiceBase implements ITickersService {
 
 
 
-        this.services.marketDataProvider.start().then(() => {
+        this.services.marketDataProvider.waitForConnection().then(() => {
             runInAction(() => {
                 this.recentTickers = [
                     new TickerModel("SPY", this.services)

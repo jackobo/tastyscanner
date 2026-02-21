@@ -80,9 +80,9 @@ export const App: React.FC<AppProps> = observer((props) => {
             <RightSideMenuComponent key={services.rightSideMenu.nonStickySideMenuId}
                                     menuId={services.rightSideMenu.nonStickySideMenuId}
                                     getCurrentRenderer={() => services.rightSideMenu.currentNonStickyRenderer}/>
-            <DialogsContainerComponent/>
-            <ToastContainerBox />
-            <LoadingIndicatorComponent/>
+            <DialogsContainerComponent key={"dialogs-container"}/>
+            <ToastContainerBox key={"toasters-container"}/>
+            <LoadingIndicatorComponent key={"loading-indicator"}/>
         </IonApp>
     );
 });

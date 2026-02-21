@@ -1,6 +1,6 @@
 
 export interface IMarketDataProviderService {
-    start(): Promise<void>;
+    waitForConnection(): Promise<void>;
     getOptionsChain(symbol: string): Promise<IOptionChainRawData[]>;
     subscribe(symbols: string[]): void;
     unsubscribe(symbols: string[]): void;

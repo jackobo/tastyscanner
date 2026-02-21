@@ -26,6 +26,7 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
     constructor() {
         super();
         this._appSettings.forceInit();
+        this._marketDataProvider.forceInit();
         this._brokerageAccount.forceInit();
 
     }

@@ -1,4 +1,4 @@
-import { makeObservable, observable, runInAction } from "mobx";
+import {makeObservable, observable, reaction, runInAction} from "mobx";
 import {
     IGreeksRawData,
     IOptionChainRawData,
@@ -14,32 +14,76 @@ import {
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {Check} from "../../../framework/utils/type-checking";
 import {IAppServiceFactory} from "../app-service-factory.interface";
+import {IAppSettingsFields} from "../app-settings/app-settings.service.interface";
+
 
 
 
 export class TastyMarketDataProvider implements IMarketDataProviderService {
     constructor(private readonly services: IAppServiceFactory) {
-        this._tastyClient = new TastyTradeClient({
-            ...TastyTradeClient.ProdConfig,
-            clientSecret: import.meta.env.VITE_CLIENT_SECRET || services.appSettings.currentSettings?.tastyClientSecret,
-            refreshToken: import.meta.env.VITE_REFRESH_TOKEN|| services.appSettings.currentSettings?.tastyRefreshToken,
-            oauthScopes: ['read', 'trade']
-        });
-        this._tastyClient.quoteStreamer.addEventListener(this._streamEventHandler);
+
+        this._connectToTastyPromise = new Promise((resolve) => {
+            this._connectToTastyPromiseResolver = resolve;
+        })
 
         makeObservable(this, {
             quotes: observable,
             trades: observable,
             greeks: observable,
         });
+
+
+        reaction(() => this.services.appSettings.currentSettings, async (appSettings) => {
+            await this._connectToTasty(appSettings);
+        }, {
+            fireImmediately: true
+        })
+
     }
 
     public quotes: Record<string, any> = {};
     public trades: Record<string, any> = {};
     public greeks: Record<string, any> = {};
 
-    async start(): Promise<void> {
-        await this._tastyClient.quoteStreamer.connect();
+    private _connectToTastyPromise: Promise<TastyTradeClient>;
+    private _connectToTastyPromiseResolver: null | ((value: TastyTradeClient | PromiseLike<TastyTradeClient>) => void) = null;
+
+    private async _connectToTasty(appSettings: IAppSettingsFields | null): Promise<void> {
+
+        const clientSecret = import.meta.env.VITE_CLIENT_SECRET || appSettings?.tastyClientSecret;
+        const refreshToken = import.meta.env.VITE_REFRESH_TOKEN || appSettings?.tastyRefreshToken;
+
+        if(!clientSecret || !refreshToken) {
+            this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translate("Tasty API credentials are not set. Please set them in the app settings.")
+            })
+
+            return;
+        }
+
+        const tastyClient = new TastyTradeClient({
+            ...TastyTradeClient.ProdConfig,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            oauthScopes: ['read', 'trade']
+        });
+
+        tastyClient.quoteStreamer.addEventListener(this._streamEventHandler);
+        await tastyClient.quoteStreamer.connect();
+
+        if(this._connectToTastyPromiseResolver) {
+            this._connectToTastyPromiseResolver(tastyClient);
+        }
+
+    }
+
+    private async _getTastyClient(): Promise<TastyTradeClient> {
+        return await this._connectToTastyPromise;
+    }
+
+
+    async waitForConnection(): Promise<void> {
+        await this._getTastyClient();
     }
 
     getSymbolTrade(symbol: string): ITradeRawData | undefined {
@@ -86,13 +130,22 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
         }
     }
 
+
+    private _executeTastyApi<TResult>(apiCall: (tastyClient: TastyTradeClient) => Promise<TResult>): Promise<TResult> {
+        return this._getTastyClient().then(apiCall);
+    }
+
     async getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData> {
-        const response = await this._tastyClient.instrumentsService.getSingleEquity(symbol);
-        return {
-            listedMarket: response['listed-market'],
-            description: response['description']
-        }
-        /*
+        return await this._executeTastyApi(async (tastyClient) => {
+            const response = await tastyClient.instrumentsService.getSingleEquity(symbol);
+            return {
+                listedMarket: response['listed-market'],
+                description: response['description']
+            }
+        })
+    }
+
+    /*
         {
     "id": 7824,
     "active": true,
@@ -137,50 +190,56 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
     ]
 }
          */
-    }
 
-    private _tastyClient: TastyTradeClient;
+
     async getOptionsChain(symbol: string): Promise<IOptionChainRawData[]> {
 
-        const optionsChain = await this._tastyClient.instrumentsService.getNestedOptionChain(symbol);
-        const result: IOptionChainRawData[] = [];
+        return await this._executeTastyApi(async (tastyClient) => {
+            const optionsChain = await tastyClient.instrumentsService.getNestedOptionChain(symbol);
+            const result: IOptionChainRawData[] = [];
 
 
-        for(const optionChain of optionsChain) {
-            result.push({
-                expirations: optionChain.expirations.map((expiration: any) => {
-                    return {
-                        expirationDate: expiration["expiration-date"],
-                        daysToExpiration: expiration["days-to-expiration"],
-                        expirationType: expiration["expiration-type"],
-                        settlementType: expiration["settlement-type"],
-                        strikes: expiration["strikes"]?.map((strike: any) => {
+            for(const optionChain of optionsChain) {
+                result.push({
+                    expirations: optionChain.expirations.map((expiration: any) => {
+                        return {
+                            expirationDate: expiration["expiration-date"],
+                            daysToExpiration: expiration["days-to-expiration"],
+                            expirationType: expiration["expiration-type"],
+                            settlementType: expiration["settlement-type"],
+                            strikes: expiration["strikes"]?.map((strike: any) => {
 
-                            return {
-                                strikePrice: parseFloat(strike["strike-price"]),
-                                callId: strike["call"],
-                                callStreamerSymbol: strike["call-streamer-symbol"],
-                                putId: strike["put"],
-                                putStreamerSymbol: strike["put-streamer-symbol"]
-                            };
-                        }) ?? []
-                    }
-                })
-            });
-        }
+                                return {
+                                    strikePrice: parseFloat(strike["strike-price"]),
+                                    callId: strike["call"],
+                                    callStreamerSymbol: strike["call-streamer-symbol"],
+                                    putId: strike["put"],
+                                    putStreamerSymbol: strike["put-streamer-symbol"]
+                                };
+                            }) ?? []
+                        }
+                    })
+                });
+            }
 
-        return result;
+            return result;
+        })
+
+
     }
 
     subscribe(symbols: string[]): void {
-        this._tastyClient.quoteStreamer.subscribe(symbols, [
-            MarketDataSubscriptionType.Quote,
-            MarketDataSubscriptionType.Trade,
-            //MarketDataSubscriptionType.Summary,
-            //MarketDataSubscriptionType.Profile,
-            MarketDataSubscriptionType.Greeks,
-            //MarketDataSubscriptionType.Underlying
-        ]);
+        this._executeTastyApi(async (tastyClient) => {
+            tastyClient.quoteStreamer.subscribe(symbols, [
+                MarketDataSubscriptionType.Quote,
+                MarketDataSubscriptionType.Trade,
+                //MarketDataSubscriptionType.Summary,
+                //MarketDataSubscriptionType.Profile,
+                MarketDataSubscriptionType.Greeks,
+                //MarketDataSubscriptionType.Underlying
+            ]);
+        })
+
 
 
     }
@@ -189,7 +248,11 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
         if(symbols.length === 0) {
             return;
         }
-        this._tastyClient.quoteStreamer.unsubscribe(symbols);
+
+        this._executeTastyApi(async (tastyClient) => {
+            tastyClient.quoteStreamer.unsubscribe(symbols);
+        })
+
         /*
         runInAction(() => {
             for(const symbol of symbols) {
@@ -222,53 +285,63 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
 
     async getUserWatchLists(): Promise<IWatchListRawData[]> {
-        const result = await this._tastyClient.watchlistsService.getAllWatchlists();
-        return result.map((wl: any) => {
-            return {
-                name: wl.name,
-                entries: wl["watchlist-entries"].map((e: any) => e.symbol)
-            }
+        return await this._executeTastyApi(async (tastyClient) => {
+            const result = await tastyClient.watchlistsService.getAllWatchlists();
+            return result.map((wl: any) => {
+                return {
+                    name: wl.name,
+                    entries: wl["watchlist-entries"].map((e: any) => e.symbol)
+                }
+            })
         })
+
     }
     async getPlatformWatchLists(): Promise<IWatchListRawData[]> {
-        const result = await this._tastyClient.watchlistsService.getPublicWatchlists();
+        return await this._executeTastyApi(async (tastyClient) => {
+            const result = await tastyClient.watchlistsService.getPublicWatchlists();
 
-        return result.map((wl: any) => {
-            return {
-                name: wl.name,
-                entries: wl["watchlist-entries"].map((e: any) => e.symbol)
-            }
+            return result.map((wl: any) => {
+                return {
+                    name: wl.name,
+                    entries: wl["watchlist-entries"].map((e: any) => e.symbol)
+                }
+            })
         })
+
 
     }
 
     async getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null> {
-        const result = await this._tastyClient.marketMetricsService.getMarketMetrics({symbols: symbol});
 
-        if(!Check.isArray(result) || result.length === 0) {
-            return null;
-        }
+        return await this._executeTastyApi(async (tastyClient) => {
+            const result = await tastyClient.marketMetricsService.getMarketMetrics({symbols: symbol});
 
-        const data = result[0] as any;
-
-        const earningsRawData = data["earnings"];
-
-        let earnings: ISymbolEarningsRawData | undefined;
-
-        if(earningsRawData) {
-            earnings = {
-                expectedReportDate: earningsRawData["expected-report-date"],
-                actualEarningsPerShare: earningsRawData["actual-eps"],
+            if(!Check.isArray(result) || result.length === 0) {
+                return null;
             }
-        }
-        return {
-            beta: data["beta"],
-            impliedVolatilityPercentile: data["implied-volatility-percentile"],
-            liquidityRank: data["liquidity-rank"],
-            impliedVolatilityIndex: data["implied-volatility-index"],
-            impliedVolatilityIndexRank: data["implied-volatility-index-rank"],
-            earnings: earnings
-        }
+
+            const data = result[0] as any;
+
+            const earningsRawData = data["earnings"];
+
+            let earnings: ISymbolEarningsRawData | undefined;
+
+            if(earningsRawData) {
+                earnings = {
+                    expectedReportDate: earningsRawData["expected-report-date"],
+                    actualEarningsPerShare: earningsRawData["actual-eps"],
+                }
+            }
+            return {
+                beta: data["beta"],
+                impliedVolatilityPercentile: data["implied-volatility-percentile"],
+                liquidityRank: data["liquidity-rank"],
+                impliedVolatilityIndex: data["implied-volatility-index"],
+                impliedVolatilityIndexRank: data["implied-volatility-index-rank"],
+                earnings: earnings
+            }
+        })
+
 
 
         /*
@@ -294,42 +367,51 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
     async searchSymbol(query: string): Promise<ISearchSymbolItemRawData[]> {
 
-        const result: any[] = (await this._tastyClient.symbolSearchService.getSymbolData(query)) ?? [];
+        return await this._executeTastyApi(async (tastyClient) => {
+            const result: any[] = (await tastyClient.symbolSearchService.getSymbolData(query)) ?? [];
 
-        return result.map((r: any) => {
-            return {
-                symbol: r.symbol,
-                description: r.description,
-            }
+            return result.map((r: any) => {
+                return {
+                    symbol: r.symbol,
+                    description: r.description,
+                }
+            })
         })
+
 
     }
 
     async getAccounts(): Promise<IAccountRawData[]> {
-        const accounts: any[] = await this._tastyClient.accountsAndCustomersService.getCustomerAccounts()
-        //this._tastyClient.orderService.createOrder("123")
-        return accounts.map(acc => {
-            return {
-                accountNumber: acc.account["account-number"]
-            }
-        });
+        return await this._executeTastyApi(async (tastyClient) => {
+            const accounts: any[] = await tastyClient.accountsAndCustomersService.getCustomerAccounts()
+            //this._tastyClient.orderService.createOrder("123")
+            return accounts.map(acc => {
+                return {
+                    accountNumber: acc.account["account-number"]
+                }
+            });
+        })
+
     }
 
     async sendOrder(accountNumber: string, order: IOrderRequest): Promise<void> {
-        const orderData = {
-            "order-type": order.orderType,
-            "time-in-force": order.timeInForce,
-            "price": order.price,
-            "price-effect": order.priceEffect,
-            "legs": order.legs.map(leg => {
-                return {
-                    "action": leg.action,
-                    "instrument-type": leg.instrumentType,
-                    "quantity": leg.quantity,
-                    "symbol": leg.symbol
-                }
-            })
-        }
-        await this._tastyClient.orderService.createOrder(accountNumber, orderData);
+        await this._executeTastyApi(async (tastyClient) => {
+            const orderData = {
+                "order-type": order.orderType,
+                "time-in-force": order.timeInForce,
+                "price": order.price,
+                "price-effect": order.priceEffect,
+                "legs": order.legs.map(leg => {
+                    return {
+                        "action": leg.action,
+                        "instrument-type": leg.instrumentType,
+                        "quantity": leg.quantity,
+                        "symbol": leg.symbol
+                    }
+                })
+            }
+            await tastyClient.orderService.createOrder(accountNumber, orderData);
+        })
+
     }
 }
