@@ -2,7 +2,7 @@ import { SideMenuRenderResult } from "../../../../../../framework/services/side-
 import {FiltersRightSideMenuRendererModel} from "./filters-right-side-menu-renderer.model";
 import {RightSideTriggerMenuItemModel} from "../right-side-trigger.menu-item.model";
 import {IonIcon} from "@ionic/react";
-import {filterOutline} from "ionicons/icons";
+import {funnelOutline} from "ionicons/icons";
 import React from "react";
 
 export class FiltersSideMenuItemModel extends RightSideTriggerMenuItemModel<FiltersRightSideMenuRendererModel> {
@@ -14,7 +14,7 @@ export class FiltersSideMenuItemModel extends RightSideTriggerMenuItemModel<Filt
 
     renderIcon(): React.ReactElement | null {
         return (
-            <IonIcon icon={filterOutline}/>
+            <IonIcon icon={funnelOutline}/>
         )
     }
     renderMenuItemContent(): SideMenuRenderResult {
