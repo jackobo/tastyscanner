@@ -5,7 +5,7 @@ import {TastyScannerStandardPage} from "../tasty-scanner-standard.page";
 
 export const StrategiesPage: React.FC = observer(() => {
     return (
-        <TastyScannerStandardPage renderHeader={() => "Home"}>
+        <TastyScannerStandardPage>
             <ExploreContainer />
         </TastyScannerStandardPage>
     )

@@ -7,7 +7,7 @@ import {TickerChartComponent} from "../../components/ticker-chart.component";
 export const ChartPage: React.FC = observer(() => {
     const services = useServices();
     return (
-        <TastyScannerStandardPage renderHeader={() => "Home"}>
+        <TastyScannerStandardPage>
             <TickerChartComponent ticker={services.tickers.currentTicker}/>
         </TastyScannerStandardPage>
     )
