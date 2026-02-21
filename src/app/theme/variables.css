@@ -1,0 +1,43 @@
+/* For information on how to create your own theme, please refer to:
+http://ionicframework.com/docs/theming/ */
+:root {
+    --ion-color-notes: #92949C;
+    --ion-color-notes-rgb: 146,148,156;
+    --ion-color-notes-contrast: #ffffff;
+    --ion-color-notes-contrast-rgb: 255,255,255;
+    --ion-color-notes-shade: #637381;
+    --ion-color-notes-tint: #8899A8;
+
+    --ion-space-8: 0.5rem;
+    --ion-space-12: 0.75rem;
+    --ion-space-16: 1rem;
+    --ion-space-20: 1.25rem;
+    --ion-space-24: 1.5rem;
+    --ion-space-30: 1.875rem;
+    --ion-space-32: 2rem;
+    --ion-space-36: 2.25rem;
+    --ion-space-40: 2.5rem;
+    --ion-space-48: 3rem;
+
+    --ion-font-size-h1: 1.625rem;
+    --ion-font-size-h2: 1.5rem;
+    --ion-font-size-h3: 1.375rem;
+    --ion-font-size-h4: 1.25rem;
+    --ion-font-size-h5: 1.125rem;
+    --ion-font-size-h6: 1rem;
+    --ion-font-size-body1: 1.125rem;
+    --ion-font-size-body2: 0.875rem;
+    --ion-font-size-caption: 0.75rem;
+
+    --ion-font-weight-thin: 100;
+    --ion-font-weight-extra-light: 200;
+    --ion-font-weight-regular: 400;
+    --ion-font-weight-medium: 500;
+    --ion-font-weight-semibold: 600;
+    --ion-font-weight-bold: 700;
+    --ion-font-weight-extrabold: 800;
+
+    --ion-border-radius: 8px;
+    --ion-color-border: #DBE0E9;
+    --ion-color-border-focused: var(--ion-color-medium);
+}

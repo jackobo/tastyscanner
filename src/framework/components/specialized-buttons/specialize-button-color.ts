@@ -1,0 +1,1 @@
+export type SpecializeButtonColor = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'success' | 'warning' | 'dark';

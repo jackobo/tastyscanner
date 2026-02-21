@@ -1,27 +1,28 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
-import {ServiceFactory} from "./services/service-factory";
-import { ServiceFactoryContext } from './react-contexts/service-factory-context';
-import './extensions/array.extensions';
+import {AppServiceFactory} from "./app/services/app-service-factory";
+import { AppServiceFactoryContext } from './app/react-contexts/app-service-factory-context';
+import {renderApp} from "./framework/render-app";
+import {GlobalStyles} from "./app/theme/global-styles";
 
-const serviceFactory = new ServiceFactory();
+const serviceFactory = new AppServiceFactory();
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
 /*
 root.render(
   <React.StrictMode>
-      <ServiceFactoryContext.Provider value={serviceFactory}>
+      <AppServiceFactoryContext.Provider value={serviceFactory}>
           <App />
-      </ServiceFactoryContext.Provider>
+      </AppServiceFactoryContext.Provider>
   </React.StrictMode>
 );
 
  */
 
-root.render(
-    <ServiceFactoryContext.Provider value={serviceFactory}>
-        <App />
-    </ServiceFactoryContext.Provider>
-);
+renderApp({
+    rootElementId: "root",
+    serviceFactory: serviceFactory,
+    appServiceFactoryContext: AppServiceFactoryContext,
+    renderGlobalStyles: () => (<GlobalStyles/>)
+});

@@ -1,0 +1,14 @@
+import {ILeftSideMenuService} from "../../../../framework/services/side-menu/left/left-side-menu.service.interface";
+import {ISideMenuItemViewModel} from "../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
+import {AppServiceBase} from "../../app-service-base";
+import {HomeSideMenuItemModel} from "./models/home-side-menu-item.model";
+
+export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenuService {
+    
+    get rootMenuItems(): ISideMenuItemViewModel[] {
+        return [
+            new HomeSideMenuItemModel(this.services),
+        ];
+    }
+
+}

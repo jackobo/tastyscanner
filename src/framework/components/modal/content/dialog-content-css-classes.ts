@@ -1,0 +1,1 @@
+export const CSS_CLASS_STANDARD_DIALOG_CONTENT_WRAPPER = 'standard-dialog-content-wrapper';
