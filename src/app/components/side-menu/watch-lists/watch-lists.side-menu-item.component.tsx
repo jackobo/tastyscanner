@@ -1,30 +1,31 @@
 import React from "react";
 import {observer} from "mobx-react";
 import {
+    IWatchListsSideMenuItemViewModel
+} from "../../../services/side-menu/left/models/watch-lists/watch-lists.side-menu-item.view-model";
+import {
     StandardSideMenuItemComponent
 } from "../../../../framework/components/side-menu/left/standard-side-menu-item.component";
 import {useServices} from "../../../hooks/use-services.hook";
-import {
-    IFiltersSideMenuItemViewModel
-} from "../../../services/side-menu/left/models/filters/filters.side-menu-item.view-model.interface";
 import {IonIcon} from "@ionic/react";
-import {filterOutline} from "ionicons/icons";
+import {eyeOutline} from "ionicons/icons";
 
-export const FiltersSideMenuItemComponent: React.FC<{menuItem: IFiltersSideMenuItemViewModel}> = observer((props) => {
+export const WatchListsSideMenuItemComponent: React.FC<{menuItem: IWatchListsSideMenuItemViewModel}> = observer((props) => {
     const services = useServices();
-    const onClick = async  () => {
+
+    const onClick = async () => {
         await props.menuItem.open();
     }
 
     const renderIcon = () => {
         return (
-            <IonIcon icon={filterOutline}/>
+            <IonIcon icon={eyeOutline}/>
         )
     }
 
     return (
         <StandardSideMenuItemComponent renderIcon={renderIcon}
-                                       renderContent={() => services.language.translate('Filters')}
+                                       renderContent={() => services.language.translate('Watch lists')}
                                        isSelected={() => false}
                                        onClick={onClick}/>
     )

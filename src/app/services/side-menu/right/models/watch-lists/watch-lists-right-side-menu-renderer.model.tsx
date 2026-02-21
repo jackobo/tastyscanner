@@ -5,8 +5,9 @@ import {
 import {IAppServiceFactory} from "../../../../app-service-factory.interface";
 import {StrategyFiltersComponent} from "../../../../../components/side-menu/filters/strategy-filters.component";
 import {StandardRightSideMenuHeaderBox} from "../../../../../components/side-menu/standard-right-side-menu-header.box";
+import {WatchListsComponent} from "../../../../../components/side-menu/watch-lists/watch-lists.component";
 
-export class FiltersRightSideMenuRendererModel implements ISideMenuContentRenderer{
+export class WatchListsRightSideMenuRendererModel implements ISideMenuContentRenderer {
     constructor(private readonly services: IAppServiceFactory) {
 
     }
@@ -15,14 +16,14 @@ export class FiltersRightSideMenuRendererModel implements ISideMenuContentRender
     renderHeader(): string | React.ReactElement {
         return (
             <StandardRightSideMenuHeaderBox>
-                {this.services.language.translate("Filters")}
+                {this.services.language.translate("Watch lists")}
             </StandardRightSideMenuHeaderBox>
         )
 
     }
 
     renderContent(): React.ReactElement {
-        return (<StrategyFiltersComponent/>)
+        return (<WatchListsComponent/>)
     }
 
     async open(): Promise<void> {

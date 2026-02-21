@@ -1,11 +1,11 @@
 import React, {useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
-import {useServices} from "../hooks/use-services.hook";
+import {useServices} from "../../../hooks/use-services.hook";
 import {IonAccordion, IonAccordionGroup } from "@ionic/react";
 import { IonItem, IonLabel } from "@ionic/react";
 import styled from "styled-components";
-import {IWatchListRawData} from "../services/market-data-provider/market-data-provider.service.interface";
-import {TickerMenuItemComponent} from "./ticker-menu-item.component";
+import {IWatchListRawData} from "../../../services/market-data-provider/market-data-provider.service.interface";
+import {TickerMenuItemComponent} from "../../ticker-menu-item.component";
 
 const AccordionHeaderBox = styled(IonItem)`
   cursor: pointer;
