@@ -20,12 +20,12 @@ export class RightSideMenuControllerModel extends SideMenuControllerModel {
         })
     }
 
-    async openRenderer(renderer: ISideMenuContentRenderer): Promise<void> {
+    async show(renderer: ISideMenuContentRenderer): Promise<void> {
         this._setCurrentRenderer(renderer);
         await super.open()
     }
 
-    async close(): Promise<void> {
+    async hide(): Promise<void> {
         this._setCurrentRenderer(null);
         await super.close();
     }
