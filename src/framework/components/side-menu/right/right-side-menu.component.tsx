@@ -4,6 +4,7 @@ import {IonContent, IonHeader, IonIcon, IonMenu, IonToolbar} from "@ionic/react"
 import styled from "styled-components";
 import {closeOutline} from "ionicons/icons";
 import {useFrameworkServices} from "../../../hooks/use-framework-services.hook";
+import {ISideMenuContentRenderer} from "../../../services/side-menu/side-menu-content-renderer.interface";
 
 const IonMenuBox = styled(IonMenu)`
     --width: 25vw;
@@ -33,10 +34,10 @@ const CloseButtonBox = styled.div`
     font-size: 28px;
 `
 
-export const RightSideMenuComponent: React.FC = observer(() => {
+export const RightSideMenuComponent: React.FC<{getCurrentRenderer: () => ISideMenuContentRenderer | null; menuId: string}> = observer((props) => {
     const services = useFrameworkServices();
 
-    const renderer = services.rightSideMenu.currentRenderer;
+    const renderer = props.getCurrentRenderer();
     if(!renderer) {
         return null;
     }
@@ -46,19 +47,16 @@ export const RightSideMenuComponent: React.FC = observer(() => {
     }
 
     const renderContent = () => {
-        if(!services.rightSideMenu.currentRenderer) {
-            return null;
-        }
 
         return renderer.renderContent();
     }
 
     const onCloseButtonClick = async () => {
-        await services.rightSideMenu.close();
+        await services.rightSideMenu.close(renderer);
     }
 
     return (
-        <IonMenuBox menuId={services.rightSideMenu.sideMenuId} contentId={services.rightSideMenu.contentId} side="end" type="overlay">
+        <IonMenuBox menuId={props.menuId} contentId={services.rightSideMenu.contentId} side="end" type="overlay">
             <IonHeader>
                 <IonToolbar>
                     <ToolBarContentBox>

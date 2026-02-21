@@ -1,9 +1,12 @@
 import {ISideMenuContentRenderer} from "../side-menu-content-renderer.interface";
 
 export interface IRightSideMenuService {
-    readonly sideMenuId: string;
     readonly contentId: string;
-    readonly currentRenderer: ISideMenuContentRenderer | null;
+    readonly stickySideMenuId: string;
+    readonly nonStickySideMenuId: string;
+    readonly currentStickyRenderer: ISideMenuContentRenderer | null;
+    readonly currentNonStickyRenderer: ISideMenuContentRenderer | null;
     open(renderer: ISideMenuContentRenderer): Promise<void>;
-    close(): Promise<void>;
+    close(renderer: ISideMenuContentRenderer): Promise<void>;
+    isOpen(renderer: ISideMenuContentRenderer): boolean;
 }

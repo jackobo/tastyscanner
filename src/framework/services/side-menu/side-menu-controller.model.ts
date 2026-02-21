@@ -9,6 +9,7 @@ export class SideMenuControllerModel implements ISideMenuControllerViewModel {
             isOpen: observable.ref
         });
         this._updateIsOpen();
+
     }
 
     isOpen: boolean = false;
@@ -28,7 +29,7 @@ export class SideMenuControllerModel implements ISideMenuControllerViewModel {
         await this._updateIsOpen();
     }
 
-    private async _updateIsOpen(): Promise<void> {
+    protected async _updateIsOpen(): Promise<void> {
         const open = await menuController.isOpen(this.menuId);
         runInAction(() => {
             this.isOpen = open;

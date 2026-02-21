@@ -60,25 +60,6 @@ interface AppProps {
 }
 export const App: React.FC<AppProps> = observer((props) => {
     const services = useFrameworkServices();
-    const isRightSideMenuSticky = services.rightSideMenu.currentRenderer?.isSticky ?? false;
-
-    const renderStickyRightSideMenu = () => {
-        if(!isRightSideMenuSticky) {
-            return null;
-        }
-
-        return (
-            <RightSideMenuComponent/>
-        )
-    }
-
-    const renderNonStickyRightSideMenu = () => {
-        if(isRightSideMenuSticky) {
-            return null;
-        }
-
-        return <RightSideMenuComponent/>
-    }
 
     return (
         <IonApp>
@@ -88,13 +69,15 @@ export const App: React.FC<AppProps> = observer((props) => {
                     <div id={MAIN_CONTENT}>
                         {services.navigator.currentRoute.render()}
                     </div>
-                    {renderStickyRightSideMenu()}
+                    <RightSideMenuComponent menuId={services.rightSideMenu.stickySideMenuId}
+                                            getCurrentRenderer={() => services.rightSideMenu.currentStickyRenderer}/>
                 </IonSplitPaneBox>
 
 
             </IonReactRouter>
 
-            {renderNonStickyRightSideMenu()}
+            <RightSideMenuComponent menuId={services.rightSideMenu.nonStickySideMenuId}
+                                    getCurrentRenderer={() => services.rightSideMenu.currentNonStickyRenderer}/>
             <DialogsContainerComponent/>
             <ToastContainerBox />
             <LoadingIndicatorComponent/>
