@@ -54,7 +54,7 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
         const refreshToken = import.meta.env.VITE_REFRESH_TOKEN || appSettings?.tastyRefreshToken;
 
         if(!clientSecret || !refreshToken) {
-            this.services.toaster.showErrorToast({
+            await this.services.toaster.showErrorToast({
                 renderContent: () => this.services.language.translate("Tasty API credentials are not set. Please set them in the app settings.")
             })
 

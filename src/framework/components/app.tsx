@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import { IonApp, IonSplitPane, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
@@ -55,6 +55,24 @@ const IonSplitPaneBox = styled(IonSplitPane)`
     --side-max-width: 320px;
 `
 
+const ToastContainerComponent: React.FC  = observer(() => {
+    const services = useFrameworkServices();
+    const elementRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        if(elementRef.current) {
+            services.toaster.setContainerElementRef(elementRef.current);
+        }
+    }, [services.toaster]);
+
+    return (
+        <div ref={elementRef}>
+            <ToastContainerBox/>
+        </div>
+
+    )
+})
+
 interface AppProps {
     appTitle: string;
 }
@@ -81,7 +99,7 @@ export const App: React.FC<AppProps> = observer((props) => {
                                     menuId={services.rightSideMenu.nonStickySideMenuId}
                                     getCurrentRenderer={() => services.rightSideMenu.currentNonStickyRenderer}/>
             <DialogsContainerComponent key={"dialogs-container"}/>
-            <ToastContainerBox key={"toasters-container"}/>
+            <ToastContainerComponent key={"toasters-container"}/>
             <LoadingIndicatorComponent key={"loading-indicator"}/>
         </IonApp>
     );

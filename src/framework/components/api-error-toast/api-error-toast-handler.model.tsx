@@ -93,13 +93,13 @@ export class ApiErrorToastHandlerModel<TData> implements IApiErrorToastHandlerVi
 
 
     show(): void {
-        this._toastHandler = this.services.toaster.showErrorToast({
+        this.services.toaster.showErrorToast({
             renderContent: () => (<ApiErrorToastComponent handler={this}/>),
             onClose: () => {
                 this._toastHandler = null;
                 this.options.onDismiss(this);
             }
-        });
+        }).then(handler => this._toastHandler = handler);
     }
 
 }

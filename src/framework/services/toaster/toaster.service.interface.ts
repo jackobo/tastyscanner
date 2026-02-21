@@ -10,7 +10,8 @@ export interface ShowToastOptions {
 }
 
 export interface IToasterService {
-    showToast(options: ShowToastOptions): IToastHandler;
-    showInfoToast(options: ShowToastOptions): IToastHandler;
-    showErrorToast(options: ShowToastOptions): IToastHandler;
+    setContainerElementRef(elementRef: HTMLElement): void;
+    showToast(options: ShowToastOptions): Promise<IToastHandler>;
+    showInfoToast(options: ShowToastOptions): Promise<IToastHandler>;
+    showErrorToast(options: ShowToastOptions): Promise<IToastHandler>;
 }
