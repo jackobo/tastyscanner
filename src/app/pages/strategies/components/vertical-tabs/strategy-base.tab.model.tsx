@@ -1,6 +1,5 @@
 import {VerticalTabModel} from "../../../../components/vertical-tabs/vertical-tab.model";
 import React from "react";
-import {PutCreditSpreadsComponent} from "../credit-spreads/put-credit-spreads.component";
 import {ITickerViewModel} from "../../../../models/ticker.view-model.interface";
 
 export abstract class StrategyBaseTab extends VerticalTabModel {
