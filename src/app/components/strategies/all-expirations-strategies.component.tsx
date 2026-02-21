@@ -7,9 +7,9 @@ import {OptionsExpirationStrategiesComponent} from "./options-expiration-strateg
 import {getEarningsDateRenderPosition} from "./helper-functions";
 import {ITickerViewModel} from "../../models/ticker.view-model.interface";
 import {IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
-import {NullableString} from "../../utils/nullable-types";
 import {reaction} from "mobx";
 import {useServices} from "../../hooks/use-services.hook";
+import {NullableString} from "../../../framework/types/nullable-types";
 
 interface AllExpirationsStrategiesComponentProps {
     ticker: ITickerViewModel;

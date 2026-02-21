@@ -1,5 +1,5 @@
 import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interface";
-import {NullableNumber} from "../utils/nullable-types";
+import {NullableNumber} from "../../framework/types/nullable-types";
 
 export interface ITickerViewModel {
     readonly symbol: string;

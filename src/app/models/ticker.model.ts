@@ -7,7 +7,8 @@ import {
     IGreeksRawData,
     IQuoteRawData, ISymbolInfoRawData, ISymbolMetricsRawData, ITradeRawData
 } from "../services/market-data-provider/market-data-provider.service.interface";
-import {NullableNumber} from "../utils/nullable-types";
+import {NullableNumber} from "../../framework/types/nullable-types";
+
 
 export class TickerModel implements ITickerViewModel {
     constructor(public readonly symbol: string,

@@ -1,6 +1,5 @@
 import { ITickersService } from "./tickers/tickers.service.interface";
 import {IAppServiceFactory} from "./app-service-factory.interface";
-import {Lazy} from "../utils/lazy";
 import {TickersService} from "./tickers/tickers.service";
 import {ISettingsService} from "./settings/settings.service.interface";
 import {SettingsService} from "./settings/settings.service";
@@ -18,6 +17,7 @@ import {AppNavigatorService} from "./navigator/app-navigator.service";
 import {FrameworkServiceFactory} from "../../framework/services/framework-service-factory";
 import {ILeftSideMenuService} from "../../framework/services/side-menu/left/left-side-menu.service.interface";
 import {LeftSideMenuService} from "./side-menu/left/left-side-menu.service";
+import {Lazy} from "../../framework/utils/lazy";
 
 export class AppServiceFactory extends FrameworkServiceFactory implements IAppServiceFactory {
 

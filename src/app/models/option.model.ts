@@ -1,6 +1,5 @@
 import {TickerModel} from "./ticker.model";
 import {IOptionViewModel} from "./option.view-model.interface";
-import {Check} from "../utils/type-checking";
 import {OptionStrikeModel} from "./option-strike.model";
 import {
     IGreeksRawData,
@@ -9,6 +8,7 @@ import {
 } from "../services/market-data-provider/market-data-provider.service.interface";
 import {IAppServiceFactory} from "../services/app-service-factory.interface";
 import {computed, makeObservable} from "mobx";
+import {Check} from "../../framework/utils/type-checking";
 
 export abstract class OptionModel implements IOptionViewModel {
     constructor(public readonly id: string,

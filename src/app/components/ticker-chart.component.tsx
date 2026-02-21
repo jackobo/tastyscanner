@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import {ITickerViewModel} from "../models/ticker.view-model.interface";
 import {IonAccordion, IonAccordionGroup, IonItem} from "@ionic/react";
-import {Check} from "../utils/type-checking";
 import {TradingViewWidgetComponent} from "./trading-view-widget.component";
 import styled from "styled-components";
 import {observer} from "mobx-react";
+import {Check} from "../../framework/utils/type-checking";
 
 const TickerChartHeaderBox = styled(IonItem)`
     cursor: pointer;

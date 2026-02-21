@@ -6,10 +6,10 @@ import {reaction} from "mobx";
 import styled from "styled-components";
 import {ISearchTickerResultItem} from "../services/tickers/tickers.service.interface";
 import {DropDownPopperModel} from "../models/popper/drop-down-popper.model";
-import {isClickInsideElement} from "../utils/is-click-inside-element";
 import {IonIcon} from "@ionic/react";
 import {searchOutline} from "ionicons/icons";
 import {InputBaseBox} from "./input-base.box";
+import {isClickInsideElement} from "../../framework/utils/is-click-inside-element";
 
 
 const ComponentContainerBox = styled.div`

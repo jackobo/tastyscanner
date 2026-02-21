@@ -12,7 +12,8 @@ import {
     ISearchSymbolItemRawData, IAccountRawData, IOrderRequest
 } from "./market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
-import {Check} from "../../utils/type-checking";
+import {Check} from "../../../framework/utils/type-checking";
+
 
 
 export class TastyMarketDataProvider implements IMarketDataProviderService {
