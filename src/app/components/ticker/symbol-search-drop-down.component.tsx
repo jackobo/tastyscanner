@@ -1,15 +1,15 @@
 import React, {useEffect, useRef, useState} from "react";
 import ReactDOM from 'react-dom';
-import {useServices} from "../hooks/use-services.hook";
+import {useServices} from "../../hooks/use-services.hook";
 import {observer} from "mobx-react";
 import {reaction} from "mobx";
 import styled from "styled-components";
-import {ISearchTickerResultItem} from "../services/tickers/tickers.service.interface";
-import {DropDownPopperModel} from "../models/popper/drop-down-popper.model";
+import {ISearchTickerResultItem} from "../../services/tickers/tickers.service.interface";
+import {DropDownPopperModel} from "../../models/popper/drop-down-popper.model";
 import {IonIcon} from "@ionic/react";
 import {searchOutline} from "ionicons/icons";
-import {InputBaseBox} from "./input-base.box";
-import {isClickInsideElement} from "../../framework/utils/is-click-inside-element";
+import {InputBaseBox} from "../input-base.box";
+import {isClickInsideElement} from "../../../framework/utils/is-click-inside-element";
 
 
 const ComponentContainerBox = styled.div`

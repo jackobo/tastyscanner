@@ -2,8 +2,8 @@ import React from "react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
 import {OptionsStrategyLegBaseBox} from "./boxes/options-strategy-leg-base.box";
-import {IOptionsStrategyLegViewModel} from "../../models/options-strategy-leg.view-model.interface";
-import {DELTA_SYMBOL} from "../../utils/global-constants";
+import {IOptionsStrategyLegViewModel} from "../../../models/options-strategy-leg.view-model.interface";
+import {DELTA_SYMBOL} from "../../../utils/global-constants";
 
 
 const OptionPriceBox = styled.span`

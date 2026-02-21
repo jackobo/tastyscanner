@@ -1,4 +1,4 @@
-import {IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
+import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 import React from "react";
 import {observer} from "mobx-react";
 import {IonCard} from "@ionic/react";

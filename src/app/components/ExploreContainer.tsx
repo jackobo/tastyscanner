@@ -2,7 +2,7 @@ import React from 'react';
 import './ExploreContainer.css';
 import styled from "styled-components";
 import {observer} from "mobx-react-lite";
-import {TickerOptionsStrategiesComponent} from "./strategies/ticker-options-strategies.component";
+import {TickerOptionsStrategiesComponent} from "../pages/strategies/components/ticker-options-strategies.component";
 
 const ContainerBox = styled.div`
     position: absolute;

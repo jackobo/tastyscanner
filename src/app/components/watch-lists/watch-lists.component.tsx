@@ -5,7 +5,7 @@ import {IonAccordion, IonAccordionGroup } from "@ionic/react";
 import { IonItem, IonLabel } from "@ionic/react";
 import styled from "styled-components";
 import {IWatchListRawData} from "../../services/market-data-provider/market-data-provider.service.interface";
-import {TickerMenuItemComponent} from "../ticker-menu-item.component";
+import {TickerMenuItemComponent} from "../ticker/ticker-menu-item.component";
 
 const AccordionHeaderBox = styled(IonItem)`
   cursor: pointer;

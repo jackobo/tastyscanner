@@ -1,14 +1,14 @@
 import React from "react";
-import {IOptionsStrategySendOrderParams, IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
+import {IOptionsStrategySendOrderParams, IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 import {IonButton, IonIcon, IonModal} from "@ionic/react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
-import {InputBaseBox} from "../input-base.box";
+import {InputBaseBox} from "../../../components/input-base.box";
 import {chevronDown, chevronUp, closeOutline, lockClosedOutline, lockOpenOutline} from "ionicons/icons";
-import {OrderType, TimeInForce} from "../../services/brokerage-account/brokerage-account.service.interface";
-import {IOptionsStrategyLegViewModel} from "../../models/options-strategy-leg.view-model.interface";
-import {NullableString} from "../../../framework/types/nullable-types";
-import {Check} from "../../../framework/utils/type-checking";
+import {OrderType, TimeInForce} from "../../../services/brokerage-account/brokerage-account.service.interface";
+import {IOptionsStrategyLegViewModel} from "../../../models/options-strategy-leg.view-model.interface";
+import {NullableString} from "../../../../framework/types/nullable-types";
+import {Check} from "../../../../framework/utils/type-checking";
 
 const ContentBox = styled.div`
     display: flex;

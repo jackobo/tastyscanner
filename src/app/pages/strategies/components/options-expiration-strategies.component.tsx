@@ -3,14 +3,14 @@ import {observer} from "mobx-react";
 import {
     IOptionsExpirationVewModel,
     OptionExpirationTypeEnum
-} from "../../models/options-expiration.view-model.interface";
-import {ITickerViewModel} from "../../models/ticker.view-model.interface";
+} from "../../../models/options-expiration.view-model.interface";
+import {ITickerViewModel} from "../../../models/ticker.view-model.interface";
 import {EarningsDatePositionEnum} from "./helper-functions";
-import {IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
+import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 import {
     EarningsDateMarkerAfterExpirationComponent,
     EarningsDateMarkerBeforeExpirationComponent
-} from "../earnings-date-marker.component";
+} from "../../../components/ticker/earnings-date-marker.component";
 import {OptionsStrategyComponent} from "./options-strategy.component";
 import {IonAccordion, IonChip, IonItem, IonLabel} from "@ionic/react";
 import styled, {css} from "styled-components";

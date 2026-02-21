@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import {useServices} from "../hooks/use-services.hook";
+import {useServices} from "../../hooks/use-services.hook";
 import {IonItem, IonMenuToggle} from "@ionic/react";
 import styled from "styled-components";
 

@@ -1,6 +1,6 @@
-import {ITickerViewModel} from "../../models/ticker.view-model.interface";
-import {IOptionsExpirationVewModel} from "../../models/options-expiration.view-model.interface";
-import {Check} from "../../../framework/utils/type-checking";
+import {ITickerViewModel} from "../../../models/ticker.view-model.interface";
+import {IOptionsExpirationVewModel} from "../../../models/options-expiration.view-model.interface";
+import {Check} from "../../../../framework/utils/type-checking";
 
 
 export enum EarningsDatePositionEnum {

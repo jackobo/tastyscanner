@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {observer} from "mobx-react";
-import {useServices} from "../../hooks/use-services.hook";
+import {useServices} from "../../../hooks/use-services.hook";
 import {
     IonContent,
     IonHeader,
@@ -18,8 +18,8 @@ import styled from "styled-components";
 import {IronCondorsComponent} from "./condors/iron-condors.component";
 import {PutCreditSpreadsComponent} from "./credit-spreads/put-credit-spreads.component";
 import {CallCreditSpreadsComponent} from "./credit-spreads/call-credit-spreads.component";
-import {AppLocalStorageKeys} from "../../services/storage/app-local-storage-keys";
-import {IOptionsStrategyViewModel} from "../../models/options-strategy.view-model.interface";
+import {AppLocalStorageKeys} from "../../../services/storage/app-local-storage-keys";
+import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 import {SendOrderDialogComponent} from "./send-order-dialog.component";
 
 const SpinnerContainerBox = styled.div`

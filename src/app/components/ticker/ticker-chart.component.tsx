@@ -1,8 +1,8 @@
 import React from "react";
-import {ITickerViewModel} from "../models/ticker.view-model.interface";
-import {TradingViewWidgetComponent} from "./trading-view-widget.component";
+import {ITickerViewModel} from "../../models/ticker.view-model.interface";
+import {TradingViewWidgetComponent} from "../charts/trading-view-widget.component";
 import {observer} from "mobx-react";
-import {useServices} from "../hooks/use-services.hook";
+import {useServices} from "../../hooks/use-services.hook";
 import styled from "styled-components";
 
 const NoTickerSelectedBox = styled.div`
