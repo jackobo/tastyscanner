@@ -12,10 +12,16 @@ const IonContentBox = styled(IonContent)`
     --padding-start: var(--ion-space-20);
     --padding-end: var(--ion-space-20);
     --padding-bottom: var(--ion-space-20);
+    &::part(scroll) {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
 `
 
 const PageContentBox = styled.div`
     container-type: inline-size;
+    flex-grow: 1;
 `
 
 export interface StandardPageProps extends PropsWithChildren {
