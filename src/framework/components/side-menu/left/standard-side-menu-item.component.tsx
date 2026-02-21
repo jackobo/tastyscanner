@@ -7,6 +7,7 @@ const IonMenuToggleBox = styled(IonMenuToggle)<{$showCursor: boolean}>`
     ${props => props.$showCursor && css`
         cursor: pointer;
     `}
+   
 `
 
 const IonItemBox = styled(IonItem)<{$isSelected: boolean; $level: number}>`
@@ -17,6 +18,9 @@ const IonItemBox = styled(IonItem)<{$isSelected: boolean; $level: number}>`
     `}
 
     --padding-start: ${props => 16 + props.$level * 32}px;
+    &:hover {
+        --background: var(--ion-color-light);
+    }
 `
 
 

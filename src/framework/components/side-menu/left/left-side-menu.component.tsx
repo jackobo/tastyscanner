@@ -92,23 +92,11 @@ export const LeftSideMenuComponent: React.FC<{appTitle: string}> = observer((pro
             </IonListHeaderBox>
 
             {menuItems.map(renderMenuItem)}
+
           </IonListBox>
 
           {menuItemsGroups.map(renderGroup)}
 
-          {
-            /*
-            <IonList id="labels-list">
-            <IonListHeader>Labels</IonListHeader>
-            {labels.map((label, index) => (
-                <IonItem lines="none" key={index}>
-                  <IonIcon aria-hidden="true" slot="start" icon={bookmarkOutline}/>
-                  <IonLabel>{label}</IonLabel>
-                </IonItem>
-            ))}
-          </IonList>
-             */
-          }
         </IonContent>
       </IonMenuBox>
   );
