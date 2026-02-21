@@ -149,7 +149,7 @@ export class TickerModel implements ITickerViewModel {
     }
 
     private _shouldIncludeExpiration(expiration: OptionsExpirationModel): boolean {
-        const filters = this.services.settings.strategyFilters;
+        const filters = this.services.strategySettings.strategyFilters;
         if(expiration.daysToExpiration < filters.minDaysToExpiration
             || expiration.daysToExpiration > filters.maxDaysToExpiration) {
             return false;

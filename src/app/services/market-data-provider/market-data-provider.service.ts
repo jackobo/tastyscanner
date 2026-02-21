@@ -7,10 +7,12 @@ import {
     ITradeRawData, IWatchListRawData
 } from "./market-data-provider.service.interface";
 import {TastyMarketDataProvider} from "./tasty-market-data-provider";
+import {AppServiceBase} from "../app-service-base";
 
-export class MarketDataProviderService implements IMarketDataProviderService {
+export class MarketDataProviderService extends AppServiceBase implements IMarketDataProviderService {
 
-    private _currentProvider: IMarketDataProviderService = new TastyMarketDataProvider();
+
+    private _currentProvider: IMarketDataProviderService = new TastyMarketDataProvider(this.services);
 
     async start(): Promise<void> {
         await this._currentProvider.start();

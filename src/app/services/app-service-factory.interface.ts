@@ -8,13 +8,15 @@ import {IAppNavigatorService} from "./navigator/app-navigator.service.interface"
 import {IStorageService} from "../../framework/services/storage/storage.service.interface";
 import {AppLocalStorageKeys} from "./storage/app-local-storage-keys";
 import {AppSessionStorageKeys} from "./storage/app-session-storage-keys";
+import {IAppSettingsService} from "./app-settings/app-settings.service.interface";
 
 export interface IAppServiceFactory extends IFrameworkServiceFactory {
     readonly localStorage: IStorageService<AppLocalStorageKeys>;
     readonly sessionStorage: IStorageService<AppSessionStorageKeys>;
     readonly navigator: IAppNavigatorService;
+    readonly appSettings: IAppSettingsService;
     readonly tickers: ITickersService;
-    readonly settings: IStrategySettingsService;
+    readonly strategySettings: IStrategySettingsService;
     readonly marketDataProvider: IMarketDataProviderService;
     readonly language: ILanguageService;
     readonly brokerAccount: IBrokerAccountService;

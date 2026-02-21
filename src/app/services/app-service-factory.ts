@@ -18,6 +18,8 @@ import {FrameworkServiceFactory} from "../../framework/services/framework-servic
 import {ILeftSideMenuService} from "../../framework/services/side-menu/left/left-side-menu.service.interface";
 import {LeftSideMenuService} from "./side-menu/left-side-menu.service";
 import {Lazy} from "../../framework/utils/lazy";
+import {IAppSettingsService} from "./app-settings/app-settings.service.interface";
+import {AppSettingsService} from "./app-settings/app-settings.service";
 
 export class AppServiceFactory extends FrameworkServiceFactory implements IAppServiceFactory {
 
@@ -53,12 +55,17 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
         return this._tickers.value;
     }
 
-    private _settings: Lazy<IStrategySettingsService> = new Lazy<IStrategySettingsService>(() => new StrategySettingsService(this));
-    get settings(): IStrategySettingsService {
-        return this._settings.value;
+    private _appSettings: Lazy<IAppSettingsService> = new Lazy<IAppSettingsService>(() => new AppSettingsService(this));
+    get appSettings(): IAppSettingsService {
+        return this._appSettings.value;
     }
 
-    private _marketDataProvider: Lazy<IMarketDataProviderService> = new Lazy<IMarketDataProviderService>(() => new MarketDataProviderService());
+    private _strategySettings: Lazy<IStrategySettingsService> = new Lazy<IStrategySettingsService>(() => new StrategySettingsService(this));
+    get strategySettings(): IStrategySettingsService {
+        return this._strategySettings.value;
+    }
+
+    private _marketDataProvider: Lazy<IMarketDataProviderService> = new Lazy<IMarketDataProviderService>(() => new MarketDataProviderService(this));
     get marketDataProvider(): IMarketDataProviderService {
         return this._marketDataProvider.value;
     }

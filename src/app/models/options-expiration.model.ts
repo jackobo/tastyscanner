@@ -85,7 +85,7 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     private _filterStrategies<T extends IOptionsStrategyViewModel>(strategies: T[]): T[] {
-        return strategies.filter(s => s.riskRewardRatio > 0 && s.riskRewardRatio <= this.services.settings.strategyFilters.maxRiskRewardRatio);
+        return strategies.filter(s => s.riskRewardRatio > 0 && s.riskRewardRatio <= this.services.strategySettings.strategyFilters.maxRiskRewardRatio);
     }
 
     get ironCondors(): IronCondorModel[] {

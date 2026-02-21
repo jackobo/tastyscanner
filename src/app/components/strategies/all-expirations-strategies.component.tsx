@@ -35,12 +35,12 @@ export const AllExpirationsStrategiesComponent: React.FC<AllExpirationsStrategie
     }, [expirations, getExpirationStrategies])
 
     useEffect(() => {
-        const r = reaction(() => services.settings.strategyFilters.lastUpdate,
+        const r = reaction(() => services.strategySettings.strategyFilters.lastUpdate,
             () => {
                 setCurrentStrategies(expandedExpirationKey);
             });
         return () => r();
-    }, [setCurrentStrategies, expandedExpirationKey, services.settings.strategyFilters.lastUpdate]);
+    }, [setCurrentStrategies, expandedExpirationKey, services.strategySettings.strategyFilters.lastUpdate]);
 
     if(expirations.length === 0) {
         return (

@@ -81,14 +81,14 @@ const SeparatorBox = styled.hr`
 
 const WingValueComponent: React.FC<{value: number}> = observer((props) => {
     const services = useServices();
-    const isChecked = services.settings.strategyFilters.wings.includes(props.value);
+    const isChecked = services.strategySettings.strategyFilters.wings.includes(props.value);
     const onToggleHandle = (checked: boolean) => {
-        const wings = [...services.settings.strategyFilters.wings];
+        const wings = [...services.strategySettings.strategyFilters.wings];
         if(checked) {
             wings.push(props.value);
-            services.settings.strategyFilters.wings = wings.sort((a, b) => a - b);
+            services.strategySettings.strategyFilters.wings = wings.sort((a, b) => a - b);
         } else {
-            services.settings.strategyFilters.wings = wings.filter(w => w !== props.value);
+            services.strategySettings.strategyFilters.wings = wings.filter(w => w !== props.value);
         }
     }
     return (
@@ -173,7 +173,7 @@ const RangeEditorComponent: React.FC<RangeEditorComponentProps> = observer((prop
 export const StrategyFiltersComponent: React.FC = observer(() => {
     const services = useServices();
 
-    const filters = services.settings.strategyFilters;
+    const filters = services.strategySettings.strategyFilters;
 
     return (
         <FiltersContainerBox>
@@ -237,8 +237,8 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
                 Filter expirations by earnings date
             </FilterLabelBox>
 
-            <ByEarningDateRadioGroupBox value={services.settings.strategyFilters.byEarningsDate}
-                           onIonChange={e => services.settings.strategyFilters.byEarningsDate = e.detail.value}>
+            <ByEarningDateRadioGroupBox value={services.strategySettings.strategyFilters.byEarningsDate}
+                           onIonChange={e => services.strategySettings.strategyFilters.byEarningsDate = e.detail.value}>
                 <IonRadio value={"all"} labelPlacement="end">
                     No filter
                 </IonRadio>

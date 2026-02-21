@@ -3,5 +3,6 @@ export enum AppLocalStorageKeys {
     currentStrategyTab = "currentStrategyTab",
     strategyFilters = "strategyFilters",
     recentTickers = "recentTickers",
+    appSettings = "appSettings"
 }
 

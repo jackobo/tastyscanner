@@ -13,15 +13,16 @@ import {
 } from "./market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
 import {Check} from "../../../framework/utils/type-checking";
+import {IAppServiceFactory} from "../app-service-factory.interface";
 
 
 
 export class TastyMarketDataProvider implements IMarketDataProviderService {
-    constructor() {
+    constructor(private readonly services: IAppServiceFactory) {
         this._tastyClient = new TastyTradeClient({
             ...TastyTradeClient.ProdConfig,
-            clientSecret: import.meta.env.VITE_CLIENT_SECRET,
-            refreshToken: import.meta.env.VITE_REFRESH_TOKEN,
+            clientSecret: import.meta.env.VITE_CLIENT_SECRET || services.appSettings.currentSettings?.tastyClientSecret,
+            refreshToken: import.meta.env.VITE_REFRESH_TOKEN|| services.appSettings.currentSettings?.tastyRefreshToken,
             oauthScopes: ['read', 'trade']
         });
         this._tastyClient.quoteStreamer.addEventListener(this._streamEventHandler);

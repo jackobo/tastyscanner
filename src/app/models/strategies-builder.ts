@@ -17,15 +17,15 @@ export class StrategiesBuilder {
     }
 
     get minDelta(): number {
-        return this.services.settings.strategyFilters.minDelta;
+        return this.services.strategySettings.strategyFilters.minDelta;
     }
 
     get maxDelta(): number {
-        return this.services.settings.strategyFilters.maxDelta;
+        return this.services.strategySettings.strategyFilters.maxDelta;
     }
 
     get wings(): number[] {
-        return this.services.settings.strategyFilters.wings;
+        return this.services.strategySettings.strategyFilters.wings;
     }
 
     private _filterByDelta(options: OptionModel[]): OptionModel[] {
@@ -129,7 +129,7 @@ export class StrategiesBuilder {
     }
 
     private _hasGoodBidAskSpread(options: OptionModel[]): boolean {
-        return !options.some(o => o.bidAskSpread < 0 || o.bidAskSpread > this.services.settings.strategyFilters.maxBidAskSpread)
+        return !options.some(o => o.bidAskSpread < 0 || o.bidAskSpread > this.services.strategySettings.strategyFilters.maxBidAskSpread)
     }
 
 }
