@@ -3,6 +3,15 @@ import {observer} from "mobx-react";
 import {IVerticalTabViewModel} from "./vertical-tab.view-model.interface";
 import styled, {css} from "styled-components";
 
+const RootContainerBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: var(--ion-space-12);
+    width: 100%;
+    min-height: 100%;
+    
+`
+
 const TabsContainerBox = styled.div`
     display: flex;
     min-height: 100%;
@@ -47,13 +56,7 @@ const TabButtonBox = styled.button<{ $isActive: boolean }>`
 
 `;
 
-const ContentContainerBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: var(--ion-space-12);
-    width: 100%;
-    flex: 1;
-`;
+
 
 const ContentTitleBox = styled.div`
     font-size: var(--ion-font-size-h3);
@@ -61,8 +64,8 @@ const ContentTitleBox = styled.div`
     text-align: center;
 `
 
-const ContentBox = styled.div`
-    
+const TabContentBox = styled.div`
+    flex: 1;
 `
 
 
@@ -92,20 +95,20 @@ export const VerticalTabsComponent: React.FC<VerticalTabsComponentProps> = obser
     }
 
     return (
-        <TabsContainerBox>
-            <TabsSidebarBox>
-                {tabs.map(renderTabButton)}
-            </TabsSidebarBox>
-            <ContentContainerBox>
-                <ContentTitleBox>
-                    {currentTab?.getTitle()}
-                </ContentTitleBox>
-                <ContentBox>
+        <RootContainerBox>
+            <ContentTitleBox>
+                {currentTab?.getTitle()}
+            </ContentTitleBox>
+            <TabsContainerBox>
+                <TabsSidebarBox>
+                    {tabs.map(renderTabButton)}
+                </TabsSidebarBox>
+                <TabContentBox>
                     {currentTab?.renderContent()}
-                </ContentBox>
+                </TabContentBox>
+            </TabsContainerBox>
+        </RootContainerBox>
 
-            </ContentContainerBox>
-        </TabsContainerBox>
     );
 
 })

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const SpinnerFullSizeContainerBox = styled.div`
+export const FullContainerBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;

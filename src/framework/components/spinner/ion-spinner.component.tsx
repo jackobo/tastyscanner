@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {IonSpinner} from "@ionic/react";
 import styled from "styled-components";
-import {SpinnerFullSizeContainerBox} from "./spinner-full-size-container.box";
+import {FullContainerBox} from "../full-container-box/full-container.box";
 
 
 const SpinnerBox = styled(IonSpinner)`
@@ -13,9 +13,9 @@ const SpinnerBox = styled(IonSpinner)`
 
 export const IonSpinnerComponent: React.FC<{className?: string; fillContainer?: boolean}> = observer((props) => {
     if(props.fillContainer) return (
-        <SpinnerFullSizeContainerBox>
+        <FullContainerBox>
             <SpinnerBox name="circles"/>
-        </SpinnerFullSizeContainerBox>
+        </FullContainerBox>
     )
     return (
         <SpinnerBox name="circles" className={props.className}/>
