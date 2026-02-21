@@ -11,7 +11,7 @@ const IonContentBox = styled(IonContent)`
 `
 
 export interface StandardPageProps extends PropsWithChildren {
-    header: string | React.ReactElement;
+    renderHeader: () => string | React.ReactElement;
 }
 
 export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
@@ -23,7 +23,7 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>{props.header}</IonTitle>
+          <IonTitle>{props.renderHeader()}</IonTitle>
         </IonToolbar>
       </IonHeader>
 
