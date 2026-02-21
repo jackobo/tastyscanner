@@ -12,11 +12,15 @@ import {
 import {
     AppSettingsSideMenuItemModel
 } from "./models/right-side-triggers/app-settings/app-settings.side-menu-item.model";
+import {
+    CurrentBrokerageAccountSideMenuItemModel
+} from "./models/settings/brokerage-account/current-brokerage-account.side-menu-item.model";
 
 export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenuService {
     
     get rootMenuItems(): ISideMenuItemViewModel[] {
         return [
+            new CurrentBrokerageAccountSideMenuItemModel(this.services),
             new StrategiesSideMenuItemModel(this.services),
             new OpenPositionsSideMenuItemModel(this.services),
             new ChartSideMenuItemModel(this.services),

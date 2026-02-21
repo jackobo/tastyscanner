@@ -1,7 +1,7 @@
-import {IBrokerAccountViewModel, IBrokerOrder} from "./broker-account.service.interface";
+import {IBrokerageAccountViewModel, IBrokerOrder} from "./brokerage-account.service.interface";
 import {IAppServiceFactory} from "../app-service-factory.interface";
 
-export class BrokerAccountModel implements IBrokerAccountViewModel {
+export class BrokerageAccountModel implements IBrokerageAccountViewModel {
     constructor(public readonly accountNumber: string, private readonly services: IAppServiceFactory) {
     }
 

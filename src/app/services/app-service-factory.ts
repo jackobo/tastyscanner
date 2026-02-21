@@ -5,8 +5,8 @@ import {IStrategySettingsService} from "./strategy-settings/strategy-settings.se
 import {StrategySettingsService} from "./strategy-settings/strategy-settings.service";
 import {IMarketDataProviderService} from "./market-data-provider/market-data-provider.service.interface";
 import {MarketDataProviderService} from "./market-data-provider/market-data-provider.service";
-import {IBrokerAccountService} from "./broker-account/broker-account.service.interface";
-import {BrokerAccountService} from "./broker-account/broker-account.service";
+import {IBrokerageAccountService} from "./brokerage-account/brokerage-account.service.interface";
+import {BrokerageAccountService} from "./brokerage-account/brokerage-account.service";
 import {IStorageService} from "../../framework/services/storage/storage.service.interface";
 import {AppLocalStorageKeys} from "./storage/app-local-storage-keys";
 import {LocalStorageService} from "../../framework/services/storage/local-storage/local-storage.service";
@@ -25,7 +25,7 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
 
     constructor() {
         super();
-        this._brokerAccount.forceInit();
+        this._brokerageAccount.forceInit();
     }
 
     private _localStorage: Lazy<IStorageService<AppLocalStorageKeys>> = new Lazy<IStorageService<AppLocalStorageKeys>>(() => new LocalStorageService<AppLocalStorageKeys>());
@@ -70,9 +70,9 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
         return this._marketDataProvider.value;
     }
 
-    private _brokerAccount: Lazy<IBrokerAccountService> = new Lazy<IBrokerAccountService>(() => new BrokerAccountService(this));
-    get brokerAccount(): IBrokerAccountService {
-        return this._brokerAccount.value;
+    private _brokerageAccount: Lazy<IBrokerageAccountService> = new Lazy<IBrokerageAccountService>(() => new BrokerageAccountService(this));
+    get brokerageAccount(): IBrokerageAccountService {
+        return this._brokerageAccount.value;
     }
 
 

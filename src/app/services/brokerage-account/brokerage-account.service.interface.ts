@@ -1,4 +1,6 @@
-export interface IBrokerAccountViewModel {
+import {FormFields} from "../../../framework/models/forms/form-field.interface";
+
+export interface IBrokerageAccountViewModel {
     accountNumber: string;
     sendOrder(order: IBrokerOrder): Promise<void>;
 }
@@ -22,8 +24,13 @@ export interface IBrokerOrderLeg {
     symbol: string;
 }
 
-export interface IBrokerAccountService {
-    readonly accounts: IBrokerAccountViewModel[];
-    readonly currentAccount: IBrokerAccountViewModel | null;
+export interface IBrokerageAccountService {
+    readonly accounts: IBrokerageAccountViewModel[];
+    readonly currentAccount: IBrokerageAccountViewModel | null;
+    readonly fields: FormFields<IBrokerageAccountSettingsFields>;
     setCurrentAccount(accountNumber: string): void;
+}
+
+export interface IBrokerageAccountSettingsFields {
+    accountNumber: string;
 }

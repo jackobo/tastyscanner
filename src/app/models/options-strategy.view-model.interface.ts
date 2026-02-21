@@ -1,4 +1,4 @@
-import {OrderType, TimeInForce} from "../services/broker-account/broker-account.service.interface";
+import {OrderType, TimeInForce} from "../services/brokerage-account/brokerage-account.service.interface";
 import {IOptionsStrategyLegViewModel} from "./options-strategy-leg.view-model.interface";
 
 

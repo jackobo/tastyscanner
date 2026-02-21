@@ -18,12 +18,12 @@ const AccountsBox = styled.div`
 
 export const BrokerAccountsComponent: React.FC = observer(() => {
     const services = useServices();
-    const accounts = services.brokerAccount.accounts;
+    const accounts = services.brokerageAccount.accounts;
     return (
         <AccountsBox>
             <IonSelect label={"Current account:"}
-                       value={services.brokerAccount.currentAccount?.accountNumber}
-                       onIonChange={e => services.brokerAccount.setCurrentAccount(e.detail.value)}>
+                       value={services.brokerageAccount.currentAccount?.accountNumber}
+                       onIonChange={e => services.brokerageAccount.setCurrentAccount(e.detail.value)}>
                 {accounts.map(account => (<IonSelectOption key={account.accountNumber} value={account.accountNumber}>
                     {account.accountNumber}
                 </IonSelectOption>))}

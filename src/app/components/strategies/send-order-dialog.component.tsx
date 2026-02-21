@@ -5,7 +5,7 @@ import {observer} from "mobx-react";
 import styled from "styled-components";
 import {InputBaseBox} from "../input-base.box";
 import {chevronDown, chevronUp, closeOutline, lockClosedOutline, lockOpenOutline} from "ionicons/icons";
-import {OrderType, TimeInForce} from "../../services/broker-account/broker-account.service.interface";
+import {OrderType, TimeInForce} from "../../services/brokerage-account/brokerage-account.service.interface";
 import {IOptionsStrategyLegViewModel} from "../../models/options-strategy-leg.view-model.interface";
 import {NullableString} from "../../../framework/types/nullable-types";
 import {Check} from "../../../framework/utils/type-checking";
