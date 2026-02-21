@@ -18,7 +18,7 @@ const TabsSidebarBox = styled.div`
     height: fit-content;
 `;
 
-const TabButtonBox = styled.button<{ isActive: boolean }>`
+const TabButtonBox = styled.button<{ $isActive: boolean }>`
     overflow: hidden;
     display: block;
     writing-mode: vertical-rl; /* Asigură scrierea verticală standard */
@@ -30,15 +30,15 @@ const TabButtonBox = styled.button<{ isActive: boolean }>`
     padding: var(--ion-space-12);
     font-size: var(--ion-font-size-body2);
     
-    background-color: ${(props) => (props.isActive ? 'var(--ion-color-dark-contrast)' : "var(--ion-color-light-shade)")};
+    background-color: ${(props) => (props.$isActive ? 'var(--ion-color-dark-contrast)' : "var(--ion-color-light-shade)")};
     
-    color: ${(props) => (props.isActive ? 'var(--ion-color-dark)' : 'var(--ion-color-medium-shade)')};
-    font-weight: ${(props) => (props.isActive ? "bold" : "normal")};
+    color: ${(props) => (props.$isActive ? 'var(--ion-color-dark)' : 'var(--ion-color-medium-shade)')};
+    font-weight: ${(props) => (props.$isActive ? "bold" : "normal")};
     &:hover {
         color: #000;
     }
     
-    ${props => props.isActive && css`
+    ${props => props.$isActive && css`
         border: 1px solid var(--ion-color-border);
         border-left: none;
     `}
@@ -82,7 +82,7 @@ export const VerticalTabsComponent: React.FC<VerticalTabsComponentProps> = obser
         return (
             <TabButtonBox
                 key={tab.key}
-                isActive={tab === currentTab}
+                $isActive={tab === currentTab}
                 onClick={() => onTabClick(tab)}>
                 {tab.getTitle()}
             </TabButtonBox>

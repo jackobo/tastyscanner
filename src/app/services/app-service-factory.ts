@@ -20,6 +20,8 @@ import {LeftSideMenuService} from "./side-menu/left-side-menu.service";
 import {Lazy} from "../../framework/utils/lazy";
 import {IAppSettingsService} from "./app-settings/app-settings.service.interface";
 import {AppSettingsService} from "./app-settings/app-settings.service";
+import {IThemeService} from "./theme/theme.service.interface";
+import {ThemeService} from "./theme/theme.service";
 
 export class AppServiceFactory extends FrameworkServiceFactory implements IAppServiceFactory {
 
@@ -77,6 +79,12 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
     get brokerageAccount(): IBrokerageAccountService {
         return this._brokerageAccount.value;
     }
+
+    private _theme: Lazy<IThemeService> = new Lazy<IThemeService>(() => new ThemeService());
+    get theme(): IThemeService {
+        return this._theme.value;
+    }
+
 
 
 }

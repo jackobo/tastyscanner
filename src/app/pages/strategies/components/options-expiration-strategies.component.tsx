@@ -63,6 +63,17 @@ const StrategiesBox = styled.div`
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
     padding: 12px;
+    ${props => props.theme.containerMediaQuery.xlAndBelow} {
+        grid-template-columns: repeat(3, 1fr)
+    }
+
+    ${props => props.theme.containerMediaQuery.lAndBelow} {
+        grid-template-columns: repeat(2, 1fr)
+    }
+
+    ${props => props.theme.containerMediaQuery.mAndBelow} {
+        grid-template-columns: 1fr;
+    }
 `
 
 interface OptionsExpirationStrategiesComponentProps {

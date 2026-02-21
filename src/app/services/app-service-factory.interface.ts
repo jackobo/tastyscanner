@@ -9,6 +9,7 @@ import {IStorageService} from "../../framework/services/storage/storage.service.
 import {AppLocalStorageKeys} from "./storage/app-local-storage-keys";
 import {AppSessionStorageKeys} from "./storage/app-session-storage-keys";
 import {IAppSettingsService} from "./app-settings/app-settings.service.interface";
+import {IThemeService} from "./theme/theme.service.interface";
 
 export interface IAppServiceFactory extends IFrameworkServiceFactory {
     readonly localStorage: IStorageService<AppLocalStorageKeys>;
@@ -20,4 +21,5 @@ export interface IAppServiceFactory extends IFrameworkServiceFactory {
     readonly marketDataProvider: IMarketDataProviderService;
     readonly language: ILanguageService;
     readonly brokerageAccount: IBrokerageAccountService;
+    readonly theme: IThemeService;
 }

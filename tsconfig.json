@@ -15,7 +15,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "types": ["styled-components"]
+
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

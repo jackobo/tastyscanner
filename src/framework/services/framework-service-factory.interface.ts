@@ -12,6 +12,7 @@ import {FrameworkLocalStorageKeys} from "./storage/local-storage/framework-local
 import {FrameworkSessionStorageKeys} from "./storage/session-storage/framework-session-storage-keys";
 import {ILeftSideMenuService} from "./side-menu/left/left-side-menu.service.interface";
 import {IRightSideMenuService} from "./side-menu/right/right-side-menu.service.interface";
+import {IMediaChecks} from "./media-query/media-queries.interface";
 
 export interface IFrameworkServiceFactory {
     readonly logger: ILoggerService;
@@ -27,5 +28,6 @@ export interface IFrameworkServiceFactory {
     readonly navigator: INavigatorService;
     readonly leftSideMenu: ILeftSideMenuService;
     readonly rightSideMenu: IRightSideMenuService;
+    readonly screenMediaQuery: IMediaChecks;
 
 }

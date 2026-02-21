@@ -25,6 +25,8 @@ import {FrameworkSessionStorageKeys} from "./storage/session-storage/framework-s
 import {IRightSideMenuService} from "./side-menu/right/right-side-menu.service.interface";
 import {RightSideMenuService} from "./side-menu/right/right-side-menu.service";
 import {ILeftSideMenuService} from "./side-menu/left/left-side-menu.service.interface";
+import {IMediaChecks} from "./media-query/media-queries.interface";
+import {ScreenMediaQueryChecks} from "./media-query/screen/screen-media-query-checks";
 
 export abstract class FrameworkServiceFactory implements IFrameworkServiceFactory {
     private _logger: Lazy<ILoggerService> = new Lazy<ILoggerService>(() => new ConsoleLoggerService());
@@ -87,5 +89,10 @@ export abstract class FrameworkServiceFactory implements IFrameworkServiceFactor
     });
     public get rightSideMenu(): IRightSideMenuService {
         return this._rightSideMenu.value;
+    }
+
+    private _screenMediaQuery: Lazy<IMediaChecks> = new Lazy<ScreenMediaQueryChecks>(() => new ScreenMediaQueryChecks());
+    get screenMediaQuery(): IMediaChecks {
+        return this._screenMediaQuery.value;
     }
 }

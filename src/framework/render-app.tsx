@@ -4,16 +4,19 @@ import React from "react";
 import {createRoot} from "react-dom/client";
 import {FrameworkServiceFactoryContext} from "./react-contexts/framework-service-factory-context";
 import {App} from "./components/app";
+import { ScreenMediaQueriesChecksContext } from './react-contexts/scren-media-queries-checks.context';
+import {DefaultTheme, ThemeProvider} from "styled-components";
 
-export interface IRenderAppOptions<TServiceFactory extends IFrameworkServiceFactory> {
+export interface IRenderAppOptions<TServiceFactory extends IFrameworkServiceFactory, TTheme extends DefaultTheme> {
     rootElementId: string;
     appTitle: string;
     serviceFactory: TServiceFactory;
     appServiceFactoryContext: React.Context<TServiceFactory>;
     renderGlobalStyles:() => React.ReactElement;
+    theme: TTheme
 }
 
-export function renderApp<TServiceFactory extends IFrameworkServiceFactory>(options: IRenderAppOptions<TServiceFactory>) {
+export function renderApp<TServiceFactory extends IFrameworkServiceFactory, TTheme extends DefaultTheme>(options: IRenderAppOptions<TServiceFactory, TTheme>) {
     const container = document.getElementById(options.rootElementId);
     if(!container) {
         throw new Error(`Container with id ${options.rootElementId} not found`);
@@ -24,8 +27,16 @@ export function renderApp<TServiceFactory extends IFrameworkServiceFactory>(opti
         <React.StrictMode>
             <FrameworkServiceFactoryContext.Provider value={options.serviceFactory}>
                 <AppServiceFactoryContext value={options.serviceFactory}>
-                    {options.renderGlobalStyles()}
-                    <App appTitle={options.appTitle}/>
+                    <ScreenMediaQueriesChecksContext.Provider value={options.serviceFactory.screenMediaQuery}>
+                        <ScreenMediaQueriesChecksContext.Provider value={options.serviceFactory.screenMediaQuery}>
+                            <ThemeProvider theme={options.theme}>
+                                {options.renderGlobalStyles()}
+                                <App appTitle={options.appTitle}/>
+                            </ThemeProvider>
+
+                        </ScreenMediaQueriesChecksContext.Provider>
+                    </ScreenMediaQueriesChecksContext.Provider>
+
                 </AppServiceFactoryContext>
             </FrameworkServiceFactoryContext.Provider>
         </React.StrictMode>
