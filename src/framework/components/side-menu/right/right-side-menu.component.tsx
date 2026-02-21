@@ -55,11 +55,18 @@ export const RightSideMenuComponent: React.FC<{getCurrentRenderer: () => ISideMe
         await services.rightSideMenu.close(renderer);
     }
 
+    const onDismissed = async () => {
+        if(!renderer.isSticky) {
+            await services.rightSideMenu.close(renderer);
+        }
+    }
+
+
     return (
         <IonMenuBox menuId={props.menuId}
                     contentId={services.rightSideMenu.contentId}
                     side="end"
-                    type="overlay">
+                    type="overlay" onIonDidClose={onDismissed}>
             <IonHeader>
                 <IonToolbar>
                     <ToolBarContentBox>
