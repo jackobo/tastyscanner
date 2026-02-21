@@ -7,6 +7,7 @@ import {App} from "./components/app";
 
 export interface IRenderAppOptions<TServiceFactory extends IFrameworkServiceFactory> {
     rootElementId: string;
+    appTitle: string;
     serviceFactory: TServiceFactory;
     appServiceFactoryContext: React.Context<TServiceFactory>;
     renderGlobalStyles:() => React.ReactElement;
@@ -24,7 +25,7 @@ export function renderApp<TServiceFactory extends IFrameworkServiceFactory>(opti
             <FrameworkServiceFactoryContext.Provider value={options.serviceFactory}>
                 <AppServiceFactoryContext value={options.serviceFactory}>
                     {options.renderGlobalStyles()}
-                    <App />
+                    <App appTitle={options.appTitle}/>
                 </AppServiceFactoryContext>
             </FrameworkServiceFactoryContext.Provider>
         </React.StrictMode>

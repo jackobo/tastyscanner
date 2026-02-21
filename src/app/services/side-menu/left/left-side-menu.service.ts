@@ -6,6 +6,9 @@ import {FiltersSideMenuItemModel} from "./models/right-side-triggers/filters/fil
 import {WatchListsSideMenuItem} from "./models/right-side-triggers/watch-lists/watch-lists.side-menu-item.model";
 import {OpenPositionsSideMenuItemModel} from "./models/navigation/open-positions/open-positions.side-menu-item.model";
 import {ChartSideMenuItemModel} from "./models/navigation/chart/chart.side-menu-item.model";
+import {
+    ISideMenuItemsGroupViewModel
+} from "../../../../framework/services/side-menu/left/models/side-menu-items-group.view-model.interface";
 
 export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenuService {
     
@@ -14,8 +17,19 @@ export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenu
             new StrategiesSideMenuItemModel(this.services),
             new OpenPositionsSideMenuItemModel(this.services),
             new ChartSideMenuItemModel(this.services),
-            new FiltersSideMenuItemModel(this.services),
-            new WatchListsSideMenuItem(this.services)
+
+        ];
+    }
+
+    get menuItemsGroups(): ISideMenuItemsGroupViewModel[] {
+        return [
+            {
+                key: "utils-side-menu-group",
+                menuItems: [
+                    new FiltersSideMenuItemModel(this.services),
+                    new WatchListsSideMenuItem(this.services)
+                ]
+            }
         ];
     }
 

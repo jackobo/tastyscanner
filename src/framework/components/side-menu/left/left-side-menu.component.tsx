@@ -13,6 +13,9 @@ import styled from "styled-components";
 import {LEFT_SIDE_MENU} from "../side-menu-consts";
 import {useFrameworkServices} from "../../../hooks/use-framework-services.hook";
 import {ISideMenuItemViewModel} from "../../../services/side-menu/left/models/side-menu-item.view-model.interface";
+import {
+  ISideMenuItemsGroupViewModel
+} from "../../../services/side-menu/left/models/side-menu-items-group.view-model.interface";
 
 
 const IonMenuBox = styled(IonMenu)`
@@ -43,10 +46,23 @@ const IonListHeaderBox = styled(IonListHeader)`
   width: 100%;
 `
 
+const MenuItemsGroupBox = styled(IonList)`
+  border-top: 1px solid var(--ion-color-border);
+`
 
-export const LeftSideMenuComponent: React.FC = observer(() => {
+const MenuItemGroupComponent: React.FC<{group: ISideMenuItemsGroupViewModel; renderMenuItem: (item: ISideMenuItemViewModel) => React.ReactElement}> = observer((props) => {
+  return (
+      <MenuItemsGroupBox>
+        {props.group.menuItems.map(props.renderMenuItem)}
+      </MenuItemsGroupBox>
+  )
+});
+
+
+export const LeftSideMenuComponent: React.FC<{appTitle: string}> = observer((props) => {
   const services = useFrameworkServices();
   const menuItems = services.leftSideMenu.rootMenuItems;
+  const menuItemsGroups = services.leftSideMenu.menuItemsGroups;
 
   const renderMenuItem = (item: ISideMenuItemViewModel) => {
     return (
@@ -57,19 +73,28 @@ export const LeftSideMenuComponent: React.FC = observer(() => {
     );
   }
 
+
+  const renderGroup = (group: ISideMenuItemsGroupViewModel)=> {
+    return (
+        <MenuItemGroupComponent key={group.key} group={group} renderMenuItem={renderMenuItem}/>
+    );
+  }
+
   return (
       <IonMenuBox contentId={MAIN_CONTENT} type="overlay" menuId={LEFT_SIDE_MENU}>
         <IonContent>
           <IonListBox>
             <IonListHeaderBox>
               <span>
-                Tasty Scanner
+                {props.appTitle}
               </span>
 
             </IonListHeaderBox>
 
             {menuItems.map(renderMenuItem)}
           </IonListBox>
+
+          {menuItemsGroups.map(renderGroup)}
 
           {
             /*

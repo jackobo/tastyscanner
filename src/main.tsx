@@ -23,6 +23,7 @@ root.render(
 
 renderApp({
     rootElementId: "root",
+    appTitle: "Tasty Scanner",
     serviceFactory: serviceFactory,
     appServiceFactoryContext: AppServiceFactoryContext,
     renderGlobalStyles: () => (<GlobalStyles/>)

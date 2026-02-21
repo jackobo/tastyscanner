@@ -55,8 +55,10 @@ const IonSplitPaneBox = styled(IonSplitPane)`
     --side-max-width: 320px;
 `
 
-
-export const App: React.FC = observer(() => {
+interface AppProps {
+    appTitle: string;
+}
+export const App: React.FC<AppProps> = observer((props) => {
     const services = useFrameworkServices();
     const isRightSideMenuSticky = services.rightSideMenu.currentRenderer?.isSticky ?? false;
 
@@ -82,7 +84,7 @@ export const App: React.FC = observer(() => {
         <IonApp>
             <IonReactRouter>
                 <IonSplitPaneBox contentId={MAIN_CONTENT}>
-                    <LeftSideMenuComponent/>
+                    <LeftSideMenuComponent appTitle={props.appTitle}/>
                     <div id={MAIN_CONTENT}>
                         {services.navigator.currentRoute.render()}
                     </div>
