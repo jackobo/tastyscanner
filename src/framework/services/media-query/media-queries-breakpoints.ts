@@ -5,7 +5,7 @@ import { MediaOrientation, MediaPointer, MediaQueryBuilder } from "./media-query
 
 
 function mediaQueriesBreakpoints(breakpoints: IBreakpoints): IMediaQueries {
-    let { xxsMax, xsMax, sMax, mMax, lMax, xlMax } = breakpoints;
+    const { xxsMax, xsMax, sMax, mMax, lMax, xlMax } = breakpoints;
     return {
         xxs: MediaQueryBuilder.For.maxWidth(xxsMax).build(),
 
