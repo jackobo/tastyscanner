@@ -1,9 +1,9 @@
 import React from "react";
 import {
-  IonContent, IonHeader,
-  IonList,
-  IonListHeader,
-  IonMenu,
+    IonContent,
+    IonHeader,
+    IonList,
+    IonMenu,
 } from '@ionic/react';
 
 
@@ -26,7 +26,7 @@ const IonMenuBox = styled(IonMenu)`
   --padding-bottom: 20px;
 `
 
-const IonListHeaderBox = styled(IonListHeader)`
+const HeaderBox = styled(IonHeader)`
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -36,8 +36,8 @@ const IonListHeaderBox = styled(IonListHeader)`
   font-size: var(--ion-font-size-h4);
   font-weight: bold;
   min-height: 20px;
-  --background: linear-gradient(to right, var(--ion-color-primary), var(--ion-color-tertiary));
-  --color: var(--ion-color-primary-contrast);
+  background: linear-gradient(to right, var(--ion-color-primary), var(--ion-color-tertiary));
+  color: var(--ion-color-primary-contrast);
   padding: var(--ion-space-16);
   width: 100%;
 `
@@ -83,12 +83,10 @@ export const LeftSideMenuComponent: React.FC<{appTitle: string}> = observer((pro
 
   return (
       <IonMenuBox contentId={MAIN_CONTENT} type="overlay" menuId={LEFT_SIDE_MENU}>
-        <IonHeader>
-          <IonListHeaderBox>
-            {props.appTitle}
-          </IonListHeaderBox>
+        <HeaderBox>
+          {props.appTitle}
+        </HeaderBox>
 
-        </IonHeader>
         <IonContent>
           <MainMenusListBox>
             {menuItems.map(renderMenuItem)}
