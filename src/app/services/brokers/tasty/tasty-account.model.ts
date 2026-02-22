@@ -33,14 +33,11 @@ export class TastyAccountModel implements IBrokerageAccountViewModel {
         //return await this.tastyClient.accountStatusService.getAccountStatus(this.accountNumber);
         //return await this.tastyClient.transactionsService.getAccountTransactions(this.accountNumber);
 
-        const positions = await this.tastyClient.balancesAndPositionsService.getPositionsList(this.accountNumber, {
+        return await this.tastyClient.balancesAndPositionsService.getPositionsList(this.accountNumber, {
             "include-closed-positions": false,
             "include-marks": true,
             "net-positions": true
         });
-
-        return positions;
-
     }
     async getOpenPositions(): Promise<IAccountOpenOrder[]> {
         const response = await this.tastyClient.orderService.getOrders(this.accountNumber, {
