@@ -15,9 +15,9 @@ import TastyTradeClient, {MarketDataSubscriptionType, STREAMER_STATE} from "@tas
 import {Check} from "../../../../framework/utils/type-checking";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {IAppSettingsFields} from "../../app-settings/app-settings.service.interface";
-import {ITastyAccountRawData} from "./tasty-account-raw-data.interface";
+import {ITastyAccountRawData} from "./raw-data/tasty-account-raw-data.interfaces";
 import {TastyAccountModel} from "./tasty-account.model";
-import {IBroker, IBrokerageAccountViewModel} from "../broker.interface";
+import {IBroker, IBrokerageAccountViewModel} from "../interfaces/broker.interface";
 
 
 
@@ -382,11 +382,11 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
     }
 
     private _accountStreamerMessageObserver = (json: object) => {
-        console.log("messageObserver", json);
+        //console.log("messageObserver", json);
     }
 
     private _accountStreamerStateObserver = (streamerState: STREAMER_STATE) => {
-        console.log("streamer state", streamerState);
+        //console.log("streamer state", streamerState);
     }
 
 

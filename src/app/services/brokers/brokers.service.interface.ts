@@ -1,5 +1,5 @@
 import {FormFields} from "../../../framework/models/forms/form-field.interface";
-import {IBrokerageAccountViewModel} from "./broker.interface";
+import {IBrokerageAccountViewModel} from "./interfaces/broker.interface";
 
 export interface IBrokersService {
     readonly accounts: IBrokerageAccountViewModel[];

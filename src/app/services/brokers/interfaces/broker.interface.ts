@@ -1,3 +1,5 @@
+import {IAccountOpenOrder} from "./account-open-order.interface";
+
 export interface IBroker {
     readonly name: string;
     getAccounts(): Promise<IBrokerageAccountViewModel[]>;
@@ -7,7 +9,10 @@ export interface IBrokerageAccountViewModel {
     readonly id: string;
     readonly brokerName: string;
     readonly accountNumber: string;
+    getOpenPositions(): Promise<IAccountOpenOrder[]>;
+    balanceAndPositions(): Promise<any[]>;
     sendOrder(order: IBrokerOrder): Promise<void>;
+
 }
 
 
@@ -20,7 +25,6 @@ export interface IBrokerOrder {
     orderType: OrderType;
     timeInForce: TimeInForce;
     legs: IBrokerOrderLeg[];
-
 }
 
 export interface IBrokerOrderLeg {
