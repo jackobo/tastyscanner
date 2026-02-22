@@ -10,9 +10,20 @@ export const OpenPositionsPage: React.FC = observer(() => {
     useEffect(() => {
         if(services.brokers.currentAccount) {
 
-            services.brokers.currentAccount.balanceAndPositions().then((data) => {
-                console.log(data);
+            /*
+            services.brokers.currentAccount.getOpenPositions().then((data) => {
+                const groupedBySymbol = data.groupByKey(item => item.underlyingSymbol);
+                console.log(groupedBySymbol);
             })
+
+             */
+
+            services.brokers.currentAccount.getOpenPositions().then(positions => {
+                const groupedBySymbol = positions.groupByKey(item => item.underlyingSymbol);
+                //console.log(groupedBySymbol);
+            });
+
+
         }
     }, [services.brokers.currentAccount]);
 

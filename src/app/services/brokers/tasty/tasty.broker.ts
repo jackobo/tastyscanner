@@ -15,7 +15,7 @@ import TastyTradeClient, {MarketDataSubscriptionType, STREAMER_STATE} from "@tas
 import {Check} from "../../../../framework/utils/type-checking";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {IAppSettingsFields} from "../../app-settings/app-settings.service.interface";
-import {ITastyAccountRawData} from "./raw-data/tasty-account-raw-data.interfaces";
+import {ITastyAccountRawData} from "./raw-data/tasty-account.raw-data.interfaces";
 import {TastyAccountModel} from "./tasty-account.model";
 import {IBroker} from "../interfaces/broker.interface";
 import {IBrokerageAccountViewModel} from "../interfaces/brokerage-account.view-model.interface";

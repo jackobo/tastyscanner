@@ -1,3 +1,4 @@
+import {InstrumentType, OrderLegAction} from "../../interfaces/open-order-request.interface";
 
 export interface ITastyAccountOrderRawData {
     id: string;
@@ -26,8 +27,8 @@ export interface ITastyAccountOrderRawData {
 
 
 export interface ITastyAccountOrderLegRawData {
-    action: string;
-    instrumentType: string;
+    action: OrderLegAction;
+    instrumentType: InstrumentType;
     quantity: number;
     remainingQuantity: number;
     symbol: string;

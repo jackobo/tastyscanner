@@ -23,7 +23,7 @@ import {
     StandardDialogFooterComponent
 } from "../../../../../framework/components/modal/footer/standard-dialog-footer.component";
 import {PrimaryButton} from "../../../../../framework/components/buttons/primary-button";
-import {OrderType, TimeInForce} from "../../../../services/brokers/interfaces/broker-open-order-request.interface";
+import {OrderType, TimeInForce} from "../../../../services/brokers/interfaces/open-order-request.interface";
 
 const SpacerBox = styled.div`
     grid-column: 1/-1;
