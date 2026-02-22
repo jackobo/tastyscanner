@@ -1,3 +1,4 @@
+import {IBrokerageAccountViewModel} from "../brokerage-account/brokerage-account.service.interface";
 
 export interface IMarketDataProviderService {
     waitForConnection(): Promise<void>;
@@ -12,8 +13,8 @@ export interface IMarketDataProviderService {
     getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null>;
     getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData>;
     searchSymbol(query: string): Promise<ISearchSymbolItemRawData[]>;
-    getAccounts(): Promise<IAccountRawData[]>;
-    sendOrder(accountNumber: string, order: IOrderRequest): Promise<void>;
+    getAccounts(): Promise<IBrokerageAccountViewModel[]>;
+
 
 }
 
@@ -85,23 +86,4 @@ export interface ISearchSymbolItemRawData {
     description: string;
 }
 
-export interface IAccountRawData {
-    accountNumber: string;
-}
 
-export interface IOrderRequest {
-    price: number;
-    orderType: string;
-    timeInForce: string;
-    priceEffect: string;
-    //automatedSource: boolean;
-    legs: IOrderRequestLeg[];
-
-}
-
-export interface IOrderRequestLeg {
-    action: string;
-    instrumentType: string;
-    quantity: number;
-    symbol: string;
-}

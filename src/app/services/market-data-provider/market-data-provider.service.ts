@@ -1,13 +1,13 @@
 import {
-    IAccountRawData,
     IGreeksRawData,
     IMarketDataProviderService,
-    IOptionChainRawData, IOrderRequest,
+    IOptionChainRawData,
     IQuoteRawData, ISearchSymbolItemRawData, ISymbolInfoRawData, ISymbolMetricsRawData,
     ITradeRawData, IWatchListRawData
 } from "./market-data-provider.service.interface";
-import {TastyMarketDataProvider} from "./tasty-market-data-provider";
+import {TastyMarketDataProvider} from "./tasty/tasty-market-data-provider";
 import {AppServiceBase} from "../app-service-base";
+import { IBrokerageAccountViewModel } from "../brokerage-account/brokerage-account.service.interface";
 
 export class MarketDataProviderService extends AppServiceBase implements IMarketDataProviderService {
 
@@ -17,6 +17,11 @@ export class MarketDataProviderService extends AppServiceBase implements IMarket
     async waitForConnection(): Promise<void> {
         await this._currentProvider.waitForConnection();
     }
+
+    async getAccounts(): Promise<IBrokerageAccountViewModel[]> {
+        return await this._currentProvider.getAccounts();
+    }
+
     async getOptionsChain(symbol: string): Promise<IOptionChainRawData[]> {
         return await this._currentProvider.getOptionsChain(symbol);
     }
@@ -55,11 +60,5 @@ export class MarketDataProviderService extends AppServiceBase implements IMarket
         return this._currentProvider.searchSymbol(query);
     }
 
-    async getAccounts(): Promise<IAccountRawData[]> {
-        return await this._currentProvider.getAccounts();
-    }
 
-    sendOrder(accountNumber: string, order: IOrderRequest): Promise<void> {
-        return this._currentProvider.sendOrder(accountNumber, order);
-    }
 }

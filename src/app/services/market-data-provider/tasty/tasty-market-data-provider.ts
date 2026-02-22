@@ -9,12 +9,15 @@ import {
     ISymbolMetricsRawData,
     ISymbolEarningsRawData,
     ISymbolInfoRawData,
-    ISearchSymbolItemRawData, IAccountRawData, IOrderRequest
-} from "./market-data-provider.service.interface";
+    ISearchSymbolItemRawData
+} from "../market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType, STREAMER_STATE} from "@tastytrade/api"
-import {Check} from "../../../framework/utils/type-checking";
-import {IAppServiceFactory} from "../app-service-factory.interface";
-import {IAppSettingsFields} from "../app-settings/app-settings.service.interface";
+import {Check} from "../../../../framework/utils/type-checking";
+import {IAppServiceFactory} from "../../app-service-factory.interface";
+import {IAppSettingsFields} from "../../app-settings/app-settings.service.interface";
+import {ITastyAccountRawData} from "./tasty-account-raw-data.interface";
+import {IBrokerageAccountViewModel} from "../../brokerage-account/brokerage-account.service.interface";
+import {TastyAccountModel} from "./tasty-account.model";
 
 
 
@@ -476,19 +479,16 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
                 }
             })
         })
-
-
     }
 
-    async getAccounts(): Promise<IAccountRawData[]> {
+    async getAccounts(): Promise<IBrokerageAccountViewModel[]> {
         return await this._executeTastyApi(async (tastyClient) => {
-           return await this._getAccounts(tastyClient);
+           return (await this._getAccounts(tastyClient)).map(acc => new TastyAccountModel(acc, tastyClient, this.services));
         })
     }
 
-    private async _getAccounts(tastyClient: TastyTradeClient): Promise<IAccountRawData[]> {
+    private async _getAccounts(tastyClient: TastyTradeClient): Promise<ITastyAccountRawData[]> {
         const accounts: any[] = await tastyClient.accountsAndCustomersService.getCustomerAccounts()
-        //this._tastyClient.orderService.createOrder("123")
         return accounts.map(acc => {
             return {
                 accountNumber: acc.account["account-number"]
@@ -496,24 +496,4 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
         });
     }
 
-    async sendOrder(accountNumber: string, order: IOrderRequest): Promise<void> {
-        await this._executeTastyApi(async (tastyClient) => {
-            const orderData = {
-                "order-type": order.orderType,
-                "time-in-force": order.timeInForce,
-                "price": order.price,
-                "price-effect": order.priceEffect,
-                "legs": order.legs.map(leg => {
-                    return {
-                        "action": leg.action,
-                        "instrument-type": leg.instrumentType,
-                        "quantity": leg.quantity,
-                        "symbol": leg.symbol
-                    }
-                })
-            }
-            await tastyClient.orderService.createOrder(accountNumber, orderData);
-        })
-
-    }
 }

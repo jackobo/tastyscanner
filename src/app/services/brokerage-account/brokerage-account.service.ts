@@ -6,7 +6,6 @@ import {
 } from "./brokerage-account.service.interface";
 import {IAppServiceFactory} from "../app-service-factory.interface";
 import {makeObservable, observable, runInAction} from "mobx";
-import {BrokerageAccountModel} from "./brokerage-account.model";
 import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";
 import {AppFormModel} from "../../models/forms/app-form.model";
 import {FormFields} from "../../../framework/models/forms/form-field.interface";
@@ -38,7 +37,7 @@ export class BrokerageAccountService extends AppServiceBase implements IBrokerag
 
     private readonly _form: BrokerageAccountSettingsForm;
 
-    accounts: BrokerageAccountModel[] = [];
+    accounts: IBrokerageAccountViewModel[] = [];
 
     currentAccount: IBrokerageAccountViewModel | null = null;
 
@@ -65,7 +64,7 @@ export class BrokerageAccountService extends AppServiceBase implements IBrokerag
         const accounts = await this.services.marketDataProvider.getAccounts();
 
         runInAction(() => {
-            this.accounts = accounts.map(acc => new BrokerageAccountModel(acc.accountNumber, this.services));
+            this.accounts = accounts;
             const lastUsedAccount = this.services.localStorage.getItem(AppLocalStorageKeys.currentBrokerAccount);
             if (lastUsedAccount) {
                 this.setCurrentAccount(lastUsedAccount);
