@@ -2,7 +2,6 @@ import {ITickersService} from "./tickers/tickers.service.interface";
 import {IStrategySettingsService} from "./strategy-settings/strategy-settings.service.interface";
 import {IMarketDataProviderService} from "./market-data-provider/market-data-provider.service.interface";
 import {ILanguageService} from "../../framework/services/language/language.service.interface";
-import {IBrokerageAccountService} from "./brokerage-account/brokerage-account.service.interface";
 import {IFrameworkServiceFactory} from "../../framework/services/framework-service-factory.interface";
 import {IAppNavigatorService} from "./navigator/app-navigator.service.interface";
 import {IStorageService} from "../../framework/services/storage/storage.service.interface";
@@ -11,6 +10,7 @@ import {AppSessionStorageKeys} from "./storage/app-session-storage-keys";
 import {IAppSettingsService} from "./app-settings/app-settings.service.interface";
 import {IFrameworkThemeService} from "../../framework/services/theme/framework-theme.service.interface";
 import {AppTheme} from "../theme/app-theme";
+import {IBrokersService} from "./brokers/brokers.service.interface";
 
 export interface IAppServiceFactory extends IFrameworkServiceFactory {
     readonly localStorage: IStorageService<AppLocalStorageKeys>;
@@ -19,8 +19,8 @@ export interface IAppServiceFactory extends IFrameworkServiceFactory {
     readonly appSettings: IAppSettingsService;
     readonly tickers: ITickersService;
     readonly strategySettings: IStrategySettingsService;
+    readonly brokers: IBrokersService;
     readonly marketDataProvider: IMarketDataProviderService;
     readonly language: ILanguageService;
-    readonly brokerageAccount: IBrokerageAccountService;
     readonly theme: IFrameworkThemeService<AppTheme>;
 }

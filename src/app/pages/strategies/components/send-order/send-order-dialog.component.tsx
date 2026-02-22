@@ -5,7 +5,6 @@ import {observer} from "mobx-react";
 import styled from "styled-components";
 import {InputBaseBox} from "../../../../components/input-base.box";
 import {chevronDown, chevronUp, lockClosedOutline, lockOpenOutline} from "ionicons/icons";
-import {OrderType, TimeInForce} from "../../../../services/brokerage-account/brokerage-account.service.interface";
 import {IOptionsStrategyLegViewModel} from "../../../../models/options-strategy-leg.view-model.interface";
 import {NullableString} from "../../../../../framework/types/nullable-types";
 import {Check} from "../../../../../framework/utils/type-checking";
@@ -24,6 +23,7 @@ import {
     StandardDialogFooterComponent
 } from "../../../../../framework/components/modal/footer/standard-dialog-footer.component";
 import {PrimaryButton} from "../../../../../framework/components/buttons/primary-button";
+import {OrderType, TimeInForce} from "../../../../services/brokers/broker.interface";
 
 const SpacerBox = styled.div`
     grid-column: 1/-1;

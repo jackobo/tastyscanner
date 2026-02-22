@@ -1,5 +1,3 @@
-import {IBrokerageAccountViewModel} from "../brokerage-account/brokerage-account.service.interface";
-
 export interface IMarketDataProviderService {
     waitForConnection(): Promise<void>;
     getOptionsChain(symbol: string): Promise<IOptionChainRawData[]>;
@@ -13,9 +11,10 @@ export interface IMarketDataProviderService {
     getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null>;
     getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData>;
     searchSymbol(query: string): Promise<ISearchSymbolItemRawData[]>;
-    getAccounts(): Promise<IBrokerageAccountViewModel[]>;
+}
 
-
+export interface IMarketDataProvider extends IMarketDataProviderService {
+    readonly name: string;
 }
 
 export interface IOptionChainRawData {

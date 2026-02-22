@@ -5,8 +5,6 @@ import {IStrategySettingsService} from "./strategy-settings/strategy-settings.se
 import {StrategySettingsService} from "./strategy-settings/strategy-settings.service";
 import {IMarketDataProviderService} from "./market-data-provider/market-data-provider.service.interface";
 import {MarketDataProviderService} from "./market-data-provider/market-data-provider.service";
-import {IBrokerageAccountService} from "./brokerage-account/brokerage-account.service.interface";
-import {BrokerageAccountService} from "./brokerage-account/brokerage-account.service";
 import {IStorageService} from "../../framework/services/storage/storage.service.interface";
 import {AppLocalStorageKeys} from "./storage/app-local-storage-keys";
 import {LocalStorageService} from "../../framework/services/storage/local-storage/local-storage.service";
@@ -23,6 +21,9 @@ import {AppSettingsService} from "./app-settings/app-settings.service";
 import {IFrameworkThemeService} from "../../framework/services/theme/framework-theme.service.interface";
 import {AppTheme} from "../theme/app-theme";
 import {AppThemeService} from "./theme/app-theme.service";
+import {TastyBroker} from "./brokers/tasty/tasty.broker";
+import {IBrokersService} from "./brokers/brokers.service.interface";
+import {BrokersService} from "./brokers/brokers.service";
 
 export class AppServiceFactory extends FrameworkServiceFactory implements IAppServiceFactory {
 
@@ -30,7 +31,7 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
         super();
         this._appSettings.forceInit();
         this._marketDataProvider.forceInit();
-        this._brokerageAccount.forceInit();
+        this._brokers.forceInit();
 
     }
 
@@ -77,17 +78,20 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
         return this._strategySettings.value;
     }
 
-    private _marketDataProvider: Lazy<IMarketDataProviderService> = new Lazy<IMarketDataProviderService>(() => new MarketDataProviderService(this));
+    private _tastyBroker: Lazy<TastyBroker> = new Lazy<TastyBroker>(() => new TastyBroker(this));
+
+    private _marketDataProvider: Lazy<IMarketDataProviderService> = new Lazy<IMarketDataProviderService>(() => {
+        return new MarketDataProviderService(this, [this._tastyBroker.value])
+    });
     get marketDataProvider(): IMarketDataProviderService {
         return this._marketDataProvider.value;
     }
 
-    private _brokerageAccount: Lazy<IBrokerageAccountService> = new Lazy<IBrokerageAccountService>(() => new BrokerageAccountService(this));
-    get brokerageAccount(): IBrokerageAccountService {
-        return this._brokerageAccount.value;
+    private _brokers: Lazy<IBrokersService> = new Lazy<IBrokersService>(() => {
+        return new BrokersService(this, [this._tastyBroker.value]);
+    });
+    get brokers(): IBrokersService {
+        return this._brokers.value;
     }
-
-
-
 
 }

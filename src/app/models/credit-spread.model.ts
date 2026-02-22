@@ -35,9 +35,11 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     }
 
     async sendOrder(orderParams: IOptionsStrategySendOrderParams): Promise<void> {
-        const account = this.services.brokerageAccount.currentAccount;
-        //TODO show error
+        const account = this.services.brokers.currentAccount;
         if(!account) {
+            await this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translate("No brokerage account connected")
+            });
             return;
         }
 

@@ -1,9 +1,15 @@
-import {FormFields} from "../../../framework/models/forms/form-field.interface";
+export interface IBroker {
+    readonly name: string;
+    getAccounts(): Promise<IBrokerageAccountViewModel[]>;
+}
 
 export interface IBrokerageAccountViewModel {
-    accountNumber: string;
+    readonly id: string;
+    readonly brokerName: string;
+    readonly accountNumber: string;
     sendOrder(order: IBrokerOrder): Promise<void>;
 }
+
 
 export type OrderType = "Limit" | "Market" | "Marketable Limit" | "Notional Market" | "Stop or Stop Limit"
 export type PriceEffect = "Credit" | "Debit";
@@ -22,16 +28,4 @@ export interface IBrokerOrderLeg {
     instrumentType: "Cryptocurrency" | "Equity" | "Equity Offering" | "Equity Option" | "Fixed Income Security" | "Future" | "Future Option" | "Liquidity Pool";
     quantity: number;
     symbol: string;
-}
-
-export interface IBrokerageAccountService {
-    readonly accounts: IBrokerageAccountViewModel[];
-    readonly currentAccount: IBrokerageAccountViewModel | null;
-    readonly fields: FormFields<IBrokerageAccountSettingsFields>;
-    readonly accountsLoadingInProgress: boolean
-    setCurrentAccount(accountNumber: string): void;
-}
-
-export interface IBrokerageAccountSettingsFields {
-    accountNumber: string;
 }

@@ -1,13 +1,21 @@
-import {IBrokerageAccountViewModel, IBrokerOrder} from "../../brokerage-account/brokerage-account.service.interface";
 import {ITastyAccountRawData} from "./tasty-account-raw-data.interface";
 import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
+import {IBrokerageAccountViewModel, IBrokerOrder} from "../broker.interface";
 
 export class TastyAccountModel implements IBrokerageAccountViewModel {
     constructor(private readonly accountRawData: ITastyAccountRawData,
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
 
+    }
+
+    get id(): string {
+        return `${this.brokerName}-${this.accountNumber}`
+    }
+
+    get brokerName(): string {
+        return "Tasty";
     }
 
     get accountNumber(): string {

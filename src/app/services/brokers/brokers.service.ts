@@ -1,19 +1,16 @@
 import {AppServiceBase} from "../app-service-base";
-import {
-    IBrokerageAccountService,
-    IBrokerageAccountSettingsFields,
-    IBrokerageAccountViewModel
-} from "./brokerage-account.service.interface";
+import {IBrokerageAccountSettingsFields, IBrokersService} from "./brokers.service.interface";
 import {IAppServiceFactory} from "../app-service-factory.interface";
+import {IBroker, IBrokerageAccountViewModel} from "./broker.interface";
 import {makeObservable, observable, runInAction} from "mobx";
+import {FormFields} from "../../../framework/models/forms/form-field.interface";
 import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";
 import {AppFormModel} from "../../models/forms/app-form.model";
-import {FormFields} from "../../../framework/models/forms/form-field.interface";
 
-
-export class BrokerageAccountService extends AppServiceBase implements IBrokerageAccountService {
-    constructor(services: IAppServiceFactory) {
+export class BrokersService extends AppServiceBase implements IBrokersService {
+    constructor(services: IAppServiceFactory, private readonly brokers: IBroker[]) {
         super(services);
+
         makeObservable(this, {
             accounts: observable.ref,
             currentAccount: observable.ref,
@@ -22,7 +19,7 @@ export class BrokerageAccountService extends AppServiceBase implements IBrokerag
 
         this._form =  new BrokerageAccountSettingsForm(this.services);
 
-        this._form.fields.accountNumber.onChange((value) => {
+        this._form.fields.lastUsedAccountId.onChange((value) => {
             if(value) {
                 this.setCurrentAccount(value);
             }
@@ -33,7 +30,9 @@ export class BrokerageAccountService extends AppServiceBase implements IBrokerag
                 this.accountsLoadingInProgress = false
             });
         });
+
     }
+
 
     private readonly _form: BrokerageAccountSettingsForm;
 
@@ -47,21 +46,19 @@ export class BrokerageAccountService extends AppServiceBase implements IBrokerag
         return this._form.fields;
     }
 
-    setCurrentAccount(accountNumber: string): void {
+    setCurrentAccount(id: string): void {
         runInAction(() => {
-            this.currentAccount = this.accounts.find(acc => acc.accountNumber === accountNumber) ?? null;
+            this.currentAccount = this.accounts.find(acc => acc.id === id) ?? null;
         });
 
         if (this.currentAccount) {
-            this.services.localStorage.setItem(AppLocalStorageKeys.currentBrokerAccount, this.currentAccount.accountNumber);
+            this.services.localStorage.setItem(AppLocalStorageKeys.currentBrokerAccount, this.currentAccount.id);
         }
-
-
     }
 
 
     private async _loadAccounts(): Promise<void> {
-        const accounts = await this.services.marketDataProvider.getAccounts();
+        const accounts = await this._getAllAccounts();
 
         runInAction(() => {
             this.accounts = accounts;
@@ -73,16 +70,33 @@ export class BrokerageAccountService extends AppServiceBase implements IBrokerag
             if (!this.currentAccount) {
                 this.currentAccount = this.accounts[0] ?? null;
             }
-            this._form.fields.accountNumber.setValue(this.currentAccount?.accountNumber ?? null);
+            this._form.fields.lastUsedAccountId.setValue(this.currentAccount?.id ?? null);
             this._form.commitChanges();
         })
+    }
+
+    private async _getAllAccounts(): Promise<IBrokerageAccountViewModel[]> {
+        const result: IBrokerageAccountViewModel[] = [];
+        for(const broker of this.brokers) {
+            try {
+                result.push(...(await broker.getAccounts()));
+            } catch (err) {
+                this.services.logger.error(`Failed to read accounts from broker: ${broker.name}`, err);
+                await this.services.toaster.showErrorToast({
+                    renderContent: () => this.services.language.translationFor('Failed to read accounts from {broker} broker')
+                        .withParams({broker: broker.name})
+                });
+            }
+
+        }
+        return result;
     }
 }
 
 class BrokerageAccountSettingsForm extends AppFormModel<IBrokerageAccountSettingsFields> {
     protected _createFields(): FormFields<IBrokerageAccountSettingsFields> {
         return {
-            accountNumber: this._createField<string>({
+            lastUsedAccountId: this._createField<string>({
                 fieldName: () => this.services.language.translate('Current account'),
             })
         };
@@ -91,9 +105,9 @@ class BrokerageAccountSettingsForm extends AppFormModel<IBrokerageAccountSetting
     protected _onFieldsCreated(fields: FormFields<IBrokerageAccountSettingsFields>) {
         super._onFieldsCreated(fields);
 
-        fields.accountNumber.onChange((value) => {
+        fields.lastUsedAccountId.onChange((value) => {
             if(value) {
-                this.services.brokerageAccount.setCurrentAccount(value);
+                this.services.brokers.setCurrentAccount(value);
                 this.commitChanges();
             }
         })

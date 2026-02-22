@@ -16,7 +16,7 @@ interface BrokerageAccountDropDownComponentProps {
 
 export const BrokerageAccountDropDownComponent: React.FC<BrokerageAccountDropDownComponentProps> = observer((props) => {
     const services = useServices()
-    const items = services.brokerageAccount.accounts.map(acc => new StandardDropDownListItemModel(acc.accountNumber, acc.accountNumber));
+    const items = services.brokers.accounts.map(acc => new StandardDropDownListItemModel(acc.id, `${acc.accountNumber} (${acc.brokerName})`));
 
     return (
         <StandardDropDownComponent field={props.field} items={items}/>

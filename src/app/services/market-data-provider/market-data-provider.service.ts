@@ -1,26 +1,26 @@
 import {
-    IGreeksRawData,
+    IGreeksRawData, IMarketDataProvider,
     IMarketDataProviderService,
     IOptionChainRawData,
     IQuoteRawData, ISearchSymbolItemRawData, ISymbolInfoRawData, ISymbolMetricsRawData,
     ITradeRawData, IWatchListRawData
 } from "./market-data-provider.service.interface";
-import {TastyMarketDataProvider} from "./tasty/tasty-market-data-provider";
 import {AppServiceBase} from "../app-service-base";
-import { IBrokerageAccountViewModel } from "../brokerage-account/brokerage-account.service.interface";
+import {IAppServiceFactory} from "../app-service-factory.interface";
 
 export class MarketDataProviderService extends AppServiceBase implements IMarketDataProviderService {
 
+    constructor(services: IAppServiceFactory, private readonly providers: IMarketDataProvider[]) {
+        super(services);
+        this._currentProvider = this.providers[0];
+    }
 
-    private _currentProvider: IMarketDataProviderService = new TastyMarketDataProvider(this.services);
+    private _currentProvider: IMarketDataProvider;
 
     async waitForConnection(): Promise<void> {
         await this._currentProvider.waitForConnection();
     }
 
-    async getAccounts(): Promise<IBrokerageAccountViewModel[]> {
-        return await this._currentProvider.getAccounts();
-    }
 
     async getOptionsChain(symbol: string): Promise<IOptionChainRawData[]> {
         return await this._currentProvider.getOptionsChain(symbol);

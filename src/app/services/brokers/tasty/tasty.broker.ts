@@ -10,19 +10,19 @@ import {
     ISymbolEarningsRawData,
     ISymbolInfoRawData,
     ISearchSymbolItemRawData
-} from "../market-data-provider.service.interface";
+} from "../../market-data-provider/market-data-provider.service.interface";
 import TastyTradeClient, {MarketDataSubscriptionType, STREAMER_STATE} from "@tastytrade/api"
 import {Check} from "../../../../framework/utils/type-checking";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {IAppSettingsFields} from "../../app-settings/app-settings.service.interface";
 import {ITastyAccountRawData} from "./tasty-account-raw-data.interface";
-import {IBrokerageAccountViewModel} from "../../brokerage-account/brokerage-account.service.interface";
 import {TastyAccountModel} from "./tasty-account.model";
+import {IBroker, IBrokerageAccountViewModel} from "../broker.interface";
 
 
 
 
-export class TastyMarketDataProvider implements IMarketDataProviderService {
+export class TastyBroker implements IBroker, IMarketDataProviderService {
     constructor(private readonly services: IAppServiceFactory) {
 
         this._connectToTastyPromise = new Promise((resolve) => {
@@ -52,6 +52,10 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
             fireImmediately: true
         })
 
+    }
+
+    get name(): string {
+        return "Tasty";
     }
 
     private _currentTastyClient: TastyTradeClient | null = null;

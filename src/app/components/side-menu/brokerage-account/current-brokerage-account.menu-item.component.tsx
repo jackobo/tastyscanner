@@ -27,7 +27,7 @@ const SpinnerContainerBox = styled.div`
 
 export const CurrentBrokerageAccountMenuItemComponent: React.FC = observer(() => {
     const services = useServices();
-    const brokerageAccount = services.brokerageAccount;
+    const brokersService = services.brokers;
 
     const renderSpinner = () => {
         return (
@@ -41,12 +41,12 @@ export const CurrentBrokerageAccountMenuItemComponent: React.FC = observer(() =>
 
     const renderDropDown = () => {
         return (
-            <BrokerageAccountDropDownComponent field={brokerageAccount.fields.accountNumber}/>
+            <BrokerageAccountDropDownComponent field={brokersService.fields.lastUsedAccountId}/>
         )
     }
 
     const renderContent = () => {
-        if(brokerageAccount.accountsLoadingInProgress) {
+        if(brokersService.accountsLoadingInProgress) {
             return renderSpinner();
         } else {
             return renderDropDown();
