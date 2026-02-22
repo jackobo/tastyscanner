@@ -375,11 +375,11 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
     }
 
     private _accountStreamerMessageObserver = (json: object) => {
-        console.log(json);
+        console.log("messageObserver", json);
     }
 
     private _accountStreamerStateObserver = (streamerState: STREAMER_STATE) => {
-        console.log(streamerState);
+        console.log("streamer state", streamerState);
     }
 
 
