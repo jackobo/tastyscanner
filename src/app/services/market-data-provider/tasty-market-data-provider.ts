@@ -11,10 +11,11 @@ import {
     ISymbolInfoRawData,
     ISearchSymbolItemRawData, IAccountRawData, IOrderRequest
 } from "./market-data-provider.service.interface";
-import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api"
+import TastyTradeClient, {MarketDataSubscriptionType, STREAMER_STATE} from "@tastytrade/api"
 import {Check} from "../../../framework/utils/type-checking";
 import {IAppServiceFactory} from "../app-service-factory.interface";
 import {IAppSettingsFields} from "../app-settings/app-settings.service.interface";
+
 
 
 
@@ -71,15 +72,11 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
         const tastyClient = new TastyTradeClient(config);
 
-        tastyClient.quoteStreamer.addEventListener(this._streamEventHandler);
+        if(Check.isNullOrUndefined(await this._connectToQuoteStreamer(tastyClient))) {
+            return null;
+        }
 
-        try {
-            await tastyClient.quoteStreamer.connect();
-        } catch(e) {
-            tastyClient.quoteStreamer.removeEventListener(this._streamEventHandler);
-            await this.services.toaster.showErrorToast({
-                renderContent: () => this.services.language.translate("Failed to connect to Tasty API. Please check your credentials in the app settings.")
-            });
+        if(Check.isNullOrUndefined(await this._connectToAccountStreamer(tastyClient))) {
             return null;
         }
 
@@ -94,6 +91,46 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
         return tastyClient;
 
+    }
+
+    private async _connectToQuoteStreamer(tastyClient: TastyTradeClient): Promise<TastyTradeClient | null> {
+        tastyClient.quoteStreamer.addEventListener(this._streamEventHandler);
+
+        try {
+
+            await tastyClient.quoteStreamer.connect();
+            return tastyClient;
+
+        } catch(e) {
+            tastyClient.quoteStreamer.removeEventListener(this._streamEventHandler);
+            await this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translate("Failed to connect to Tasty API. Please check your credentials in the app settings.")
+            });
+            return null;
+        }
+    }
+
+    private async _connectToAccountStreamer(tastyClient: TastyTradeClient): Promise<TastyTradeClient | null> {
+        let accountNumbers: string[];
+        try {
+            accountNumbers = (await this._getAccounts(tastyClient))?.map(acc => acc.accountNumber) ?? [];
+            if(accountNumbers.length === 0) {
+                return tastyClient;
+            }
+            const accountStreamer = tastyClient.accountStreamer;
+            await accountStreamer.start();
+            await accountStreamer.subscribeToAccounts(accountNumbers);
+            accountStreamer.addMessageObserver(this._accountStreamerMessageObserver);
+            accountStreamer.addStreamerStateObserver(this._accountStreamerStateObserver);
+            return tastyClient;
+        }
+        catch(e) {
+            tastyClient.quoteStreamer.removeEventListener(this._streamEventHandler);
+            await this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translate("Failed to read accounts from Tasty API. Please check your network connection or credentials in the app settings.")
+            });
+            return null;
+        }
     }
 
     private async _createTastyClientConfig(appSettings: IAppSettingsFields | null) {
@@ -303,7 +340,9 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
         this._executeTastyApi(async (tastyClient) => {
             tastyClient.quoteStreamer.unsubscribe(symbols);
-        })
+        });
+
+        this._lastSymbols = this._lastSymbols.filter(s => !symbols.includes(s));
 
         /*
         runInAction(() => {
@@ -333,6 +372,14 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
             }
         })
+    }
+
+    private _accountStreamerMessageObserver = (json: object) => {
+        console.log(json);
+    }
+
+    private _accountStreamerStateObserver = (streamerState: STREAMER_STATE) => {
+        console.log(streamerState);
     }
 
 
@@ -435,15 +482,18 @@ export class TastyMarketDataProvider implements IMarketDataProviderService {
 
     async getAccounts(): Promise<IAccountRawData[]> {
         return await this._executeTastyApi(async (tastyClient) => {
-            const accounts: any[] = await tastyClient.accountsAndCustomersService.getCustomerAccounts()
-            //this._tastyClient.orderService.createOrder("123")
-            return accounts.map(acc => {
-                return {
-                    accountNumber: acc.account["account-number"]
-                }
-            });
+           return await this._getAccounts(tastyClient);
         })
+    }
 
+    private async _getAccounts(tastyClient: TastyTradeClient): Promise<IAccountRawData[]> {
+        const accounts: any[] = await tastyClient.accountsAndCustomersService.getCustomerAccounts()
+        //this._tastyClient.orderService.createOrder("123")
+        return accounts.map(acc => {
+            return {
+                accountNumber: acc.account["account-number"]
+            }
+        });
     }
 
     async sendOrder(accountNumber: string, order: IOrderRequest): Promise<void> {
