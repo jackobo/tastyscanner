@@ -1,5 +1,6 @@
 import {FormFields} from "../../../framework/models/forms/form-field.interface";
-import {IBrokerageAccountViewModel} from "./interfaces/broker.interface";
+import {IBrokerageAccountViewModel} from "./interfaces/brokerage-account.view-model.interface";
+
 
 export interface IBrokersService {
     readonly accounts: IBrokerageAccountViewModel[];
@@ -12,3 +13,4 @@ export interface IBrokersService {
 export interface IBrokerageAccountSettingsFields {
     lastUsedAccountId: string;
 }
+

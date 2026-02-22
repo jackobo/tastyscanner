@@ -1,13 +1,14 @@
 import {ITastyAccountRawData} from "./raw-data/tasty-account-raw-data.interfaces";
 import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
-import {IBrokerageAccountViewModel, IBrokerOrder} from "../interfaces/broker.interface";
 import {
-    IAccountOpenOrder,
-    IAccountOpenOrderLeg,
-    IAccountOpenOrderLegFill
-} from "../interfaces/account-open-order.interface";
+    ITastyAccountOrderRawData,
+    ITastyAccountOrderLegRawData,
+    ITastyAccountOrderLegFillRawData
+} from "./raw-data/tasty-order.raw-data.interfaces";
 import {Check} from "../../../../framework/utils/type-checking";
+import {IBrokerageAccountViewModel} from "../interfaces/brokerage-account.view-model.interface";
+import {IBrokerOpenOrderRequest} from "../interfaces/broker-open-order-request.interface";
 
 export class TastyAccountModel implements IBrokerageAccountViewModel {
     constructor(private readonly accountRawData: ITastyAccountRawData,
@@ -33,24 +34,36 @@ export class TastyAccountModel implements IBrokerageAccountViewModel {
         //return await this.tastyClient.accountStatusService.getAccountStatus(this.accountNumber);
         //return await this.tastyClient.transactionsService.getAccountTransactions(this.accountNumber);
 
-        return await this.tastyClient.balancesAndPositionsService.getPositionsList(this.accountNumber, {
+        const positionsList = await this.tastyClient.balancesAndPositionsService.getPositionsList(this.accountNumber, {
             "include-closed-positions": false,
             "include-marks": true,
             "net-positions": true
         });
-    }
-    async getOpenPositions(): Promise<IAccountOpenOrder[]> {
-        const response = await this.tastyClient.orderService.getOrders(this.accountNumber, {
+
+        const ordersList = await this.tastyClient.orderService.getOrders(this.accountNumber, {
             status: ["Filled"],
             "per-page": 100,
             "include-closed-positions": false
+        })
+
+        return {
+            positionsList,
+            ordersList
+        };
+    }
+    async getOpenPositions(): Promise<ITastyAccountOrderRawData[]> {
+        const response = await this.tastyClient.orderService.getOrders(this.accountNumber, {
+            status: ["Filled"],
+            "per-page": 100,
+            "include-closed-positions": false,
+            "start-date": '2026-01-01'
         });
 
         if(!Check.isArray(response)) {
             return [];
         }
 
-        const mapToOrder = (data: any): IAccountOpenOrder => {
+        const mapToOrder = (data: any): ITastyAccountOrderRawData => {
             return {
                 id: data.id.toString(),
                 accountNumber: data['account-number'],
@@ -73,13 +86,13 @@ export class TastyAccountModel implements IBrokerageAccountViewModel {
                 underlyingInstrumentType: data['underlying-instrument-type'],
                 underlyingSymbol: data['underlying-symbol'],
                 updatedAt: new Date(data['updated-at']),
-                legs: (data.legs ?? []).map((leg: any): IAccountOpenOrderLeg => ({
+                legs: (data.legs ?? []).map((leg: any): ITastyAccountOrderLegRawData => ({
                     action: leg.action,
                     instrumentType: leg['instrument-type'],
                     quantity: leg.quantity,
                     remainingQuantity: leg['remaining-quantity'],
                     symbol: leg.symbol,
-                    fills: (leg.fills ?? []).map((fill: any): IAccountOpenOrderLegFill => ({
+                    fills: (leg.fills ?? []).map((fill: any): ITastyAccountOrderLegFillRawData => ({
                         destinationVenue: fill['destination-venue'],
                         fillId: fill['fill-id'],
                         fillPrice: fill['fill-price'],
@@ -94,7 +107,7 @@ export class TastyAccountModel implements IBrokerageAccountViewModel {
         return response.map(mapToOrder);
     }
 
-    async sendOrder(order: IBrokerOrder): Promise<void> {
+    async sendOrder(order: IBrokerOpenOrderRequest): Promise<void> {
         try {
             const orderData = {
                 "order-type": order.orderType,

@@ -1,11 +1,12 @@
 import {AppServiceBase} from "../app-service-base";
 import {IBrokerageAccountSettingsFields, IBrokersService} from "./brokers.service.interface";
 import {IAppServiceFactory} from "../app-service-factory.interface";
-import {IBroker, IBrokerageAccountViewModel} from "./interfaces/broker.interface";
+import {IBroker} from "./interfaces/broker.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 import {FormFields} from "../../../framework/models/forms/form-field.interface";
 import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";
 import {AppFormModel} from "../../models/forms/app-form.model";
+import {IBrokerageAccountViewModel} from "./interfaces/brokerage-account.view-model.interface";
 
 export class BrokersService extends AppServiceBase implements IBrokersService {
     constructor(services: IAppServiceFactory, private readonly brokers: IBroker[]) {

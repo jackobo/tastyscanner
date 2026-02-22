@@ -1,21 +1,5 @@
-export interface IAccountOpenOrderLegFill {
-    destinationVenue: string;
-    fillId: string;
-    fillPrice: string;
-    filledAt: string;
-    quantity: number;
-}
 
-export interface IAccountOpenOrderLeg {
-    action: string;
-    instrumentType: string;
-    quantity: number;
-    remainingQuantity: number;
-    symbol: string;
-    fills: IAccountOpenOrderLegFill[];
-}
-
-export interface IAccountOpenOrder {
+export interface ITastyAccountOrderRawData {
     id: string;
     accountNumber: string;
     cancellable: boolean;
@@ -37,5 +21,24 @@ export interface IAccountOpenOrder {
     underlyingInstrumentType: string;
     underlyingSymbol: string;
     updatedAt: Date;
-    legs: IAccountOpenOrderLeg[];
+    legs: ITastyAccountOrderLegRawData[];
+}
+
+
+export interface ITastyAccountOrderLegRawData {
+    action: string;
+    instrumentType: string;
+    quantity: number;
+    remainingQuantity: number;
+    symbol: string;
+    fills: ITastyAccountOrderLegFillRawData[];
+}
+
+
+export interface ITastyAccountOrderLegFillRawData {
+    destinationVenue: string;
+    fillId: string;
+    fillPrice: string;
+    filledAt: string;
+    quantity: number;
 }
