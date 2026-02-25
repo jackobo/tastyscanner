@@ -96,7 +96,7 @@ export abstract class FormModel<TFields, TServiceFactory extends IFrameworkServi
         this._fieldsList.forEach(f => f.clear());
     }
 
-    get isReadOnly(): boolean {
+    isFormReadOnly(): boolean {
         return false;
     }
 
@@ -104,7 +104,7 @@ export abstract class FormModel<TFields, TServiceFactory extends IFrameworkServi
         const fieldReadOnly = fieldOptions.isReadOnly;
 
         fieldOptions.isReadOnly = () => {
-            if(this.isReadOnly) {
+            if(this.isFormReadOnly()) {
                 return true;
             }
 
