@@ -9,7 +9,7 @@ export class IronCondorsTabModel extends StrategyBaseTab {
         return "IronCondors";
     }
     getTitle(): string {
-        return "Iron Condors";
+        return `${this.services.tickers.currentTicker?.symbol} Iron Condors`;
     }
 
     renderTickerStrategies(ticker: ITickerViewModel): React.ReactElement {

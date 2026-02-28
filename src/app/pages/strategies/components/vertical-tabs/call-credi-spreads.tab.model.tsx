@@ -10,7 +10,8 @@ export class CallCreditSpreadsTabModel extends StrategyBaseTab {
         return "CallCreditSpreads";
     }
     getTitle(): string {
-        return "Call Credit Spreads";
+        return `${this.services.tickers.currentTicker?.symbol} Call Credit Spreads`;
+
     }
 
     renderTickerStrategies(ticker: ITickerViewModel): React.ReactElement {
