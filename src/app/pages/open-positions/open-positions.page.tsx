@@ -18,7 +18,7 @@ export const OpenPositionsPage: React.FC = observer(() => {
 
              */
 
-            services.brokers.currentAccount.getOpenPositions().then(positions => {
+            services.brokers.currentAccount.getOpenOrders().then(positions => {
                 //const groupedBySymbol = positions.groupByKey(item => item.underlyingSymbol);
                 //console.log(groupedBySymbol);
             });

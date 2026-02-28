@@ -11,13 +11,24 @@ import {isSellToOpenAction} from "../interfaces/open-order-request.interface";
 export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
     constructor(private readonly services: IAppServiceFactory,
                 private readonly orderRawData: ITastyOrderConsolidatedWithPositions) {
+        this.legs = orderRawData.legs.map(leg => new TastyOpenOrderLegModel(services, leg));
     }
 
-    id: string = "";
-    underlyingSymbol: string = "";
-    createdAt: Date = new Date();
-    tradingPrice: number = 0;
-    legs: IAccountOpenOrderLegViewModel[] = [];
+    get id(): string {
+        return this.orderRawData.id;
+    }
+    get underlyingSymbol(): string {
+        return this.orderRawData.underlyingSymbol;
+    }
+    get createdAt(): Date {
+        return this.orderRawData.terminalAt;
+    }
+
+    get tradingPrice(): number {
+        return this.legs.sum(leg => leg.price);
+    }
+
+    public readonly legs: IAccountOpenOrderLegViewModel[];
 }
 
 export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
