@@ -21,8 +21,6 @@ import {IBroker} from "../interfaces/broker.interface";
 import {IBrokerageAccountViewModel} from "../interfaces/brokerage-account.view-model.interface";
 
 
-
-
 export class TastyBroker implements IBroker, IMarketDataProviderService {
     constructor(private readonly services: IAppServiceFactory) {
 

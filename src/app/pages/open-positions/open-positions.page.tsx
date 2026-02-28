@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {observer} from "mobx-react";
 import {TastyScannerStandardPage} from "../tasty-scanner-standard.page";
 import {useServices} from "../../hooks/use-services.hook";
@@ -8,24 +8,26 @@ import {
 } from "../../services/brokers/interfaces/account-open-order-interface";
 import styled from "styled-components";
 import {Check} from "../../../framework/utils/type-checking";
+import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
+import {IonAccordion, IonAccordionGroup, IonItem} from "@ionic/react";
 
+const LEG_INFO_CELL_WIDTH = '210px';
 
 const PageContentBox = styled.div`
     display: flex;
     flex-direction: column;
-    gap: var(--ion-space-24);
-`
-
-const UnderlyingSymbolBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: var(--ion-space-8);
     width: 100%;
+    font-size: var(--ion-font-size-body2);
+    gap: var(--ion-space-8);
 `
 
 
-const SymbolBox = styled.div`
+const SymbolBox = styled(IonItem)`
+    cursor: pointer;
     font-weight: var(--ion-font-weight-bold);
+    --background: var(--ion-color-light);
+    --color: var(--ion-color-light-contrast);
+    
 `
 
 const OrdersBox = styled.div`
@@ -33,28 +35,56 @@ const OrdersBox = styled.div`
     flex-direction: column;
     gap: var(--ion-space-8);
     padding-left: var(--ion-space-24);
+    padding-bottom: var(--ion-space-20);
 `
 
-const OrderBox = styled.div`
+const HeaderGridBox = styled.div`
     display: grid;
-    grid-template-columns: 210px 1fr 1fr;
+    grid-template-columns: calc(${LEG_INFO_CELL_WIDTH} + var(--ion-space-24)) 1fr 1fr;
+    align-items: center;
+`
+
+
+const BodyGridBox = styled.div`
+    display: grid;
+    grid-template-columns: ${LEG_INFO_CELL_WIDTH} 1fr 1fr;
     align-items: center;
 `
 
 const GridCellBox = styled.div`
     padding: var(--ion-space-8);
+`
+
+const GridBodyCellBox = styled(GridCellBox)`
     border-bottom: 1px solid var(--ion-color-border);
 `
 
-const RightGridCellBox = styled(GridCellBox)`
+const GridHeaderCellBox = styled(GridCellBox)`
+    font-weight: var(--ion-font-weight-bold);
+`
+
+const RightBodyGridCellBox = styled(GridBodyCellBox)`
     text-align: right;
 `
 
-const CenteredGridCellBox = styled(GridCellBox)`
+const CenteredBodyGridCellBox = styled(GridBodyCellBox)`
     text-align: center;
 `
 
-const LegInfoGridBox = styled(GridCellBox)`
+const RightHeaderGridCellBox = styled(GridHeaderCellBox)`
+    text-align: right;
+`
+
+const CenteredHeaderGridCellBox = styled(GridHeaderCellBox)`
+    text-align: center;
+`
+
+
+
+const LegInfoHeaderGridBox = styled(GridHeaderCellBox)`
+`
+
+const LegInfoBodyGridBox = styled(GridBodyCellBox)`
     display: grid;
     grid-template-columns: 25px auto 10px auto auto auto auto;
     flex-direction: row;
@@ -62,9 +92,9 @@ const LegInfoGridBox = styled(GridCellBox)`
     justify-items: center;
     justify-content: space-evenly;
     gap: var(--ion-space-8);
-    background-color: var(--ion-color-light-shade);
+    background-color: var(--ion-color-light);
     color: var(--ion-color-light-contrast);
-    border-bottom: 1px solid var(--ion-color-light);
+    
 `
 
 const LegInfoGridCellBox = styled.div`
@@ -74,29 +104,26 @@ const LegInfoGridCellBox = styled.div`
 
 const LegInfoSeparatorBox = styled.span`
     display: flex;
-    border-right: 1px solid var(--ion-color-dark);
     height: 70%;
+    border-right: 1px solid var(--ion-color-dark);
 `
-
-
-
 
 const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observer((props) => {
     const services = useServices();
     return (
         <>
-            <LegInfoGridBox>
+            <LegInfoBodyGridBox>
                 <LegInfoGridCellBox>{props.leg.quantity}</LegInfoGridCellBox>
                 <LegInfoSeparatorBox/>
                 <LegInfoGridCellBox>{props.leg.optionType}</LegInfoGridCellBox>
                 <LegInfoSeparatorBox/>
-                <LegInfoGridCellBox>{services.time.formatUserFriendlyMonthDay(props.leg.expirationDate ?? null)}</LegInfoGridCellBox>
+                <LegInfoGridCellBox>{services.time.formatUserFriendlyMonthDay(props.leg.expirationDate)}</LegInfoGridCellBox>
                 <LegInfoSeparatorBox/>
                 <LegInfoGridCellBox>{props.leg.strikePrice}</LegInfoGridCellBox>
-            </LegInfoGridBox>
+            </LegInfoBodyGridBox>
 
-            <RightGridCellBox>{props.leg.price}</RightGridCellBox>
-            <CenteredGridCellBox>{props.leg.daysToExpiration}</CenteredGridCellBox>
+            <RightBodyGridCellBox>{props.leg.price}</RightBodyGridCellBox>
+            <CenteredBodyGridCellBox>{props.leg.daysToExpiration}</CenteredBodyGridCellBox>
         </>
     )
 })
@@ -109,15 +136,15 @@ const OrderHeaderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = obse
 
     return (
         <>
-            <GridCellBox>
+            <GridBodyCellBox>
                 {`Order id: ${props.order.id}`}
-            </GridCellBox>
-            <RightGridCellBox>
+            </GridBodyCellBox>
+            <RightBodyGridCellBox>
                 {props.order.tradingPrice}
-            </RightGridCellBox>
-            <CenteredGridCellBox>
+            </RightBodyGridCellBox>
+            <CenteredBodyGridCellBox>
                 {daysToExpiration.length > 0 ? Math.min(...daysToExpiration) : null}
-            </CenteredGridCellBox>
+            </CenteredBodyGridCellBox>
         </>
 
     )
@@ -126,55 +153,60 @@ const OrderHeaderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = obse
 const OrderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = observer(props => {
     const legs = [...props.order.legs].sort((l1, l2) => (l1.strikePrice ?? 0) - (l2.strikePrice ?? 0));
     return (
-        <OrderBox>
+        <BodyGridBox>
             <OrderHeaderComponent order={props.order}/>
-            {legs.map(leg => (<OrderLegComponent key={leg.symbol} leg={leg}/>))}
-        </OrderBox>
+            {legs.map((leg) => (<OrderLegComponent key={leg.symbol} leg={leg}/>))}
+        </BodyGridBox>
     )
 })
 
 const UnderlyingSymbolOpenOrdersComponent: React.FC<{underlyingSymbol: string, openOrders: IAccountOpenOrderViewModel[]}> = observer((props) => {
     return (
-        <UnderlyingSymbolBox>
-            <SymbolBox>{props.underlyingSymbol}</SymbolBox>
-            <OrdersBox>
+        <IonAccordion value={props.underlyingSymbol}>
+            <SymbolBox slot={"header"}>{props.underlyingSymbol}</SymbolBox>
+            <OrdersBox slot="content">
                 {props.openOrders.map(o => <OrderComponent key={o.id} order={o}/>)}
             </OrdersBox>
-        </UnderlyingSymbolBox>
+        </IonAccordion>
+
+    )
+})
+
+const HeaderComponent: React.FC = observer(() => {
+    return (
+        <HeaderGridBox>
+            <LegInfoHeaderGridBox>Symbol</LegInfoHeaderGridBox>
+            <RightHeaderGridCellBox>Trd Prc</RightHeaderGridCellBox>
+            <CenteredHeaderGridCellBox>DTE</CenteredHeaderGridCellBox>
+        </HeaderGridBox>
     )
 })
 
 export const OpenPositionsPage: React.FC = observer(() => {
-    const [openOrders, setOpenOrders] = React.useState<IAccountOpenOrderViewModel[]>([]);
 
     const services = useServices();
-    useEffect(() => {
-        if(services.brokers.currentAccount) {
 
-            /*
-            services.brokers.currentAccount.getOpenPositions().then((data) => {
-                const groupedBySymbol = data.groupByKey(item => item.underlyingSymbol);
-                console.log(groupedBySymbol);
-            })
+    const openOrders = services.brokers.currentAccount?.openOrders;
 
-             */
-
-            services.brokers.currentAccount.getOpenOrders().then(orders => {
-               setOpenOrders(orders);
-            });
+    if(!openOrders || openOrders.isLoading) {
+        return (
+            <SpinnerComponent fillContainer={true}/>
+        )
+    }
 
 
-        }
-    }, [services.brokers.currentAccount]);
-
-
-    const ordersByUnderlying = openOrders.groupByKey(o => o.underlyingSymbol);
+    const ordersByUnderlying = openOrders.orders.groupByKey(o => o.underlyingSymbol);
 
     return (
         <TastyScannerStandardPage>
+
             <PageContentBox>
-                {Object.keys(ordersByUnderlying).map(underlyingSymbol => (<UnderlyingSymbolOpenOrdersComponent key={underlyingSymbol} underlyingSymbol={underlyingSymbol} openOrders={ordersByUnderlying[underlyingSymbol]}/>))}
+                <HeaderComponent/>
+                <IonAccordionGroup>
+                    {Object.keys(ordersByUnderlying).map(underlyingSymbol => (<UnderlyingSymbolOpenOrdersComponent key={underlyingSymbol} underlyingSymbol={underlyingSymbol} openOrders={ordersByUnderlying[underlyingSymbol]}/>))}
+                </IonAccordionGroup>
             </PageContentBox>
+
         </TastyScannerStandardPage>
     )
 })

@@ -6,7 +6,11 @@ export interface IBrokerageAccountViewModel {
     readonly id: string;
     readonly brokerName: string;
     readonly accountNumber: string;
-    getOpenOrders(): Promise<IAccountOpenOrderViewModel[]>;
+    readonly openOrders: IOpenOrdersResult;
     sendOrder(order: IOpenOrderRequest): Promise<void>;
+}
 
+export interface IOpenOrdersResult {
+    readonly isLoading: boolean;
+    readonly orders: IAccountOpenOrderViewModel[];
 }
