@@ -10,6 +10,11 @@ export interface IBrokerageAccountViewModel {
     sendOrder(order: IOpenOrderRequest): Promise<void>;
 }
 
+export interface IBrokerageAccountModel extends IBrokerageAccountViewModel {
+    init(): Promise<void>;
+    dispose(): Promise<void>;
+}
+
 export interface IOpenOrdersResult {
     readonly isLoading: boolean;
     readonly orders: IAccountOpenOrderViewModel[];

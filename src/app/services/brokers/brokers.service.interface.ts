@@ -7,7 +7,7 @@ export interface IBrokersService {
     readonly currentAccount: IBrokerageAccountViewModel | null;
     readonly fields: FormFields<IBrokerageAccountSettingsFields>;
     readonly accountsLoadingInProgress: boolean
-    setCurrentAccount(id: string): void;
+    setCurrentAccount(id: string): Promise<void>;
 }
 
 export interface IBrokerageAccountSettingsFields {

@@ -1,14 +1,17 @@
 import {ITastyAccountRawData} from "./raw-data/tasty-account.raw-data.interfaces";
 import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
-import {IBrokerageAccountViewModel, IOpenOrdersResult} from "../interfaces/brokerage-account.view-model.interface";
+import {
+    IBrokerageAccountModel,
+    IOpenOrdersResult
+} from "../interfaces/brokerage-account.view-model.interface";
 import {IOpenOrderRequest} from "../interfaces/open-order-request.interface";
 import {IAccountOpenOrderViewModel} from "../interfaces/account-open-order-interface";
 import {TastyOpenOrdersReader} from "./tasty-open-orders-reader";
 import {TastyOpenOrderModel} from "./tasty-open-order.model";
 import {makeObservable, observable, runInAction} from "mobx";
 
-export class TastyAccountModel implements IBrokerageAccountViewModel {
+export class TastyAccountModel implements IBrokerageAccountModel {
     constructor(private readonly accountRawData: ITastyAccountRawData,
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
@@ -18,6 +21,8 @@ export class TastyAccountModel implements IBrokerageAccountViewModel {
         })
 
     }
+
+
 
 
     get id(): string {
@@ -34,6 +39,14 @@ export class TastyAccountModel implements IBrokerageAccountViewModel {
 
     private _openOrders: IOpenOrdersResult | null = null;
 
+    async init(): Promise<void> {
+
+    }
+
+    async dispose(): Promise<void> {
+
+    }
+
     private _setOpenOrders(orders: IAccountOpenOrderViewModel[], isLoading: boolean = false): void {
         runInAction(() => {
             this._openOrders = {
@@ -41,8 +54,9 @@ export class TastyAccountModel implements IBrokerageAccountViewModel {
                 orders: orders
             }
         });
-
     }
+
+
 
     get openOrders(): IOpenOrdersResult {
         if(!this._openOrders) {

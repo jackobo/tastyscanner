@@ -18,7 +18,7 @@ import {IAppSettingsFields} from "../../app-settings/app-settings.service.interf
 import {ITastyAccountRawData} from "./raw-data/tasty-account.raw-data.interfaces";
 import {TastyAccountModel} from "./tasty-account.model";
 import {IBroker} from "../interfaces/broker.interface";
-import {IBrokerageAccountViewModel} from "../interfaces/brokerage-account.view-model.interface";
+import {IBrokerageAccountModel} from "../interfaces/brokerage-account.view-model.interface";
 
 
 export class TastyBroker implements IBroker, IMarketDataProviderService {
@@ -484,7 +484,7 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
         })
     }
 
-    async getAccounts(): Promise<IBrokerageAccountViewModel[]> {
+    async getAccounts(): Promise<IBrokerageAccountModel[]> {
         return await this._executeTastyApi(async (tastyClient) => {
            return (await this._getAccounts(tastyClient)).map(acc => new TastyAccountModel(acc, tastyClient, this.services));
         })
