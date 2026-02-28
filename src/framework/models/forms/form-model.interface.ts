@@ -6,7 +6,7 @@ export interface IActivateErrorsValidationOptions {
 
 export interface IFormModel<TFields> {
     readonly fields: FormFields<TFields>;
-    readonly isReadOnly: boolean;
+    isFormReadOnly(): boolean;
     hasErrors(): boolean;
     hasChanges(): boolean;
     hasChangesOnCurrentSession(): boolean;
