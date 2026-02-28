@@ -10,7 +10,7 @@ import {IonIcon} from "@ionic/react";
 import {informationOutline} from "ionicons/icons";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
 
-export const StrategyBox = styled(CardBox)<{$hasOppositePurchases: boolean}>`
+export const StrategyBox = styled(CardBox)<{$hasOppositePosition: boolean}>`
     position: relative;
     display: flex;
     flex-direction: column;
@@ -18,7 +18,7 @@ export const StrategyBox = styled(CardBox)<{$hasOppositePurchases: boolean}>`
     padding: 24px;
     overflow: hidden;
     font-size: var(--ion-font-size-body2);
-    ${props => props.$hasOppositePurchases && css`
+    ${props => props.$hasOppositePosition && css`
         background-color: var(--ion-color-medium-tint);
     `}
 `
@@ -93,7 +93,7 @@ export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> =
     const infoIconBoxRef = useRef<HTMLDivElement | null>(null);
     const isBestRiskReward = props.strategy.riskRewardRatio === props.bestRiskReward;
     const isBestPop = props.strategy.pop === props.bestPop;
-    const hasOppositePurchases = props.strategy.legs.some(l => l.hasOppositePurchases);
+    const hasOppositePosition = props.strategy.legs.some(l => l.hasOppositePositions);
 
     const renderCorner = () => {
         if(!(isBestPop || isBestRiskReward)) {
@@ -135,7 +135,7 @@ export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> =
 
     return (
         <>
-            <StrategyBox $hasOppositePurchases={hasOppositePurchases}
+            <StrategyBox $hasOppositePosition={hasOppositePosition}
                          className={props.className}>
                 {renderCorner()}
 

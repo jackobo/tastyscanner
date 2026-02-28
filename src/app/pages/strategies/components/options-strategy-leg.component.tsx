@@ -18,11 +18,11 @@ const StrikePriceBox = styled.span`
 `
 
 
-const StrategyLegBox = styled(OptionsStrategyLegBaseBox)<{$isSell: boolean; $hasOppositePurchases: boolean}>`
+const StrategyLegBox = styled(OptionsStrategyLegBaseBox)<{$isSell: boolean; $hasOppositePosition: boolean}>`
     background-color: ${props => props.$isSell ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'};
     color: ${props => props.$isSell ? 'var(--ion-color-danger-contrast)' : 'var(--ion-color-success-contrast)'};
     padding: var(--ion-space-8);
-    ${props => props.$hasOppositePurchases && css`
+    ${props => props.$hasOppositePosition && css`
         opacity: 0.3;
     `}
     
@@ -38,21 +38,21 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
     const services = useServices();
     const strategyLegBoxRef = useRef<HTMLDivElement | null>(null)
     const isSellOption = props.leg.isSell;
-    const hasOppositePurchases = props.leg.hasOppositePurchases;
+    const hasOppositePosition = props.leg.hasOppositePositions;
 
 
     const price = isSellOption ? props.leg.option.midPrice : -1 * props.leg.option.midPrice;
 
-    const renderTooltip = () => {
-        if(!hasOppositePurchases) {
+    const renderOpositePositionTooltip = () => {
+        if(!hasOppositePosition) {
             return null;
         }
 
         let tooltipText: string;
         if(isSellOption) {
-            tooltipText = services.language.translate('This leg has already am existing buy order. Trading this strategy would close this leg.');
+            tooltipText = services.language.translate('This leg has already am existing opposite buy order. Trading this strategy would close this leg.');
         } else {
-            tooltipText = services.language.translate('This leg has already an existing sell order. Trading this strategy would close this leg.');
+            tooltipText = services.language.translate('This leg has already an existing opposite sell order. Trading this strategy would close this leg.');
         }
 
         return (
@@ -66,7 +66,7 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
 
     return (
         <>
-            <StrategyLegBox $isSell={isSellOption} $hasOppositePurchases={hasOppositePurchases} ref={strategyLegBoxRef}>
+            <StrategyLegBox $isSell={isSellOption} $hasOppositePosition={hasOppositePosition} ref={strategyLegBoxRef}>
                 <span>{props.leg.legActionType}</span>
                 <span>{props.leg.option.optionType}</span>
                 <StrikePriceBox>{props.leg.option.strikePrice}</StrikePriceBox>
@@ -74,7 +74,7 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
                 <span>{props.leg.option.deltaPercent + DELTA_SYMBOL}</span>
                 <span>{props.leg.option.bidAskSpread.toFixed(2) + '%'}</span>
             </StrategyLegBox>
-            {renderTooltip()}
+            {renderOpositePositionTooltip()}
         </>
     )
 })

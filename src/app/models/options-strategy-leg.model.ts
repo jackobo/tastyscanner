@@ -18,7 +18,11 @@ export class OptionsStrategyLegModel implements IOptionsStrategyLegViewModel {
         return this.legActionType === 'BTO';
     }
 
-    get hasOppositePurchases(): boolean {
+    get countExistingSameDirectionPositions(): number {
+        return this.isSell ? this.option.countSells : this.option.countBuys;
+    }
+
+    get hasOppositePositions(): boolean {
         if(this.isSell) {
             return this.option.countBuys != 0;
         } else {

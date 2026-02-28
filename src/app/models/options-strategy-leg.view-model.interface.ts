@@ -8,5 +8,6 @@ export interface IOptionsStrategyLegViewModel {
     readonly legActionType: StrategyLegActionType;
     readonly isSell: boolean;
     readonly isBuy: boolean;
-    readonly hasOppositePurchases: boolean;
+    readonly hasOppositePositions: boolean;
+    readonly countExistingSameDirectionPositions: number;
 }

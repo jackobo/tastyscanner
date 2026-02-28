@@ -37,15 +37,15 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
         })
     }
 
-    const hasOppositePurchases = props.strategy.legs.some(l => l.hasOppositePurchases);
+    const hasOppositePosition = props.strategy.legs.some(l => l.hasOppositePositions);
 
     const getButtonTooltipProps = (): ButtonTooltipProps | undefined => {
-        if(!hasOppositePurchases) {
+        if(!hasOppositePosition) {
             return undefined;
         }
 
         return {
-            renderTooltipContent: () => services.language.translate("Some of the legs in this strategy have opposite purchases in already open orders.")
+            renderTooltipContent: () => services.language.translate("Some of the legs in this strategy have opposite positions in already open orders.")
         }
     }
 
@@ -64,7 +64,7 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
             <span>Theta:</span>
             <span>{props.strategy.theta}</span>
             <ButtonBox>
-                <SuccessButton onClick={onTrade} disabled={hasOppositePurchases} tooltip={getButtonTooltipProps()}>
+                <SuccessButton onClick={onTrade} disabled={hasOppositePosition} tooltip={getButtonTooltipProps()}>
                     { services.language.translate("Trade")}
                 </SuccessButton>
             </ButtonBox>
