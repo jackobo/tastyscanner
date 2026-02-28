@@ -146,7 +146,7 @@ const OrderHeaderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = obse
 })
 
 const OrderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = observer(props => {
-    const legs = [...props.order.legs].sort((l1, l2) => (l1.strikePrice ?? 0) - (l2.strikePrice ?? 0));
+    const legs = props.order.legs;
     return (
         <BodyGridBox>
             <OrderHeaderComponent order={props.order}/>

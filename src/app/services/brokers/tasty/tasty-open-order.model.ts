@@ -13,7 +13,8 @@ import {Check} from "../../../../framework/utils/type-checking";
 export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
     constructor(private readonly services: IAppServiceFactory,
                 private readonly orderRawData: ITastyOrderConsolidatedWithPositions) {
-        this.legs = orderRawData.legs.map(leg => new TastyOpenOrderLegModel(services, leg));
+        this.legs = orderRawData.legs.map(leg => new TastyOpenOrderLegModel(services, leg))
+                                     .sort((l1, l2) => (l1.strikePrice ?? 0) - (l2.strikePrice ?? 0));
     }
 
     get id(): string {
