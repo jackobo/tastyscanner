@@ -11,6 +11,14 @@ export interface IOpenOrderRequest {
 
 export type OrderLegAction = "Allocate" | "Buy" | "Buy to Close" | "Buy to Open" | "Sell" | "Sell to Close" | "Sell to Open";
 
+export function isOrderLegOpenAction(action: OrderLegAction): boolean {
+    return action === "Buy to Open" || action === "Sell to Open";
+}
+
+export function isSellToOpenAction(action: OrderLegAction) {
+    return action === "Sell to Open";
+}
+
 export type InstrumentType = "Cryptocurrency" | "Equity" | "Equity Offering" | "Equity Option" | "Fixed Income Security" | "Future" | "Future Option" | "Liquidity Pool";
 
 export interface IOpenOrderRequestLeg {

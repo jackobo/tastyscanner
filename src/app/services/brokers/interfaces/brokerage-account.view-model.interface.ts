@@ -1,12 +1,12 @@
 import {IOpenOrderRequest} from "./open-order-request.interface";
-import {IAccountOpenPositionViewModel} from "./account-open-position-interface";
+import {IAccountOpenOrderViewModel} from "./account-open-order-interface";
 
 
 export interface IBrokerageAccountViewModel {
     readonly id: string;
     readonly brokerName: string;
     readonly accountNumber: string;
-    getOpenPositions(): Promise<any[]>;
+    getOpenOrders(): Promise<IAccountOpenOrderViewModel[]>;
     sendOrder(order: IOpenOrderRequest): Promise<void>;
 
 }

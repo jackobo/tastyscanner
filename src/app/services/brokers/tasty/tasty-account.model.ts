@@ -3,8 +3,9 @@ import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {IBrokerageAccountViewModel} from "../interfaces/brokerage-account.view-model.interface";
 import {IOpenOrderRequest} from "../interfaces/open-order-request.interface";
-import {IAccountOpenPositionViewModel} from "../interfaces/account-open-position-interface";
-import {TastyOpenPositionsReader} from "./tasty-open-positions-reader";
+import {IAccountOpenOrderViewModel} from "../interfaces/account-open-order-interface";
+import {TastyOpenOrdersReader} from "./tasty-open-orders-reader";
+import {TastyOpenOrderModel} from "./tasty-open-order.model";
 
 export class TastyAccountModel implements IBrokerageAccountViewModel {
     constructor(private readonly accountRawData: ITastyAccountRawData,
@@ -51,8 +52,12 @@ export class TastyAccountModel implements IBrokerageAccountViewModel {
 
     }
 
-    async getOpenPositions(): Promise<any[]> {
-        return await new TastyOpenPositionsReader(this.accountNumber, this.tastyClient, this.services).read();
+    async getOpenOrders(): Promise<IAccountOpenOrderViewModel[]> {
+        const openPositions = await new TastyOpenOrdersReader(this.accountNumber, this.tastyClient, this.services).read();
+
+        console.log(openPositions.groupByKey(p => p.underlyingSymbol));
+
+        return openPositions.map(order => new TastyOpenOrderModel(this.services, order));
     }
 
 }

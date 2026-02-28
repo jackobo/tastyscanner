@@ -7,67 +7,67 @@ import {
     ITastyAccountOrderRawData
 } from "./raw-data/tasty-order.raw-data.interfaces";
 import {Check} from "../../../../framework/utils/type-checking";
+import {
+    ITastyLegConsolidatedWithPosition,
+    ITastyOrderConsolidatedWithPositions
+} from "./raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
+import {isOrderLegOpenAction} from "../interfaces/open-order-request.interface";
 
-export class TastyOpenPositionsReader {
+
+export class TastyOpenOrdersReader {
     constructor(private readonly accountNumber: string,
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
     }
 
 
-    async read(): Promise<ITastyAccountOrderRawData[]> {
-        const positionsRawData = await this._getOpenPositionsRawData();
+    async read(): Promise<ITastyOrderConsolidatedWithPositions[]> {
+        const openPositions = await this._getOpenPositionsRawData();
+        const openPositionsGroupedBySymbol = openPositions
+            .toDictionaryOfType(position => position.symbol,
+                    position => {
+                            return {
+                                position: position,
+                                quantity: position.quantity,
+                            }
+                    });
+        const minDate = new Date(Math.min(...openPositions.map(pos => pos.createdAt.getTime())));
+        let filledOrders = await this._getFilledOrdersRawData(minDate);
+
+        // sort orders descending by date when was created
+        filledOrders = filledOrders.sort((a, b) => b.terminalAt.getTime() - a.terminalAt.getTime());
 
 
-        if(positionsRawData.length === 0) {
-            return [];
-        }
+        const result: ITastyOrderConsolidatedWithPositions[] = [];
 
-        const positionsGroupedBySymbol = positionsRawData.groupByKey(p => p.symbol);
-
-
-        const minDate = new Date(Math.min(...positionsRawData.map(pos => pos.createdAt.getTime())));
-
-        const ordersWithPositionLegs = (await this._getOrdersRawData(minDate))
-            .map(order => {
-                return {
-                    ...order,
-                    legs: order.legs.filter(leg => positionsGroupedBySymbol[leg.symbol]
-                                            && (leg.action === "Buy to Open" || leg.action === "Sell to Open"))
-                }
-            })
-            .filter(order => order.legs.length > 0);
-
-        const symbolsPositionQuantity = Object.keys(positionsGroupedBySymbol).toDictionaryOfType(symbol => symbol, symbol => positionsGroupedBySymbol[symbol].sum(p => p.quantity));
-
-        const finalOrders: ITastyAccountOrderRawData[] = [];
-
-        for(const order of ordersWithPositionLegs) {
-            const legs: ITastyAccountOrderLegRawData[] = [];
-            for(const leg of order.legs) {
-                const symbolPositionQuantity = symbolsPositionQuantity[leg.symbol];
-                if(symbolPositionQuantity === 0) {
+        for(const filledOrder of filledOrders) {
+            const {legs, ...filledOrderWithoutLegs} = filledOrder;
+            const consolidatedLegs: ITastyLegConsolidatedWithPosition[] = [];
+            for(const leg of legs) {
+                if(!isOrderLegOpenAction(leg.action)) {
                     continue;
                 }
-
-                const legQuantity = Math.min(leg.quantity, symbolPositionQuantity);
-
-                legs.push({
-                    ...leg,
-                    quantity: legQuantity
-                })
-                symbolsPositionQuantity[leg.symbol] -= legQuantity;
+                const position = openPositionsGroupedBySymbol[leg.symbol];
+                if(!position || position.quantity <= 0) {
+                    continue;
+                }
+                const legQuantity = Math.min(leg.quantity, position.quantity);
+                position.quantity -= legQuantity;
+                consolidatedLegs.push({
+                    position: position.position,
+                    leg: leg
+                });
             }
 
-            if(legs.length > 0) {
-                finalOrders.push({
-                    ...order,
-                    legs
+            if(consolidatedLegs.length > 0) {
+                result.push({
+                    ...filledOrderWithoutLegs,
+                    legs: consolidatedLegs,
                 })
             }
         }
 
-        return finalOrders;
+        return result;
     }
 
 
@@ -76,7 +76,7 @@ export class TastyOpenPositionsReader {
             "include-closed-positions": false
         });
 
-        return positionsList.map(position => {
+        return positionsList.map((position: any) => {
             return {
                 accountNumber: position["account-number"],
                 instrumentType: position["instrument-type"],
@@ -107,7 +107,7 @@ export class TastyOpenPositionsReader {
         });
     }
 
-    private async _getOrdersRawData(minDate: Date): Promise<ITastyAccountOrderRawData[]> {
+    private async _getFilledOrdersRawData(minDate: Date): Promise<ITastyAccountOrderRawData[]> {
         const response: any[] = await this.tastyClient.orderService.getOrders(this.accountNumber, {
             status: ["Filled"],
             "per-page": 200,
@@ -120,11 +120,8 @@ export class TastyOpenPositionsReader {
             return [];
         }
 
-        const withoutReplaceOrderId = response.filter((order: any) => !order['replaces-order-id']);
 
-        console.log(withoutReplaceOrderId);
-
-        return response.map((order: any) => {
+        const mapOrder = (order: any): ITastyAccountOrderRawData => {
             return {
                 id: order.id.toString(),
                 accountNumber: order['account-number'],
@@ -162,6 +159,8 @@ export class TastyOpenPositionsReader {
                     }))
                 }))
             };
-        })
+        }
+
+        return response.map(mapOrder);
     }
 }
