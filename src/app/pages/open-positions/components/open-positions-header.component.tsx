@@ -12,6 +12,7 @@ export const HeaderComponent: React.FC = observer(() => {
         <HeaderGridBox>
             <LegInfoHeaderGridCellBox>Symbol</LegInfoHeaderGridCellBox>
             <CenterAlignedHeaderGridCellBox>DTE</CenterAlignedHeaderGridCellBox>
+            <RightAlignedHeaderGridCellBox>Mrk</RightAlignedHeaderGridCellBox>
             <RightAlignedHeaderGridCellBox>Trd Prc</RightAlignedHeaderGridCellBox>
             <RightAlignedHeaderGridCellBox>Bid</RightAlignedHeaderGridCellBox>
             <RightAlignedHeaderGridCellBox>Ask</RightAlignedHeaderGridCellBox>

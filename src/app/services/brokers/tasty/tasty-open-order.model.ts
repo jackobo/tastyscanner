@@ -29,6 +29,9 @@ export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
         return this.orderRawData.terminalAt;
     }
 
+    get marketPrice(): number {
+        return Math.round(this.legs.sum(leg => leg.marketPrice) * 100)/100;
+    }
     get tradingPrice(): number {
         return Math.round(this.legs.sum(leg => leg.tradingPrice) * 100)/100;
     }
@@ -80,9 +83,24 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
     get instrumentType(): string {
         return this.legRawData.leg.instrumentType;
     }
+
+    get marketPrice(): number {
+        const price = this.trade?.price;
+        if(Check.isNullOrUndefined(price)) {
+            return 0;
+        }
+
+        if(this.isSell) {
+            return -1 * price;
+        }
+
+        return price;
+    }
+
+
     get tradingPrice(): number {
         const fillsTotal = this.legRawData.leg.fills.sum(fill => parseFloat(fill.fillPrice))
-        if(isSellToOpenAction(this.legRawData.leg.action)) {
+        if(this.isSell) {
             return fillsTotal;
         }
         return -1 * fillsTotal;
@@ -120,9 +138,6 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
         return this.services.marketDataProvider.getSymbolQuote(this.streamerSymbol);
     }
 
-    get marketPrice(): NullableNumber {
-        return this.trade?.price ?? null;
-    }
 
     get bidPrice(): NullableNumber {
         return this.quote?.bidPrice ?? null;

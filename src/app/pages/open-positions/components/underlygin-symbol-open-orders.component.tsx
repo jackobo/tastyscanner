@@ -59,6 +59,7 @@ const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observ
             </LegInfoBodyGridCellBox>
 
             <CenterAlignedBodyGridCellBox>{props.leg.daysToExpiration}</CenterAlignedBodyGridCellBox>
+            <RightAlignedBodyGridCellBox>{props.leg.marketPrice.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.tradingPrice.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.bidPrice?.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.askPrice?.toFixed(2)}</RightAlignedBodyGridCellBox>
@@ -76,6 +77,10 @@ const OrderDetailsComponent: React.FC<{order: IAccountOpenOrderViewModel}> = obs
             <CenterAlignedBodyGridCellBox>
                 {props.order.daysToExpiration}
             </CenterAlignedBodyGridCellBox>
+
+            <RightAlignedBodyGridCellBox>
+                {props.order.marketPrice.toFixed(2)}
+            </RightAlignedBodyGridCellBox>
 
             <RightAlignedBodyGridCellBox>
                 {props.order.tradingPrice.toFixed(2)}
