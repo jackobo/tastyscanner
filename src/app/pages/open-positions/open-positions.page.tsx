@@ -60,7 +60,7 @@ const LegInfoGridBox = styled(GridCellBox)`
     flex-direction: row;
     align-items: center;
     justify-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     gap: var(--ion-space-8);
     background-color: var(--ion-color-light-shade);
     color: var(--ion-color-light-contrast);
@@ -69,7 +69,7 @@ const LegInfoGridBox = styled(GridCellBox)`
 
 const LegInfoGridCellBox = styled.div`
     width: 100%;
-  
+    text-align: center;
 `
 
 const LegInfoSeparatorBox = styled.span`
@@ -79,10 +79,6 @@ const LegInfoSeparatorBox = styled.span`
 `
 
 
-const LegQuantityBox = styled(LegInfoGridCellBox)`
-    text-align: right;
-    width: 100%;
-`
 
 
 const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observer((props) => {
@@ -90,7 +86,7 @@ const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observ
     return (
         <>
             <LegInfoGridBox>
-                <LegQuantityBox>{props.leg.quantity}</LegQuantityBox>
+                <LegInfoGridCellBox>{props.leg.quantity}</LegInfoGridCellBox>
                 <LegInfoSeparatorBox/>
                 <LegInfoGridCellBox>{props.leg.optionType}</LegInfoGridCellBox>
                 <LegInfoSeparatorBox/>
@@ -114,10 +110,10 @@ const OrderHeaderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = obse
     return (
         <>
             <GridCellBox>
-                {props.order.id}
+                {`Order id: ${props.order.id}`}
             </GridCellBox>
             <RightGridCellBox>
-                {props.order.tradingPrice.toFixed(2)}
+                {props.order.tradingPrice}
             </RightGridCellBox>
             <CenteredGridCellBox>
                 {daysToExpiration.length > 0 ? Math.min(...daysToExpiration) : null}

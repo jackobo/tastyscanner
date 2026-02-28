@@ -26,7 +26,7 @@ export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
     }
 
     get tradingPrice(): number {
-        return this.legs.sum(leg => leg.price);
+        return Math.round(this.legs.sum(leg => leg.price) * 100)/100;
     }
 
     public readonly legs: IAccountOpenOrderLegViewModel[];
