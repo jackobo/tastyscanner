@@ -23,7 +23,10 @@ export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
 export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
     constructor(private readonly services: IAppServiceFactory,
                 private readonly legRawData: ITastyLegConsolidatedWithPosition) {
+        this._parsedOptionStreamerSymbol = parseOptionStreamerSymbol(legRawData.position.streamerSymbol);
     }
+
+    private _parsedOptionStreamerSymbol: IParsedOptionStreamerSymbol | undefined;
 
     get symbol(): string {
         return this.legRawData.leg.symbol;
@@ -46,6 +49,41 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
         return isSellToOpenAction(this.legRawData.leg.action);
     }
     get optionType(): "P" | "C" | undefined {
+        return this._parsedOptionStreamerSymbol?.optionType;
+    }
+}
+
+interface IParsedOptionStreamerSymbol {
+    underlyingSymbol: string;
+    expirationDate: Date;
+    optionType: "P" | "C";
+    strikePrice: number;
+}
+
+const regex = /^\.(?<underlying>[A-Z]+)(?<expiration>\d{6})(?<type>[CP])(?<strike>\d+)$/;
+function parseOptionStreamerSymbol(optionSymbol: string): IParsedOptionStreamerSymbol | undefined {
+
+    const match = optionSymbol.match(regex);
+
+    if (!match || !match.groups) {
+        // Return null if the format is invalid
         return undefined;
     }
+
+    const { underlying, expiration, type, strike } = match.groups;
+
+    // Parse expiration date: YYMMDD to Date
+    const year = 2000 + parseInt(expiration.substring(0, 2));
+    const month = parseInt(expiration.substring(2, 4)) - 1;
+    const day = parseInt(expiration.substring(4, 6));
+
+    const expirationDate = new Date(year, month, day);
+
+    // Return the parsed fields
+    return {
+        underlyingSymbol: underlying,
+        expirationDate,
+        optionType: type as "P" | "C",
+        strikePrice: parseInt(strike),
+    };
 }
