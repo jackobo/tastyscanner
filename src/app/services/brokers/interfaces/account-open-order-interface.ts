@@ -6,13 +6,14 @@ export interface IAccountOpenOrderViewModel {
     readonly createdAt: Date;
     readonly tradingPrice: number;
     readonly legs: IAccountOpenOrderLegViewModel[];
+    readonly daysToExpiration: NullableNumber;
 }
 
 export interface IAccountOpenOrderLegViewModel {
     readonly symbol: string;
     readonly quantity: number;
     readonly instrumentType: string;
-    readonly price: number;
+    readonly tradingPrice: number;
     readonly isSell: boolean;
     readonly optionType: "P" | "C" | null; //put / call
     readonly expirationDate: NullableDate;

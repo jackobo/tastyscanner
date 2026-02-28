@@ -7,7 +7,6 @@ import {
     IAccountOpenOrderViewModel
 } from "../../services/brokers/interfaces/account-open-order-interface";
 import styled from "styled-components";
-import {Check} from "../../../framework/utils/type-checking";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
 import {IonAccordion, IonAccordionGroup, IonItem} from "@ionic/react";
 
@@ -122,7 +121,7 @@ const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observ
                 <LegInfoGridCellBox>{props.leg.strikePrice}</LegInfoGridCellBox>
             </LegInfoBodyGridBox>
 
-            <RightBodyGridCellBox>{props.leg.price}</RightBodyGridCellBox>
+            <RightBodyGridCellBox>{props.leg.tradingPrice.toFixed(2)}</RightBodyGridCellBox>
             <CenteredBodyGridCellBox>{props.leg.daysToExpiration}</CenteredBodyGridCellBox>
         </>
     )
@@ -130,20 +129,16 @@ const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observ
 
 
 const OrderHeaderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = observer(props => {
-
-    const daysToExpiration =  props.order.legs.filter(l => !Check.isNullOrUndefined(l.daysToExpiration))
-                                                      .map(l => l.daysToExpiration ?? 0);
-
     return (
         <>
             <GridBodyCellBox>
                 {`Order id: ${props.order.id}`}
             </GridBodyCellBox>
             <RightBodyGridCellBox>
-                {props.order.tradingPrice}
+                {props.order.tradingPrice.toFixed(2)}
             </RightBodyGridCellBox>
             <CenteredBodyGridCellBox>
-                {daysToExpiration.length > 0 ? Math.min(...daysToExpiration) : null}
+                {props.order.daysToExpiration}
             </CenteredBodyGridCellBox>
         </>
 
@@ -161,11 +156,12 @@ const OrderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = observer(p
 })
 
 const UnderlyingSymbolOpenOrdersComponent: React.FC<{underlyingSymbol: string, openOrders: IAccountOpenOrderViewModel[]}> = observer((props) => {
+    const orders = props.openOrders.sort((o1, o2) => (o1.daysToExpiration ?? 0) - (o2.daysToExpiration ?? 0));
     return (
         <IonAccordion value={props.underlyingSymbol}>
             <SymbolBox slot={"header"}>{props.underlyingSymbol}</SymbolBox>
             <OrdersBox slot="content">
-                {props.openOrders.map(o => <OrderComponent key={o.id} order={o}/>)}
+                {orders.map(o => <OrderComponent key={o.id} order={o}/>)}
             </OrdersBox>
         </IonAccordion>
 
@@ -203,7 +199,8 @@ export const OpenPositionsPage: React.FC = observer(() => {
             <PageContentBox>
                 <HeaderComponent/>
                 <IonAccordionGroup>
-                    {Object.keys(ordersByUnderlying).map(underlyingSymbol => (<UnderlyingSymbolOpenOrdersComponent key={underlyingSymbol} underlyingSymbol={underlyingSymbol} openOrders={ordersByUnderlying[underlyingSymbol]}/>))}
+                    {Object.keys(ordersByUnderlying).sort((s1, s2) => s1.localeCompare(s2))
+                        .map(underlyingSymbol => (<UnderlyingSymbolOpenOrdersComponent key={underlyingSymbol} underlyingSymbol={underlyingSymbol} openOrders={ordersByUnderlying[underlyingSymbol]}/>))}
                 </IonAccordionGroup>
             </PageContentBox>
 

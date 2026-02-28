@@ -8,6 +8,7 @@ import {
 } from "./raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
 import {isSellToOpenAction} from "../interfaces/open-order-request.interface";
 import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
+import {Check} from "../../../../framework/utils/type-checking";
 
 export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
     constructor(private readonly services: IAppServiceFactory,
@@ -26,7 +27,16 @@ export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
     }
 
     get tradingPrice(): number {
-        return Math.round(this.legs.sum(leg => leg.price) * 100)/100;
+        return Math.round(this.legs.sum(leg => leg.tradingPrice) * 100)/100;
+    }
+
+    get daysToExpiration(): NullableNumber {
+        const daysToExpiration =  this.legs.filter(l => !Check.isNullOrUndefined(l.daysToExpiration))
+            .map(l => l.daysToExpiration ?? 0);
+        if(daysToExpiration.length === 0) {
+            return null;
+        }
+        return Math.min(...daysToExpiration);
     }
 
     public readonly legs: IAccountOpenOrderLegViewModel[];
@@ -53,7 +63,7 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
     get instrumentType(): string {
         return this.legRawData.leg.instrumentType;
     }
-    get price(): number {
+    get tradingPrice(): number {
         const fillsTotal = this.legRawData.leg.fills.sum(fill => parseFloat(fill.fillPrice))
         if(isSellToOpenAction(this.legRawData.leg.action)) {
             return fillsTotal;
