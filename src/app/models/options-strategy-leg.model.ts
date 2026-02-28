@@ -17,4 +17,12 @@ export class OptionsStrategyLegModel implements IOptionsStrategyLegViewModel {
     get isBuy(): boolean {
         return this.legType === 'BTO';
     }
+
+    get hasOppositePurchases(): boolean {
+        if(this.isSell) {
+            return this.option.countBuys != 0;
+        } else {
+            return this.option.countSells != 0;
+        }
+    }
 }

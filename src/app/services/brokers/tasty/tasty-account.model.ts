@@ -7,8 +7,8 @@ import {
 } from "../interfaces/brokerage-account.view-model.interface";
 import {IOpenOrderRequest} from "../interfaces/open-order-request.interface";
 import {TastyOpenOrdersReader} from "./tasty-open-orders-reader";
-import {TastyOpenOrderModel} from "./tasty-open-order.model";
-import {makeObservable, observable, runInAction} from "mobx";
+import {TastyOpenOrderLegModel, TastyOpenOrderModel} from "./tasty-open-order.model";
+import {computed, makeObservable, observable, runInAction} from "mobx";
 
 
 class TastyOpenOrdersResult implements IOpenOrdersResult {
@@ -22,9 +22,10 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
 
-        makeObservable<this, '_openOrders'>(this, {
-            _openOrders: observable.ref
-        })
+        makeObservable<this, '_openOrders' | 'openOrdersLegsMap'>(this, {
+            _openOrders: observable.ref,
+            openOrdersLegsMap: computed,
+        });
     }
 
     get id(): string {
@@ -38,19 +39,6 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     get accountNumber(): string {
         return this.accountRawData.accountNumber;
     }
-
-    private _openOrders: TastyOpenOrdersResult = new TastyOpenOrdersResult(true, []);
-
-    private _setOpenOrders(orders: TastyOpenOrderModel[]): void {
-        runInAction(() => {
-            this._openOrders = new TastyOpenOrdersResult(false, orders);
-        });
-    }
-
-    get openOrders(): TastyOpenOrdersResult {
-        return this._openOrders;
-    }
-
 
 
     async init(): Promise<void> {
@@ -73,6 +61,26 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         const streamerSymbols = this.openOrders.orders.selectMany(o => o.getAllStreamerSymbols());
         this.services.marketDataProvider.unsubscribeForOpenPositions(streamerSymbols);
     }
+
+
+    private _openOrders: TastyOpenOrdersResult = new TastyOpenOrdersResult(true, []);
+
+    private get openOrdersLegsMap(): Record<string, TastyOpenOrderLegModel> {
+        return this._openOrders.orders.selectMany(o => o.legs).toDictionaryOfType(leg => leg.symbol, leg => leg);
+    }
+
+    private _setOpenOrders(orders: TastyOpenOrderModel[]): void {
+        runInAction(() => {
+            this._openOrders = new TastyOpenOrdersResult(false, orders);
+        });
+    }
+
+    get openOrders(): TastyOpenOrdersResult {
+        return this._openOrders;
+    }
+
+
+
 
 
     async sendOrder(order: IOpenOrderRequest): Promise<void> {
@@ -100,6 +108,26 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }
 
     }
+
+    countSoldLegs(symbol: string): number {
+        const leg = this.openOrdersLegsMap[symbol];
+        if(!leg?.isSell) {
+            return 0;
+        }
+
+        return Math.abs(leg.quantity);
+    }
+
+    countBoughtLegs(symbol: string): number {
+        const leg = this.openOrdersLegsMap[symbol];
+        if(!leg?.isBuy) {
+            return 0;
+        }
+
+        return Math.abs(leg.quantity);
+    }
+
+
 
     private async _loadOpenOrders(): Promise<TastyOpenOrderModel[]> {
         const rawOpenOrders = await new TastyOpenOrdersReader(this.accountNumber, this.tastyClient, this.services).read();

@@ -6,6 +6,7 @@ import {useServices} from "../../../hooks/use-services.hook";
 import {SendOrderDialogComponent} from "./send-order/send-order-dialog.component";
 import {DialogCloseButtonBehavior} from "../../../../framework/services/dialog/dialog-enums";
 import {SuccessButton} from "../../../../framework/components/buttons/success-button";
+import {ButtonTooltipProps} from "../../../../framework/components/buttons/button-base";
 
 
 const StrategyFooterBox = styled.div`
@@ -36,6 +37,18 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
         })
     }
 
+    const hasOppositePurchases = props.strategy.legs.some(l => l.hasOppositePurchases);
+
+    const getButtonTooltipProps = (): ButtonTooltipProps | undefined => {
+        if(!hasOppositePurchases) {
+            return undefined;
+        }
+
+        return {
+            renderTooltipContent: () => services.language.translate("Some of the legs in this strategy have opposite purchases in already open orders.")
+        }
+    }
+
     return (
         <StrategyFooterBox>
             <span>Risk/Reward:</span>
@@ -51,7 +64,7 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
             <span>Theta:</span>
             <span>{props.strategy.theta}</span>
             <ButtonBox>
-                <SuccessButton onClick={onTrade}>
+                <SuccessButton onClick={onTrade} disabled={hasOppositePurchases} tooltip={getButtonTooltipProps()}>
                     { services.language.translate("Trade")}
                 </SuccessButton>
             </ButtonBox>

@@ -53,13 +53,13 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
                     instrumentType: "Equity Option",
                     action: "Buy to Open",
                     quantity: orderParams.quantity,
-                    symbol: this.btoOption.id
+                    symbol: this.btoOption.symbol
                 },
                 {
                     instrumentType: "Equity Option",
                     action: "Sell to Open",
                     quantity: orderParams.quantity,
-                    symbol: this.stoOption.id
+                    symbol: this.stoOption.symbol
                 }
             ]
         });

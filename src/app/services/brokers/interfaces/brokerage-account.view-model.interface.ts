@@ -8,6 +8,8 @@ export interface IBrokerageAccountViewModel {
     readonly accountNumber: string;
     readonly openOrders: IOpenOrdersResult;
     sendOrder(order: IOpenOrderRequest): Promise<void>;
+    countSoldLegs(symbol: string): number;
+    countBoughtLegs(symbol: string): number;
 }
 
 export interface IBrokerageAccountModel extends IBrokerageAccountViewModel {

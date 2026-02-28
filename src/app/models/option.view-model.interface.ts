@@ -1,5 +1,6 @@
+export type OptionType = 'C' | 'P'; //call or put
 export interface IOptionViewModel {
-    readonly optionType: string;
+    readonly optionType: OptionType;
     readonly strikePrice: number;
     readonly midPrice: number;
     readonly rawDelta: number;
@@ -10,5 +11,7 @@ export interface IOptionViewModel {
     readonly bidAskSpread: number;
     readonly expirationDate: string;
     readonly daysToExpiration: number;
+    readonly countSells: number;
+    readonly countBuys: number;
 
 }

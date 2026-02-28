@@ -1,5 +1,5 @@
 import {TickerModel} from "./ticker.model";
-import {IOptionViewModel} from "./option.view-model.interface";
+import {IOptionViewModel, OptionType} from "./option.view-model.interface";
 import {OptionStrikeModel} from "./option-strike.model";
 import {
     IGreeksRawData,
@@ -11,7 +11,7 @@ import {computed, makeObservable} from "mobx";
 import {Check} from "../../framework/utils/type-checking";
 
 export abstract class OptionModel implements IOptionViewModel {
-    constructor(public readonly id: string,
+    constructor(public readonly symbol: string,
                 public readonly streamerSymbol: string,
                 public readonly strike: OptionStrikeModel) {
 
@@ -23,7 +23,7 @@ export abstract class OptionModel implements IOptionViewModel {
     }
 
     abstract get isOutOfMoney(): boolean;
-    abstract get optionType(): string;
+    abstract get optionType(): OptionType;
 
     protected get ticker(): TickerModel {
         return this.strike.ticker;
@@ -89,9 +89,8 @@ export abstract class OptionModel implements IOptionViewModel {
 
     get rawDelta(): number {
         return this.greeksData?.delta ?? 0;
-
-
     }
+
     get absoluteRawDelta(): number {
         return Math.abs(this.rawDelta);
     }
@@ -115,10 +114,19 @@ export abstract class OptionModel implements IOptionViewModel {
     get volatility(): number {
         return this.greeksData?.volatility ?? 0;
     }
+
+    get countSells(): number {
+        return this.services.brokers.currentAccount?.countSoldLegs(this.symbol) ?? 0;
+    }
+
+    get countBuys(): number {
+        return this.services.brokers.currentAccount?.countBoughtLegs(this.symbol) ?? 0;
+    }
+
 }
 
 export class PutOptionModel extends OptionModel {
-    get optionType(): string {
+    get optionType(): OptionType {
         return "P";
     }
 
@@ -128,7 +136,7 @@ export class PutOptionModel extends OptionModel {
 }
 
 export class CallOptionModel extends OptionModel {
-    get optionType(): string {
+    get optionType(): OptionType {
         return "C";
     }
     get isOutOfMoney(): boolean {

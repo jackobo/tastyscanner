@@ -77,25 +77,25 @@ export class IronCondorModel implements IIronCondorViewModel {
                     instrumentType: "Equity Option",
                     action: "Buy to Open",
                     quantity: orderParams.quantity,
-                    symbol: this.btoPut.id
+                    symbol: this.btoPut.symbol
                 },
                 {
                     instrumentType: "Equity Option",
                     action: "Sell to Open",
                     quantity: orderParams.quantity,
-                    symbol: this.stoPut.id
+                    symbol: this.stoPut.symbol
                 },
                 {
                     instrumentType: "Equity Option",
                     action: "Sell to Open",
                     quantity: orderParams.quantity,
-                    symbol: this.stoCall.id
+                    symbol: this.stoCall.symbol
                 },
                 {
                     instrumentType: "Equity Option",
                     action: "Buy to Open",
                     quantity: orderParams.quantity,
-                    symbol: this.btoCall.id
+                    symbol: this.btoCall.symbol
                 }
             ]
         });

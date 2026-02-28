@@ -6,10 +6,11 @@ import {
     ITastyLegConsolidatedWithPosition,
     ITastyOrderConsolidatedWithPositions
 } from "./raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
-import {isSellToOpenAction} from "../interfaces/open-order-request.interface";
+import {isBuyToOpenAction, isSellToOpenAction} from "../interfaces/open-order-request.interface";
 import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
 import {Check} from "../../../../framework/utils/type-checking";
-import {IQuoteRawData} from "../../market-data-provider/market-data-provider.service.interface";
+import {IQuoteRawData, ITradeRawData} from "../../market-data-provider/market-data-provider.service.interface";
+import {OptionType} from "../../../models/option.view-model.interface";
 
 export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
     constructor(private readonly services: IAppServiceFactory,
@@ -89,7 +90,12 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
     get isSell(): boolean {
         return isSellToOpenAction(this.legRawData.leg.action);
     }
-    get optionType(): "P" | "C" | null {
+
+    get isBuy(): boolean {
+        return isBuyToOpenAction(this.legRawData.leg.action);
+    }
+
+    get optionType(): OptionType | null {
         return this._parsedOptionStreamerSymbol?.optionType ?? null;
     }
 
@@ -107,8 +113,15 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
         return this.services.time.differenceInCalendarDays(this.services.time.currentDate, this.expirationDate);
     }
 
+    private get trade(): ITradeRawData | undefined {
+        return this.services.marketDataProvider.getSymbolTrade(this.streamerSymbol);
+    }
     private get quote(): IQuoteRawData | undefined {
         return this.services.marketDataProvider.getSymbolQuote(this.streamerSymbol);
+    }
+
+    get marketPrice(): NullableNumber {
+        return this.trade?.price ?? null;
     }
 
     get bidPrice(): NullableNumber {
@@ -122,7 +135,7 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
 interface IParsedOptionStreamerSymbol {
     underlyingSymbol: string;
     expirationDate: Date;
-    optionType: "P" | "C";
+    optionType: OptionType;
     strikePrice: number;
 }
 
@@ -149,7 +162,7 @@ function parseOptionStreamerSymbol(optionSymbol: string): IParsedOptionStreamerS
     return {
         underlyingSymbol: underlying,
         expirationDate,
-        optionType: type as "P" | "C",
+        optionType: type as OptionType,
         strikePrice: parseInt(strike),
     };
 }

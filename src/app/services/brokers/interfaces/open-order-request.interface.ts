@@ -19,6 +19,10 @@ export function isSellToOpenAction(action: OrderLegAction) {
     return action === "Sell to Open";
 }
 
+export function isBuyToOpenAction(action: OrderLegAction) {
+    return action === "Buy to Open";
+}
+
 export type InstrumentType = "Cryptocurrency" | "Equity" | "Equity Offering" | "Equity Option" | "Fixed Income Security" | "Future" | "Future Option" | "Liquidity Pool";
 
 export interface IOpenOrderRequestLeg {
