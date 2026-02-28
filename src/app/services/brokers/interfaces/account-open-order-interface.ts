@@ -5,6 +5,8 @@ export interface IAccountOpenOrderViewModel {
     readonly id: string;
     readonly underlyingSymbol: string;
     readonly createdAt: Date;
+    readonly profitLossPercent: number;
+    readonly profitLoss: number;
     readonly marketPrice: number;
     readonly tradingPrice: number;
     readonly legs: IAccountOpenOrderLegViewModel[];
@@ -15,6 +17,8 @@ export interface IAccountOpenOrderLegViewModel {
     readonly symbol: string;
     readonly quantity: number;
     readonly instrumentType: string;
+    readonly profitLossPercent: number;
+    readonly profitLoss: number;
     readonly marketPrice: number;
     readonly tradingPrice: number;
     readonly isSell: boolean;

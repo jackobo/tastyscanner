@@ -58,7 +58,10 @@ const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observ
                 <LegInfoGridCellBox>{props.leg.strikePrice}</LegInfoGridCellBox>
             </LegInfoBodyGridCellBox>
 
+
             <CenterAlignedBodyGridCellBox>{props.leg.daysToExpiration}</CenterAlignedBodyGridCellBox>
+            <RightAlignedBodyGridCellBox>{`${props.leg.profitLossPercent.toFixed(2)}%`}</RightAlignedBodyGridCellBox>
+            <RightAlignedBodyGridCellBox>{props.leg.profitLoss.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.marketPrice.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.tradingPrice.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.bidPrice?.toFixed(2)}</RightAlignedBodyGridCellBox>
@@ -77,6 +80,15 @@ const OrderDetailsComponent: React.FC<{order: IAccountOpenOrderViewModel}> = obs
             <CenterAlignedBodyGridCellBox>
                 {props.order.daysToExpiration}
             </CenterAlignedBodyGridCellBox>
+
+            <RightAlignedBodyGridCellBox>
+                {`${props.order.profitLossPercent.toFixed(2)}%`}
+            </RightAlignedBodyGridCellBox>
+
+            <RightAlignedBodyGridCellBox>
+                {props.order.profitLoss.toFixed(2)}
+            </RightAlignedBodyGridCellBox>
+
 
             <RightAlignedBodyGridCellBox>
                 {props.order.marketPrice.toFixed(2)}

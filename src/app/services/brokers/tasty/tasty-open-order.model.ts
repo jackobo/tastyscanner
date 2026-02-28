@@ -29,12 +29,30 @@ export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
         return this.orderRawData.terminalAt;
     }
 
+    private _sumValues(values: number[]): number {
+        return Math.round(values.sum(val => val) * 100)/100;
+    }
+
+    get profitLossPercent(): number {
+        return 100 * (this.profitLoss / Math.abs(this.tradingCost));
+    }
+
+    get profitLoss(): number {
+        return this._sumValues(this.legs.map(leg => leg.profitLoss));
+    }
+
     get marketPrice(): number {
-        return Math.round(this.legs.sum(leg => leg.marketPrice) * 100)/100;
+        return this._sumValues(this.legs.map(leg => leg.marketPrice));
     }
     get tradingPrice(): number {
-        return Math.round(this.legs.sum(leg => leg.tradingPrice) * 100)/100;
+        return this._sumValues(this.legs.map(leg => leg.tradingPrice));
     }
+
+    get tradingCost(): number {
+        return this._sumValues(this.legs.map(leg => leg.tradingCost));
+    }
+
+
 
     get daysToExpiration(): NullableNumber {
         const daysToExpiration =  this.legs.filter(l => !Check.isNullOrUndefined(l.daysToExpiration))
@@ -44,6 +62,8 @@ export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
         }
         return Math.min(...daysToExpiration);
     }
+
+
 
     public readonly legs: TastyOpenOrderLegModel[];
 
@@ -73,38 +93,79 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
         return this.legRawData.position.streamerSymbol;
     }
 
-    get quantity(): number {
-        if(isSellToOpenAction(this.legRawData.leg.action)) {
-            return -1 * this.legRawData.leg.quantity;
-        }
+    get rawQuantity(): number {
         return this.legRawData.leg.quantity;
+    }
+
+    get quantity(): number {
+        if(this.isSell) {
+            return -1 * this.rawQuantity;
+        }
+        return this.rawQuantity;
+    }
+
+    get multiplier(): number {
+        return parseInt(this.legRawData.position.multiplier);
     }
 
     get instrumentType(): string {
         return this.legRawData.leg.instrumentType;
     }
 
-    get marketPrice(): number {
-        const price = this.trade?.price;
-        if(Check.isNullOrUndefined(price)) {
-            return 0;
-        }
-
-        if(this.isSell) {
-            return -1 * price;
-        }
-
-        return price;
+    get rawMarketPrice(): number {
+        return  this.trade?.price ?? 0
     }
 
+    get marketPrice(): number {
+
+        if(this.isSell) {
+            return -1 * this.rawMarketPrice;
+        }
+
+        return this.rawMarketPrice;
+    }
+
+    get rawMarketCost(): number {
+        return this.rawMarketPrice * this.rawQuantity * this.multiplier;
+    }
+
+    get marketCost(): number {
+        return this.marketPrice * this.rawQuantity * this.multiplier;
+    }
+
+    get rawTradingPrice(): number {
+        return this.legRawData.leg.fills.sum(fill => parseFloat(fill.fillPrice));
+    }
 
     get tradingPrice(): number {
-        const fillsTotal = this.legRawData.leg.fills.sum(fill => parseFloat(fill.fillPrice))
         if(this.isSell) {
-            return fillsTotal;
+            return this.rawTradingPrice;
         }
-        return -1 * fillsTotal;
+        return -1 * this.rawTradingPrice;
     }
+
+    get rawTradingCost(): number {
+        return this.rawTradingPrice * this.rawQuantity * this.multiplier;
+    }
+
+    get tradingCost(): number {
+        return this.tradingPrice * this.rawQuantity * this.multiplier;
+    }
+
+    get profitLoss(): number {
+        if(this.isSell) {
+            return this.rawTradingCost - this.rawMarketCost;
+        } else {
+            return this.rawMarketCost - this.rawTradingCost;
+        }
+
+    }
+
+    get profitLossPercent(): number {
+        return 100 * (this.profitLoss / this.rawTradingCost);
+    }
+
+
     get isSell(): boolean {
         return isSellToOpenAction(this.legRawData.leg.action);
     }
