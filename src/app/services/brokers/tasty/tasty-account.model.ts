@@ -6,10 +6,16 @@ import {
     IOpenOrdersResult
 } from "../interfaces/brokerage-account.view-model.interface";
 import {IOpenOrderRequest} from "../interfaces/open-order-request.interface";
-import {IAccountOpenOrderViewModel} from "../interfaces/account-open-order-interface";
 import {TastyOpenOrdersReader} from "./tasty-open-orders-reader";
 import {TastyOpenOrderModel} from "./tasty-open-order.model";
 import {makeObservable, observable, runInAction} from "mobx";
+
+
+class TastyOpenOrdersResult implements IOpenOrdersResult {
+    constructor(public readonly isLoading: boolean, public readonly orders: TastyOpenOrderModel[]) {
+    }
+
+}
 
 export class TastyAccountModel implements IBrokerageAccountModel {
     constructor(private readonly accountRawData: ITastyAccountRawData,
@@ -19,11 +25,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         makeObservable<this, '_openOrders'>(this, {
             _openOrders: observable.ref
         })
-
     }
-
-
-
 
     get id(): string {
         return `${this.brokerName}-${this.accountNumber}`
@@ -37,50 +39,41 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         return this.accountRawData.accountNumber;
     }
 
-    private _openOrders: IOpenOrdersResult | null = null;
+    private _openOrders: TastyOpenOrdersResult = new TastyOpenOrdersResult(true, []);
+
+    private _setOpenOrders(orders: TastyOpenOrderModel[]): void {
+        runInAction(() => {
+            this._openOrders = new TastyOpenOrdersResult(false, orders);
+        });
+    }
+
+    get openOrders(): TastyOpenOrdersResult {
+        return this._openOrders;
+    }
+
+
 
     async init(): Promise<void> {
+        try {
+            const openOrders = await this._loadOpenOrders();
+            const streamerSymbols = openOrders.selectMany(order => order.getAllStreamerSymbols());
+            this.services.marketDataProvider.subscribeForOpenPositions(streamerSymbols);
+            this._setOpenOrders(openOrders);
+        } catch (err) {
+            this.services.logger.error('Failed to load open orders from Tasty Trade', err);
+            await this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translate('Failed to load open orders from Tasty Trade: {error}')
+            });
+            this._setOpenOrders([]);
+        }
 
     }
 
     async dispose(): Promise<void> {
-
+        const streamerSymbols = this.openOrders.orders.selectMany(o => o.getAllStreamerSymbols());
+        this.services.marketDataProvider.unsubscribeForOpenPositions(streamerSymbols);
     }
 
-    private _setOpenOrders(orders: IAccountOpenOrderViewModel[], isLoading: boolean = false): void {
-        runInAction(() => {
-            this._openOrders = {
-                isLoading: isLoading,
-                orders: orders
-            }
-        });
-    }
-
-
-
-    get openOrders(): IOpenOrdersResult {
-        if(!this._openOrders) {
-            this._setOpenOrders([], true)
-
-            this._loadOpenOrders().then(orders => {
-                this._setOpenOrders(orders);
-            }).catch(err => {
-                this.services.logger.error('Failed to load open orders from Tasty Trade', err);
-                this.services.toaster.showErrorToast({
-                    renderContent: () => this.services.language.translate('Failed to load open orders from Tasty Trade: {error}')
-                });
-
-                this._setOpenOrders([]);
-            })
-
-            return this._openOrders ?? {
-                isLoading: false,
-                orders: []
-            };
-
-        }
-        return this._openOrders;
-    }
 
     async sendOrder(order: IOpenOrderRequest): Promise<void> {
         try {
@@ -108,12 +101,12 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
     }
 
-    private async _loadOpenOrders(): Promise<IAccountOpenOrderViewModel[]> {
-        const openPositions = await new TastyOpenOrdersReader(this.accountNumber, this.tastyClient, this.services).read();
+    private async _loadOpenOrders(): Promise<TastyOpenOrderModel[]> {
+        const rawOpenOrders = await new TastyOpenOrdersReader(this.accountNumber, this.tastyClient, this.services).read();
 
-        console.log(openPositions.groupByKey(p => p.underlyingSymbol));
+        //console.log(openPositions.groupByKey(p => p.underlyingSymbol));
 
-        return openPositions.map(order => new TastyOpenOrderModel(this.services, order));
+        return rawOpenOrders.map(order => new TastyOpenOrderModel(this.services, order));
     }
 
 }

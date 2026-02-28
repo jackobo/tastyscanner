@@ -67,6 +67,7 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
     private _connectToTastyPromiseResolver: null | ((value: TastyTradeClient | PromiseLike<TastyTradeClient>) => void) = null;
 
     private _lastSymbols: string[] = [];
+    private _openPositionsSymbols: string[] = [];
 
     private async _connectToTasty(appSettings: IAppSettingsFields | null): Promise<TastyTradeClient | null> {
 
@@ -322,7 +323,19 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
 
     subscribe(symbols: string[]): void {
         this._executeTastyApi(async (tastyClient) => {
-            this._subscribeToSymbols(symbols, tastyClient)
+            this._subscribeToSymbols(symbols, tastyClient);
+            this._lastSymbols = [
+                ...this._lastSymbols,
+                ...symbols.filter(s => !this._lastSymbols.includes(s))
+            ];
+        })
+    }
+
+
+    subscribeForOpenPositions(symbols: string[]): void {
+        this._executeTastyApi(async (tastyClient) => {
+            this._subscribeToSymbols(symbols, tastyClient);
+            this._openPositionsSymbols = symbols;
         })
     }
 
@@ -336,30 +349,31 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
             //MarketDataSubscriptionType.Underlying
         ]);
 
-        this._lastSymbols = symbols;
+
     }
 
     unsubscribe(symbols: string[]): void {
-        if(symbols.length === 0) {
-            return;
+        this._executeTastyApi(async (tastyClient) => {
+            this._unsubscribeFromSymbols(symbols, tastyClient, this._openPositionsSymbols);
+            this._lastSymbols = this._lastSymbols.filter(s => !symbols.includes(s));
+        });
+    }
+
+    unsubscribeForOpenPositions(symbols: string[]): void {
+        this._executeTastyApi(async (tastyClient) => {
+            this._unsubscribeFromSymbols(symbols, tastyClient, this._lastSymbols);
+            this._openPositionsSymbols = this._openPositionsSymbols.filter(s => !symbols.includes(s));
+        });
+    }
+
+
+    private _unsubscribeFromSymbols(symbols: string[], tastyClient: TastyTradeClient, excludeSymbols: string[]): void {
+
+        const symbolsToUnsubscribe = symbols.filter(s => !excludeSymbols.includes(s));
+        if(symbolsToUnsubscribe.length > 0) {
+            tastyClient.quoteStreamer.unsubscribe(symbolsToUnsubscribe);
         }
 
-        this._executeTastyApi(async (tastyClient) => {
-            tastyClient.quoteStreamer.unsubscribe(symbols);
-        });
-
-        this._lastSymbols = this._lastSymbols.filter(s => !symbols.includes(s));
-
-        /*
-        runInAction(() => {
-            for(const symbol of symbols) {
-                delete this.quotes[symbol];
-                delete this.trades[symbol];
-                delete this.greeks[symbol];
-            }
-        });
-
-         */
 
     }
 

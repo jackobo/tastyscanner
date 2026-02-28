@@ -2,7 +2,9 @@ export interface IMarketDataProviderService {
     waitForConnection(): Promise<void>;
     getOptionsChain(symbol: string): Promise<IOptionChainRawData[]>;
     subscribe(symbols: string[]): void;
+    subscribeForOpenPositions(symbols: string[]): void;
     unsubscribe(symbols: string[]): void;
+    unsubscribeForOpenPositions(symbols: string[]): void;
     getSymbolQuote(symbol: string): IQuoteRawData | undefined;
     getSymbolTrade(symbol: string): ITradeRawData | undefined;
     getSymbolGreeks(symbol: string): IGreeksRawData | undefined;

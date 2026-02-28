@@ -9,6 +9,7 @@ import {
 import {isSellToOpenAction} from "../interfaces/open-order-request.interface";
 import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
 import {Check} from "../../../../framework/utils/type-checking";
+import {IQuoteRawData} from "../../market-data-provider/market-data-provider.service.interface";
 
 export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
     constructor(private readonly services: IAppServiceFactory,
@@ -40,7 +41,11 @@ export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
         return Math.min(...daysToExpiration);
     }
 
-    public readonly legs: IAccountOpenOrderLegViewModel[];
+    public readonly legs: TastyOpenOrderLegModel[];
+
+    getAllStreamerSymbols(): string[] {
+        return this.legs.map(leg => leg.streamerSymbol);
+    }
 }
 
 export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
@@ -59,6 +64,11 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
     get symbol(): string {
         return this.legRawData.leg.symbol;
     }
+
+    get streamerSymbol(): string {
+        return this.legRawData.position.streamerSymbol;
+    }
+
     get quantity(): number {
         if(isSellToOpenAction(this.legRawData.leg.action)) {
             return -1 * this.legRawData.leg.quantity;
@@ -95,6 +105,17 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
             return null;
         }
         return this.services.time.differenceInCalendarDays(this.services.time.currentDate, this.expirationDate);
+    }
+
+    private get quote(): IQuoteRawData | undefined {
+        return this.services.marketDataProvider.getSymbolQuote(this.streamerSymbol);
+    }
+
+    get bidPrice(): NullableNumber {
+        return this.quote?.bidPrice ?? null;
+    }
+    get askPrice(): NullableNumber {
+        return this.quote?.askPrice ?? null;
     }
 }
 

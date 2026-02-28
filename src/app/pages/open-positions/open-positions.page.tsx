@@ -12,14 +12,30 @@ import {IonAccordion, IonAccordionGroup, IonItem} from "@ionic/react";
 
 const LEG_INFO_CELL_WIDTH = '210px';
 
-const PageContentBox = styled.div`
+const PageBox = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
+    flex-grow: 1;
+    max-height: 100%;
     font-size: var(--ion-font-size-body2);
     gap: var(--ion-space-8);
+    overflow: hidden;
+    background-color: red;
 `
 
+const PageHeaderBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+`
+
+const PageContentBox = styled.div`
+    width: 100%;
+    max-height: 100%;
+    background-color: yellow;
+    overflow-y: auto;
+`
 
 const SymbolBox = styled(IonItem)`
     cursor: pointer;
@@ -39,14 +55,14 @@ const OrdersBox = styled.div`
 
 const HeaderGridBox = styled.div`
     display: grid;
-    grid-template-columns: calc(${LEG_INFO_CELL_WIDTH} + var(--ion-space-24)) 1fr 1fr;
+    grid-template-columns: calc(${LEG_INFO_CELL_WIDTH} + var(--ion-space-24)) 1fr 1fr 1fr 1fr;
     align-items: center;
 `
 
 
 const BodyGridBox = styled.div`
     display: grid;
-    grid-template-columns: ${LEG_INFO_CELL_WIDTH} 1fr 1fr;
+    grid-template-columns: ${LEG_INFO_CELL_WIDTH} 1fr 1fr 1fr 1fr;
     align-items: center;
 `
 
@@ -121,8 +137,10 @@ const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observ
                 <LegInfoGridCellBox>{props.leg.strikePrice}</LegInfoGridCellBox>
             </LegInfoBodyGridBox>
 
-            <RightBodyGridCellBox>{props.leg.tradingPrice.toFixed(2)}</RightBodyGridCellBox>
             <CenteredBodyGridCellBox>{props.leg.daysToExpiration}</CenteredBodyGridCellBox>
+            <RightBodyGridCellBox>{props.leg.tradingPrice.toFixed(2)}</RightBodyGridCellBox>
+            <RightBodyGridCellBox>{props.leg.bidPrice?.toFixed(2)}</RightBodyGridCellBox>
+            <RightBodyGridCellBox>{props.leg.askPrice?.toFixed(2)}</RightBodyGridCellBox>
         </>
     )
 })
@@ -134,12 +152,21 @@ const OrderHeaderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = obse
             <GridBodyCellBox>
                 {`Order id: ${props.order.id}`}
             </GridBodyCellBox>
-            <RightBodyGridCellBox>
-                {props.order.tradingPrice.toFixed(2)}
-            </RightBodyGridCellBox>
+
             <CenteredBodyGridCellBox>
                 {props.order.daysToExpiration}
             </CenteredBodyGridCellBox>
+
+            <RightBodyGridCellBox>
+                {props.order.tradingPrice.toFixed(2)}
+            </RightBodyGridCellBox>
+
+            <RightBodyGridCellBox>
+                ?
+            </RightBodyGridCellBox>
+            <RightBodyGridCellBox>
+                ?
+            </RightBodyGridCellBox>
         </>
 
     )
@@ -172,8 +199,10 @@ const HeaderComponent: React.FC = observer(() => {
     return (
         <HeaderGridBox>
             <LegInfoHeaderGridBox>Symbol</LegInfoHeaderGridBox>
-            <RightHeaderGridCellBox>Trd Prc</RightHeaderGridCellBox>
             <CenteredHeaderGridCellBox>DTE</CenteredHeaderGridCellBox>
+            <RightHeaderGridCellBox>Trd Prc</RightHeaderGridCellBox>
+            <RightHeaderGridCellBox>Bid</RightHeaderGridCellBox>
+            <RightHeaderGridCellBox>Ask</RightHeaderGridCellBox>
         </HeaderGridBox>
     )
 })
@@ -196,13 +225,22 @@ export const OpenPositionsPage: React.FC = observer(() => {
     return (
         <TastyScannerStandardPage>
 
-            <PageContentBox>
-                <HeaderComponent/>
-                <IonAccordionGroup>
-                    {Object.keys(ordersByUnderlying).sort((s1, s2) => s1.localeCompare(s2))
-                        .map(underlyingSymbol => (<UnderlyingSymbolOpenOrdersComponent key={underlyingSymbol} underlyingSymbol={underlyingSymbol} openOrders={ordersByUnderlying[underlyingSymbol]}/>))}
-                </IonAccordionGroup>
-            </PageContentBox>
+            <PageBox>
+                <PageHeaderBox>
+                    <HeaderComponent/>
+                </PageHeaderBox>
+
+                <PageContentBox>
+                    <div>
+                        <IonAccordionGroup>
+                            {Object.keys(ordersByUnderlying).sort((s1, s2) => s1.localeCompare(s2))
+                                .map(underlyingSymbol => (<UnderlyingSymbolOpenOrdersComponent key={underlyingSymbol} underlyingSymbol={underlyingSymbol} openOrders={ordersByUnderlying[underlyingSymbol]}/>))}
+                        </IonAccordionGroup>
+                    </div>
+
+                </PageContentBox>
+
+            </PageBox>
 
         </TastyScannerStandardPage>
     )

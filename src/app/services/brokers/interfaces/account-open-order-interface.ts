@@ -19,6 +19,8 @@ export interface IAccountOpenOrderLegViewModel {
     readonly expirationDate: NullableDate;
     readonly strikePrice: NullableNumber;
     readonly daysToExpiration: NullableNumber;
+    readonly bidPrice: NullableNumber;
+    readonly askPrice: NullableNumber;
 
 
 
