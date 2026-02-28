@@ -19,6 +19,7 @@ const StrikePriceBox = styled.span`
 
 
 const StrategyLegBox = styled(OptionsStrategyLegBaseBox)<{$isSell: boolean; $hasOppositePosition: boolean}>`
+    position: relative;
     background-color: ${props => props.$isSell ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'};
     color: ${props => props.$isSell ? 'var(--ion-color-danger-contrast)' : 'var(--ion-color-success-contrast)'};
     padding: var(--ion-space-8);
@@ -28,22 +29,48 @@ const StrategyLegBox = styled(OptionsStrategyLegBaseBox)<{$isSell: boolean; $has
     
 `
 
-const HasPurchasesTooltipContentBox = styled.div`
+const TooltipContentBox = styled.div`
     padding: var(--ion-space-16);
     font-size: var(--ion-font-size-body2);
     max-width: 300px;
 `
 
+
+const SameDirectionExistingPositionCountBox = styled.span`
+    position: absolute;
+    left: 0;
+    top: 25%;
+    transform: translateX(calc(-100% - 4px));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    background-color: var(--ion-color-warning);
+    color: var(--ion-color-warning-contrast);
+    border-radius: 50%;
+    padding: 0.5rem;
+    width: 1rem;
+    height: 1rem;
+    font-size: 0.7rem;
+    font-weight: var(--ion-font-weight-bold);
+    cursor: pointer;
+`
+
+
+
 export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegViewModel}> = observer((props) => {
     const services = useServices();
     const strategyLegBoxRef = useRef<HTMLDivElement | null>(null)
+    const sameDirectionPositionsCountRef = useRef<HTMLDivElement | null>(null);
+
     const isSellOption = props.leg.isSell;
     const hasOppositePosition = props.leg.hasOppositePositions;
-
+    const sameDirectionPositionsCount = props.leg.countExistingSameDirectionPositions;
 
     const price = isSellOption ? props.leg.option.midPrice : -1 * props.leg.option.midPrice;
 
-    const renderOpositePositionTooltip = () => {
+    const renderOppositePositionTooltip = () => {
         if(!hasOppositePosition) {
             return null;
         }
@@ -57,9 +84,42 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
 
         return (
             <TooltipComponent targetRef={strategyLegBoxRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                <HasPurchasesTooltipContentBox>
+                <TooltipContentBox>
                     {tooltipText}
-                </HasPurchasesTooltipContentBox>
+                </TooltipContentBox>
+            </TooltipComponent>
+        )
+    }
+
+    const renderSameDirectionExistingPositionCount = () => {
+        if(sameDirectionPositionsCount === 0) {
+            return null;
+        }
+        return (
+            <SameDirectionExistingPositionCountBox ref={sameDirectionPositionsCountRef}>
+                {sameDirectionPositionsCount}
+            </SameDirectionExistingPositionCountBox>
+        );
+    }
+
+    const renderSameDirectionExistingPositionCountTooltip = () => {
+
+        if(sameDirectionPositionsCount === 0) {
+            return null;
+        }
+
+        let tooltipText: string;
+        if(sameDirectionPositionsCount ===  1) {
+            tooltipText = services.language.translate('You already have 1 open position on this leg.');
+        } else {
+            tooltipText = services.language.translationFor('You already have {count} open positions on this leg.').withParams({count: sameDirectionPositionsCount});
+        }
+
+        return (
+            <TooltipComponent targetRef={sameDirectionPositionsCountRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                <TooltipContentBox>
+                    {tooltipText}
+                </TooltipContentBox>
             </TooltipComponent>
         )
     }
@@ -67,6 +127,7 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
     return (
         <>
             <StrategyLegBox $isSell={isSellOption} $hasOppositePosition={hasOppositePosition} ref={strategyLegBoxRef}>
+                {renderSameDirectionExistingPositionCount()}
                 <span>{props.leg.legActionType}</span>
                 <span>{props.leg.option.optionType}</span>
                 <StrikePriceBox>{props.leg.option.strikePrice}</StrikePriceBox>
@@ -74,7 +135,9 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
                 <span>{props.leg.option.deltaPercent + DELTA_SYMBOL}</span>
                 <span>{props.leg.option.bidAskSpread.toFixed(2) + '%'}</span>
             </StrategyLegBox>
-            {renderOpositePositionTooltip()}
+            {renderOppositePositionTooltip()}
+            {renderSameDirectionExistingPositionCountTooltip()}
+
         </>
     )
 })
