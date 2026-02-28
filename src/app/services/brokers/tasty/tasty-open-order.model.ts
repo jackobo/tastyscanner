@@ -7,6 +7,7 @@ import {
     ITastyOrderConsolidatedWithPositions
 } from "./raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
 import {isSellToOpenAction} from "../interfaces/open-order-request.interface";
+import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
 
 export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
     constructor(private readonly services: IAppServiceFactory,
@@ -37,7 +38,7 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
         this._parsedOptionStreamerSymbol = parseOptionStreamerSymbol(legRawData.position.streamerSymbol);
     }
 
-    private _parsedOptionStreamerSymbol: IParsedOptionStreamerSymbol | undefined;
+    private _parsedOptionStreamerSymbol: IParsedOptionStreamerSymbol | null;
 
     get symbol(): string {
         return this.legRawData.leg.symbol;
@@ -62,15 +63,22 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
     get isSell(): boolean {
         return isSellToOpenAction(this.legRawData.leg.action);
     }
-    get optionType(): "P" | "C" | undefined {
-        return this._parsedOptionStreamerSymbol?.optionType;
+    get optionType(): "P" | "C" | null {
+        return this._parsedOptionStreamerSymbol?.optionType ?? null;
     }
 
-    get expirationDate(): Date | undefined {
-        return this._parsedOptionStreamerSymbol?.expirationDate;
+    get expirationDate(): NullableDate {
+        return this._parsedOptionStreamerSymbol?.expirationDate ?? null;
     }
-    get strikePrice(): number | undefined {
-        return this._parsedOptionStreamerSymbol?.strikePrice;
+    get strikePrice(): NullableNumber {
+        return this._parsedOptionStreamerSymbol?.strikePrice ?? null;
+    }
+
+    get daysToExpiration(): NullableNumber {
+        if(!this.expirationDate) {
+            return null;
+        }
+        return this.services.time.differenceInCalendarDays(this.services.time.currentDate, this.expirationDate);
     }
 }
 
@@ -82,13 +90,13 @@ interface IParsedOptionStreamerSymbol {
 }
 
 const regex = /^\.(?<underlying>[A-Z]+)(?<expiration>\d{6})(?<type>[CP])(?<strike>\d+)$/;
-function parseOptionStreamerSymbol(optionSymbol: string): IParsedOptionStreamerSymbol | undefined {
+function parseOptionStreamerSymbol(optionSymbol: string): IParsedOptionStreamerSymbol | null {
 
     const match = optionSymbol.match(regex);
 
     if (!match || !match.groups) {
         // Return null if the format is invalid
-        return undefined;
+        return null;
     }
 
     const { underlying, expiration, type, strike } = match.groups;

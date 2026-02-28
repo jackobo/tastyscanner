@@ -7,6 +7,7 @@ import {
     IAccountOpenOrderViewModel
 } from "../../services/brokers/interfaces/account-open-order-interface";
 import styled from "styled-components";
+import {Check} from "../../../framework/utils/type-checking";
 
 
 const PageContentBox = styled.div`
@@ -27,7 +28,7 @@ const SymbolBox = styled.div`
     font-weight: var(--ion-font-weight-bold);
 `
 
-const UnderlyingOrdersBox = styled.div`
+const OrdersBox = styled.div`
     display: flex;
     flex-direction: column;
     gap: var(--ion-space-8);
@@ -36,7 +37,7 @@ const UnderlyingOrdersBox = styled.div`
 
 const OrderBox = styled.div`
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 210px 1fr 1fr;
     align-items: center;
 `
 
@@ -45,50 +46,82 @@ const GridCellBox = styled.div`
     border-bottom: 1px solid var(--ion-color-border);
 `
 
-const MoneyGridCellBox = styled(GridCellBox)`
+const RightGridCellBox = styled(GridCellBox)`
     text-align: right;
 `
 
-const LegInfoBox = styled(GridCellBox)`
+const CenteredGridCellBox = styled(GridCellBox)`
+    text-align: center;
+`
+
+const LegInfoGridBox = styled(GridCellBox)`
     display: grid;
-    grid-template-columns: 25px 10px auto auto;
+    grid-template-columns: 25px auto 10px auto auto auto auto;
     flex-direction: row;
     align-items: center;
     justify-items: center;
+    justify-content: center;
     gap: var(--ion-space-8);
+    background-color: var(--ion-color-light-shade);
+    color: var(--ion-color-light-contrast);
+    border-bottom: 1px solid var(--ion-color-light);
 `
 
-const LegQuantityBox = styled.div`
+const LegInfoGridCellBox = styled.div`
+    width: 100%;
+  
+`
+
+const LegInfoSeparatorBox = styled.span`
+    display: flex;
+    border-right: 1px solid var(--ion-color-dark);
+    height: 70%;
+`
+
+
+const LegQuantityBox = styled(LegInfoGridCellBox)`
     text-align: right;
     width: 100%;
 `
+
 
 const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observer((props) => {
     const services = useServices();
     return (
         <>
-            <LegInfoBox>
+            <LegInfoGridBox>
                 <LegQuantityBox>{props.leg.quantity}</LegQuantityBox>
-                <div>{props.leg.optionType}</div>
-                <div>{services.time.formatYYYY_MM_DD(props.leg.expirationDate ?? null)}</div>
-                <div>{props.leg.strikePrice}</div>
-            </LegInfoBox>
+                <LegInfoSeparatorBox/>
+                <LegInfoGridCellBox>{props.leg.optionType}</LegInfoGridCellBox>
+                <LegInfoSeparatorBox/>
+                <LegInfoGridCellBox>{services.time.formatUserFriendlyMonthDay(props.leg.expirationDate ?? null)}</LegInfoGridCellBox>
+                <LegInfoSeparatorBox/>
+                <LegInfoGridCellBox>{props.leg.strikePrice}</LegInfoGridCellBox>
+            </LegInfoGridBox>
 
-            <MoneyGridCellBox>{props.leg.price}</MoneyGridCellBox>
+            <RightGridCellBox>{props.leg.price}</RightGridCellBox>
+            <CenteredGridCellBox>{props.leg.daysToExpiration}</CenteredGridCellBox>
         </>
     )
 })
 
 
 const OrderHeaderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = observer(props => {
+
+    const daysToExpiration =  props.order.legs.filter(l => !Check.isNullOrUndefined(l.daysToExpiration))
+                                                      .map(l => l.daysToExpiration ?? 0);
+
     return (
         <>
             <GridCellBox>
                 {props.order.id}
             </GridCellBox>
-            <MoneyGridCellBox>
+            <RightGridCellBox>
                 {props.order.tradingPrice.toFixed(2)}
-            </MoneyGridCellBox>
+            </RightGridCellBox>
+            <CenteredGridCellBox>
+                {daysToExpiration.length > 0 ? Math.min(...daysToExpiration) : null}
+            </CenteredGridCellBox>
         </>
 
     )
@@ -108,9 +141,9 @@ const UnderlyingSymbolOpenOrdersComponent: React.FC<{underlyingSymbol: string, o
     return (
         <UnderlyingSymbolBox>
             <SymbolBox>{props.underlyingSymbol}</SymbolBox>
-            <UnderlyingOrdersBox>
+            <OrdersBox>
                 {props.openOrders.map(o => <OrderComponent key={o.id} order={o}/>)}
-            </UnderlyingOrdersBox>
+            </OrdersBox>
         </UnderlyingSymbolBox>
     )
 })

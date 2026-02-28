@@ -1,3 +1,4 @@
+import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
 
 export interface IAccountOpenOrderViewModel {
     readonly id: string;
@@ -13,9 +14,10 @@ export interface IAccountOpenOrderLegViewModel {
     readonly instrumentType: string;
     readonly price: number;
     readonly isSell: boolean;
-    readonly optionType: "P" | "C" | undefined; //put / call
-    readonly expirationDate: Date | undefined;
-    readonly strikePrice: number | undefined;
+    readonly optionType: "P" | "C" | null; //put / call
+    readonly expirationDate: NullableDate;
+    readonly strikePrice: NullableNumber;
+    readonly daysToExpiration: NullableNumber;
 
 
 
