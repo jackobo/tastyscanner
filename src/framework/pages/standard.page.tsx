@@ -27,6 +27,8 @@ const PageContentBox = styled.div`
 export interface StandardPageProps extends PropsWithChildren {
     renderHeaderContent?: () => string | React.ReactElement;
     renderCustomHeader?: () => React.ReactElement;
+    className?: string;
+    pageContentCssClass?: string;
 }
 
 export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
@@ -72,10 +74,10 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
     }
 
     return (
-        <IonPage>
+        <IonPage className={props.className}>
             {renderHeader()}
             <IonContentBox>
-                <PageContentBox ref={contentRef}>
+                <PageContentBox ref={contentRef} className={props.pageContentCssClass}>
                     <ContainerMediaQueriesChecksContext.Provider value={containerMediaChecks.current}>
                         <ThemeProvider theme={services.theme.applyContainerMediaQueries()}>
                             {props.children}

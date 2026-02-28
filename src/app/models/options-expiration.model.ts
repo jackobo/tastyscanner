@@ -65,7 +65,7 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
         return this._sortedStrikes;
     }
 
-    getAllSymbols(): string[] {
+    getAllStreamerSymbols(): string[] {
         return this.strikes.map(s => s.call.streamerSymbol)
                            .concat(this.strikes.map(s => s.put.streamerSymbol));
     }

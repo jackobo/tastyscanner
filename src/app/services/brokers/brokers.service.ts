@@ -1,11 +1,12 @@
 import {AppServiceBase} from "../app-service-base";
 import {IBrokerageAccountSettingsFields, IBrokersService} from "./brokers.service.interface";
 import {IAppServiceFactory} from "../app-service-factory.interface";
-import {IBroker, IBrokerageAccountViewModel} from "./interfaces/broker.interface";
+import {IBroker} from "./interfaces/broker.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 import {FormFields} from "../../../framework/models/forms/form-field.interface";
 import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";
 import {AppFormModel} from "../../models/forms/app-form.model";
+import {IBrokerageAccountModel} from "./interfaces/brokerage-account.view-model.interface";
 
 export class BrokersService extends AppServiceBase implements IBrokersService {
     constructor(services: IAppServiceFactory, private readonly brokers: IBroker[]) {
@@ -19,9 +20,9 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
 
         this._form =  new BrokerageAccountSettingsForm(this.services);
 
-        this._form.fields.lastUsedAccountId.onChange((value) => {
+        this._form.fields.lastUsedAccountId.onChange(async (value) => {
             if(value) {
-                this.setCurrentAccount(value);
+                await this.setCurrentAccount(value);
             }
         })
 
@@ -36,9 +37,9 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
 
     private readonly _form: BrokerageAccountSettingsForm;
 
-    accounts: IBrokerageAccountViewModel[] = [];
+    accounts: IBrokerageAccountModel[] = [];
 
-    currentAccount: IBrokerageAccountViewModel | null = null;
+    currentAccount: IBrokerageAccountModel | null = null;
 
     accountsLoadingInProgress: boolean = true;
 
@@ -46,14 +47,45 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
         return this._form.fields;
     }
 
-    setCurrentAccount(id: string): void {
+    async setCurrentAccount(id: string): Promise<void> {
+
+        if(this.currentAccount?.id === id) {
+            return;
+        }
+
+        const newAccount = this.accounts.find(acc => acc.id === id) ?? null;
+
+        if(!newAccount) {
+            return;
+        }
+
+        if(this.currentAccount) {
+            try {
+                await this.currentAccount.dispose();
+            } catch (err) {
+                this.services.logger.error(`Failed to dispose account: ${this.currentAccount.id}`, err);
+            }
+
+        }
+
+
+        try {
+            await newAccount.init();
+        } catch (err) {
+            this.services.logger.error(`Failed to initialize account: ${newAccount.id}`, err);
+            await this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translationFor('Failed to initialize account: {account}')
+                    .withParams({account: newAccount.id})
+            });
+            return;
+        }
+
+
         runInAction(() => {
-            this.currentAccount = this.accounts.find(acc => acc.id === id) ?? null;
+            this.currentAccount = newAccount;
         });
 
-        if (this.currentAccount) {
-            this.services.localStorage.setItem(AppLocalStorageKeys.currentBrokerAccount, this.currentAccount.id);
-        }
+        this.services.localStorage.setItem(AppLocalStorageKeys.currentBrokerAccount, newAccount.id);
     }
 
 
@@ -62,21 +94,28 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
 
         runInAction(() => {
             this.accounts = accounts;
-            const lastUsedAccount = this.services.localStorage.getItem(AppLocalStorageKeys.currentBrokerAccount);
-            if (lastUsedAccount) {
-                this.setCurrentAccount(lastUsedAccount);
-            }
+        });
 
-            if (!this.currentAccount) {
-                this.currentAccount = this.accounts[0] ?? null;
+        const lastUsedAccount = this.services.localStorage.getItem(AppLocalStorageKeys.currentBrokerAccount);
+        if (lastUsedAccount) {
+            await this.setCurrentAccount(lastUsedAccount);
+        }
+
+        if (!this.currentAccount) {
+            const accountId = this.accounts[0]?.id;
+            if(!accountId) {
+                return;
             }
-            this._form.fields.lastUsedAccountId.setValue(this.currentAccount?.id ?? null);
-            this._form.commitChanges();
-        })
+            await this.setCurrentAccount(accountId);
+        }
+
+
+        this._form.fields.lastUsedAccountId.setValue(this.currentAccount?.id ?? null);
+        this._form.commitChanges();
     }
 
-    private async _getAllAccounts(): Promise<IBrokerageAccountViewModel[]> {
-        const result: IBrokerageAccountViewModel[] = [];
+    private async _getAllAccounts(): Promise<IBrokerageAccountModel[]> {
+        const result: IBrokerageAccountModel[] = [];
         for(const broker of this.brokers) {
             try {
                 result.push(...(await broker.getAccounts()));
@@ -105,9 +144,9 @@ class BrokerageAccountSettingsForm extends AppFormModel<IBrokerageAccountSetting
     protected _onFieldsCreated(fields: FormFields<IBrokerageAccountSettingsFields>) {
         super._onFieldsCreated(fields);
 
-        fields.lastUsedAccountId.onChange((value) => {
+        fields.lastUsedAccountId.onChange(async (value) => {
             if(value) {
-                this.services.brokers.setCurrentAccount(value);
+                await this.services.brokers.setCurrentAccount(value);
                 this.commitChanges();
             }
         })

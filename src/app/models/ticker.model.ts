@@ -122,13 +122,13 @@ export class TickerModel implements ITickerViewModel {
         });
     }
 
-    private _getAllSymbols(): string[] {
-        const allOptionsSymbols: string[] = [this.symbol];
+    private _getAllStreamerSymbols(): string[] {
+        const allStreamerSymbols: string[] = [this.symbol];
         for(const expiration of this.expirations) {
-            expiration.getAllSymbols().forEach(s => allOptionsSymbols.push(s));
+            expiration.getAllStreamerSymbols().forEach(s => allStreamerSymbols.push(s));
         }
 
-        return allOptionsSymbols;
+        return allStreamerSymbols;
     }
 
     async start(): Promise<void> {
@@ -136,7 +136,7 @@ export class TickerModel implements ITickerViewModel {
         try {
             await this._loadMarketData();
 
-            this.services.marketDataProvider.subscribe(this._getAllSymbols());
+            this.services.marketDataProvider.subscribe(this._getAllStreamerSymbols());
 
         } finally {
             this.isLoading = false;
@@ -145,7 +145,7 @@ export class TickerModel implements ITickerViewModel {
     }
 
     async stop(): Promise<void> {
-        this.services.marketDataProvider.unsubscribe(this._getAllSymbols());
+        this.services.marketDataProvider.unsubscribe(this._getAllStreamerSymbols());
     }
 
     private _shouldIncludeExpiration(expiration: OptionsExpirationModel): boolean {

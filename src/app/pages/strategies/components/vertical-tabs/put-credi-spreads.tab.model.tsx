@@ -10,7 +10,7 @@ export class PutCreditSpreadsTabModel extends StrategyBaseTab {
     }
 
     getTitle(): string {
-        return "Put Credit Spreads";
+        return `${this.services.tickers.currentTicker?.symbol} Put Credit Spreads`;
     }
 
     protected renderTickerStrategies(ticker: ITickerViewModel): React.ReactElement {

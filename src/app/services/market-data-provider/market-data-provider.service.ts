@@ -28,6 +28,15 @@ export class MarketDataProviderService extends AppServiceBase implements IMarket
     subscribe(symbols: string[]): void {
         this._currentProvider.subscribe(symbols);
     }
+
+    subscribeForOpenPositions(symbols: string[]): void {
+        this._currentProvider.subscribeForOpenPositions(symbols);
+    }
+
+    unsubscribeForOpenPositions(symbols: string[]) {
+        this._currentProvider.unsubscribeForOpenPositions(symbols);
+    }
+
     unsubscribe(symbols: string[]): void {
         this._currentProvider.unsubscribe(symbols);
     }
