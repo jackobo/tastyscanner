@@ -1,6 +1,8 @@
+import {InstrumentType} from "../../interfaces/open-order-request.interface";
+
 export interface ITastyOpenPositionRawData {
     accountNumber: string;
-    instrumentType: string;
+    instrumentType: InstrumentType;
     streamerSymbol: string;
     symbol: string;
     underlyingSymbol: string;
@@ -15,7 +17,7 @@ export interface ITastyOpenPositionRawData {
     multiplier: string;
     quantityDirection: string;
     restrictedQuantity: number;
-    expiresAt: Date;
+    expiresAt?: Date;
     realizedDayGain: string;
     realizedDayGainDate: Date;
     realizedDayGainEffect: string;

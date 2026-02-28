@@ -94,7 +94,7 @@ export class TastyOpenOrdersReader {
                 multiplier: position["multiplier"],
                 quantityDirection: position["quantity-direction"],
                 restrictedQuantity: position["restricted-quantity"],
-                expiresAt: new Date(position["expires-at"]),
+                expiresAt: position["expires-at"] ? new Date(position["expires-at"]) : undefined,
                 realizedDayGain: position["realized-day-gain"],
                 realizedDayGainDate: new Date(position["realized-day-gain-date"]),
                 realizedDayGainEffect: position["realized-day-gain-effect"],

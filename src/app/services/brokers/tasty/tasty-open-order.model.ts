@@ -46,10 +46,15 @@ export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
 export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
     constructor(private readonly services: IAppServiceFactory,
                 private readonly legRawData: ITastyLegConsolidatedWithPosition) {
-        this._parsedOptionStreamerSymbol = parseOptionStreamerSymbol(legRawData.position.streamerSymbol);
+
+        if(legRawData.position.instrumentType === "Equity Option"
+            || legRawData.position.instrumentType === "Future Option") {
+            this._parsedOptionStreamerSymbol = parseOptionStreamerSymbol(legRawData.position.streamerSymbol);
+        }
+
     }
 
-    private _parsedOptionStreamerSymbol: IParsedOptionStreamerSymbol | null;
+    private _parsedOptionStreamerSymbol: IParsedOptionStreamerSymbol | null = null;
 
     get symbol(): string {
         return this.legRawData.leg.symbol;
