@@ -43,6 +43,9 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
         return this.legRawData.leg.symbol;
     }
     get quantity(): number {
+        if(isSellToOpenAction(this.legRawData.leg.action)) {
+            return -1 * this.legRawData.leg.quantity;
+        }
         return this.legRawData.leg.quantity;
     }
 
@@ -61,6 +64,13 @@ export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
     }
     get optionType(): "P" | "C" | undefined {
         return this._parsedOptionStreamerSymbol?.optionType;
+    }
+
+    get expirationDate(): Date | undefined {
+        return this._parsedOptionStreamerSymbol?.expirationDate;
+    }
+    get strikePrice(): number | undefined {
+        return this._parsedOptionStreamerSymbol?.strikePrice;
     }
 }
 

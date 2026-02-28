@@ -13,7 +13,10 @@ export interface IAccountOpenOrderLegViewModel {
     readonly instrumentType: string;
     readonly price: number;
     readonly isSell: boolean;
-    readonly optionType?: "P" | "C"; //put / call
+    readonly optionType: "P" | "C" | undefined; //put / call
+    readonly expirationDate: Date | undefined;
+    readonly strikePrice: number | undefined;
+
 
 
     //readonly action: string;
