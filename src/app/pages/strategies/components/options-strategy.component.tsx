@@ -10,7 +10,7 @@ import {IonIcon} from "@ionic/react";
 import {informationOutline} from "ionicons/icons";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
 
-export const StrategyBox = styled(CardBox)<{$isBestPop: boolean; $isBestRiskReward: boolean}>`
+export const StrategyBox = styled(CardBox)<{$hasOppositePurchases: boolean}>`
     position: relative;
     display: flex;
     flex-direction: column;
@@ -18,6 +18,9 @@ export const StrategyBox = styled(CardBox)<{$isBestPop: boolean; $isBestRiskRewa
     padding: 24px;
     overflow: hidden;
     font-size: var(--ion-font-size-body2);
+    ${props => props.$hasOppositePurchases && css`
+        background-color: var(--ion-color-medium-tint);
+    `}
 `
 
 const CornerBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}>`
@@ -38,7 +41,7 @@ const CornerBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}>`
     `}
 
     ${props => props.$isBestRiskReward && props.$isBestPop && css`
-        border-bottom: 35px solid var(--ion-color-tertiary-tint);
+        border-bottom: 35px solid var(--ion-color-success-shade);
     `}
 `
 
@@ -68,8 +71,8 @@ const InfoIconBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}
     `}
 
     ${props => props.$isBestRiskReward && props.$isBestPop && css`
-        color: var(--ion-color-tertiary-contrast);
-        border: 1px solid var(--ion-color-tertiary-contrast);
+        color: var(--ion-color-success-contrast);
+        border: 1px solid var(--ion-color-success-contrast);
     `}
 `
 
@@ -90,6 +93,7 @@ export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> =
     const infoIconBoxRef = useRef<HTMLDivElement | null>(null);
     const isBestRiskReward = props.strategy.riskRewardRatio === props.bestRiskReward;
     const isBestPop = props.strategy.pop === props.bestPop;
+    const hasOppositePurchases = props.strategy.legs.some(l => l.hasOppositePurchases);
 
     const renderCorner = () => {
         if(!(isBestPop || isBestRiskReward)) {
@@ -131,8 +135,7 @@ export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> =
 
     return (
         <>
-            <StrategyBox $isBestRiskReward={isBestRiskReward}
-                         $isBestPop={isBestPop}
+            <StrategyBox $hasOppositePurchases={hasOppositePurchases}
                          className={props.className}>
                 {renderCorner()}
 

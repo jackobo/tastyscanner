@@ -155,7 +155,7 @@ const LegComponent: React.FC<{leg: IOptionsStrategyLegViewModel}> = observer((pr
             <LegCellBox>{props.leg.option.strikePrice}</LegCellBox>
             <LegCellBox>{props.leg.option.optionType}</LegCellBox>
             <LegTypeCellBox $isSell={props.leg.isSell}>
-                {props.leg.legType}
+                {props.leg.legActionType}
             </LegTypeCellBox>
             <LegPriceCellBox>{props.leg.isSell ? props.leg.option.midPrice : -1 * props.leg.option.midPrice}</LegPriceCellBox>
         </>

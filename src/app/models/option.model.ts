@@ -18,7 +18,9 @@ export abstract class OptionModel implements IOptionViewModel {
         makeObservable(this, {
             tradeData: computed,
             quoteData: computed,
-            greeksData: computed
+            greeksData: computed,
+            countSells: computed,
+            countBuys: computed
         })
     }
 

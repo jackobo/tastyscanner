@@ -66,7 +66,8 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     private _openOrders: TastyOpenOrdersResult = new TastyOpenOrdersResult(true, []);
 
     private get openOrdersLegsMap(): Record<string, TastyOpenOrderLegModel> {
-        return this._openOrders.orders.selectMany(o => o.legs).toDictionaryOfType(leg => leg.symbol, leg => leg);
+        return this._openOrders.orders.selectMany(o => o.legs)
+                                      .toDictionaryOfType(leg => leg.symbol, leg => leg);
     }
 
     private _setOpenOrders(orders: TastyOpenOrderModel[]): void {

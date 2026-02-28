@@ -1,21 +1,21 @@
 import {IOptionViewModel} from "./option.view-model.interface";
-import {IOptionsStrategyLegViewModel, StrategyLegType} from "./options-strategy-leg.view-model.interface";
+import {IOptionsStrategyLegViewModel, StrategyLegActionType} from "./options-strategy-leg.view-model.interface";
 
 export class OptionsStrategyLegModel implements IOptionsStrategyLegViewModel {
     constructor(public readonly option: IOptionViewModel,
-                public readonly legType: StrategyLegType) {
+                public readonly legActionType: StrategyLegActionType) {
     }
 
     get key(): string {
-        return `${this.option.strikePrice}_${this.option.optionType}_${this.legType}`;
+        return `${this.option.strikePrice}_${this.option.optionType}_${this.legActionType}`;
     }
 
     get isSell(): boolean {
-        return this.legType === 'STO';
+        return this.legActionType === 'STO';
     }
 
     get isBuy(): boolean {
-        return this.legType === 'BTO';
+        return this.legActionType === 'BTO';
     }
 
     get hasOppositePurchases(): boolean {
