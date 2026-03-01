@@ -6,7 +6,7 @@ import styled from "styled-components";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
 import {IonAccordionGroup} from "@ionic/react";
 
-import {HeaderComponent} from "./components/open-positions-header.component";
+import {OpenPositionsRootHeaderComponent} from "./components/open-positions-root-header.component";
 import {UnderlyingSymbolOpenOrdersComponent} from "./components/underlygin-symbol-open-orders.component";
 
 const PAGE_CONTENT_CSS_CLASS = 'open-positions-page-content'
@@ -43,7 +43,7 @@ export const OpenPositionsPage: React.FC = observer(() => {
     return (
         <PageBox pageContentCssClass={PAGE_CONTENT_CSS_CLASS}>
 
-            <HeaderComponent/>
+            <OpenPositionsRootHeaderComponent/>
 
             <PageContentBox>
                 <IonAccordionGroup>
