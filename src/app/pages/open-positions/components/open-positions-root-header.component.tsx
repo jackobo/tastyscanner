@@ -12,8 +12,8 @@ export const OpenPositionsRootHeaderComponent: React.FC = observer(() => {
         <HeaderGridBox>
             <LegInfoHeaderGridCellBox>Symbol</LegInfoHeaderGridCellBox>
             <CenterAlignedHeaderGridCellBox>DTE</CenterAlignedHeaderGridCellBox>
-            <RightAlignedHeaderGridCellBox>P/L Opn %</RightAlignedHeaderGridCellBox>
-            <RightAlignedHeaderGridCellBox>P/L Opn</RightAlignedHeaderGridCellBox>
+            <RightAlignedHeaderGridCellBox>P/L %</RightAlignedHeaderGridCellBox>
+            <RightAlignedHeaderGridCellBox>P/L</RightAlignedHeaderGridCellBox>
             <RightAlignedHeaderGridCellBox>Mrk</RightAlignedHeaderGridCellBox>
             <RightAlignedHeaderGridCellBox>Trd Prc</RightAlignedHeaderGridCellBox>
             <RightAlignedHeaderGridCellBox>Bid</RightAlignedHeaderGridCellBox>
