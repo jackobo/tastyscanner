@@ -110,9 +110,9 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
 
         let tooltipText: string;
         if(sameDirectionPositionsCount ===  1) {
-            tooltipText = services.language.translate('You already have 1 open position on this leg.');
+            tooltipText = services.language.translate('You already have 1 open position on this leg. You can still trade this strategy but this will increase the number of positions on this leg.');
         } else {
-            tooltipText = services.language.translationFor('You already have {count} open positions on this leg.').withParams({count: sameDirectionPositionsCount});
+            tooltipText = services.language.translationFor('You already have {count} open positions on this leg. You can still trade this strategy but this will increase the number of positions on this leg.').withParams({count: sameDirectionPositionsCount});
         }
 
         return (
