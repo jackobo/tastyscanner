@@ -6,7 +6,6 @@ import {
     ITastyAccountOrderLegRawData,
     ITastyAccountOrderRawData
 } from "./raw-data/tasty-order.raw-data.interfaces";
-import {Check} from "../../../../framework/utils/type-checking";
 import {
     ITastyLegConsolidatedWithPosition,
     ITastyOrderConsolidatedWithPositions
@@ -108,17 +107,6 @@ export class TastyOpenOrdersReader {
     }
 
     private async _getFilledOrdersRawData(minDate: Date): Promise<ITastyAccountOrderRawData[]> {
-        const response: any[] = await this.tastyClient.orderService.getOrders(this.accountNumber, {
-            status: ["Filled"],
-            "per-page": 200,
-            "include-closed-positions": false,
-            "start-date": this.services.time.formatYYYY_MM_DD(minDate)
-        });
-
-
-        if(!Check.isArray(response)) {
-            return [];
-        }
 
 
         const mapOrder = (order: any): ITastyAccountOrderRawData => {
@@ -161,6 +149,31 @@ export class TastyOpenOrdersReader {
             };
         }
 
-        return response.map(mapOrder);
+        let pageOffset = 0;
+        const pageSize = 200;
+
+        let orders: any[] = [];
+        let shouldContinue = true;
+        do {
+            const response = await this.tastyClient.orderService.getOrders(this.accountNumber, {
+                status: ["Filled"],
+                "page-offset": pageOffset,
+                "per-page": pageSize,
+                "include-closed-positions": false,
+                "start-date": this.services.time.formatYYYY_MM_DD(minDate)
+            });
+
+            orders = [
+                ...orders,
+                ...(response ?? [])
+            ]
+
+            pageOffset++;
+
+            shouldContinue = response.length >= pageSize;
+
+        } while(shouldContinue);
+
+        return orders.map(mapOrder);
     }
 }
