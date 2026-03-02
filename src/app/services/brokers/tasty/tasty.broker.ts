@@ -340,6 +340,11 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
     }
 
     private _subscribeToSymbols(symbols: string[], tastyClient: TastyTradeClient): void {
+        symbols = symbols.filter(s => Boolean(s));
+
+        if(symbols.length === 0) {
+            return;
+        }
         tastyClient.quoteStreamer.subscribe(symbols, [
             MarketDataSubscriptionType.Quote,
             MarketDataSubscriptionType.Trade,
