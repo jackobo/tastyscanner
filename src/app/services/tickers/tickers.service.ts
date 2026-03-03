@@ -63,9 +63,12 @@ export class TickersService extends AppServiceBase implements ITickersService {
 
     private _loadRecentTickers(): void {
         const symbols = this.services.localStorage.getJson<string[]>(AppLocalStorageKeys.recentTickers) ?? [];
-        runInAction(() => {
-            this.recentTickers = symbols.map(s => new TickerModel(s, this.services));
-        });
+        if(symbols.length > 0) {
+            runInAction(() => {
+                this.recentTickers = symbols.map(s => new TickerModel(s, this.services));
+            });
+        }
+
     }
 
     private _addToRecentTickers(ticker: TickerModel): void {
