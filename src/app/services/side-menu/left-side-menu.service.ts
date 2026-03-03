@@ -15,6 +15,7 @@ import {
 import {
     CurrentBrokerageAccountSideMenuItemModel
 } from "./models/settings/brokerage-account/current-brokerage-account.side-menu-item.model";
+import {RecentTickersMenuItemModel} from "./models/recent-tickers/recent-tickers-menu-item.model";
 
 export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenuService {
     
@@ -36,6 +37,12 @@ export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenu
                     new FiltersSideMenuItemModel(this.services),
                     new WatchListsSideMenuItem(this.services),
                     new AppSettingsSideMenuItemModel(this.services)
+                ]
+            },
+            {
+                key: "recent-tickers-menu-group",
+                menuItems: [
+                    new RecentTickersMenuItemModel(this.services)
                 ]
             }
         ];

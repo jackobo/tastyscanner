@@ -18,18 +18,21 @@ export class TickersService extends AppServiceBase implements ITickersService {
 
 
 
-        this.services.marketDataProvider.waitForConnection().then(() => {
-            runInAction(() => {
-                this.recentTickers = [
-                    new TickerModel("SPY", this.services)
-                ];
-                this._loadRecentTickers();
+        runInAction(() => {
+            this.recentTickers = [
+                new TickerModel("SPY", this.services)
+            ];
+            this._loadRecentTickers();
+            const lastTicker = this.recentTickers.find(t => t.symbol === this.services.localStorage.getItem(AppLocalStorageKeys.lastSelectedTicker));
+            if(lastTicker) {
+                this._currentTicker = lastTicker;
+            } else {
                 this._currentTicker = this.recentTickers[0];
-            })
+            }
 
-            return this._currentTicker?.start();
-        });
+        })
 
+        this._currentTicker?.start();
     }
 
 
@@ -54,7 +57,11 @@ export class TickersService extends AppServiceBase implements ITickersService {
             this._currentTicker = ticker;
         });
 
-        await this._currentTicker?.start();
+        if(this._currentTicker) {
+            this.services.localStorage.setItem(AppLocalStorageKeys.lastSelectedTicker, this._currentTicker.symbol);
+            await this._currentTicker.start();
+        }
+
     }
 
     private _saveRecentTickers(): void {
@@ -63,22 +70,24 @@ export class TickersService extends AppServiceBase implements ITickersService {
 
     private _loadRecentTickers(): void {
         const symbols = this.services.localStorage.getJson<string[]>(AppLocalStorageKeys.recentTickers) ?? [];
-        runInAction(() => {
-            this.recentTickers = symbols.map(s => new TickerModel(s, this.services));
-        });
+        if(symbols.length > 0) {
+            runInAction(() => {
+                this.recentTickers = symbols.map(s => new TickerModel(s, this.services));
+            });
+        }
+
     }
 
     private _addToRecentTickers(ticker: TickerModel): void {
         const index = this.recentTickers.findIndex(t => t.symbol === ticker.symbol);
 
         runInAction(() => {
-            if(index >= 0) {
-                this.recentTickers.splice(index, 1);
+            if(index < 0) {
+                this.recentTickers.push(ticker);
             }
 
-            this.recentTickers.splice(0, 0, ticker);
             if(this.recentTickers.length > 10) {
-                this.recentTickers.splice(10, this.recentTickers.length - 10);
+                this.recentTickers.splice(0, 1);
             }
             this._saveRecentTickers();
         });

@@ -17,9 +17,7 @@ export class MarketDataProviderService extends AppServiceBase implements IMarket
 
     private _currentProvider: IMarketDataProvider;
 
-    async waitForConnection(): Promise<void> {
-        await this._currentProvider.waitForConnection();
-    }
+
 
 
     async getOptionsChain(symbol: string): Promise<IOptionChainRawData[]> {
