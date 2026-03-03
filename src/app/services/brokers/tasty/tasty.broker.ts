@@ -20,25 +20,33 @@ import {IBroker} from "../interfaces/broker.interface";
 import {IBrokerageAccountModel} from "../interfaces/brokerage-account.view-model.interface";
 import {TastyMarketDataProvider} from "./tasty-market-data-provider";
 
+class TastyConnection {
+    constructor(public readonly tastyClient: TastyTradeClient,
+                public readonly marketDataProvider: TastyMarketDataProvider) {
+    }
+
+}
 
 export class TastyBroker implements IBroker, IMarketDataProviderService {
+
+    private _currentTastyConnection: TastyConnection | null = null;
+
     constructor(private readonly services: IAppServiceFactory) {
 
         this._connectToTastyPromise = new Promise((resolve) => {
             this._connectToTastyPromiseResolver = resolve;
-        })
-
+        });
 
         reaction(() => this.services.appSettings.currentSettings, async (appSettings) => {
-            if(this._currentTastyClient) {
-                this._tastyMarketDataProvider?.disconnect();
-                this._currentTastyClient.session.clear();
+            if(this._currentTastyConnection) {
+                this._currentTastyConnection.marketDataProvider?.disconnect();
+                this._currentTastyConnection.tastyClient.session.clear();
                 this._connectToTastyPromise = new Promise((resolve) => {
                     this._connectToTastyPromiseResolver = resolve;
                 });
             }
 
-            this._currentTastyClient = await this._connectToTasty(appSettings);
+            this._currentTastyConnection = await this._connectToTasty(appSettings);
 
         }, {
             fireImmediately: true
@@ -50,15 +58,13 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
         return "Tasty";
     }
 
-    private _currentTastyClient: TastyTradeClient | null = null;
+
+
+    private _connectToTastyPromise: Promise<TastyConnection>;
+    private _connectToTastyPromiseResolver: null | ((value: TastyConnection | PromiseLike<TastyConnection>) => void) = null;
     private _tastyMarketDataProvider: TastyMarketDataProvider | undefined = undefined;
 
-
-    private _connectToTastyPromise: Promise<TastyTradeClient>;
-    private _connectToTastyPromiseResolver: null | ((value: TastyTradeClient | PromiseLike<TastyTradeClient>) => void) = null;
-
-
-    private async _connectToTasty(appSettings: IAppSettingsFields | null): Promise<TastyTradeClient | null> {
+    private async _connectToTasty(appSettings: IAppSettingsFields | null): Promise<TastyConnection | null> {
 
 
         const config = await this._createTastyClientConfig(appSettings);
@@ -72,30 +78,30 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
             return null;
         }
 
+        const marketDataProvider = await this._createMarketDataProvider(tastyClient);
 
-        if(Check.isNullOrUndefined(await this._connectToQuoteStreamer(tastyClient))) {
+        if(Check.isNullOrUndefined(marketDataProvider)) {
             return null;
         }
 
-
-
+        const tastyConnection = new TastyConnection(tastyClient, marketDataProvider);
 
         if(this._connectToTastyPromiseResolver) {
-            this._connectToTastyPromiseResolver(tastyClient);
+            this._connectToTastyPromiseResolver(new TastyConnection(tastyClient, marketDataProvider));
         }
 
+        this._tastyMarketDataProvider = tastyConnection.marketDataProvider;
 
-        return tastyClient;
+        return tastyConnection;
 
     }
 
-    private async _connectToQuoteStreamer(tastyClient: TastyTradeClient): Promise<TastyTradeClient | null> {
+    private async _createMarketDataProvider(tastyClient: TastyTradeClient): Promise<TastyMarketDataProvider | null> {
         try {
 
             const marketDataProvider = new TastyMarketDataProvider(tastyClient);
             await marketDataProvider.connect();
-            this._tastyMarketDataProvider = marketDataProvider;
-            return tastyClient;
+            return marketDataProvider;
 
         } catch(e) {
             await this.services.toaster.showErrorToast({
@@ -147,19 +153,19 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
         }
     }
 
-    private async _getTastyClient(): Promise<TastyTradeClient> {
+    private async _getTastyConnection(): Promise<TastyConnection> {
         return await this._connectToTastyPromise;
     }
 
 
     async waitForConnection(): Promise<void> {
-        await this._getTastyClient();
+        await this._getTastyConnection();
     }
 
     private async _executeTastyApi<TResult>(apiCall: (tastyClient: TastyTradeClient) => Promise<TResult>): Promise<TResult> {
         try {
-            const tastyClient = await this._getTastyClient();
-            return await apiCall(tastyClient);
+            const tastyConnection = await this._getTastyConnection();
+            return await apiCall(tastyConnection.tastyClient);
         } catch (err) {
             await this.services.toaster.showErrorToast({
                 renderContent: () => this.services.language.translate("Failed to call Tasty API. Please check your network connection or your credentials in the app settings.")
@@ -170,19 +176,14 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
 
     private async _executeMarketProviderApi<TResult>(apiCall: (marketDataProvider: TastyMarketDataProvider) => Promise<TResult>): Promise<TResult> {
         try {
-            await this.waitForConnection();
-            if(this._tastyMarketDataProvider) {
-                return await apiCall(this._tastyMarketDataProvider);
-            }
-
+            const tastyConnection = await this._getTastyConnection();
+            return await apiCall(tastyConnection.marketDataProvider);
         } catch (err) {
             await this.services.toaster.showErrorToast({
                 renderContent: () => this.services.language.translate("Failed to call Tasty API. Please check your network connection or your credentials in the app settings.")
             });
             throw err;
         }
-
-        throw new Error("Market data provider is not connected");
     }
 
     getSymbolTrade(symbol: string): ITradeRawData | undefined {
