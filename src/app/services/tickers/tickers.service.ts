@@ -94,6 +94,18 @@ export class TickersService extends AppServiceBase implements ITickersService {
 
     }
 
+    removeFromRecentTickers(symbol: string): void {
+        const index = this.recentTickers.findIndex(t => t.symbol === symbol);
+        if(index >= 0) {
+            runInAction(() => {
+                this.recentTickers.splice(index, 1);
+                this._saveRecentTickers();
+            });
+
+        }
+
+    }
+
    async searchTicker(query: string): Promise<ISearchTickerResultItem[]> {
         const result = await this.services.marketDataProvider.searchSymbol(query);
 

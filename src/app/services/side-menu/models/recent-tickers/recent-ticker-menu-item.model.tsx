@@ -31,7 +31,7 @@ export class RecentTickerMenuItem extends SideMenuItemBaseModel implements IRece
                                            renderIcon={() => <IonIcon slot="start" icon={this.isCurrentTicker ? radioButtonOnOutline : radioButtonOffOutline}/> }
                                            level={() => 1}
                                            onClick={async () => {
-                                               await this.services.tickers.setCurrentTicker(this.ticker.symbol);
+                                               //await this.services.tickers.setCurrentTicker(this.ticker.symbol);
                                            }}/>
         );
     }
