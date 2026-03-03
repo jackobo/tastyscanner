@@ -13,6 +13,9 @@ export default defineConfig({
     checker(
       { typescript: true })
   ],
+  server: {
+    port: 3333
+  },
   test: {
     globals: true,
     environment: 'jsdom',
