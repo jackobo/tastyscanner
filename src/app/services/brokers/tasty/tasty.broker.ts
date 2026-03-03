@@ -1,4 +1,4 @@
-import {reaction} from "mobx";
+import {makeObservable, observable, reaction, runInAction} from "mobx";
 import {
     IGreeksRawData,
     IOptionChainRawData,
@@ -35,6 +35,10 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
             this._connectToTastyPromiseResolver = resolve;
         });
 
+        makeObservable<this, '_currentTastyConnection'>(this, {
+            _currentTastyConnection: observable.ref
+        })
+
         reaction(() => this.services.appSettings.currentSettings, async (appSettings) => {
             if(this._currentTastyConnection) {
                 this._currentTastyConnection.marketDataProvider?.disconnect();
@@ -44,8 +48,10 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
                 });
             }
 
-            this._currentTastyConnection = await this._connectToTasty(appSettings);
-
+            const cnn = await this._connectToTasty(appSettings);
+            runInAction(() => {
+                this._currentTastyConnection = cnn;
+            });
         }, {
             fireImmediately: true
         })
