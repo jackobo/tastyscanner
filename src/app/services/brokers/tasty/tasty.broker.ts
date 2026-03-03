@@ -2,13 +2,12 @@ import {reaction} from "mobx";
 import {
     IGreeksRawData,
     IOptionChainRawData,
-    IMarketDataProviderService,
     IQuoteRawData,
     ITradeRawData,
     IWatchListRawData,
     ISymbolMetricsRawData,
     ISymbolInfoRawData,
-    ISearchSymbolItemRawData
+    ISearchSymbolItemRawData, IMarketDataProvider
 } from "../../market-data-provider/market-data-provider.service.interface";
 import TastyTradeClient, {STREAMER_STATE} from "@tastytrade/api"
 import {Check} from "../../../../framework/utils/type-checking";
@@ -17,7 +16,6 @@ import {IAppSettingsFields} from "../../app-settings/app-settings.service.interf
 import {ITastyAccountRawData} from "./raw-data/tasty-account.raw-data.interfaces";
 import {TastyAccountModel} from "./tasty-account.model";
 import {IBroker} from "../interfaces/broker.interface";
-import {IBrokerageAccountModel} from "../interfaces/brokerage-account.view-model.interface";
 import {TastyMarketDataProvider} from "./tasty-market-data-provider";
 
 class TastyConnection {
@@ -27,9 +25,9 @@ class TastyConnection {
 
 }
 
-export class TastyBroker implements IBroker, IMarketDataProviderService {
+export class TastyBroker implements IBroker, IMarketDataProvider {
 
-    private _currentTastyConnection: TastyConnection | null = null;
+
 
     constructor(private readonly services: IAppServiceFactory) {
 
@@ -62,7 +60,8 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
 
     private _connectToTastyPromise: Promise<TastyConnection>;
     private _connectToTastyPromiseResolver: null | ((value: TastyConnection | PromiseLike<TastyConnection>) => void) = null;
-    private _tastyMarketDataProvider: TastyMarketDataProvider | undefined = undefined;
+    private _currentTastyConnection: TastyConnection | null = null;
+
 
     private async _connectToTasty(appSettings: IAppSettingsFields | null): Promise<TastyConnection | null> {
 
@@ -90,8 +89,6 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
             this._connectToTastyPromiseResolver(new TastyConnection(tastyClient, marketDataProvider));
         }
 
-        this._tastyMarketDataProvider = tastyConnection.marketDataProvider;
-
         return tastyConnection;
 
     }
@@ -114,7 +111,7 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
     private async _connectToAccountStreamer(tastyClient: TastyTradeClient): Promise<TastyTradeClient | null> {
         let accountNumbers: string[];
         try {
-            accountNumbers = (await this._getAccounts(tastyClient))?.map(acc => acc.accountNumber) ?? [];
+            accountNumbers = (await this._getAccounts(tastyClient)).map(acc => acc.accountNumber);
             if(accountNumbers.length === 0) {
                 return tastyClient;
             }
@@ -187,15 +184,15 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
     }
 
     getSymbolTrade(symbol: string): ITradeRawData | undefined {
-        return this._tastyMarketDataProvider?.getSymbolTrade(symbol);
+        return this._currentTastyConnection?.marketDataProvider?.getSymbolTrade(symbol);
     }
 
     getSymbolQuote(symbol: string): IQuoteRawData | undefined {
-        return this._tastyMarketDataProvider?.getSymbolQuote(symbol);
+        return this._currentTastyConnection?.marketDataProvider?.getSymbolQuote(symbol);
     }
 
     getSymbolGreeks(symbol: string): IGreeksRawData | undefined {
-        return this._tastyMarketDataProvider?.getSymbolGreeks(symbol);
+        return this._currentTastyConnection?.marketDataProvider?.getSymbolGreeks(symbol);
     }
 
 
@@ -280,19 +277,29 @@ export class TastyBroker implements IBroker, IMarketDataProviderService {
         });
     }
 
-    async getAccounts(): Promise<IBrokerageAccountModel[]> {
+
+    async getAccounts(): Promise<TastyAccountModel[]> {
         return await this._executeTastyApi(async (tastyClient) => {
-           return (await this._getAccounts(tastyClient)).map(acc => new TastyAccountModel(acc, tastyClient, this.services));
-        })
+            return (await this._getAccounts(tastyClient)).map(acc => new TastyAccountModel(acc, tastyClient, this.services));
+        });
     }
 
-    private async _getAccounts(tastyClient: TastyTradeClient): Promise<ITastyAccountRawData[]> {
-        const accounts: any[] = await tastyClient.accountsAndCustomersService.getCustomerAccounts()
-        return accounts.map(acc => {
-            return {
-                accountNumber: acc.account["account-number"]
-            }
-        });
+    private _accounts: TastyAccountModel[] | null = null;
+    private async _getAccounts(tastyClient: TastyTradeClient): Promise<TastyAccountModel[]> {
+        if(!this._accounts) {
+            const rawAccounts: any[] = (await tastyClient.accountsAndCustomersService.getCustomerAccounts() ?? []);
+
+            this._accounts = rawAccounts.map(acc => {
+                const rawAccountData: ITastyAccountRawData = {
+                    accountNumber: acc.account["account-number"]
+                };
+
+                return new TastyAccountModel(rawAccountData, tastyClient, this.services);
+
+            });
+        }
+
+        return this._accounts;
     }
 
 }

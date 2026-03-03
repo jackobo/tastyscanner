@@ -1,7 +1,7 @@
 import TastyTradeClient, {MarketDataSubscriptionType} from "@tastytrade/api";
 import {
     IGreeksRawData,
-    IMarketDataProvider,
+    IMarketDataProviderService,
     IOptionChainRawData,
     IQuoteRawData,
     ISearchSymbolItemRawData, ISymbolEarningsRawData,
@@ -13,7 +13,7 @@ import {
 import {makeObservable, observable, runInAction} from "mobx";
 import {Check} from "../../../../framework/utils/type-checking";
 
-export class TastyMarketDataProvider implements Omit<IMarketDataProvider, 'name' | 'waitForConnection' | 'getUserWatchLists'> {
+export class TastyMarketDataProvider implements Omit<IMarketDataProviderService, 'waitForConnection' | 'getUserWatchLists'> {
     constructor(private readonly tastyClient: TastyTradeClient) {
         makeObservable(this, {
             quotes: observable,
