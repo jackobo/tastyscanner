@@ -15,14 +15,16 @@ import {timerOutline} from "ionicons/icons";
 import {IonIcon} from "@ionic/react";
 import {RecentTickerMenuItem} from "./recent-ticker-menu-item.model";
 import {AppLocalStorageKeys} from "../../../storage/app-local-storage-keys";
+import {ITickerViewModel} from "../../../../models/ticker.view-model.interface";
 
 export class RecentTickersMenuItemModel extends SideMenuItemBaseModel implements IRecentTickersMenuItemViewModel {
     constructor(services: IAppServiceFactory) {
         super(services);
         this.isExpanded = this.services.localStorage.getItem(AppLocalStorageKeys.recentTickersSideMenuExpanded) === 'true';
-        makeObservable<this, '_isExpanded' | '_tickersSubmenus'>(this, {
+        makeObservable<this, '_isExpanded' | '_tickersSubmenus' | '_currentHoveredTicker'>(this, {
             _isExpanded: observable.ref,
             _tickersSubmenus: computed,
+            _currentHoveredTicker: observable.ref,
         })
     }
     private _isExpanded: boolean = false;
@@ -38,8 +40,19 @@ export class RecentTickersMenuItemModel extends SideMenuItemBaseModel implements
         });
     }
 
+    private _currentHoveredTicker: ITickerViewModel | null = null;
+    get currentHoveredTicker(): ITickerViewModel | null {
+        return this._currentHoveredTicker;
+    }
+    set currentHoverTicker(ticker: ITickerViewModel | null) {
+        runInAction(() => {
+            this._currentHoveredTicker = ticker;
+        })
+
+    }
+
     private get _tickersSubmenus(): ISideMenuItemViewModel[] {
-        return this.services.tickers.recentTickers.map(t => new RecentTickerMenuItem(this.services, t))
+        return this.services.tickers.recentTickers.map(t => new RecentTickerMenuItem(this.services, t, this))
     }
 
     get subItems(): ISideMenuItemViewModel[] {

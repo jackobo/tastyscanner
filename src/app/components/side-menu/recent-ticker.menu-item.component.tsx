@@ -30,7 +30,7 @@ interface RecentTickerMenuItemComponentProps {
 }
 export const RecentTickerMenuItemComponent: React.FC<RecentTickerMenuItemComponentProps> = observer((props) => {
     const services = useServices();
-    const [isMouseInside, setIsMouseInside] = React.useState(false);
+
 
     const onSelectTicker = async () => {
         await services.tickers.setCurrentTicker(props.menuItem.ticker.symbol);
@@ -40,7 +40,7 @@ export const RecentTickerMenuItemComponent: React.FC<RecentTickerMenuItemCompone
         services.tickers.removeFromRecentTickers(props.menuItem.ticker.symbol);
     }
     const renderRemoveButton = () => {
-        if(!isMouseInside) {
+        if(!props.menuItem.isHovered) {
             return null;
         }
 
@@ -57,8 +57,8 @@ export const RecentTickerMenuItemComponent: React.FC<RecentTickerMenuItemCompone
         )
     }
     return (
-        <ContainerBox onMouseEnter={() => setIsMouseInside(true)}
-                      onMouseLeave={() => setIsMouseInside(false)}>
+        <ContainerBox onMouseEnter={() => props.menuItem.isHovered = true}
+                      onMouseLeave={() => props.menuItem.isHovered = false}>
             <SymbolBox onClick={onSelectTicker}>
                 {props.menuItem.ticker.symbol}
             </SymbolBox>

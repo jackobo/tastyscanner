@@ -10,10 +10,13 @@ import {radioButtonOffOutline, radioButtonOnOutline} from "ionicons/icons";
 import React from "react";
 import {IRecentTickerMenuItemViewModel} from "./recent-ticker-menu-item.view-model.interface";
 import {RecentTickerMenuItemComponent} from "../../../../components/side-menu/recent-ticker.menu-item.component";
+import {RecentTickersMenuItemModel} from "./recent-tickers-menu-item.model";
 
 export class RecentTickerMenuItem extends SideMenuItemBaseModel implements IRecentTickerMenuItemViewModel {
 
-    constructor(services: IAppServiceFactory, public readonly ticker: ITickerViewModel) {
+    constructor(services: IAppServiceFactory,
+                public readonly ticker: ITickerViewModel,
+                private readonly parent: RecentTickersMenuItemModel) {
         super(services);
     }
 
@@ -24,6 +27,21 @@ export class RecentTickerMenuItem extends SideMenuItemBaseModel implements IRece
     get isCurrentTicker(): boolean {
         return this.ticker.symbol === this.services.tickers.currentTicker?.symbol;
     }
+
+    get isHovered(): boolean {
+        return this.parent.currentHoveredTicker?.symbol === this.ticker.symbol;
+    }
+
+    set isHovered(value: boolean) {
+        if(value) {
+            this.parent.currentHoverTicker = this.ticker;
+        } else {
+            this.parent.currentHoverTicker = null;
+        }
+    }
+
+
+
     render(): SideMenuRenderResult {
         return (
             <StandardSideMenuItemComponent renderContent={() => (<RecentTickerMenuItemComponent menuItem={this}/>)}
