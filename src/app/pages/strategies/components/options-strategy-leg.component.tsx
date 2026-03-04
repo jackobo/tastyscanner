@@ -6,6 +6,7 @@ import {IOptionsStrategyLegViewModel} from "../../../models/options-strategy-leg
 import {DELTA_SYMBOL} from "../../../utils/global-constants";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
 import {useServices} from "../../../hooks/use-services.hook";
+import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 
 
 const OptionPriceBox = styled.span`
@@ -59,7 +60,7 @@ const SameDirectionExistingPositionCountBox = styled.span`
 
 
 
-export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegViewModel}> = observer((props) => {
+export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegViewModel; strategy: IOptionsStrategyViewModel}> = observer((props) => {
     const services = useServices();
     const strategyLegBoxRef = useRef<HTMLDivElement | null>(null)
     const sameDirectionPositionsCountRef = useRef<HTMLDivElement | null>(null);
@@ -67,6 +68,7 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
     const isSellOption = props.leg.isSell;
     const hasOppositePosition = props.leg.hasOppositePositions;
     const sameDirectionPositionsCount = props.leg.countExistingSameDirectionPositions;
+    const strategyHasOppositePosition = props.strategy.legs.some(l => l.hasOppositePositions);
 
     const price = isSellOption ? props.leg.option.midPrice : -1 * props.leg.option.midPrice;
 
@@ -109,11 +111,20 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
         }
 
         let tooltipText: string;
-        if(sameDirectionPositionsCount ===  1) {
-            tooltipText = services.language.translate('You already have 1 open position on this leg. You can still trade this strategy but this will increase the number of positions on this leg.');
+        if(strategyHasOppositePosition) {
+            if(sameDirectionPositionsCount ===  1) {
+                tooltipText = services.language.translate('You already have 1 open position on this leg.');
+            } else {
+                tooltipText = services.language.translationFor('You already have {count} open positions on this leg.').withParams({count: sameDirectionPositionsCount});
+            }
         } else {
-            tooltipText = services.language.translationFor('You already have {count} open positions on this leg. You can still trade this strategy but this will increase the number of positions on this leg.').withParams({count: sameDirectionPositionsCount});
+            if(sameDirectionPositionsCount ===  1) {
+                tooltipText = services.language.translate('You already have 1 open position on this leg. You can still trade this strategy but this will increase the number of positions on this leg.');
+            } else {
+                tooltipText = services.language.translationFor('You already have {count} open positions on this leg. You can still trade this strategy but this will increase the number of positions on this leg.').withParams({count: sameDirectionPositionsCount});
+            }
         }
+
 
         return (
             <TooltipComponent targetRef={sameDirectionPositionsCountRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>

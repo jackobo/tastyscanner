@@ -140,7 +140,7 @@ export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> =
                 {renderCorner()}
 
                 <OptionsStrategyHeaderComponent/>
-                {props.strategy.legs.map(leg => (<OptionsStrategyLegComponent key={leg.key} leg={leg}/>))}
+                {props.strategy.legs.map(leg => (<OptionsStrategyLegComponent key={leg.key} leg={leg} strategy={props.strategy}/>))}
                 <OptionsStrategyFooterComponent strategy={props.strategy}/>
             </StrategyBox>
             {renderToolTip()}
