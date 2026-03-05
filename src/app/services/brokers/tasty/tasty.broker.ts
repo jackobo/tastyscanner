@@ -41,7 +41,9 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
 
         reaction(() => this.services.appSettings.currentSettings, async (appSettings) => {
             if(this._currentTastyConnection) {
-                this._currentTastyConnection.marketDataProvider?.disconnect();
+                this._accountStreamerDisposers.forEach(d => d());
+                this._accountStreamerDisposers = [];
+                this._currentTastyConnection.marketDataProvider.disconnect();
                 this._currentTastyConnection.tastyClient.session.clear();
                 this._connectToTastyPromise = new Promise((resolve) => {
                     this._connectToTastyPromiseResolver = resolve;
@@ -67,6 +69,7 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
     private _connectToTastyPromise: Promise<TastyConnection>;
     private _connectToTastyPromiseResolver: null | ((value: TastyConnection | PromiseLike<TastyConnection>) => void) = null;
     private _currentTastyConnection: TastyConnection | null = null;
+    private _accountStreamerDisposers: Array<() => void> = [];
 
 
     private async _connectToTasty(appSettings: IAppSettingsFields | null): Promise<TastyConnection | null> {
@@ -124,8 +127,9 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
             const accountStreamer = tastyClient.accountStreamer;
             await accountStreamer.start();
             await accountStreamer.subscribeToAccounts(accountNumbers);
-            accountStreamer.addMessageObserver(this._accountStreamerMessageObserver);
-            accountStreamer.addStreamerStateObserver(this._accountStreamerStateObserver);
+            //console.log("subscribeResult", subscribeResult);
+            this._accountStreamerDisposers.push(accountStreamer.addMessageObserver(this._accountStreamerMessageObserver));
+            this._accountStreamerDisposers.push(accountStreamer.addStreamerStateObserver(this._accountStreamerStateObserver));
             return tastyClient;
         }
         catch(e) {
@@ -226,11 +230,101 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
     }
 
     private _accountStreamerMessageObserver = (json: object) => {
-        //console.log("messageObserver", json);
+        console.log("messageObserver", json);
+        /*
+
+        //order placed
+        {
+            "type": "Order",
+            "data": {
+                "id": 444756436,
+                "account-number": "5WZ51885",
+                "cancellable": true,
+                "editable": true,
+                "edited": false,
+                "global-request-id": "986c01bad01ecd09d68132ed72133efb",
+                "order-type": "Limit",
+                "price": "2.1",
+                "price-effect": "Credit",
+                "received-at": "2026-03-05T23:33:26.190+00:00",
+                "size": 1,
+                "source": "desktop-javafx;2.44.0",
+                "status": "Received",
+                "time-in-force": "GTC",
+                "underlying-instrument-type": "Equity",
+                "underlying-symbol": "NVDA",
+                "updated-at": 1772753606190,
+                "legs": [
+                    {
+                        "action": "Buy to Open",
+                        "instrument-type": "Equity Option",
+                        "quantity": 1,
+                        "remaining-quantity": 1,
+                        "symbol": "NVDA  260417C00210000",
+                        "fills": []
+                    },
+                    {
+                        "action": "Sell to Open",
+                        "instrument-type": "Equity Option",
+                        "quantity": 1,
+                        "remaining-quantity": 1,
+                        "symbol": "NVDA  260417C00200000",
+                        "fills": []
+                    }
+                ]
+            },
+            "timestamp": 1772753606205,
+            "ws-sequence": 0
+        }
+         */
+
+        /*
+        //order canceled
+        {
+            "id": 444756436,
+            "account-number": "5WZ51885",
+            "cancellable": false,
+            "cancelled-at": "2026-03-05T23:34:13.367+00:00",
+            "editable": false,
+            "edited": false,
+            "global-request-id": "986c01bad01ecd09d68132ed72133efb",
+            "order-type": "Limit",
+            "price": "2.1",
+            "price-effect": "Credit",
+            "received-at": "2026-03-05T23:33:26.190+00:00",
+            "size": 1,
+            "source": "desktop-javafx;2.44.0",
+            "status": "Cancelled",
+            "terminal-at": "2026-03-05T23:34:13.367+00:00",
+            "time-in-force": "GTC",
+            "underlying-instrument-type": "Equity",
+            "underlying-symbol": "NVDA",
+            "updated-at": 1772753653374,
+            "legs": [
+                {
+                    "action": "Buy to Open",
+                    "instrument-type": "Equity Option",
+                    "quantity": 1,
+                    "remaining-quantity": 1,
+                    "symbol": "NVDA  260417C00210000",
+                    "fills": []
+                },
+                {
+                    "action": "Sell to Open",
+                    "instrument-type": "Equity Option",
+                    "quantity": 1,
+                    "remaining-quantity": 1,
+                    "symbol": "NVDA  260417C00200000",
+                    "fills": []
+                }
+            ]
+        }
+
+        */
     }
 
     private _accountStreamerStateObserver = (streamerState: STREAMER_STATE) => {
-        //console.log("streamer state", streamerState);
+        console.log("streamer state", streamerState);
     }
 
     async getUserWatchLists(): Promise<IWatchListRawData[]> {
