@@ -58,7 +58,7 @@ const MenuItemsGroupBox = styled(IonList)`
 const MenuItemGroupComponent: React.FC<{group: ISideMenuItemsGroupViewModel; renderMenuItem: (item: ISideMenuItemViewModel) => React.ReactElement}> = observer((props) => {
   return (
       <MenuItemsGroupBox>
-        {props.group.menuItems.map(props.renderMenuItem)}
+        {props.group.menuItems.filter(item => item.isVisible).map(props.renderMenuItem)}
       </MenuItemsGroupBox>
   )
 });
