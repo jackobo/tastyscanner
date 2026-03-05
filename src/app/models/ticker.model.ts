@@ -110,7 +110,7 @@ export class TickerModel implements ITickerViewModel {
 
         for(const optionChain of optionsChain) {
             for(const expiration of optionChain.expirations) {
-                if(expiration.daysToExpiration <= 730) { //maximum 2 years is enough
+                if(expiration.daysToExpiration <= 365) { //maximum 1 year is enough
                     expirations.push(new OptionsExpirationModel(expiration, this))
                 }
 
@@ -136,7 +136,7 @@ export class TickerModel implements ITickerViewModel {
         try {
             await this._loadMarketData();
 
-            this.services.marketDataProvider.subscribe(this._getAllStreamerSymbols());
+            this.services.marketDataProvider.subscribeToStreamer(this._getAllStreamerSymbols());
 
         } finally {
             this.isLoading = false;
@@ -145,7 +145,7 @@ export class TickerModel implements ITickerViewModel {
     }
 
     async stop(): Promise<void> {
-        this.services.marketDataProvider.unsubscribe(this._getAllStreamerSymbols());
+        this.services.marketDataProvider.unsubscribeFromStreamer(this._getAllStreamerSymbols());
     }
 
     private _shouldIncludeExpiration(expiration: OptionsExpirationModel): boolean {

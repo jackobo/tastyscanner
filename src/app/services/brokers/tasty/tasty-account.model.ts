@@ -55,7 +55,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
     async dispose(): Promise<void> {
         const streamerSymbols = this.openOrders.orders.selectMany(o => o.getAllStreamerSymbols());
-        this.services.marketDataProvider.unsubscribeForOpenPositions(streamerSymbols);
+        this.services.marketDataProvider.unsubscribeFromStreamer(streamerSymbols);
     }
 
 
@@ -130,7 +130,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
             const openOrdersModels = rawOpenOrders.map(order => new TastyOpenOrderModel(this.services, order));
 
             const streamerSymbols = openOrdersModels.selectMany(order => order.getAllStreamerSymbols());
-            this.services.marketDataProvider.subscribeForOpenPositions(streamerSymbols);
+            this.services.marketDataProvider.subscribeToStreamer(streamerSymbols);
 
             this._setOpenOrders(openOrdersModels);
         } catch (err) {

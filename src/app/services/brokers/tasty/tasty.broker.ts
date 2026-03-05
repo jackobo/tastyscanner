@@ -211,31 +211,17 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
         })
     }
 
-    subscribe(symbols: string[]): void {
+    subscribeToStreamer(symbols: string[]): void {
         this._executeMarketProviderApi(async (marketDataProvider) => {
-            marketDataProvider.subscribe(symbols);
+            marketDataProvider.subscribeToStreamer(symbols);
         })
     }
 
 
-    subscribeForOpenPositions(symbols: string[]): void {
+
+    unsubscribeFromStreamer(symbols: string[]): void {
         this._executeMarketProviderApi(async (marketDataProvider) => {
-            marketDataProvider.subscribeForOpenPositions(symbols);
-        });
-    }
-
-
-
-    unsubscribe(symbols: string[]): void {
-        this._executeMarketProviderApi(async (marketDataProvider) => {
-            marketDataProvider.unsubscribe(symbols);
-        });
-
-    }
-
-    unsubscribeForOpenPositions(symbols: string[]): void {
-        this._executeMarketProviderApi(async (marketDataProvider) => {
-            marketDataProvider.unsubscribeForOpenPositions(symbols);
+            marketDataProvider.unsubscribeFromStreamer(symbols);
         });
     }
 
@@ -246,7 +232,6 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
     private _accountStreamerStateObserver = (streamerState: STREAMER_STATE) => {
         //console.log("streamer state", streamerState);
     }
-
 
     async getUserWatchLists(): Promise<IWatchListRawData[]> {
         return await this._executeTastyApi(async (tastyClient) => {

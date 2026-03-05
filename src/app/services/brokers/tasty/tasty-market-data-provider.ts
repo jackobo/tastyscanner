@@ -22,8 +22,8 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
         });
     }
 
-    private _lastSymbols: string[] = [];
-    private _openPositionsSymbols: string[] = [];
+    private _streamerSubscriptionsCount: Record<string, number> = {};
+
 
 
     public async connect(): Promise<void> {
@@ -32,9 +32,9 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
         try {
 
             await this.tastyClient.quoteStreamer.connect();
-            if(this._lastSymbols.length > 0) {
-                this._subscribeToSymbols(this._lastSymbols, this.tastyClient);
-            }
+            const symbols = Object.keys(this._streamerSubscriptionsCount);
+            this._subscribeToSymbols(symbols, this.tastyClient);
+
 
         } catch(e) {
             this.tastyClient.quoteStreamer.removeEventListener(this._streamEventHandler);
@@ -100,25 +100,46 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
 
         return result;
     }
-    subscribe(symbols: string[]): void {
-        this._subscribeToSymbols(symbols, this.tastyClient);
-        this._lastSymbols = [
-            ...this._lastSymbols,
-            ...symbols.filter(s => !this._lastSymbols.includes(s))
-        ];
+
+    subscribeToStreamer(symbols: string[]): void {
+
+        const symbolsToSubscribe: string[] = [];
+
+        for(const symbol of symbols) {
+            if(this._streamerSubscriptionsCount[symbol]) {
+                this._streamerSubscriptionsCount[symbol]++;
+            } else {
+                this._streamerSubscriptionsCount[symbol] = 1;
+                symbolsToSubscribe.push(symbol);
+            }
+        }
+
+        this._subscribeToSymbols(symbolsToSubscribe, this.tastyClient);
+
     }
-    subscribeForOpenPositions(symbols: string[]): void {
-        this._subscribeToSymbols(symbols, this.tastyClient);
-        this._openPositionsSymbols = symbols;
+
+    unsubscribeFromStreamer(symbols: string[]): void {
+        const symbolsToUnsubscribe: string[] = [];
+        for(const symbol of symbols) {
+            let symbolSubscriptionsCount = this._streamerSubscriptionsCount[symbol] ?? 0;
+            if(symbolSubscriptionsCount === 0) {
+                continue;
+            }
+
+            symbolSubscriptionsCount--;
+
+            if(symbolSubscriptionsCount === 0) {
+                delete this._streamerSubscriptionsCount[symbol];
+                symbolsToUnsubscribe.push(symbol);
+            } else {
+                this._streamerSubscriptionsCount[symbol] = symbolSubscriptionsCount;
+            }
+        }
+
+        this._unsubscribeFromSymbols(symbolsToUnsubscribe, this.tastyClient);
+
     }
-    unsubscribe(symbols: string[]): void {
-        this._unsubscribeFromSymbols(symbols, this.tastyClient, this._openPositionsSymbols);
-        this._lastSymbols = this._lastSymbols.filter(s => !symbols.includes(s));
-    }
-    unsubscribeForOpenPositions(symbols: string[]): void {
-        this._unsubscribeFromSymbols(symbols, this.tastyClient, this._lastSymbols);
-        this._openPositionsSymbols = this._openPositionsSymbols.filter(s => !symbols.includes(s));
-    }
+
     getSymbolQuote(symbol: string): IQuoteRawData | undefined {
         const quote = this.quotes[symbol];
 
@@ -232,13 +253,11 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
         ]);
     }
 
-    private _unsubscribeFromSymbols(symbols: string[], tastyClient: TastyTradeClient, excludeSymbols: string[]): void {
+    private _unsubscribeFromSymbols(symbols: string[], tastyClient: TastyTradeClient): void {
 
-        const symbolsToUnsubscribe = symbols.filter(s => !excludeSymbols.includes(s));
-        if(symbolsToUnsubscribe.length > 0) {
-            tastyClient.quoteStreamer.unsubscribe(symbolsToUnsubscribe);
+        if(symbols.length > 0) {
+            tastyClient.quoteStreamer.unsubscribe(symbols);
         }
-
 
     }
 

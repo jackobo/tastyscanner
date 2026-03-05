@@ -23,20 +23,12 @@ export class MarketDataProviderService extends AppServiceBase implements IMarket
     async getOptionsChain(symbol: string): Promise<IOptionChainRawData[]> {
         return await this._currentProvider.getOptionsChain(symbol);
     }
-    subscribe(symbols: string[]): void {
-        this._currentProvider.subscribe(symbols);
+    subscribeToStreamer(symbols: string[]): void {
+        this._currentProvider.subscribeToStreamer(symbols);
     }
 
-    subscribeForOpenPositions(symbols: string[]): void {
-        this._currentProvider.subscribeForOpenPositions(symbols);
-    }
-
-    unsubscribeForOpenPositions(symbols: string[]) {
-        this._currentProvider.unsubscribeForOpenPositions(symbols);
-    }
-
-    unsubscribe(symbols: string[]): void {
-        this._currentProvider.unsubscribe(symbols);
+    unsubscribeFromStreamer(symbols: string[]): void {
+        this._currentProvider.unsubscribeFromStreamer(symbols);
     }
     getSymbolQuote(symbol: string): IQuoteRawData | undefined {
         return this._currentProvider.getSymbolQuote(symbol);

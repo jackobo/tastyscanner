@@ -1,13 +1,11 @@
 export interface IMarketDataProviderService {
     getOptionsChain(symbol: string): Promise<IOptionChainRawData[]>;
-    subscribe(symbols: string[]): void;
-    subscribeForOpenPositions(symbols: string[]): void;
-    unsubscribe(symbols: string[]): void;
-    unsubscribeForOpenPositions(symbols: string[]): void;
+    subscribeToStreamer(symbols: string[]): void;
+    unsubscribeFromStreamer(symbols: string[]): void;
     getSymbolQuote(symbol: string): IQuoteRawData | undefined;
     getSymbolTrade(symbol: string): ITradeRawData | undefined;
     getSymbolGreeks(symbol: string): IGreeksRawData | undefined;
-    getUserWatchLists(): Promise<IWatchListRawData[]>;
+    getUserWatchLists(): Promise<IWatchListRawData[]>; //TODO - move this in the brokerage account mode.
     getPlatformWatchLists(): Promise<IWatchListRawData[]>;
     getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null>;
     getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData>;
