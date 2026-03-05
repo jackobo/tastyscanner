@@ -227,13 +227,6 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
             <SeparatorBox/>
 
             <FilterLabelBox>
-                Price to use
-            </FilterLabelBox>
-
-
-            <SeparatorBox/>
-
-            <FilterLabelBox>
                 Filter expirations by earnings date
             </FilterLabelBox>
 
