@@ -66,14 +66,15 @@ const MenuItemGroupComponent: React.FC<{group: ISideMenuItemsGroupViewModel; ren
 
 export const LeftSideMenuComponent: React.FC<{appTitle: string; renderLogo?: () => React.ReactElement}> = observer((props) => {
     const services = useFrameworkServices();
-    const menuItems = services.leftSideMenu.rootMenuItems;
-    const menuItemsGroups = services.leftSideMenu.menuItemsGroups;
+    const menuItems = services.leftSideMenu.rootMenuItems.filter(item => item.isVisible);
+    const menuItemsGroups = services.leftSideMenu.menuItemsGroups.filter(g => g.menuItems.some(item => item.isVisible));
 
     const renderMenuItem = (item: ISideMenuItemViewModel) => {
+
         return (
             <React.Fragment key={item.key}>
                 {item.render()}
-                {item.subItems.map(renderMenuItem)}
+                {item.subItems.filter(item => item.isVisible).map(renderMenuItem)}
             </React.Fragment>
         );
     }

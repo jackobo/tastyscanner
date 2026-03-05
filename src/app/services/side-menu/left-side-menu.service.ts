@@ -16,12 +16,16 @@ import {
     CurrentBrokerageAccountSideMenuItemModel
 } from "./models/settings/brokerage-account/current-brokerage-account.side-menu-item.model";
 import {RecentTickersMenuItemModel} from "./models/recent-tickers/recent-tickers-menu-item.model";
+import {
+    BrokerageAccountInfoSideMenuItemModel
+} from "./models/right-side-triggers/brokerage-account-info/brokerage-account-info.side-menu-item.model";
 
 export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenuService {
     
     get rootMenuItems(): ISideMenuItemViewModel[] {
         return [
             new CurrentBrokerageAccountSideMenuItemModel(this.services),
+            new BrokerageAccountInfoSideMenuItemModel(this.services),
             new StrategiesSideMenuItemModel(this.services),
             new OpenPositionsSideMenuItemModel(this.services),
             new ChartSideMenuItemModel(this.services),

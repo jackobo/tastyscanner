@@ -9,6 +9,10 @@ export abstract class SideMenuItemBaseModel implements ISideMenuItemViewModel {
     abstract get key(): string;
     abstract render(): SideMenuRenderResult;
 
+    get isVisible(): boolean {
+        return true;
+    }
+
     get subItems(): ISideMenuItemViewModel[] {
         return [];
     }
