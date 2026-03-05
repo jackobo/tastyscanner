@@ -39,7 +39,7 @@ const HeaderBox = styled(IonHeader)`
     min-height: 20px;
     background: linear-gradient(to right, var(--ion-color-primary), var(--ion-color-tertiary));
     color: var(--ion-color-primary-contrast);
-    padding: var(--ion-space-16);
+    padding: var(--ion-space-8);
     width: 100%;
 `
 

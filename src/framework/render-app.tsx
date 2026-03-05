@@ -29,7 +29,7 @@ export function renderApp<TServiceFactory extends IFrameworkServiceFactory>(opti
                 <AppServiceFactoryContext value={options.serviceFactory}>
                     <ScreenMediaQueriesChecksContext.Provider value={options.serviceFactory.screenMediaQuery}>
                         <ScreenMediaQueriesChecksContext.Provider value={options.serviceFactory.screenMediaQuery}>
-                            <ThemeProvider theme={options.serviceFactory.theme as any}>
+                            <ThemeProvider theme={options.serviceFactory.theme.currentTheme as any}>
                                 {options.renderGlobalStyles()}
                                 <App appTitle={options.appTitle} renderLogo={options.renderLogo}/>
                             </ThemeProvider>
