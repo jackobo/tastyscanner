@@ -6,6 +6,7 @@ import { ContainerMediaQueriesChecksContext } from "../react-contexts/container-
 import {ContainerMediaQueryChecks} from "../services/media-query/container/container-media-query-checks";
 import {useScreenMediaQueriesChecks} from "../hooks/use-screen-media-queries-checks.hook";
 import {useFrameworkServices} from "../hooks/use-framework-services.hook";
+import {FrameworkTheme} from "../services/theme/framework-theme";
 
 const IonContentBox = styled(IonContent)`
     --padding-top: var(--ion-space-20);
@@ -79,7 +80,7 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
             <IonContentBox>
                 <PageContentBox ref={contentRef} className={props.pageContentCssClass}>
                     <ContainerMediaQueriesChecksContext.Provider value={containerMediaChecks.current}>
-                        <ThemeProvider theme={services.theme.applyContainerMediaQueries()}>
+                        <ThemeProvider theme={services.theme.applyContainerMediaQueries() as any}>
                             {props.children}
                         </ThemeProvider>
 

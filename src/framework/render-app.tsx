@@ -10,6 +10,7 @@ import {ThemeProvider} from "styled-components";
 export interface IRenderAppOptions<TServiceFactory extends IFrameworkServiceFactory> {
     rootElementId: string;
     appTitle: string;
+    renderLogo?: () => React.ReactElement;
     serviceFactory: TServiceFactory;
     appServiceFactoryContext: React.Context<TServiceFactory>;
     renderGlobalStyles:() => React.ReactElement;
@@ -30,7 +31,7 @@ export function renderApp<TServiceFactory extends IFrameworkServiceFactory>(opti
                         <ScreenMediaQueriesChecksContext.Provider value={options.serviceFactory.screenMediaQuery}>
                             <ThemeProvider theme={options.serviceFactory.theme as any}>
                                 {options.renderGlobalStyles()}
-                                <App appTitle={options.appTitle}/>
+                                <App appTitle={options.appTitle} renderLogo={options.renderLogo}/>
                             </ThemeProvider>
 
                         </ScreenMediaQueriesChecksContext.Provider>

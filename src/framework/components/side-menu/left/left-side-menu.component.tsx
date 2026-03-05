@@ -27,19 +27,20 @@ const IonMenuBox = styled(IonMenu)`
 `
 
 const HeaderBox = styled(IonHeader)`
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  font-size: var(--ion-font-size-h4);
-  font-weight: bold;
-  min-height: 20px;
-  background: linear-gradient(to right, var(--ion-color-primary), var(--ion-color-tertiary));
-  color: var(--ion-color-primary-contrast);
-  padding: var(--ion-space-16);
-  width: 100%;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    gap: var(--ion-space-8);
+    font-size: var(--ion-font-size-h4);
+    font-weight: bold;
+    min-height: 20px;
+    background: linear-gradient(to right, var(--ion-color-primary), var(--ion-color-tertiary));
+    color: var(--ion-color-primary-contrast);
+    padding: var(--ion-space-16);
+    width: 100%;
 `
 
 const ContentBox = styled(IonContent)`
@@ -63,42 +64,59 @@ const MenuItemGroupComponent: React.FC<{group: ISideMenuItemsGroupViewModel; ren
 });
 
 
-export const LeftSideMenuComponent: React.FC<{appTitle: string}> = observer((props) => {
-  const services = useFrameworkServices();
-  const menuItems = services.leftSideMenu.rootMenuItems;
-  const menuItemsGroups = services.leftSideMenu.menuItemsGroups;
+export const LeftSideMenuComponent: React.FC<{appTitle: string; renderLogo?: () => React.ReactElement}> = observer((props) => {
+    const services = useFrameworkServices();
+    const menuItems = services.leftSideMenu.rootMenuItems;
+    const menuItemsGroups = services.leftSideMenu.menuItemsGroups;
 
-  const renderMenuItem = (item: ISideMenuItemViewModel) => {
+    const renderMenuItem = (item: ISideMenuItemViewModel) => {
+        return (
+            <React.Fragment key={item.key}>
+                {item.render()}
+                {item.subItems.map(renderMenuItem)}
+            </React.Fragment>
+        );
+    }
+
+
+    const renderGroup = (group: ISideMenuItemsGroupViewModel) => {
+        return (
+            <MenuItemGroupComponent key={group.key} group={group} renderMenuItem={renderMenuItem}/>
+        );
+    }
+
+    const renderLogo = () => {
+        if (props.renderLogo) {
+            return (
+                <div>
+                    {props.renderLogo()}
+                </div>
+            );
+        }
+
+        return null;
+    }
+
     return (
-        <React.Fragment key={item.key}>
-          {item.render()}
-          {item.subItems.map(renderMenuItem)}
-        </React.Fragment>
+        <IonMenuBox contentId={MAIN_CONTENT} type="overlay" menuId={LEFT_SIDE_MENU}>
+            <HeaderBox>
+                <div>
+                    {renderLogo()}
+                </div>
+                <div>
+                    {props.appTitle}
+                </div>
+            </HeaderBox>
+
+            <ContentBox>
+                <MainMenusListBox>
+                    {menuItems.map(renderMenuItem)}
+                </MainMenusListBox>
+
+                {menuItemsGroups.map(renderGroup)}
+
+            </ContentBox>
+        </IonMenuBox>
     );
-  }
-
-
-  const renderGroup = (group: ISideMenuItemsGroupViewModel)=> {
-    return (
-        <MenuItemGroupComponent key={group.key} group={group} renderMenuItem={renderMenuItem}/>
-    );
-  }
-
-  return (
-      <IonMenuBox contentId={MAIN_CONTENT} type="overlay" menuId={LEFT_SIDE_MENU}>
-        <HeaderBox>
-          {props.appTitle}
-        </HeaderBox>
-
-        <ContentBox>
-          <MainMenusListBox>
-            {menuItems.map(renderMenuItem)}
-          </MainMenusListBox>
-
-          {menuItemsGroups.map(renderGroup)}
-
-        </ContentBox>
-      </IonMenuBox>
-  );
 });
 

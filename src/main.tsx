@@ -4,6 +4,7 @@ import {AppServiceFactory} from "./app/services/app-service-factory";
 import { AppServiceFactoryContext } from './app/react-contexts/app-service-factory-context';
 import {renderApp} from "./framework/render-app";
 import {GlobalStyles} from "./app/theme/global-styles";
+import {AppLogo} from "./app/components/logo/app-logo.component";
 
 const serviceFactory = new AppServiceFactory();
 
@@ -23,6 +24,7 @@ root.render(
 renderApp({
     rootElementId: "root",
     appTitle: "Tasty Scanner",
+    renderLogo: () => <AppLogo/>,
     serviceFactory: serviceFactory,
     appServiceFactoryContext: AppServiceFactoryContext,
     renderGlobalStyles: () => (<GlobalStyles/>),

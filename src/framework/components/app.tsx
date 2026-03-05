@@ -75,6 +75,7 @@ const ToastContainerComponent: React.FC  = observer(() => {
 
 interface AppProps {
     appTitle: string;
+    renderLogo?: () => React.ReactElement;
 }
 export const App: React.FC<AppProps> = observer((props) => {
     const services = useFrameworkServices();
@@ -83,7 +84,7 @@ export const App: React.FC<AppProps> = observer((props) => {
         <IonApp>
             <IonReactRouter>
                 <IonSplitPaneBox contentId={MAIN_CONTENT}>
-                    <LeftSideMenuComponent appTitle={props.appTitle}/>
+                    <LeftSideMenuComponent appTitle={props.appTitle} renderLogo={props.renderLogo}/>
                     <div id={MAIN_CONTENT}>
                         {services.navigator.currentRoute.render()}
                     </div>
