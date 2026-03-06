@@ -1,7 +1,20 @@
 import {IBrokerageAccountInfoViewModel} from "../interfaces/brokerage-account.view-model.interface";
+import {makeObservable, observable, runInAction} from "mobx";
 
 export class TastyAccountInfoModel implements IBrokerageAccountInfoViewModel {
-    constructor(private readonly accountInfoRawData: any) {
+    constructor(accountInfoRawData: any) {
+        this._accountInfoRawData = accountInfoRawData;
+        makeObservable<this, '_accountInfoRawData'>(this, {
+            _accountInfoRawData: observable.ref
+        });
+    }
+
+    private _accountInfoRawData: any;
+
+    updateInfo(accountInfoRawData: any): void {
+        runInAction(() => {
+            this._accountInfoRawData = accountInfoRawData;
+        })
     }
 
     private _parseAmount(valueAsString: any): number {
@@ -9,17 +22,19 @@ export class TastyAccountInfoModel implements IBrokerageAccountInfoViewModel {
     }
 
     get cashBalance(): number {
-        return this._parseAmount(this.accountInfoRawData['cash-balance']);
+        return this._parseAmount(this._accountInfoRawData['cash-balance']);
     }
 
     get netLiquidity(): number {
-        return this._parseAmount(this.accountInfoRawData['net-liquidating-value'])
+        return this._parseAmount(this._accountInfoRawData['net-liquidating-value'])
     }
 
     get optionsBuyingPower(): number {
-        return this._parseAmount(this.accountInfoRawData['derivative-buying-power']);
+        return this._parseAmount(this._accountInfoRawData['derivative-buying-power']);
     }
     get stocksBuyingPower(): number {
-        return this._parseAmount(this.accountInfoRawData['equity-buying-power']);
+        return this._parseAmount(this._accountInfoRawData['equity-buying-power']);
     }
+
+
 }

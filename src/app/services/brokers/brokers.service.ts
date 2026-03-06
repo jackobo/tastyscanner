@@ -2,7 +2,7 @@ import {AppServiceBase} from "../app-service-base";
 import {IBrokerageAccountSettingsFields, IBrokersService} from "./brokers.service.interface";
 import {IAppServiceFactory} from "../app-service-factory.interface";
 import {IBroker} from "./interfaces/broker.interface";
-import {makeObservable, observable, runInAction} from "mobx";
+import {computed, makeObservable, observable, runInAction} from "mobx";
 import {FormFields} from "../../../framework/models/forms/form-field.interface";
 import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";
 import {AppFormModel} from "../../models/forms/app-form.model";
@@ -13,7 +13,7 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
         super(services);
 
         makeObservable(this, {
-            accounts: observable.ref,
+            accounts: computed,
             currentAccount: observable.ref,
             accountsLoadingInProgress: observable.ref
         });
@@ -37,7 +37,9 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
 
     private readonly _form: BrokerageAccountSettingsForm;
 
-    accounts: IBrokerageAccountModel[] = [];
+    get accounts(): IBrokerageAccountModel[] {
+        return this.brokers.selectMany(b => b.accounts);
+    }
 
     currentAccount: IBrokerageAccountModel | null = null;
 
@@ -61,7 +63,7 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
 
         if(this.currentAccount) {
             try {
-                await this.currentAccount.dispose();
+                await this.currentAccount.disconnect();
             } catch (err) {
                 this.services.logger.error(`Failed to dispose account: ${this.currentAccount.id}`, err);
             }
@@ -70,7 +72,7 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
 
 
         try {
-            await newAccount.init();
+            await newAccount.connect();
         } catch (err) {
             this.services.logger.error(`Failed to initialize account: ${newAccount.id}`, err);
             await this.services.toaster.showErrorToast({
@@ -90,11 +92,7 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
 
 
     private async _loadAccounts(): Promise<void> {
-        const accounts = await this._getAllAccounts();
-
-        runInAction(() => {
-            this.accounts = accounts;
-        });
+        await Promise.all(this.brokers.map(b => b.waitForAccountsLoading()));
 
         const lastUsedAccount = this.services.localStorage.getItem(AppLocalStorageKeys.currentBrokerAccount);
         if (lastUsedAccount) {
@@ -114,22 +112,6 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
         this._form.commitChanges();
     }
 
-    private async _getAllAccounts(): Promise<IBrokerageAccountModel[]> {
-        const result: IBrokerageAccountModel[] = [];
-        for(const broker of this.brokers) {
-            try {
-                result.push(...(await broker.getAccounts()));
-            } catch (err) {
-                this.services.logger.error(`Failed to read accounts from broker: ${broker.name}`, err);
-                await this.services.toaster.showErrorToast({
-                    renderContent: () => this.services.language.translationFor('Failed to read accounts from {broker} broker')
-                        .withParams({broker: broker.name})
-                });
-            }
-
-        }
-        return result;
-    }
 }
 
 class BrokerageAccountSettingsForm extends AppFormModel<IBrokerageAccountSettingsFields> {

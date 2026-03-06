@@ -21,8 +21,8 @@ export interface IBrokerageAccountInfoViewModel {
 }
 
 export interface IBrokerageAccountModel extends IBrokerageAccountViewModel {
-    init(): Promise<void>;
-    dispose(): Promise<void>;
+    connect(): Promise<void>;
+    disconnect(): Promise<void>;
 }
 
 export interface IOpenOrdersResult {

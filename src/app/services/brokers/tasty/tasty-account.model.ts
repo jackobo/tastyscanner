@@ -48,12 +48,13 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     }
 
 
-    async init(): Promise<void> {
-        await this._loadOpenOrders();
+    async connect(): Promise<void> {
         await this._loadAccountInfo();
+        await this._loadOpenOrders();
+
     }
 
-    async dispose(): Promise<void> {
+    async disconnect(): Promise<void> {
         const streamerSymbols = this.openOrders.orders.selectMany(o => o.getAllStreamerSymbols());
         this.services.marketDataProvider.unsubscribeFromStreamer(streamerSymbols);
     }
