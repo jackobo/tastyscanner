@@ -1,9 +1,10 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {IonItem, IonLabel, IonMenuToggle} from "@ionic/react";
+import {IonItem, IonMenuToggle} from "@ionic/react";
 import styled, {css} from "styled-components";
 
 const IonMenuToggleBox = styled(IonMenuToggle)<{$showCursor: boolean}>`
+    padding: 0;
     ${props => props.$showCursor && css`
         cursor: pointer;
     `}
@@ -11,16 +12,23 @@ const IonMenuToggleBox = styled(IonMenuToggle)<{$showCursor: boolean}>`
 `
 
 const IonItemBox = styled(IonItem)<{$isSelected: boolean; $level: number}>`
-    
+    --padding-start: ${props => 16 + props.$level * 32}px;
     ${props => props.$isSelected && css`
         --background: rgba(var(--ion-color-primary-rgb), 0.14);
         --color: var(--ion-color-primary);
     `}
 
-    --padding-start: ${props => 16 + props.$level * 32}px;
     &:hover {
         --background: var(--ion-color-light);
     }
+`
+
+const MenuItemContentBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 100%;
 `
 
 
@@ -69,9 +77,9 @@ export const StandardSideMenuItemComponent: React.FC<StandardSideMenuItemCompone
                         detail={false}
                         onClick={onClick}>
                 {renderIcon()}
-                <IonLabel>
+                <MenuItemContentBox>
                     {props.renderContent()}
-                </IonLabel>
+                </MenuItemContentBox>
             </IonItemBox>
         </IonMenuToggleBox>
     )

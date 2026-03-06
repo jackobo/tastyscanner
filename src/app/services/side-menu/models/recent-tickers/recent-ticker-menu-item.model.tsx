@@ -5,8 +5,6 @@ import { SideMenuRenderResult } from "../../../../../framework/services/side-men
 import {
     StandardSideMenuItemComponent
 } from "../../../../../framework/components/side-menu/left/standard-side-menu-item.component";
-import {IonIcon} from "@ionic/react";
-import {radioButtonOffOutline, radioButtonOnOutline} from "ionicons/icons";
 import React from "react";
 import {IRecentTickerMenuItemViewModel} from "./recent-ticker-menu-item.view-model.interface";
 import {RecentTickerMenuItemComponent} from "../../../../components/side-menu/recent-ticker.menu-item.component";
@@ -45,12 +43,8 @@ export class RecentTickerMenuItem extends SideMenuItemBaseModel implements IRece
     render(): SideMenuRenderResult {
         return (
             <StandardSideMenuItemComponent renderContent={() => (<RecentTickerMenuItemComponent menuItem={this}/>)}
-                                           isSelected={() => this.isCurrentTicker}
-                                           renderIcon={() => <IonIcon slot="start" icon={this.isCurrentTicker ? radioButtonOnOutline : radioButtonOffOutline}/> }
-                                           level={() => 1}
-                                           onClick={async () => {
-                                               //await this.services.tickers.setCurrentTicker(this.ticker.symbol);
-                                           }}/>
+                                           isSelected={() => false}
+                                           level={() => 1}/>
         );
     }
 

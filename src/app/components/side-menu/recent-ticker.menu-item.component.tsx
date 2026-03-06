@@ -6,6 +6,8 @@ import {
 import styled from "styled-components";
 import {RemoveButtonComponent} from "../../../framework/components/specialized-buttons/remove-button.component";
 import {useServices} from "../../hooks/use-services.hook";
+import {radioButtonOffOutline, radioButtonOnOutline} from "ionicons/icons";
+import {IonIcon} from "@ionic/react";
 
 
 const ContainerBox = styled.div`
@@ -14,15 +16,29 @@ const ContainerBox = styled.div`
     flex-direction: row;
     align-items: center;
     width: 100%;
+    height: 100%;
+    cursor: pointer;
 `
 
 const SymbolBox = styled.span`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
     width: 100%;
 `
 
 const RemoveButtonBox = styled.div`
     position: absolute;
     right: 0;
+`
+
+const IconBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-right: var(--ion-space-12);
+    height: 100%;
 `
 
 interface RecentTickerMenuItemComponentProps {
@@ -58,7 +74,12 @@ export const RecentTickerMenuItemComponent: React.FC<RecentTickerMenuItemCompone
     }
     return (
         <ContainerBox onMouseEnter={() => props.menuItem.isHovered = true}
-                      onMouseLeave={() => props.menuItem.isHovered = false}>
+                      onMouseLeave={() => props.menuItem.isHovered = false}
+                      >
+            <IconBox onClick={onSelectTicker}>
+                <IonIcon slot="start" icon={props.menuItem.isCurrentTicker ? radioButtonOnOutline : radioButtonOffOutline}/>
+            </IconBox>
+
             <SymbolBox onClick={onSelectTicker}>
                 {props.menuItem.ticker.symbol}
             </SymbolBox>
