@@ -2,6 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {useServices} from "../../hooks/use-services.hook";
 import styled from "styled-components";
+import {IonSpinnerComponent} from "../../../framework/components/spinner/ion-spinner.component";
 
 const ContainerBox = styled.div`
     display: flex;
@@ -9,6 +10,13 @@ const ContainerBox = styled.div`
     gap: var(--ion-space-16);
     width: 100%;
     padding: var(--ion-space-16);
+`
+
+const SpinnerContainerBox = styled(ContainerBox)`
+    min-height: 100%;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
 `
 
 const InfoFieldBox = styled.div`
@@ -30,6 +38,15 @@ const InfoFieldComponent: React.FC<{label: string, value: string}> = observer((p
 export const BrokerageAccountInfoComponent: React.FC = observer(() => {
     const services = useServices();
     const accountInfo = services.brokers.currentAccount?.accountInfo;
+
+    if(services.brokers.accountsLoadingInProgress) {
+        return (
+            <SpinnerContainerBox>
+                <IonSpinnerComponent fillContainer={true}/>
+            </SpinnerContainerBox>
+        )
+    }
+
     if(!accountInfo) {
         return null;
     }

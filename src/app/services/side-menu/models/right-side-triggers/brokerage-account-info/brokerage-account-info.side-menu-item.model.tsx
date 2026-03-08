@@ -15,9 +15,11 @@ export class BrokerageAccountInfoSideMenuItemModel extends RightSideTriggerMenuI
         return "AccountInfo";
     }
 
+    /*
     get isVisible(): boolean {
         return Boolean(this.services.brokers.currentAccount?.accountInfo);
     }
+     */
 
     renderIcon(): React.ReactElement | null {
         return (

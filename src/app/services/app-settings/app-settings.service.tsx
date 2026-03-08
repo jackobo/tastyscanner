@@ -76,7 +76,7 @@ class AppSettingsForm extends AppFormModel<IAppSettingsFields> {
         return  {
             tastyRefreshToken: this._createField<string>( {
                 fieldName: () =>this.services.language.translate('Tasty refresh token'),
-                initialValue: () => this.services.appSettings.currentSettings?.tastyRefreshToken ?? null
+                initialValue: () => this.services.appSettings.currentSettings?.tastyRefreshToken ?? null,
             }),
             tastyClientSecret: this._createField<string>( {
                 fieldName: () =>this.services.language.translate('Tasty client secret'),
