@@ -1,4 +1,7 @@
-import {InstrumentType, OrderLegAction} from "../../interfaces/open-order-request.interface";
+import {InstrumentType, OrderLegAction, PriceEffect} from "../../interfaces/open-order-request.interface";
+
+export type TastyOrderStatus = "Received" | "Routed" | "In Flight" | "Live" | "Cancel Requested" | "Replace Requested" | "Contingent" | "Filled" | "Cancelled" | "Expired" | "Rejected" | "Removed" | "Partially Removed";
+
 
 export interface ITastyAccountOrderRawData {
     id: string;
@@ -12,11 +15,11 @@ export interface ITastyAccountOrderRawData {
     globalRequestId: string;
     orderType: string;
     price: string;
-    priceEffect: "Debut" | "Credit";
+    priceEffect: PriceEffect;
     receivedAt: Date;
     size: number;
     source: string;
-    status: "Received" | "Routed" | "In Flight" | "Live" | "Cancel Requested" | "Replace Requested" | "Contingent" | "Filled" | "Cancelled" | "Expired" | "Rejected" | "Removed" | "Partially Removed";
+    status: TastyOrderStatus;
     terminalAt: Date;
     timeInForce: string;
     underlyingInstrumentType: string;
