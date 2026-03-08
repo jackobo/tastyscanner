@@ -215,9 +215,9 @@ interface IParsedOptionStreamerSymbol {
     strikePrice: number;
 }
 
-const regex = /^\.(?<underlying>[A-Z]+)(?<expiration>\d{6})(?<type>[CP])(?<strike>\d+)$/;
-function parseOptionStreamerSymbol(optionSymbol: string): IParsedOptionStreamerSymbol | null {
+const regex = /^\.(?<underlying>[A-Z]+)(?<expiration>\d{6})(?<type>[CP])(?<strike>\d+(\.\d+)?)$/;
 
+function parseOptionStreamerSymbol(optionSymbol: string): IParsedOptionStreamerSymbol | null {
     const match = optionSymbol.match(regex);
 
     if (!match || !match.groups) {
@@ -239,6 +239,6 @@ function parseOptionStreamerSymbol(optionSymbol: string): IParsedOptionStreamerS
         underlyingSymbol: underlying,
         expirationDate,
         optionType: type as OptionType,
-        strikePrice: parseInt(strike),
+        strikePrice: parseFloat(strike), // Strike poate avea zecimale, deci folosim parseFloat
     };
 }

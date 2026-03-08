@@ -110,7 +110,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
             return 0;
         }
 
-        return Math.abs(leg.quantity);
+        return leg.rawQuantity;
     }
 
     countBoughtLegs(symbol: string): number {
