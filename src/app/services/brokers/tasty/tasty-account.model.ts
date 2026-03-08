@@ -142,7 +142,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         } catch (err) {
             this.services.logger.error('Failed to load open orders from Tasty Trade', err);
             await this.services.toaster.showErrorToast({
-                renderContent: () => this.services.language.translate('Failed to load open orders from Tasty Trade: {error}')
+                renderContent: () => this.services.language.translate(`Failed to load open orders from Tasty Trade: ${err}`)
             });
             this._setOpenOrders([]);
         }
