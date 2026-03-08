@@ -85,6 +85,9 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 "time-in-force": order.timeInForce,
                 "price": order.price,
                 "price-effect": order.priceEffect,
+                "advanced-instructions": {
+                    "strict-position-effect-validation": true
+                },
                 "legs": order.legs.map(leg => {
                     return {
                         "action": leg.action,
