@@ -11,6 +11,7 @@ import {TastyOpenOrderLegModel, TastyOpenOrderModel} from "./tasty-open-order.mo
 import {computed, makeObservable, observable, runInAction} from "mobx";
 import {TastyAccountInfoModel} from "./tasty-account-info.model";
 
+const ORDER_SOURCE = "operatiunea-guvidul";
 
 class TastyOpenOrdersResult implements IOpenOrdersResult {
     constructor(public readonly isLoading: boolean, public readonly orders: TastyOpenOrderModel[]) {
@@ -85,6 +86,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 "time-in-force": order.timeInForce,
                 "price": order.price,
                 "price-effect": order.priceEffect,
+                "source": ORDER_SOURCE,
                 "advanced-instructions": {
                     "strict-position-effect-validation": true
                 },
