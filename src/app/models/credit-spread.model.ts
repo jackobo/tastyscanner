@@ -34,6 +34,15 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
 
     }
 
+    get delta(): number {
+        return  Math.round((this.btoOption.rawDelta - this.stoOption.rawDelta) * 10000) / 100;
+    }
+
+
+    get theta(): number {
+        return Math.round((this.btoOption.theta - this.stoOption.theta) * 10000)/100;
+    }
+
     async sendOrder(orderParams: IOptionsStrategySendOrderParams): Promise<void> {
         const account = this.services.brokers.currentAccount;
         if(!account) {
@@ -64,14 +73,4 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
             ]
         });
     }
-
-    get delta(): number {
-        return  Math.round((this.btoOption.rawDelta - this.stoOption.rawDelta) * 10000) / 100;
-    }
-
-
-    get theta(): number {
-        return Math.round((this.btoOption.theta - this.stoOption.theta) * 10000)/100;
-    }
-
 }
