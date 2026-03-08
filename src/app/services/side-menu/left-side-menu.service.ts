@@ -25,7 +25,6 @@ export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenu
     get rootMenuItems(): ISideMenuItemViewModel[] {
         return [
             new CurrentBrokerageAccountSideMenuItemModel(this.services),
-            new BrokerageAccountInfoSideMenuItemModel(this.services),
             new StrategiesSideMenuItemModel(this.services),
             new OpenPositionsSideMenuItemModel(this.services),
             new ChartSideMenuItemModel(this.services),
@@ -38,6 +37,7 @@ export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenu
             {
                 key: "utils-side-menu-group",
                 menuItems: [
+                    new BrokerageAccountInfoSideMenuItemModel(this.services),
                     new FiltersSideMenuItemModel(this.services),
                     new WatchListsSideMenuItem(this.services),
                     new AppSettingsSideMenuItemModel(this.services)
