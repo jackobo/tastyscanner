@@ -1,4 +1,5 @@
 import React from "react";
+import {TimeSpan} from "../../types/time-span";
 
 export interface IToastHandler {
   close: () => void;
@@ -7,6 +8,7 @@ export interface IToastHandler {
 export interface ShowToastOptions {
     renderContent: () => (React.ReactElement | string);
     onClose?: (reason?: boolean | string) => void;
+    autoCloseTime?: TimeSpan;
 }
 
 export interface IToasterService {

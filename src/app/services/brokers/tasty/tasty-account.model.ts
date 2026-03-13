@@ -13,8 +13,7 @@ import {TastyAccountInfoModel} from "./tasty-account-info.model";
 import {ITastyOrderRawData} from "./raw-data/tasty-order.raw-data.interfaces";
 import {TastyWorkingOrderModel} from "./tasty-working-order.model";
 import {ORDERS_SOURCE_NAME} from "../constants";
-
-
+import {TimeSpan} from "../../../../framework/types/time-span";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -181,23 +180,33 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     }
 
 
-    updateOrder(rawOrderData: ITastyOrderRawData): void {
+    async updateOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
 
-        runInAction(() => {
-            const existingWorkingOrderIndex = this._workingOrders.findIndex(wo => wo.id === rawOrderData.id);
-            if(existingWorkingOrderIndex >= 0) {
+        const existingWorkingOrderIndex = this._workingOrders.findIndex(wo => wo.id === rawOrderData.id);
+        if(existingWorkingOrderIndex >= 0) {
+            runInAction(() => {
                 this._workingOrders.splice(existingWorkingOrderIndex, 1);
-            }
-            switch(rawOrderData.status) {
-                case "Live":
+            });
+
+        }
+        switch(rawOrderData.status) {
+            case "Live":
+                runInAction(() => {
                     this._workingOrders.push(new TastyWorkingOrderModel(rawOrderData));
-                    break;
-                case "Cancelled":
-                    break;
+                });
 
-            }
-        })
-
+                await this.services.toaster.showInfoToast({
+                    renderContent: () => this.services.language.translate('Order Received'),
+                    autoCloseTime: TimeSpan.fromSeconds(3)
+                })
+                break;
+            case "Cancelled":
+                await this.services.toaster.showInfoToast({
+                    renderContent: () => this.services.language.translate('Order Canceled'),
+                    autoCloseTime: TimeSpan.fromSeconds(3)
+                })
+                break;
+        }
     }
 
     /*

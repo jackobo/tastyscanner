@@ -60,7 +60,7 @@ export class ToasterService implements IToasterService {
 
   private _createToastOptions(options: ShowToastOptions): ToastOptions<any> {
     return {
-      autoClose: false,
+      autoClose: options.autoCloseTime ? options.autoCloseTime.totalMilliseconds : false,
       closeOnClick: false,
       draggable: false,
       closeButton: true,
