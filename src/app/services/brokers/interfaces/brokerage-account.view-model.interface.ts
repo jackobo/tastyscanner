@@ -1,5 +1,5 @@
 import {IOpenOrderRequest} from "./open-order-request.interface";
-import {IActiveOrderViewModel} from "./active-order.interfaces";
+import {IActivePositionViewModel} from "./active-position.interfaces";
 import {IWorkingOrderViewModel} from "./working-order.interfaces";
 
 
@@ -7,7 +7,7 @@ export interface IBrokerageAccountViewModel {
     readonly id: string;
     readonly brokerName: string;
     readonly accountNumber: string;
-    readonly activeOrders: IActiveOrdersResult;
+    readonly activePositions: IActivePositionsResult;
     readonly workingOrders: IWorkingOrderViewModel[];
     readonly accountInfo: IBrokerageAccountInfoViewModel | null;
     sendOrder(order: IOpenOrderRequest): Promise<void>;
@@ -27,7 +27,7 @@ export interface IBrokerageAccountModel extends IBrokerageAccountViewModel {
     disconnect(): Promise<void>;
 }
 
-export interface IActiveOrdersResult {
+export interface IActivePositionsResult {
     readonly isLoading: boolean;
-    readonly orders: IActiveOrderViewModel[];
+    readonly positions: IActivePositionViewModel[];
 }

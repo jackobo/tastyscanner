@@ -29,7 +29,7 @@ export const ActivePositionsPage: React.FC = observer(() => {
 
     const services = useServices();
 
-    const activePositions = services.brokers.currentAccount?.activeOrders;
+    const activePositions = services.brokers.currentAccount?.activePositions;
 
     if(!activePositions || activePositions.isLoading) {
         return (
@@ -38,7 +38,7 @@ export const ActivePositionsPage: React.FC = observer(() => {
     }
 
 
-    const ordersByUnderlying = activePositions.orders.groupByKey(o => o.underlyingSymbol);
+    const ordersByUnderlying = activePositions.positions.groupByKey(o => o.underlyingSymbol);
 
     return (
         <PageBox pageContentCssClass={PAGE_CONTENT_CSS_CLASS}>

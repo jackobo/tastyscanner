@@ -3,20 +3,21 @@ import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {
     IBrokerageAccountModel,
-    IActiveOrdersResult
+    IActivePositionsResult
 } from "../interfaces/brokerage-account.view-model.interface";
 import {IOpenOrderRequest} from "../interfaces/open-order-request.interface";
 import {TastyOrdersReader} from "./tasty-orders-reader";
-import {TastyOpenOrderLegModel, TastyActiveOrderModel} from "./tasty-active-order.model";
+import {TastyActivePositionLegModel, TastyActivePositionModel} from "./tasty-active-position.model";
 import {computed, makeObservable, observable, runInAction} from "mobx";
 import {TastyAccountInfoModel} from "./tasty-account-info.model";
 import {ITastyOrderRawData} from "./raw-data/tasty-order.raw-data.interfaces";
 import {TastyWorkingOrderModel} from "./tasty-working-order.model";
+import {ORDERS_SOURCE_NAME} from "../constants";
 
-const ORDER_SOURCE = "operatiunea-guvidul";
 
-class TastyActiveOrdersResult implements IActiveOrdersResult {
-    constructor(public readonly isLoading: boolean, public readonly orders: TastyActiveOrderModel[]) {
+
+class TastyActivePositionsResult implements IActivePositionsResult {
+    constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
     }
 
 }
@@ -26,8 +27,8 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
 
-        makeObservable<this, '_activeOrders' | '_workingOrders' | 'openOrdersLegsMap' | '_accountInfo'>(this, {
-            _activeOrders: observable.ref,
+        makeObservable<this, '_activePositions' | '_workingOrders' | 'openOrdersLegsMap' | '_accountInfo'>(this, {
+            _activePositions: observable.ref,
             _workingOrders: observable,
             _accountInfo: observable.ref,
             openOrdersLegsMap: computed,
@@ -55,31 +56,31 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     async connect(): Promise<void> {
         await this._loadAccountInfo();
         await this._loadWorkingOrders();
-        await this._loadOpenOrders();
+        await this._loadActivePositions();
 
     }
 
     async disconnect(): Promise<void> {
-        const streamerSymbols = this.activeOrders.orders.selectMany(o => o.getAllStreamerSymbols());
+        const streamerSymbols = this.activePositions.positions.selectMany(o => o.getAllStreamerSymbols());
         this.services.marketDataProvider.unsubscribeFromStreamer(streamerSymbols);
     }
 
 
-    private _activeOrders: TastyActiveOrdersResult = new TastyActiveOrdersResult(true, []);
+    private _activePositions: TastyActivePositionsResult = new TastyActivePositionsResult(true, []);
 
-    private get openOrdersLegsMap(): Record<string, TastyOpenOrderLegModel> {
-        return this._activeOrders.orders.selectMany(o => o.legs)
+    private get openOrdersLegsMap(): Record<string, TastyActivePositionLegModel> {
+        return this._activePositions.positions.selectMany(o => o.legs)
                                       .toDictionaryOfType(leg => leg.symbol, leg => leg);
     }
 
-    private _setOpenOrders(orders: TastyActiveOrderModel[]): void {
+    private _setActivePositions(orders: TastyActivePositionModel[]): void {
         runInAction(() => {
-            this._activeOrders = new TastyActiveOrdersResult(false, orders);
+            this._activePositions = new TastyActivePositionsResult(false, orders);
         });
     }
 
-    get activeOrders(): TastyActiveOrdersResult {
-        return this._activeOrders;
+    get activePositions(): TastyActivePositionsResult {
+        return this._activePositions;
     }
 
     private _workingOrders: TastyWorkingOrderModel[] = [];
@@ -95,7 +96,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 "time-in-force": order.timeInForce,
                 "price": order.price,
                 "price-effect": order.priceEffect,
-                "source": ORDER_SOURCE,
+                "source": ORDERS_SOURCE_NAME,
                 "advanced-instructions": {
                     "strict-position-effect-validation": true
                 },
@@ -143,22 +144,22 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         });
     }
 
-    private async _loadOpenOrders(): Promise<void> {
+    private async _loadActivePositions(): Promise<void> {
 
         try {
-            const rawOpenOrders = await new TastyOrdersReader(this.accountNumber, this.tastyClient, this.services).readOpenOrders();
-            const openOrdersModels = rawOpenOrders.map(order => new TastyActiveOrderModel(this.services, order));
+            const rawActivePositions = await new TastyOrdersReader(this.accountNumber, this.tastyClient, this.services).readActivePositions();
+            const openOrdersModels = rawActivePositions.map(order => new TastyActivePositionModel(this.services, order));
 
             const streamerSymbols = openOrdersModels.selectMany(order => order.getAllStreamerSymbols());
             this.services.marketDataProvider.subscribeToStreamer(streamerSymbols);
 
-            this._setOpenOrders(openOrdersModels);
+            this._setActivePositions(openOrdersModels);
         } catch (err) {
             this.services.logger.error('Failed to load open orders from Tasty Trade', err);
             await this.services.toaster.showErrorToast({
                 renderContent: () => this.services.language.translate(`Failed to load open orders from Tasty Trade: ${err}`)
             });
-            this._setOpenOrders([]);
+            this._setActivePositions([]);
         }
     }
 
@@ -175,7 +176,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
             await this.services.toaster.showErrorToast({
                 renderContent: () => this.services.language.translate(`Failed to load working orders from Tasty Trade: ${err}`)
             });
-            this._setOpenOrders([]);
+            this._setActivePositions([]);
         }
     }
 

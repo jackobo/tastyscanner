@@ -61,7 +61,7 @@ export class TastyOrdersReader {
         };
     }
 
-    async readOpenOrders(): Promise<ITastyOrderConsolidatedWithPositions[]> {
+    async readActivePositions(): Promise<ITastyOrderConsolidatedWithPositions[]> {
         const openPositions = await this._getOpenPositionsRawData();
         const openPositionsGroupedBySymbol = openPositions
             .toDictionaryOfType(position => position.symbol,

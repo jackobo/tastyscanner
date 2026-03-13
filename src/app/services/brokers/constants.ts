@@ -1,0 +1,1 @@
+export const ORDERS_SOURCE_NAME = "operatiunea-guvidul";

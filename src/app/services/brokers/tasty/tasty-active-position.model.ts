@@ -1,6 +1,6 @@
-import {IActiveOrderLegViewModel,
-    IActiveOrderViewModel
-} from "../interfaces/active-order.interfaces";
+import {IActivePositionLegViewModel,
+    IActivePositionViewModel
+} from "../interfaces/active-position.interfaces";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {
     ITastyLegConsolidatedWithPosition,
@@ -12,10 +12,10 @@ import {Check} from "../../../../framework/utils/type-checking";
 import {IQuoteRawData, ITradeRawData} from "../../market-data-provider/market-data-provider.service.interface";
 import {OptionType} from "../../../models/option.view-model.interface";
 
-export class TastyActiveOrderModel implements IActiveOrderViewModel {
+export class TastyActivePositionModel implements IActivePositionViewModel {
     constructor(private readonly services: IAppServiceFactory,
                 private readonly orderRawData: ITastyOrderConsolidatedWithPositions) {
-        this.legs = orderRawData.legs.map(leg => new TastyOpenOrderLegModel(services, leg))
+        this.legs = orderRawData.legs.map(leg => new TastyActivePositionLegModel(services, leg))
                                      .sort((l1, l2) => (l1.strikePrice ?? 0) - (l2.strikePrice ?? 0));
     }
 
@@ -65,14 +65,14 @@ export class TastyActiveOrderModel implements IActiveOrderViewModel {
 
 
 
-    public readonly legs: TastyOpenOrderLegModel[];
+    public readonly legs: TastyActivePositionLegModel[];
 
     getAllStreamerSymbols(): string[] {
         return this.legs.map(leg => leg.streamerSymbol);
     }
 }
 
-export class TastyOpenOrderLegModel implements IActiveOrderLegViewModel {
+export class TastyActivePositionLegModel implements IActivePositionLegViewModel {
     constructor(private readonly services: IAppServiceFactory,
                 private readonly legRawData: ITastyLegConsolidatedWithPosition) {
 

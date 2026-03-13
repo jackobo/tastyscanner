@@ -1,8 +1,8 @@
 import React from "react";
 import {
-    IActiveOrderLegViewModel,
-    IActiveOrderViewModel
-} from "../../../services/brokers/interfaces/active-order.interfaces";
+    IActivePositionLegViewModel,
+    IActivePositionViewModel
+} from "../../../services/brokers/interfaces/active-position.interfaces";
 import {observer} from "mobx-react";
 import {IonAccordion, IonItem} from "@ionic/react";
 import {
@@ -44,7 +44,7 @@ const LegInfoSeparatorBox = styled.span`
 
 
 
-const OrderLegComponent: React.FC<{leg: IActiveOrderLegViewModel}> = observer((props) => {
+const OrderLegComponent: React.FC<{leg: IActivePositionLegViewModel}> = observer((props) => {
     const services = useServices();
     return (
         <>
@@ -71,7 +71,7 @@ const OrderLegComponent: React.FC<{leg: IActiveOrderLegViewModel}> = observer((p
     )
 })
 
-const OrderDetailsComponent: React.FC<{order: IActiveOrderViewModel}> = observer(props => {
+const OrderDetailsComponent: React.FC<{order: IActivePositionViewModel}> = observer(props => {
     return (
         <>
             <GridBodyCellBox>
@@ -112,7 +112,7 @@ const OrderDetailsComponent: React.FC<{order: IActiveOrderViewModel}> = observer
 })
 
 
-const OrderComponent: React.FC<{order: IActiveOrderViewModel}> = observer(props => {
+const OrderComponent: React.FC<{order: IActivePositionViewModel}> = observer(props => {
     const legs = props.order.legs;
     return (
         <BodyGridBox>
@@ -123,7 +123,7 @@ const OrderComponent: React.FC<{order: IActiveOrderViewModel}> = observer(props 
 })
 
 
-export const UnderlyingSymbolActivePositionsComponent: React.FC<{underlyingSymbol: string, openOrders: IActiveOrderViewModel[]}> = observer((props) => {
+export const UnderlyingSymbolActivePositionsComponent: React.FC<{underlyingSymbol: string, openOrders: IActivePositionViewModel[]}> = observer((props) => {
     const orders = props.openOrders.sort((o1, o2) => (o1.daysToExpiration ?? 0) - (o2.daysToExpiration ?? 0));
     return (
         <IonAccordion value={props.underlyingSymbol}>
