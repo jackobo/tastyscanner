@@ -26,6 +26,12 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     }
 
     public  async cancelOrder(): Promise<void> {
-        await this.account.cancelOrder(this.id);
+        try {
+            await this.account.cancelOrder(this.id);
+        } catch (err) {
+            await this.account.services.toaster.showErrorToast({
+                renderContent: () => this.account.services.language.translate(`Failed to cancel order! ${err}`)
+            });
+        }
     }
 }

@@ -24,7 +24,7 @@ class TastyActivePositionsResult implements IActivePositionsResult {
 export class TastyAccountModel implements IBrokerageAccountModel {
     constructor(private readonly accountRawData: ITastyAccountRawData,
                 private readonly tastyClient: TastyTradeClient,
-                private readonly services: IAppServiceFactory) {
+                public readonly services: IAppServiceFactory) {
 
         makeObservable<this, '_activePositions' | '_workingOrders' | 'openOrdersLegsMap' | '_accountInfo'>(this, {
             _activePositions: observable.ref,
@@ -203,13 +203,13 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 });
 
                 await this.services.toaster.showInfoToast({
-                    renderContent: () => this.services.language.translate('Order Received'),
+                    renderContent: () => this.services.language.translate('Order is live'),
                     autoCloseTime: TimeSpan.fromSeconds(3)
                 })
                 break;
             case "Cancelled":
                 await this.services.toaster.showInfoToast({
-                    renderContent: () => this.services.language.translate('Order Canceled'),
+                    renderContent: () => this.services.language.translate('Order canceled'),
                     autoCloseTime: TimeSpan.fromSeconds(3)
                 })
                 break;
