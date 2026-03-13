@@ -213,6 +213,14 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                     autoCloseTime: TimeSpan.fromSeconds(3)
                 })
                 break;
+            case "Filled":
+                //TODO - optimize and load only this position (will be tricky when an order is closed)
+                await this._loadActivePositions();
+                await this.services.toaster.showInfoToast({
+                    renderContent: () => this.services.language.translate('Order filled'),
+                    autoCloseTime: TimeSpan.fromSeconds(3)
+                })
+                break;
         }
     }
 
