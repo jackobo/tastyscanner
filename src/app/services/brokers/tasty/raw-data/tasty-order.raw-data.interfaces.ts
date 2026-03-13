@@ -3,7 +3,7 @@ import {InstrumentType, OrderLegAction, PriceEffect} from "../../interfaces/open
 export type TastyOrderStatus = "Received" | "Routed" | "In Flight" | "Live" | "Cancel Requested" | "Replace Requested" | "Contingent" | "Filled" | "Cancelled" | "Expired" | "Rejected" | "Removed" | "Partially Removed";
 
 
-export interface ITastyAccountOrderRawData {
+export interface ITastyOrderRawData {
     id: string;
     accountNumber: string;
     cancellable: boolean;
@@ -25,21 +25,21 @@ export interface ITastyAccountOrderRawData {
     underlyingInstrumentType: string;
     underlyingSymbol: string;
     updatedAt: Date;
-    legs: ITastyAccountOrderLegRawData[];
+    legs: ITastyOrderLegRawData[];
 }
 
 
-export interface ITastyAccountOrderLegRawData {
+export interface ITastyOrderLegRawData {
     action: OrderLegAction;
     instrumentType: InstrumentType;
     quantity: number;
     remainingQuantity: number;
     symbol: string;
-    fills: ITastyAccountOrderLegFillRawData[];
+    fills: ITastyOrderLegFillRawData[];
 }
 
 
-export interface ITastyAccountOrderLegFillRawData {
+export interface ITastyOrderLegFillRawData {
     destinationVenue: string;
     fillId: string;
     fillPrice: string;

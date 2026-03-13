@@ -18,6 +18,7 @@ import {TastyAccountModel} from "./tasty-account.model";
 import {IBroker} from "../interfaces/broker.interface";
 import {TastyMarketDataProvider} from "./tasty-market-data-provider";
 import {NullableUndefinedString} from "../../../../framework/types/nullable-types";
+import {TastyOrdersReader} from "./tasty-orders-reader";
 
 class TastyConnection {
     constructor(public readonly tastyClient: TastyTradeClient,
@@ -250,6 +251,16 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
                     account?.accountInfo?.updateInfo(json.data);
 
                 }
+                break;
+            case 'Order':
+                if(json.data) {
+                    const rawOrderData = TastyOrdersReader.mapRawOrderData(json.data);
+                    const account = this._findAccount(rawOrderData.accountNumber);
+                    if(account) {
+                        account.updateOrder(rawOrderData);
+                    }
+                }
+                break;
 
         }
 

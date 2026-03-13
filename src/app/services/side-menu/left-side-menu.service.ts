@@ -19,6 +19,7 @@ import {RecentTickersMenuItemModel} from "./models/recent-tickers/recent-tickers
 import {
     BrokerageAccountInfoSideMenuItemModel
 } from "./models/right-side-triggers/brokerage-account-info/brokerage-account-info.side-menu-item.model";
+import {WorkingOrdersSideMenuItemModel} from "./models/navigation/working-orders/working-orders.side-menu-item.model";
 
 export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenuService {
     
@@ -27,6 +28,7 @@ export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenu
             new CurrentBrokerageAccountSideMenuItemModel(this.services),
             new StrategiesSideMenuItemModel(this.services),
             new OpenPositionsSideMenuItemModel(this.services),
+            new WorkingOrdersSideMenuItemModel(this.services),
             new ChartSideMenuItemModel(this.services),
 
         ];

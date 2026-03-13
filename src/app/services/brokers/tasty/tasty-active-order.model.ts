@@ -1,6 +1,6 @@
-import {IAccountOpenOrderLegViewModel,
-    IAccountOpenOrderViewModel
-} from "../interfaces/account-open-order-interface";
+import {IActiveOrderLegViewModel,
+    IActiveOrderViewModel
+} from "../interfaces/active-order.interfaces";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {
     ITastyLegConsolidatedWithPosition,
@@ -12,7 +12,7 @@ import {Check} from "../../../../framework/utils/type-checking";
 import {IQuoteRawData, ITradeRawData} from "../../market-data-provider/market-data-provider.service.interface";
 import {OptionType} from "../../../models/option.view-model.interface";
 
-export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
+export class TastyActiveOrderModel implements IActiveOrderViewModel {
     constructor(private readonly services: IAppServiceFactory,
                 private readonly orderRawData: ITastyOrderConsolidatedWithPositions) {
         this.legs = orderRawData.legs.map(leg => new TastyOpenOrderLegModel(services, leg))
@@ -72,7 +72,7 @@ export class TastyOpenOrderModel implements IAccountOpenOrderViewModel {
     }
 }
 
-export class TastyOpenOrderLegModel implements IAccountOpenOrderLegViewModel {
+export class TastyOpenOrderLegModel implements IActiveOrderLegViewModel {
     constructor(private readonly services: IAppServiceFactory,
                 private readonly legRawData: ITastyLegConsolidatedWithPosition) {
 

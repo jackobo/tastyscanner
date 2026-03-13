@@ -2,9 +2,9 @@ import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {ITastyOpenPositionRawData} from "./raw-data/tasty-open-position.raw-data.interface";
 import {
-    ITastyAccountOrderLegFillRawData,
-    ITastyAccountOrderLegRawData,
-    ITastyAccountOrderRawData
+    ITastyOrderLegFillRawData,
+    ITastyOrderLegRawData,
+    ITastyOrderRawData
 } from "./raw-data/tasty-order.raw-data.interfaces";
 import {
     ITastyLegConsolidatedWithPosition,
@@ -13,14 +13,54 @@ import {
 import {isOrderLegOpenAction} from "../interfaces/open-order-request.interface";
 
 
-export class TastyOpenOrdersReader {
+export class TastyOrdersReader {
     constructor(private readonly accountNumber: string,
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
     }
 
 
-    async read(): Promise<ITastyOrderConsolidatedWithPositions[]> {
+    public static mapRawOrderData(order: any): ITastyOrderRawData {
+        return {
+            id: order.id.toString(),
+            accountNumber: order['account-number'],
+            cancellable: order.cancellable,
+            editable: order.editable,
+            edited: order.edited,
+            extClientOrderId: order['ext-client-order-id'],
+            extExchangeOrderNumber: order['ext-exchange-order-number'],
+            extGlobalOrderNumber: order['ext-global-order-number'],
+            globalRequestId: order['global-request-id'],
+            orderType: order['order-type'],
+            price: order.price,
+            priceEffect: order['price-effect'],
+            receivedAt:  new Date(order['received-at']),
+            size: order.size,
+            source: order.source,
+            status: order.status,
+            terminalAt: new Date(order['terminal-at']),
+            timeInForce: order['time-in-force'],
+            underlyingInstrumentType: order['underlying-instrument-type'],
+            underlyingSymbol: order['underlying-symbol'],
+            updatedAt: new Date(order['updated-at']),
+            legs: (order.legs ?? []).map((leg: any): ITastyOrderLegRawData => ({
+                action: leg.action,
+                instrumentType: leg['instrument-type'],
+                quantity: leg.quantity,
+                remainingQuantity: leg['remaining-quantity'],
+                symbol: leg.symbol,
+                fills: (leg.fills ?? []).map((fill: any): ITastyOrderLegFillRawData => ({
+                    destinationVenue: fill['destination-venue'],
+                    fillId: fill['fill-id'],
+                    fillPrice: fill['fill-price'],
+                    filledAt: fill['filled-at'],
+                    quantity: fill.quantity,
+                }))
+            }))
+        };
+    }
+
+    async readOpenOrders(): Promise<ITastyOrderConsolidatedWithPositions[]> {
         const openPositions = await this._getOpenPositionsRawData();
         const openPositionsGroupedBySymbol = openPositions
             .toDictionaryOfType(position => position.symbol,
@@ -106,47 +146,11 @@ export class TastyOpenOrdersReader {
         });
     }
 
-    private async _getFilledOrdersRawData(minDate: Date): Promise<ITastyAccountOrderRawData[]> {
+    private async _getFilledOrdersRawData(minDate: Date): Promise<ITastyOrderRawData[]> {
 
 
-        const mapOrder = (order: any): ITastyAccountOrderRawData => {
-            return {
-                id: order.id.toString(),
-                accountNumber: order['account-number'],
-                cancellable: order.cancellable,
-                editable: order.editable,
-                edited: order.edited,
-                extClientOrderId: order['ext-client-order-id'],
-                extExchangeOrderNumber: order['ext-exchange-order-number'],
-                extGlobalOrderNumber: order['ext-global-order-number'],
-                globalRequestId: order['global-request-id'],
-                orderType: order['order-type'],
-                price: order.price,
-                priceEffect: order['price-effect'],
-                receivedAt:  new Date(order['received-at']),
-                size: order.size,
-                source: order.source,
-                status: order.status,
-                terminalAt: new Date(order['terminal-at']),
-                timeInForce: order['time-in-force'],
-                underlyingInstrumentType: order['underlying-instrument-type'],
-                underlyingSymbol: order['underlying-symbol'],
-                updatedAt: new Date(order['updated-at']),
-                legs: (order.legs ?? []).map((leg: any): ITastyAccountOrderLegRawData => ({
-                    action: leg.action,
-                    instrumentType: leg['instrument-type'],
-                    quantity: leg.quantity,
-                    remainingQuantity: leg['remaining-quantity'],
-                    symbol: leg.symbol,
-                    fills: (leg.fills ?? []).map((fill: any): ITastyAccountOrderLegFillRawData => ({
-                        destinationVenue: fill['destination-venue'],
-                        fillId: fill['fill-id'],
-                        fillPrice: fill['fill-price'],
-                        filledAt: fill['filled-at'],
-                        quantity: fill.quantity,
-                    }))
-                }))
-            };
+        const mapOrder = (order: any): ITastyOrderRawData => {
+            return TastyOrdersReader.mapRawOrderData(order);
         }
 
         let pageOffset = 0;

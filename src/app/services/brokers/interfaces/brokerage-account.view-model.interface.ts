@@ -1,12 +1,14 @@
 import {IOpenOrderRequest} from "./open-order-request.interface";
-import {IAccountOpenOrderViewModel} from "./account-open-order-interface";
+import {IActiveOrderViewModel} from "./active-order.interfaces";
+import {IWorkingOrderViewModel} from "./working-order.interfaces";
 
 
 export interface IBrokerageAccountViewModel {
     readonly id: string;
     readonly brokerName: string;
     readonly accountNumber: string;
-    readonly openOrders: IOpenOrdersResult;
+    readonly activeOrders: IActiveOrdersResult;
+    readonly workingOrders: IWorkingOrderViewModel[];
     readonly accountInfo: IBrokerageAccountInfoViewModel | null;
     sendOrder(order: IOpenOrderRequest): Promise<void>;
     countSoldLegs(symbol: string): number;
@@ -25,7 +27,7 @@ export interface IBrokerageAccountModel extends IBrokerageAccountViewModel {
     disconnect(): Promise<void>;
 }
 
-export interface IOpenOrdersResult {
+export interface IActiveOrdersResult {
     readonly isLoading: boolean;
-    readonly orders: IAccountOpenOrderViewModel[];
+    readonly orders: IActiveOrderViewModel[];
 }

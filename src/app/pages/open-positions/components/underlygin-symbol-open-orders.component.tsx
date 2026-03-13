@@ -1,8 +1,8 @@
 import React from "react";
 import {
-    IAccountOpenOrderLegViewModel,
-    IAccountOpenOrderViewModel
-} from "../../../services/brokers/interfaces/account-open-order-interface";
+    IActiveOrderLegViewModel,
+    IActiveOrderViewModel
+} from "../../../services/brokers/interfaces/active-order.interfaces";
 import {observer} from "mobx-react";
 import {IonAccordion, IonItem} from "@ionic/react";
 import {
@@ -44,7 +44,7 @@ const LegInfoSeparatorBox = styled.span`
 
 
 
-const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observer((props) => {
+const OrderLegComponent: React.FC<{leg: IActiveOrderLegViewModel}> = observer((props) => {
     const services = useServices();
     return (
         <>
@@ -71,7 +71,7 @@ const OrderLegComponent: React.FC<{leg: IAccountOpenOrderLegViewModel}> = observ
     )
 })
 
-const OrderDetailsComponent: React.FC<{order: IAccountOpenOrderViewModel}> = observer(props => {
+const OrderDetailsComponent: React.FC<{order: IActiveOrderViewModel}> = observer(props => {
     return (
         <>
             <GridBodyCellBox>
@@ -112,7 +112,7 @@ const OrderDetailsComponent: React.FC<{order: IAccountOpenOrderViewModel}> = obs
 })
 
 
-const OrderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = observer(props => {
+const OrderComponent: React.FC<{order: IActiveOrderViewModel}> = observer(props => {
     const legs = props.order.legs;
     return (
         <BodyGridBox>
@@ -123,7 +123,7 @@ const OrderComponent: React.FC<{order: IAccountOpenOrderViewModel}> = observer(p
 })
 
 
-export const UnderlyingSymbolOpenOrdersComponent: React.FC<{underlyingSymbol: string, openOrders: IAccountOpenOrderViewModel[]}> = observer((props) => {
+export const UnderlyingSymbolOpenOrdersComponent: React.FC<{underlyingSymbol: string, openOrders: IActiveOrderViewModel[]}> = observer((props) => {
     const orders = props.openOrders.sort((o1, o2) => (o1.daysToExpiration ?? 0) - (o2.daysToExpiration ?? 0));
     return (
         <IonAccordion value={props.underlyingSymbol}>

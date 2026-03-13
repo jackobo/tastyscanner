@@ -29,7 +29,7 @@ export const OpenPositionsPage: React.FC = observer(() => {
 
     const services = useServices();
 
-    const openOrders = services.brokers.currentAccount?.openOrders;
+    const openOrders = services.brokers.currentAccount?.activeOrders;
 
     if(!openOrders || openOrders.isLoading) {
         return (

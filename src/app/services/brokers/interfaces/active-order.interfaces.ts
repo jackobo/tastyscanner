@@ -1,7 +1,7 @@
 import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
 import {OptionType} from "../../../models/option.view-model.interface";
 
-export interface IAccountOpenOrderViewModel {
+export interface IActiveOrderViewModel {
     readonly id: string;
     readonly underlyingSymbol: string;
     readonly createdAt: Date;
@@ -9,11 +9,11 @@ export interface IAccountOpenOrderViewModel {
     readonly profitLoss: number;
     readonly marketPrice: number;
     readonly tradingPrice: number;
-    readonly legs: IAccountOpenOrderLegViewModel[];
+    readonly legs: IActiveOrderLegViewModel[];
     readonly daysToExpiration: NullableNumber;
 }
 
-export interface IAccountOpenOrderLegViewModel {
+export interface IActiveOrderLegViewModel {
     readonly symbol: string;
     readonly quantity: number;
     readonly instrumentType: string;
