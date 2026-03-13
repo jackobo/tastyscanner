@@ -12,7 +12,8 @@ import {SpinnerComponent} from "../../../framework/components/spinner/spinner.co
 import {RemoveButtonComponent} from "../../../framework/components/specialized-buttons/remove-button.component";
 
 const PageContentBox = styled.div`
-   
+    display: flex;
+    flex-direction: column;
     width: 100%;
     min-height: 100%;
 `
@@ -26,7 +27,6 @@ const WorkingOrdersContainerBox = styled.div`
 `
 
 const WorkingOrderBox = styled(CardBox)`
-    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--ion-space-24);
