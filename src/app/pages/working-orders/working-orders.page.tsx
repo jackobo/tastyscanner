@@ -11,12 +11,17 @@ import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../framework/co
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
 
 const PageContentBox = styled.div`
+   
+    width: 100%;
+    min-height: 100%;
+`
+
+const WorkingOrdersContainerBox = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: var(--ion-space-24);
     width: 100%;
-    min-height: 100%;
 `
 
 const WorkingOrderBox = styled(CardBox)`
@@ -111,9 +116,9 @@ export const WorkingOrdersPage: React.FC = observer(() => {
             )
         } else {
             return (
-                <>
+                <WorkingOrdersContainerBox>
                     {workingOrders.map(renderOneWorkingOrder)}
-                </>
+                </WorkingOrdersContainerBox>
             )
         }
     }
