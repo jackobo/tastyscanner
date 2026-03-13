@@ -54,6 +54,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
     async connect(): Promise<void> {
         await this._loadAccountInfo();
+        await this._loadWorkingOrders();
         await this._loadOpenOrders();
 
     }
@@ -135,6 +136,13 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         return Math.abs(leg.quantity);
     }
 
+    private async _loadAccountInfo(): Promise<void> {
+        const rawAccountInfo = await this.tastyClient.balancesAndPositionsService.getAccountBalanceValues(this.accountNumber);
+        runInAction(() => {
+            this._accountInfo = new TastyAccountInfoModel(rawAccountInfo);
+        });
+    }
+
     private async _loadOpenOrders(): Promise<void> {
 
         try {
@@ -154,12 +162,23 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }
     }
 
-    private async _loadAccountInfo(): Promise<void> {
-        const rawAccountInfo = await this.tastyClient.balancesAndPositionsService.getAccountBalanceValues(this.accountNumber);
-        runInAction(() => {
-            this._accountInfo = new TastyAccountInfoModel(rawAccountInfo);
-        });
+    private async _loadWorkingOrders(): Promise<void> {
+        try {
+            const rawWorkingOrders = await new TastyOrdersReader(this.accountNumber, this.tastyClient, this.services).readWorkingOrders();
+            runInAction(() => {
+                this._workingOrders = rawWorkingOrders.filter(wo => wo.status === 'Live')
+                    .map(wo => new TastyWorkingOrderModel(wo));
+            });
+
+        } catch (err) {
+            this.services.logger.error('Failed to load working orders from Tasty Trade', err);
+            await this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translate(`Failed to load working orders from Tasty Trade: ${err}`)
+            });
+            this._setOpenOrders([]);
+        }
     }
+
 
     updateOrder(rawOrderData: ITastyOrderRawData): void {
 

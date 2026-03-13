@@ -11,6 +11,7 @@ import {
     ITastyOrderConsolidatedWithPositions
 } from "./raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
 import {isOrderLegOpenAction} from "../interfaces/open-order-request.interface";
+import {Check} from "../../../../framework/utils/type-checking";
 
 
 export class TastyOrdersReader {
@@ -109,6 +110,14 @@ export class TastyOrdersReader {
         return result;
     }
 
+    async readWorkingOrders(): Promise<ITastyOrderRawData[]> {
+        const response = await this.tastyClient.orderService.getLiveOrders(this.accountNumber);
+        console.log(response);
+        if(!Check.isArray(response)) {
+            return [];
+        }
+        return response.map(TastyOrdersReader.mapRawOrderData);
+    }
 
     private async _getOpenPositionsRawData(): Promise<ITastyOpenPositionRawData[]> {
         const positionsList = await this.tastyClient.balancesAndPositionsService.getPositionsList(this.accountNumber, {
