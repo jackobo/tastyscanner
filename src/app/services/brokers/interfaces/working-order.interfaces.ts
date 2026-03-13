@@ -3,4 +3,5 @@ export interface IWorkingOrderViewModel {
     readonly underlyingSymbol: string;
     readonly tradingPrice: number;
     readonly hasGuvidulSource: boolean
+    cancelOrder(): Promise<void>;
 }

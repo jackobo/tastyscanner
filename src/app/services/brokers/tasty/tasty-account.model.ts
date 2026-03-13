@@ -162,12 +162,16 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }
     }
 
+    private _createWorkingOrderModel(rawOrderData: ITastyOrderRawData): TastyWorkingOrderModel {
+        return new TastyWorkingOrderModel(rawOrderData, this);
+    }
+
     private async _loadWorkingOrders(): Promise<void> {
         try {
             const rawWorkingOrders = await new TastyOrdersReader(this.accountNumber, this.tastyClient, this.services).readWorkingOrders();
             runInAction(() => {
                 this._workingOrders = rawWorkingOrders.filter(wo => wo.status === 'Live')
-                    .map(wo => new TastyWorkingOrderModel(wo));
+                    .map(wo => this._createWorkingOrderModel(wo));
             });
 
         } catch (err) {
@@ -179,6 +183,9 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }
     }
 
+    async cancelOrder(orderId: string): Promise<void> {
+        await this.tastyClient.orderService.cancelOrder(this.accountNumber, parseInt(orderId));
+    }
 
     async updateOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
 
@@ -192,7 +199,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         switch(rawOrderData.status) {
             case "Live":
                 runInAction(() => {
-                    this._workingOrders.push(new TastyWorkingOrderModel(rawOrderData));
+                    this._workingOrders.push(this._createWorkingOrderModel(rawOrderData));
                 });
 
                 await this.services.toaster.showInfoToast({

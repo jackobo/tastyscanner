@@ -9,6 +9,7 @@ import {IonIcon} from "@ionic/react";
 import {fishOutline} from "ionicons/icons";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../framework/components/tooltip/tooltip.component";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
+import {RemoveButtonComponent} from "../../../framework/components/specialized-buttons/remove-button.component";
 
 const PageContentBox = styled.div`
    
@@ -26,17 +27,38 @@ const WorkingOrdersContainerBox = styled.div`
 
 const WorkingOrderBox = styled(CardBox)`
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ion-space-24);
+`
+
+
+const WorkingOrderFieldsBox = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: var(--ion-space-16);
     row-gap: var(--ion-space-8);
-    padding: var(--ion-space-24) var(--ion-space-20) var(--ion-space-20) var(--ion-space-20);
+    
 `
 
+const WorkingOrderHeaderBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ion-space-16);
+`
+const WorkingOrderHeaderButtonsBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--ion-space-16);
+    flex-grow: 1;
+`
+
+
 const GuvidulIndicatorBox = styled.div`
-    position: absolute;
-    top: 4px;
-    left: 8px;
     cursor: pointer;
 `
 
@@ -79,15 +101,30 @@ const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = 
         return null;
     }
 
+    const cancelClick = async () => {
+        await props.workingOrder.cancelOrder();
+    }
+
     return (
         <WorkingOrderBox>
-            <div>{services.language.translate('Order id:')}</div>
-            <div>{props.workingOrder.id}</div>
-            <div>{services.language.translate('Undernlying symbol:')}</div>
-            <div>{props.workingOrder.underlyingSymbol}</div>
-            <div>{services.language.translate('Trading price:')}</div>
-            <div>{props.workingOrder.tradingPrice}</div>
-            {renderGuvidulIndicator()}
+            <WorkingOrderHeaderBox>
+                {renderGuvidulIndicator()}
+                <WorkingOrderHeaderButtonsBox>
+                    <RemoveButtonComponent onClick={cancelClick}
+                                           tooltipText={services.language.translate('Cancel order')}/>
+                </WorkingOrderHeaderButtonsBox>
+
+            </WorkingOrderHeaderBox>
+
+            <WorkingOrderFieldsBox>
+                <div>{services.language.translate('Order id:')}</div>
+                <div>{props.workingOrder.id}</div>
+                <div>{services.language.translate('Undernlying symbol:')}</div>
+                <div>{props.workingOrder.underlyingSymbol}</div>
+                <div>{services.language.translate('Trading price:')}</div>
+                <div>{props.workingOrder.tradingPrice}</div>
+            </WorkingOrderFieldsBox>
+
         </WorkingOrderBox>
     )
 })

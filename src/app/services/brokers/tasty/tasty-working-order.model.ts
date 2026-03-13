@@ -1,9 +1,11 @@
 import {IWorkingOrderViewModel} from "../interfaces/working-order.interfaces";
 import {ITastyOrderRawData} from "./raw-data/tasty-order.raw-data.interfaces";
 import {ORDERS_SOURCE_NAME} from "../constants";
+import {TastyAccountModel} from "./tasty-account.model";
 
 export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
-    constructor(private readonly tastyOrderRawData: ITastyOrderRawData) {
+    constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
+                private readonly account: TastyAccountModel) {
     }
 
     get id(): string {
@@ -21,5 +23,9 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
     get hasGuvidulSource(): boolean {
         return this.tastyOrderRawData.source === ORDERS_SOURCE_NAME;
+    }
+
+    public  async cancelOrder(): Promise<void> {
+        await this.account.cancelOrder(this.id);
     }
 }
