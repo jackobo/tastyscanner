@@ -1,0 +1,2072 @@
+[
+    {
+        "id": 446890121,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "10088002f3f1aa30089",
+        "ext-exchange-order-number": "1919378454603579272",
+        "ext-global-order-number": 12095,
+        "global-request-id": "fc32c7c6bb59c097fd75d20da3854ee5",
+        "order-type": "Limit",
+        "price": "1.79",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T19:05:10.824+00:00",
+        "size": 1,
+        "source": "operatiunea-guvidul",
+        "status": "Filled",
+        "terminal-at": "2026-03-13T19:05:11.003+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773428711006,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "SPY   260324C00689000",
+                "fills": [
+                    {
+                        "destination-venue": "JANE_STREET_OPTIONS_A",
+                        "fill-id": "603131220601994L3",
+                        "fill-price": "0.91",
+                        "filled-at": "2026-03-13T19:05:10.976+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "SPY   260324C00684000",
+                "fills": [
+                    {
+                        "destination-venue": "JANE_STREET_OPTIONS_A",
+                        "fill-id": "603131220601994L2",
+                        "fill-price": "1.91",
+                        "filled-at": "2026-03-13T19:05:10.976+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "SPY   260324P00638000",
+                "fills": [
+                    {
+                        "destination-venue": "JANE_STREET_OPTIONS_A",
+                        "fill-id": "603131220601994L1",
+                        "fill-price": "4.25",
+                        "filled-at": "2026-03-13T19:05:10.976+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "SPY   260324P00633000",
+                "fills": [
+                    {
+                        "destination-venue": "JANE_STREET_OPTIONS_A",
+                        "fill-id": "603131220601994L0",
+                        "fill-price": "3.46",
+                        "filled-at": "2026-03-13T19:05:10.976+00:00",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 446889306,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "000300688e1aa2fd5a",
+        "ext-exchange-order-number": "1919374954208988675",
+        "ext-global-order-number": 26766,
+        "global-request-id": "670096448505d18c9b8701f7ecb2c2dd",
+        "order-type": "Limit",
+        "price": "1.7",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T19:03:52.785+00:00",
+        "size": 1,
+        "source": "operatiunea-guvidul",
+        "status": "Filled",
+        "terminal-at": "2026-03-13T19:04:11.104+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773428651109,
+        "legs": [
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "SPY   260325P00636000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_A",
+                        "fill-id": "OPT900783027",
+                        "fill-price": "4.35",
+                        "filled-at": "2026-03-13T19:04:11.077+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "SPY   260325P00631000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_A",
+                        "fill-id": "OPT900783019",
+                        "fill-price": "3.58",
+                        "filled-at": "2026-03-13T19:04:11.077+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "SPY   260325C00691000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_A",
+                        "fill-id": "OPT900783023",
+                        "fill-price": "0.86",
+                        "filled-at": "2026-03-13T19:04:11.077+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "SPY   260325C00686000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_A",
+                        "fill-id": "OPT900783031",
+                        "fill-price": "1.79",
+                        "filled-at": "2026-03-13T19:04:11.077+00:00",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 446882805,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T18:57:49.264+00:00",
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "001400210e1aa2e3f5",
+        "ext-exchange-order-number": "1919347032621911572",
+        "ext-global-order-number": 8462,
+        "global-request-id": "50283d526fe26da3bde4cabe3ce6f6d2",
+        "order-type": "Limit",
+        "price": "3.2",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T18:52:40.915+00:00",
+        "size": 1,
+        "source": "operatiunea-guvidul",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T18:57:49.279+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773428269295,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260323C00686000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260323C00681000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260323P00643000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260323P00638000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446868080,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T18:53:24.419+00:00",
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "00b30036eb1aa2aa70",
+        "ext-exchange-order-number": "1919283789229910963",
+        "ext-global-order-number": 14059,
+        "global-request-id": "951051d14f4e48acb23f46b65b2d8d34",
+        "order-type": "Limit",
+        "price": "3.5",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T18:27:54.827+00:00",
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T18:53:24.434+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773428004449,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260323P00640000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260323P00645000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260323C00685000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260323C00680000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446867002,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T18:50:12.833+00:00",
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "001e0000561aa2a63a",
+        "ext-exchange-order-number": "1919279159251588638",
+        "ext-global-order-number": 86,
+        "global-request-id": "eb0ee85dd3f22945a81a796a64785808",
+        "order-type": "Limit",
+        "price": "3.0",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T18:25:55.853+00:00",
+        "size": 1,
+        "source": "operatiunea-guvidul",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T18:50:12.850+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773427812868,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260324C00685000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260324C00680000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260324P00640000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260324P00635000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446865378,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T18:23:19.024+00:00",
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "0007007b451aa29fe2",
+        "ext-exchange-order-number": "1919272184232756487",
+        "ext-global-order-number": 31557,
+        "global-request-id": "e6fe88feff8bb2dc5892aa731a4f4082",
+        "order-type": "Limit",
+        "price": "2.5",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T18:23:06.940+00:00",
+        "size": 1,
+        "source": "operatiunea-guvidul",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T18:23:19.040+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773426199056,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260324C00688000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260324C00683000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260324P00636000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260324P00631000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446851405,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T18:11:59.224+00:00",
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "0003005d5f1aa2694d",
+        "ext-exchange-order-number": "1919212170652770051",
+        "ext-global-order-number": 23903,
+        "global-request-id": "d68868b78ecc08f1afbdcb15838ac9e7",
+        "order-type": "Limit",
+        "price": "2.0",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T17:58:04.939+00:00",
+        "size": 1,
+        "source": "operatiunea-guvidul",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T18:11:59.239+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773425519254,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00690000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00685000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00633000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00628000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446836924,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T17:57:13.995+00:00",
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "000b0020bc1aa230bc",
+        "ext-exchange-order-number": "1919149975227382795",
+        "ext-global-order-number": 8380,
+        "global-request-id": "c78dc7358c4a8ade757ebca2e56d20fb",
+        "order-type": "Limit",
+        "price": "1.98",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T17:30:11.238+00:00",
+        "replaces-order-id": 446836578,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T17:57:14.013+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773424634032,
+        "legs": [
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00682000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00684000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00649000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00647000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446836719,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "global-request-id": "cb84addc7a43b0d66398da44f1b11fdc",
+        "order-type": "Limit",
+        "price": "2.05",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T17:29:55.322+00:00",
+        "reject-reason": "Order price is invalid for this trade. Contact trade desk with any questions",
+        "replaces-order-id": 446836578,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Rejected",
+        "terminal-at": "2026-03-13T17:29:55.321+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773422995322,
+        "legs": [
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00682000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00684000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00649000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00647000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446836578,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T17:30:11.271+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "00030059391aa22f62",
+        "ext-exchange-order-number": "1919148489172400387",
+        "ext-global-order-number": 22841,
+        "global-request-id": "f48e99cf19171bee1933ea2e82093def",
+        "order-type": "Limit",
+        "price": "2.0",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T17:29:35.602+00:00",
+        "replacing-order-id": 446836924,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T17:30:11.286+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773423011302,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00647000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00649000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00684000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00682000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446833197,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T17:57:21.983+00:00",
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "00030058321aa2222d",
+        "ext-exchange-order-number": "1919133967887905283",
+        "ext-global-order-number": 22578,
+        "global-request-id": "4d1afdcc37fed98041d88e5d24bd6f78",
+        "order-type": "Limit",
+        "price": "2.4",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T17:22:09.013+00:00",
+        "replaces-order-id": 446832988,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T17:57:21.998+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773424642015,
+        "legs": [
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00640000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00635000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00687000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00692000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446832988,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T17:22:09.046+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "00130071031aa2215c",
+        "ext-exchange-order-number": "1919133070241366803",
+        "ext-global-order-number": 28931,
+        "global-request-id": "9d05259602cb8dd27dd91013c1d59d97",
+        "order-type": "Limit",
+        "price": "2.45",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T17:21:38.062+00:00",
+        "replaces-order-id": 446829328,
+        "replacing-order-id": 446833197,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T17:22:09.061+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773422529090,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00692000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00687000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00635000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00640000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446829328,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T17:21:38.095+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "00150057511aa21310",
+        "ext-exchange-order-number": "1919117350659379477",
+        "ext-global-order-number": 22353,
+        "global-request-id": "923e9aceb8fe25caba61417d2bbf626c",
+        "order-type": "Limit",
+        "price": "2.5",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T17:14:40.658+00:00",
+        "replaces-order-id": 446810352,
+        "replacing-order-id": 446832988,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T17:21:38.110+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773422498125,
+        "legs": [
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00640000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00635000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00687000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00692000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446810352,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T17:14:40.693+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "100890022381aa1c8f0",
+        "ext-exchange-order-number": "1919035849356490889",
+        "ext-global-order-number": 8760,
+        "global-request-id": "5748e8813c384974a29428120465b1df",
+        "order-type": "Limit",
+        "price": "2.0",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T16:41:35.334+00:00",
+        "replacing-order-id": 446829328,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T17:14:40.707+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "SPY",
+        "updated-at": 1773422080722,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00692000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325C00687000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00635000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "SPY   260325P00640000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446767961,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "00150046701aa12359",
+        "ext-exchange-order-number": "1918853781400219669",
+        "ext-global-order-number": 18032,
+        "global-request-id": "2013c956884f652b3bae9e959b0194e0",
+        "order-type": "Limit",
+        "price": "1.88",
+        "price-effect": "Debit",
+        "received-at": "2026-03-13T15:39:35.036+00:00",
+        "replaces-order-id": 446767765,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Filled",
+        "terminal-at": "2026-03-13T15:39:35.352+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "ADBE",
+        "updated-at": 1773416375356,
+        "legs": [
+            {
+                "action": "Sell to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "ADBE  260417P00235000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT100458867",
+                        "fill-price": "5.32",
+                        "filled-at": "2026-03-13T15:39:35.324+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "ADBE  260417P00240000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT100458859",
+                        "fill-price": "6.77",
+                        "filled-at": "2026-03-13T15:39:35.324+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "ADBE  260417C00295000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT100458863",
+                        "fill-price": "1.66",
+                        "filled-at": "2026-03-13T15:39:35.324+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "ADBE  260417C00300000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT100458871",
+                        "fill-price": "1.24",
+                        "filled-at": "2026-03-13T15:39:35.324+00:00",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 446767765,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T15:39:35.068+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "00030045c61aa12295",
+        "ext-exchange-order-number": "1918852939586586115",
+        "ext-global-order-number": 17862,
+        "global-request-id": "a9681e8713ed3da37f107c4924ef6a0f",
+        "order-type": "Limit",
+        "price": "1.79",
+        "price-effect": "Debit",
+        "received-at": "2026-03-13T15:39:17.563+00:00",
+        "replaces-order-id": 446767624,
+        "replacing-order-id": 446767961,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T15:39:35.084+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "ADBE",
+        "updated-at": 1773416375101,
+        "legs": [
+            {
+                "action": "Sell to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417C00300000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417C00295000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417P00240000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417P00235000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446767624,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T15:39:17.593+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "10088001a491aa12208",
+        "ext-exchange-order-number": "1918852333993347464",
+        "ext-global-order-number": 6729,
+        "global-request-id": "a6d4fcc795f48f5a45f36db0c7277080",
+        "order-type": "Limit",
+        "price": "1.8",
+        "price-effect": "Debit",
+        "received-at": "2026-03-13T15:39:06.329+00:00",
+        "replaces-order-id": 446764165,
+        "replacing-order-id": 446767765,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T15:39:17.607+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "ADBE",
+        "updated-at": 1773416357621,
+        "legs": [
+            {
+                "action": "Sell to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417P00235000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417P00240000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417C00295000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417C00300000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446767075,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "00150046331aa11fe3",
+        "ext-exchange-order-number": "1918849976059179797",
+        "ext-global-order-number": 17971,
+        "global-request-id": "b7b7c5df07ecdbff6f7e1c616ca11768",
+        "order-type": "Limit",
+        "price": "2.12",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:38:19.718+00:00",
+        "replaces-order-id": 446767012,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Filled",
+        "terminal-at": "2026-03-13T15:38:20.023+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "IWM",
+        "updated-at": 1773416300026,
+        "legs": [
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260325P00235000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT175458046",
+                        "fill-price": "2.49",
+                        "filled-at": "2026-03-13T15:38:19.996+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260325P00230000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT175458038",
+                        "fill-price": "1.59",
+                        "filled-at": "2026-03-13T15:38:19.996+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260325C00255000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT175458050",
+                        "fill-price": "2.15",
+                        "filled-at": "2026-03-13T15:38:19.996+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260325C00260000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT175458042",
+                        "fill-price": "0.93",
+                        "filled-at": "2026-03-13T15:38:19.996+00:00",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 446767012,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T15:38:19.750+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "00140016961aa11fa4",
+        "ext-exchange-order-number": "1918849705473119764",
+        "ext-global-order-number": 5782,
+        "global-request-id": "2dfbc68764a7456abafcd4c3312888a1",
+        "order-type": "Limit",
+        "price": "2.13",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:38:13.482+00:00",
+        "replacing-order-id": 446767075,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T15:38:19.765+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "IWM",
+        "updated-at": 1773416299782,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260325C00260000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260325C00255000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260325P00230000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260325P00235000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446766400,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "00040027101aa11d40",
+        "ext-exchange-order-number": "1918847076954214404",
+        "ext-global-order-number": 10000,
+        "global-request-id": "7e824c5b83d34771bd83d9583c831f09",
+        "order-type": "Limit",
+        "price": "1.9",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:37:25.838+00:00",
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Filled",
+        "terminal-at": "2026-03-13T15:37:27.056+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "IWM",
+        "updated-at": 1773416247059,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260326P00225000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_A",
+                        "fill-id": "7FT7-9QH-9E6F-3",
+                        "fill-price": "1.21",
+                        "filled-at": "2026-03-13T15:37:27.032+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260326P00230000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_A",
+                        "fill-id": "7FT7-9QH-9E6F-4",
+                        "fill-price": "1.87",
+                        "filled-at": "2026-03-13T15:37:27.032+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260326C00260000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_A",
+                        "fill-id": "7FT7-9QH-9E6F-6",
+                        "fill-price": "1.03",
+                        "filled-at": "2026-03-13T15:37:27.032+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260326C00255000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_A",
+                        "fill-id": "7FT7-9QH-9E6F-5",
+                        "fill-price": "2.27",
+                        "filled-at": "2026-03-13T15:37:27.032+00:00",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 446765600,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T15:37:42.978+00:00",
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "00130059521aa11a20",
+        "ext-exchange-order-number": "1918843640983671315",
+        "ext-global-order-number": 22866,
+        "global-request-id": "08b558b14fdf0d49944d0f4d5aa5aa0e",
+        "order-type": "Limit",
+        "price": "2.13",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:36:27.841+00:00",
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T15:37:42.993+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "IWM",
+        "updated-at": 1773416263007,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260325P00230000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260325P00235000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260325C00260000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260325C00255000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446764165,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T15:39:06.372+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "00040026b21aa11485",
+        "ext-exchange-order-number": "1918837477702283780",
+        "ext-global-order-number": 9906,
+        "global-request-id": "c77a247e75609c153b2cedd464892fbc",
+        "order-type": "Limit",
+        "price": "1.82",
+        "price-effect": "Debit",
+        "received-at": "2026-03-13T15:34:21.948+00:00",
+        "replacing-order-id": 446767624,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T15:39:06.387+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "ADBE",
+        "updated-at": 1773416346405,
+        "legs": [
+            {
+                "action": "Sell to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417C00300000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417C00295000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417P00240000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "ADBE  260417P00235000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446750720,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "00b300234c1aa0e000",
+        "ext-exchange-order-number": "1918779731866766515",
+        "ext-global-order-number": 9036,
+        "global-request-id": "613dc8fa541187fd2ac8023d1712c679",
+        "order-type": "Limit",
+        "price": "2.04",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:16:23.405+00:00",
+        "replaces-order-id": 446750568,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Filled",
+        "terminal-at": "2026-03-13T15:16:24.756+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "IWM",
+        "updated-at": 1773414984759,
+        "legs": [
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260324P00235000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_B",
+                        "fill-id": "2HPF-8TD-8TUP-4",
+                        "fill-price": "2.15",
+                        "filled-at": "2026-03-13T15:16:24.732+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260324P00230000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_B",
+                        "fill-id": "2HPF-8TD-8TUP-3",
+                        "fill-price": "1.32",
+                        "filled-at": "2026-03-13T15:16:24.732+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260324C00255000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_B",
+                        "fill-id": "2HPF-8TD-8TUP-5",
+                        "fill-price": "2.05",
+                        "filled-at": "2026-03-13T15:16:24.732+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "IWM   260324C00260000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_B",
+                        "fill-id": "2HPF-8TD-8TUP-6",
+                        "fill-price": "0.84",
+                        "filled-at": "2026-03-13T15:16:24.732+00:00",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 446750568,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T15:16:23.435+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "100890017b21aa0df68",
+        "ext-exchange-order-number": "1918779079030977161",
+        "ext-global-order-number": 6066,
+        "global-request-id": "b218ae49602861d97660fcc879757a6d",
+        "order-type": "Limit",
+        "price": "2.05",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:16:11.205+00:00",
+        "replacing-order-id": 446750720,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T15:16:23.450+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "IWM",
+        "updated-at": 1773414983467,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260324P00230000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260324P00235000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260324C00260000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "IWM   260324C00255000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446746729,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "001500400d1aa0d069",
+        "ext-exchange-order-number": "1918762590654172437",
+        "ext-global-order-number": 16397,
+        "global-request-id": "83d4cbffd88467e710afda34fb359b69",
+        "order-type": "Limit",
+        "price": "2.18",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:11:41.609+00:00",
+        "replaces-order-id": 446743327,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Filled",
+        "terminal-at": "2026-03-13T15:11:41.915+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "QQQ",
+        "updated-at": 1773414701919,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260324P00565000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT300398154",
+                        "fill-price": "3.07",
+                        "filled-at": "2026-03-13T15:11:41.886+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260324P00570000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT300398162",
+                        "fill-price": "3.81",
+                        "filled-at": "2026-03-13T15:11:41.886+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260324C00618000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT300398158",
+                        "fill-price": "1.98",
+                        "filled-at": "2026-03-13T15:11:41.886+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260324C00613000",
+                "fills": [
+                    {
+                        "destination-venue": "CITADEL_OPTIONS_B",
+                        "fill-id": "OPT300398166",
+                        "fill-price": "3.42",
+                        "filled-at": "2026-03-13T15:11:41.886+00:00",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 446745568,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "00130051cb1aa0cbe0",
+        "ext-exchange-order-number": "1918757604198304531",
+        "ext-global-order-number": 20939,
+        "global-request-id": "913ef8e18e0e85d9c0067549355690b1",
+        "order-type": "Limit",
+        "price": "2.18",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:10:26.066+00:00",
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Filled",
+        "terminal-at": "2026-03-13T15:11:24.980+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "QQQ",
+        "updated-at": 1773414684983,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260326P00568000",
+                "fills": [
+                    {
+                        "destination-venue": "DASH_OPTIONS_B",
+                        "fill-id": "7302200707673",
+                        "fill-price": "4.53",
+                        "filled-at": "2026-03-13T15:11:24.956+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260326C00622000",
+                "fills": [
+                    {
+                        "destination-venue": "DASH_OPTIONS_B",
+                        "fill-id": "7302200707670",
+                        "fill-price": "1.73",
+                        "filled-at": "2026-03-13T15:11:24.956+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260326P00573000",
+                "fills": [
+                    {
+                        "destination-venue": "DASH_OPTIONS_B",
+                        "fill-id": "7302200707668",
+                        "fill-price": "5.44",
+                        "filled-at": "2026-03-13T15:11:24.956+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260326C00617000",
+                "fills": [
+                    {
+                        "destination-venue": "DASH_OPTIONS_B",
+                        "fill-id": "7302200707666",
+                        "fill-price": "3.0",
+                        "filled-at": "2026-03-13T15:11:24.956+00:00",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 446744455,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "00b30022451aa0c787",
+        "ext-exchange-order-number": "1918752823896589747",
+        "ext-global-order-number": 8773,
+        "global-request-id": "a72efa97825476ca3ec7a0021f66712d",
+        "order-type": "Limit",
+        "price": "2.0",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:09:15.409+00:00",
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Filled",
+        "terminal-at": "2026-03-13T15:11:50.726+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "QQQ",
+        "updated-at": 1773414710729,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260325P00560000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_B",
+                        "fill-id": "2HPF-8J6-9E6F-3",
+                        "fill-price": "2.86",
+                        "filled-at": "2026-03-13T15:11:50.701+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260325P00565000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_B",
+                        "fill-id": "2HPF-8J6-9E6F-4",
+                        "fill-price": "3.47",
+                        "filled-at": "2026-03-13T15:11:50.701+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260325C00620000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_B",
+                        "fill-id": "2HPF-8J6-9E6F-6",
+                        "fill-price": "1.89",
+                        "filled-at": "2026-03-13T15:11:50.701+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260325C00615000",
+                "fills": [
+                    {
+                        "destination-venue": "WOLVERINE_OPTIONS_B",
+                        "fill-id": "2HPF-8J6-9E6F-5",
+                        "fill-price": "3.28",
+                        "filled-at": "2026-03-13T15:11:50.701+00:00",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 446743327,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T15:11:41.642+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "0003003e401aa0c31f",
+        "ext-exchange-order-number": "1918747979175313411",
+        "ext-global-order-number": 15936,
+        "global-request-id": "12a6ec20ebffe98dbd17e4806c8c1a95",
+        "order-type": "Limit",
+        "price": "2.19",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:08:13.719+00:00",
+        "replaces-order-id": 446743062,
+        "replacing-order-id": 446746729,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T15:11:41.658+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "QQQ",
+        "updated-at": 1773414701673,
+        "legs": [
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "QQQ   260324C00613000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "QQQ   260324C00618000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "QQQ   260324P00570000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "QQQ   260324P00565000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446743062,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "cancelled-at": "2026-03-13T15:08:13.752+00:00",
+        "editable": false,
+        "edited": true,
+        "ext-client-order-id": "00040023171aa0c216",
+        "ext-exchange-order-number": "1918746841007200004",
+        "ext-global-order-number": 8983,
+        "global-request-id": "e347c55cec11b5f71e385ca6e2fe5325",
+        "order-type": "Limit",
+        "price": "2.2",
+        "price-effect": "Credit",
+        "received-at": "2026-03-13T15:07:58.855+00:00",
+        "replacing-order-id": 446743327,
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Cancelled",
+        "terminal-at": "2026-03-13T15:08:13.767+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "QQQ",
+        "updated-at": 1773414493784,
+        "legs": [
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "QQQ   260324P00565000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "QQQ   260324P00570000",
+                "fills": []
+            },
+            {
+                "action": "Buy to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "QQQ   260324C00618000",
+                "fills": []
+            },
+            {
+                "action": "Sell to Open",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 1,
+                "symbol": "QQQ   260324C00613000",
+                "fills": []
+            }
+        ]
+    },
+    {
+        "id": 446739647,
+        "account-number": "5WZ51885",
+        "cancellable": false,
+        "editable": false,
+        "edited": false,
+        "ext-client-order-id": "0013004fa41aa0b4bf",
+        "ext-exchange-order-number": "1918732173696803859",
+        "ext-global-order-number": 20388,
+        "global-request-id": "7b7db5e9122f7f3f11ce985a7a4b2a51",
+        "order-type": "Limit",
+        "price": "1.28",
+        "price-effect": "Debit",
+        "received-at": "2026-03-13T15:04:05.067+00:00",
+        "size": 1,
+        "source": "desktop-javafx;2.44.0",
+        "status": "Filled",
+        "terminal-at": "2026-03-13T15:05:03.394+00:00",
+        "time-in-force": "Day",
+        "underlying-instrument-type": "Equity",
+        "underlying-symbol": "QQQ",
+        "updated-at": 1773414303397,
+        "legs": [
+            {
+                "action": "Sell to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260316C00620000",
+                "fills": [
+                    {
+                        "destination-venue": "DASH_OPTIONS_B",
+                        "fill-id": "302164764524",
+                        "fill-price": "0.04",
+                        "filled-at": "2026-03-13T15:05:03.367+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260316C00615000",
+                "fills": [
+                    {
+                        "destination-venue": "DASH_OPTIONS_B",
+                        "fill-id": "302164764520",
+                        "fill-price": "0.15",
+                        "filled-at": "2026-03-13T15:05:03.367+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Buy to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260316P00590000",
+                "fills": [
+                    {
+                        "destination-venue": "DASH_OPTIONS_B",
+                        "fill-id": "302164764522",
+                        "fill-price": "2.79",
+                        "filled-at": "2026-03-13T15:05:03.367+00:00",
+                        "quantity": 1
+                    }
+                ]
+            },
+            {
+                "action": "Sell to Close",
+                "instrument-type": "Equity Option",
+                "quantity": 1,
+                "remaining-quantity": 0,
+                "symbol": "QQQ   260316P00585000",
+                "fills": [
+                    {
+                        "destination-venue": "DASH_OPTIONS_B",
+                        "fill-id": "302164764527",
+                        "fill-price": "1.62",
+                        "filled-at": "2026-03-13T15:05:03.368+00:00",
+                        "quantity": 1
+                    }
+                ]
+            }
+        ]
+    }
+]

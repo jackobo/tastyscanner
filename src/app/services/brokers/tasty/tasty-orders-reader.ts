@@ -112,7 +112,6 @@ export class TastyOrdersReader {
 
     async readWorkingOrders(): Promise<ITastyOrderRawData[]> {
         const response = await this.tastyClient.orderService.getLiveOrders(this.accountNumber);
-        console.log(response);
         if(!Check.isArray(response)) {
             return [];
         }
