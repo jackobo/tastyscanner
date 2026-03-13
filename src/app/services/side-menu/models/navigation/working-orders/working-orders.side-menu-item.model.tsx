@@ -4,7 +4,7 @@ import {
 import {IAppServiceFactory} from "../../../../app-service-factory.interface";
 import React from "react";
 import {IonIcon} from "@ionic/react";
-import {briefcaseOutline} from "ionicons/icons";
+import {hourglassOutline} from "ionicons/icons";
 import {
     SideMenuRenderResult
 } from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
@@ -17,7 +17,7 @@ export class WorkingOrdersSideMenuItemModel extends RouteBaseSideMenuItemModel {
     renderIcon(): React.ReactElement {
 
         return (
-            <IonIcon slot="start" icon={briefcaseOutline}/>
+            <IonIcon slot="start" icon={hourglassOutline}/>
         )
     }
 

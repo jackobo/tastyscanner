@@ -6,10 +6,10 @@ import styled from "styled-components";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
 import {IonAccordionGroup} from "@ionic/react";
 
-import {OpenPositionsRootHeaderComponent} from "./components/open-positions-root-header.component";
-import {UnderlyingSymbolOpenOrdersComponent} from "./components/underlygin-symbol-open-orders.component";
+import {ActivePositionsRootHeaderComponent} from "./components/active-positions-root-header.component";
+import {UnderlyingSymbolActivePositionsComponent} from "./components/underlying-symbol-active-positions.component";
 
-const PAGE_CONTENT_CSS_CLASS = 'open-positions-page-content'
+const PAGE_CONTENT_CSS_CLASS = 'active-positions-page-content'
 
 const PageBox = styled(TastyScannerStandardPage)`
     font-size: var(--ion-font-size-body2);
@@ -25,30 +25,30 @@ const PageContentBox = styled.div`
     overflow-y: auto;
 `
 
-export const OpenPositionsPage: React.FC = observer(() => {
+export const ActivePositionsPage: React.FC = observer(() => {
 
     const services = useServices();
 
-    const openOrders = services.brokers.currentAccount?.activeOrders;
+    const activePositions = services.brokers.currentAccount?.activeOrders;
 
-    if(!openOrders || openOrders.isLoading) {
+    if(!activePositions || activePositions.isLoading) {
         return (
             <SpinnerComponent fillContainer={true}/>
         )
     }
 
 
-    const ordersByUnderlying = openOrders.orders.groupByKey(o => o.underlyingSymbol);
+    const ordersByUnderlying = activePositions.orders.groupByKey(o => o.underlyingSymbol);
 
     return (
         <PageBox pageContentCssClass={PAGE_CONTENT_CSS_CLASS}>
 
-            <OpenPositionsRootHeaderComponent/>
+            <ActivePositionsRootHeaderComponent/>
 
             <PageContentBox>
                 <IonAccordionGroup>
                     {Object.keys(ordersByUnderlying).sort((s1, s2) => s1.localeCompare(s2))
-                        .map(underlyingSymbol => (<UnderlyingSymbolOpenOrdersComponent key={underlyingSymbol} underlyingSymbol={underlyingSymbol} openOrders={ordersByUnderlying[underlyingSymbol]}/>))}
+                        .map(underlyingSymbol => (<UnderlyingSymbolActivePositionsComponent key={underlyingSymbol} underlyingSymbol={underlyingSymbol} openOrders={ordersByUnderlying[underlyingSymbol]}/>))}
                 </IonAccordionGroup>
             </PageContentBox>
 

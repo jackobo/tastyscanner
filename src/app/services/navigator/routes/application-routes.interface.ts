@@ -4,7 +4,7 @@ import {
 import {IRoute} from "../../../../framework/services/navigator/models/route.interface";
 
 export interface IApplicationRoutes extends IApplicationRoutesBase {
-    openPositions: IRoute
+    activePositions: IRoute
     workingOrders: IRoute
     chart: IRoute;
 }

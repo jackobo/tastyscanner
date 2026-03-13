@@ -123,7 +123,7 @@ const OrderComponent: React.FC<{order: IActiveOrderViewModel}> = observer(props 
 })
 
 
-export const UnderlyingSymbolOpenOrdersComponent: React.FC<{underlyingSymbol: string, openOrders: IActiveOrderViewModel[]}> = observer((props) => {
+export const UnderlyingSymbolActivePositionsComponent: React.FC<{underlyingSymbol: string, openOrders: IActiveOrderViewModel[]}> = observer((props) => {
     const orders = props.openOrders.sort((o1, o2) => (o1.daysToExpiration ?? 0) - (o2.daysToExpiration ?? 0));
     return (
         <IonAccordion value={props.underlyingSymbol}>
@@ -132,6 +132,5 @@ export const UnderlyingSymbolOpenOrdersComponent: React.FC<{underlyingSymbol: st
                 {orders.map(o => <OrderComponent key={o.id} order={o}/>)}
             </OrdersBox>
         </IonAccordion>
-
-    )
+    );
 })

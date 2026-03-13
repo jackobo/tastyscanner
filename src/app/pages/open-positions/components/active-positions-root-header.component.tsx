@@ -7,7 +7,7 @@ import {
     RightAlignedHeaderGridCellBox
 } from "../boxes/grid-header.boxes";
 
-export const OpenPositionsRootHeaderComponent: React.FC = observer(() => {
+export const ActivePositionsRootHeaderComponent: React.FC = observer(() => {
     return (
         <HeaderGridBox>
             <LegInfoHeaderGridCellBox>Symbol</LegInfoHeaderGridCellBox>

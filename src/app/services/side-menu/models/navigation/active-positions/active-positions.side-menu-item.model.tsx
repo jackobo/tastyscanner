@@ -5,9 +5,9 @@ import {IonIcon} from "@ionic/react";
 import React from "react";
 import {briefcaseOutline} from "ionicons/icons";
 
-export class OpenPositionsSideMenuItemModel extends RouteBaseSideMenuItemModel {
+export class ActivePositionsSideMenuItemModel extends RouteBaseSideMenuItemModel {
     constructor(services: IAppServiceFactory) {
-        super(services.navigator.routes.openPositions, services);
+        super(services.navigator.routes.activePositions, services);
     }
 
     renderIcon(): React.ReactElement {
@@ -18,6 +18,6 @@ export class OpenPositionsSideMenuItemModel extends RouteBaseSideMenuItemModel {
     }
 
     renderContent(): SideMenuRenderResult {
-        return "Opened Positions";
+        return "Active Positions";
     }
 }
