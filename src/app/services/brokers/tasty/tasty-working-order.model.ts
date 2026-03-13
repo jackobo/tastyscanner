@@ -9,9 +9,15 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     get id(): string {
         return this.tastyOrderRawData.id;
     }
+
+    get underlyingSymbol(): string {
+        return this.tastyOrderRawData.underlyingSymbol;
+    }
+
     get tradingPrice(): number {
         return parseFloat(this.tastyOrderRawData.price);
     }
+
 
     get hasGuvidulSource(): boolean {
         return this.tastyOrderRawData.source === ORDERS_SOURCE_NAME;

@@ -83,6 +83,8 @@ const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = 
         <WorkingOrderBox>
             <div>{services.language.translate('Order id:')}</div>
             <div>{props.workingOrder.id}</div>
+            <div>{services.language.translate('Undernlying symbol:')}</div>
+            <div>{props.workingOrder.underlyingSymbol}</div>
             <div>{services.language.translate('Trading price:')}</div>
             <div>{props.workingOrder.tradingPrice}</div>
             {renderGuvidulIndicator()}
