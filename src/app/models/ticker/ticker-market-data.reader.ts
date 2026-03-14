@@ -1,9 +1,4 @@
 import {IAppServiceFactory} from "../../services/app-service-factory.interface";
-import {
-    IOptionChainRawData,
-    ISymbolInfoRawData,
-    ISymbolMetricsRawData
-} from "../../services/market-data-provider/market-data-provider.service.interface";
 import {TickerInfoModel} from "./ticker-info.model";
 import {TickerMetricsModel} from "./ticker-metrics.model";
 import {makeObservable, observable, runInAction} from "mobx";

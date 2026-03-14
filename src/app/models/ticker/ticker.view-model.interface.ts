@@ -1,5 +1,4 @@
 import {IOptionsExpirationVewModel} from "../options-expiration.view-model.interface";
-import {NullableNumber} from "../../../framework/types/nullable-types";
 import {TickerInfoViewModel} from "./ticker-info.view-model.interface";
 import {ITickerMetricsViewModel} from "./ticker-metrics.view-model.interface";
 
