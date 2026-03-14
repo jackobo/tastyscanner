@@ -1,10 +1,7 @@
 import {ITastyAccountRawData} from "./raw-data/tasty-account.raw-data.interfaces";
 import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
-import {
-    IBrokerageAccountModel,
-    IActivePositionsResult
-} from "../interfaces/brokerage-account.view-model.interface";
+import {IActivePositionsResult, IBrokerageAccountModel} from "../interfaces/brokerage-account.view-model.interface";
 import {IOpenOrderRequest} from "../interfaces/open-order-request.interface";
 import {TastyOrdersReader} from "./tasty-orders-reader";
 import {TastyActivePositionLegModel, TastyActivePositionModel} from "./tasty-active-position.model";
@@ -16,7 +13,8 @@ import {ORDERS_SOURCE_NAME} from "../constants";
 import {TimeSpan} from "../../../../framework/types/time-span";
 import {Check} from "../../../../framework/utils/type-checking";
 import {Debounce} from "../../../../framework/utils/debounce";
-import {NullableUndefinedNumber} from "../../../../framework/types/nullable-types";
+import {NullableUndefinedNumber, UndefinedString} from "../../../../framework/types/nullable-types";
+import {AppLocalStorageKeys} from "../../storage/app-local-storage-keys";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -183,6 +181,8 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                     .map(wo => this._createWorkingOrderModel(wo));
             });
 
+            this._clearOrderReplaceAttemptStorageKeys();
+
         } catch (err) {
             this.services.logger.error('Failed to load working orders from Tasty Trade', err);
             await this.services.toaster.showErrorToast({
@@ -258,7 +258,23 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }
     }
 
+    /**
+     * Removes storage keys for working orders that do not exist anymore
+     * @private
+     */
+    private _clearOrderReplaceAttemptStorageKeys() {
+        const storageDiscriminators = this.services.localStorage.getDiscriminators(AppLocalStorageKeys.orderReplaceAttempts);
+        const currentWorkingOrdersStorageDiscriminators: UndefinedString[] = this._workingOrders.map(wo => wo.getReplaceAttemptStorageDiscriminator())
 
+        for(const storageDisc of storageDiscriminators) {
+            if(!currentWorkingOrdersStorageDiscriminators.includes(storageDisc.discriminator)) {
+                this.services.localStorage.removeItem(storageDisc.key, {
+                    discriminator: storageDisc.discriminator,
+                });
+            }
+        }
+
+    }
     private _startReplaceWorkingOrders(): void {
         //this random stuff is to reduce the likelihood that multiple browser tabs to execute the order replacement at the same time
         const timeIntervalMS = Math.max(3000, Math.round(Math.random() * WORKING_ORDERS_MAX_REPLACE_TIME_INTERVAL.totalMilliseconds));

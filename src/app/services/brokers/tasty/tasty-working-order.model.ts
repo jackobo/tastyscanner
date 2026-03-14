@@ -30,6 +30,10 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return this.tastyOrderRawData.id;
     }
 
+    getReplaceAttemptStorageDiscriminator(): string {
+        return this._replaceAttemptsStorageHandler.getLocalStorageDiscriminator().discriminator;
+    }
+
     get underlyingSymbol(): string {
         return this.tastyOrderRawData.underlyingSymbol;
     }
@@ -139,21 +143,21 @@ class ReplaceAttemptsStorageHandler {
 
 
     set numberOfReplaceAttempts(value: number) {
-        this.services.localStorage.setJson(AppLocalStorageKeys.orderReplaceAttemptCount, {
+        this.services.localStorage.setJson(AppLocalStorageKeys.orderReplaceAttempts, {
             count: value,
             lastAttemptTime: Date.now()
-        }, this._getLocalStorageDiscriminator());
+        }, this.getLocalStorageDiscriminator());
     }
 
-    private _getLocalStorageDiscriminator(orderId?: string): {discriminator: string} {
+    getLocalStorageDiscriminator(orderId?: string): {discriminator: string} {
         return {
             discriminator: `Tasty.${this.tastyOrderRawData.accountNumber}.${orderId ?? this.tastyOrderRawData.id.toString()}`
         }
     }
 
     private _getReplaceAttemptStorageData(orderId?: string): IReplaceAttemptStorageData | null {
-        return this.services.localStorage.getJson<IReplaceAttemptStorageData>(AppLocalStorageKeys.orderReplaceAttemptCount,
-                                                  this._getLocalStorageDiscriminator(orderId));
+        return this.services.localStorage.getJson<IReplaceAttemptStorageData>(AppLocalStorageKeys.orderReplaceAttempts,
+                                                  this.getLocalStorageDiscriminator(orderId));
     }
 
     private _replaceStorageKey() {
@@ -168,10 +172,10 @@ class ReplaceAttemptsStorageHandler {
         }
 
 
-        this.services.localStorage.removeItem(AppLocalStorageKeys.orderReplaceAttemptCount,
-                                              this._getLocalStorageDiscriminator(this.tastyOrderRawData.replacesOrderId.toString()));
+        this.services.localStorage.removeItem(AppLocalStorageKeys.orderReplaceAttempts,
+                                              this.getLocalStorageDiscriminator(this.tastyOrderRawData.replacesOrderId.toString()));
 
-        this.services.localStorage.setJson(AppLocalStorageKeys.orderReplaceAttemptCount, replaceAttempts, this._getLocalStorageDiscriminator());
+        this.services.localStorage.setJson(AppLocalStorageKeys.orderReplaceAttempts, replaceAttempts, this.getLocalStorageDiscriminator());
     }
 
 }
