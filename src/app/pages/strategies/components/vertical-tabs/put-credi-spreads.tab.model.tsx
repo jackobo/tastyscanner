@@ -1,6 +1,6 @@
 import React from "react";
 import {PutCreditSpreadsComponent} from "../credit-spreads/put-credit-spreads.component";
-import {ITickerViewModel} from "../../../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../../../models/ticker/ticker.view-model.interface";
 import {StrategyBaseTab} from "./strategy-base.tab.model";
 
 export class PutCreditSpreadsTabModel extends StrategyBaseTab {

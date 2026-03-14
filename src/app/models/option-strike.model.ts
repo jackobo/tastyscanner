@@ -1,7 +1,7 @@
 import {CallOptionModel, OptionModel, PutOptionModel} from "./option.model";
 import {IOptionStrikeViewModel} from "./option-strike.view-model.interface";
 import {OptionsExpirationModel} from "./options-expiration.model";
-import {TickerModel} from "./ticker.model";
+import {TickerModel} from "./ticker/ticker.model";
 
 
 export class OptionStrikeModel implements IOptionStrikeViewModel {

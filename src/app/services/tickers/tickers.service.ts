@@ -1,7 +1,7 @@
 import {makeObservable, observable, runInAction} from "mobx";
-import {TickerModel} from "../../models/ticker.model";
+import {TickerModel} from "../../models/ticker/ticker.model";
 import {ISearchTickerResultItem, ITickersService} from "./tickers.service.interface";
-import {ITickerViewModel} from "../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../models/ticker/ticker.view-model.interface";
 import {AppServiceBase} from "../app-service-base";
 import {IAppServiceFactory} from "../app-service-factory.interface";
 import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";

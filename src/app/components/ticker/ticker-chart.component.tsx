@@ -1,5 +1,5 @@
 import React from "react";
-import {ITickerViewModel} from "../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../models/ticker/ticker.view-model.interface";
 import {TradingViewWidgetComponent} from "../charts/trading-view-widget.component";
 import {observer} from "mobx-react";
 import {useServices} from "../../hooks/use-services.hook";

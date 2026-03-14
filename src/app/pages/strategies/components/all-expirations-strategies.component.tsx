@@ -5,7 +5,7 @@ import {NoOptionsStrategyAvailableBox} from "./boxes/no-options-strategy-availab
 import {IonAccordionGroup} from "@ionic/react";
 import {OptionsExpirationStrategiesComponent} from "./options-expiration-strategies.component";
 import {getEarningsDateRenderPosition} from "./helper-functions";
-import {ITickerViewModel} from "../../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../../models/ticker/ticker.view-model.interface";
 import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 import {reaction} from "mobx";
 import {useServices} from "../../../hooks/use-services.hook";

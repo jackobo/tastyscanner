@@ -1,6 +1,6 @@
 import {VerticalTabModel} from "../../../../components/vertical-tabs/vertical-tab.model";
 import React from "react";
-import {ITickerViewModel} from "../../../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../../../models/ticker/ticker.view-model.interface";
 import {FullContainerBox} from "../../../../../framework/components/full-container-box/full-container.box";
 
 export abstract class StrategyBaseTab extends VerticalTabModel {

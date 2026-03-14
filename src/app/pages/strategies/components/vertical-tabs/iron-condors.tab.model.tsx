@@ -1,6 +1,6 @@
 import React from "react";
 import {IronCondorsComponent} from "../condors/iron-condors.component";
-import {ITickerViewModel} from "../../../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../../../models/ticker/ticker.view-model.interface";
 import {StrategyBaseTab} from "./strategy-base.tab.model";
 
 export class IronCondorsTabModel extends StrategyBaseTab {

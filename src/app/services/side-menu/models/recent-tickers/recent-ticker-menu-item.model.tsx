@@ -1,6 +1,6 @@
 import {SideMenuItemBaseModel} from "../../../../../framework/services/side-menu/left/models/side-menu-item-base.model";
 import {IAppServiceFactory} from "../../../app-service-factory.interface";
-import {ITickerViewModel} from "../../../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../../../models/ticker/ticker.view-model.interface";
 import { SideMenuRenderResult } from "../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {
     StandardSideMenuItemComponent

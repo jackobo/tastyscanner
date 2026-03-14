@@ -4,7 +4,7 @@ import {
     IOptionsExpirationVewModel,
     OptionExpirationTypeEnum
 } from "../../../models/options-expiration.view-model.interface";
-import {ITickerViewModel} from "../../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../../models/ticker/ticker.view-model.interface";
 import {EarningsDatePositionEnum} from "./helper-functions";
 import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 import {

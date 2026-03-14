@@ -1,18 +1,21 @@
 import {makeObservable, observable, runInAction} from "mobx";
-import {OptionsExpirationModel} from "./options-expiration.model";
+import {OptionsExpirationModel} from "../options-expiration.model";
 import {ITickerViewModel} from "./ticker.view-model.interface";
-import {IAppServiceFactory} from "../services/app-service-factory.interface";
-import {IOptionsExpirationVewModel} from "./options-expiration.view-model.interface";
+import {IAppServiceFactory} from "../../services/app-service-factory.interface";
+import {IOptionsExpirationVewModel} from "../options-expiration.view-model.interface";
 import {
     IGreeksRawData,
     IQuoteRawData, ISymbolInfoRawData, ISymbolMetricsRawData, ITradeRawData
-} from "../services/market-data-provider/market-data-provider.service.interface";
-import {NullableNumber} from "../../framework/types/nullable-types";
+} from "../../services/market-data-provider/market-data-provider.service.interface";
+import {NullableNumber} from "../../../framework/types/nullable-types";
+import {TickerMarketDataReader} from "./ticker-market-data.reader";
 
 
 export class TickerModel implements ITickerViewModel {
     constructor(public readonly symbol: string,
                 public readonly services: IAppServiceFactory) {
+
+        this._tickerMarketDataReader = new TickerMarketDataReader(symbol, services);
 
         makeObservable<this, '_isLoading' | '_marketMetrics' | '_symbolInfo'>(this, {
             expirations: observable,
@@ -25,6 +28,8 @@ export class TickerModel implements ITickerViewModel {
     public expirations: OptionsExpirationModel[] = [];
     private _marketMetrics: ISymbolMetricsRawData | null = null;
     private _symbolInfo: ISymbolInfoRawData | null = null;
+
+    private readonly _tickerMarketDataReader: TickerMarketDataReader;
 
     private _isLoading: boolean = true;
 

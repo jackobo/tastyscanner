@@ -1,5 +1,5 @@
 import {OptionModel} from "./option.model";
-import {TickerModel} from "./ticker.model";
+import {TickerModel} from "./ticker/ticker.model";
 import {OptionStrikeModel} from "./option-strike.model";
 import {
     IOptionsExpirationVewModel,

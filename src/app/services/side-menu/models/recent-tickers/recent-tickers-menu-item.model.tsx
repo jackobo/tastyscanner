@@ -15,7 +15,7 @@ import {timerOutline} from "ionicons/icons";
 import {IonIcon} from "@ionic/react";
 import {RecentTickerMenuItem} from "./recent-ticker-menu-item.model";
 import {AppLocalStorageKeys} from "../../../storage/app-local-storage-keys";
-import {ITickerViewModel} from "../../../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../../../models/ticker/ticker.view-model.interface";
 
 export class RecentTickersMenuItemModel extends SideMenuItemBaseModel implements IRecentTickersMenuItemViewModel {
     constructor(services: IAppServiceFactory) {

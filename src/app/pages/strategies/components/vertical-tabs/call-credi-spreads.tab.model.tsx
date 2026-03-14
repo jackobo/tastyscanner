@@ -1,5 +1,5 @@
 import React from "react";
-import {ITickerViewModel} from "../../../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../../../models/ticker/ticker.view-model.interface";
 import {CallCreditSpreadsComponent} from "../credit-spreads/call-credit-spreads.component";
 import {StrategyBaseTab} from "./strategy-base.tab.model";
 

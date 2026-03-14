@@ -1,7 +1,7 @@
 import React from "react";
 import {observer} from "mobx-react";
 import styled, {css} from "styled-components";
-import {ITickerViewModel} from "../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../models/ticker/ticker.view-model.interface";
 import {EarningsDatePositionEnum} from "../../pages/strategies/components/helper-functions";
 
 const ContainerBox = styled.div`

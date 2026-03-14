@@ -1,4 +1,4 @@
-import {ITickerViewModel} from "../../models/ticker.view-model.interface";
+import {ITickerViewModel} from "../../models/ticker/ticker.view-model.interface";
 
 export interface ITickersService {
     readonly currentTicker: ITickerViewModel | null;

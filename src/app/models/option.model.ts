@@ -1,4 +1,4 @@
-import {TickerModel} from "./ticker.model";
+import {TickerModel} from "./ticker/ticker.model";
 import {IOptionViewModel, OptionType} from "./option.view-model.interface";
 import {OptionStrikeModel} from "./option-strike.model";
 import {
