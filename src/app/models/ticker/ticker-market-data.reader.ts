@@ -20,24 +20,33 @@ export class TickerMarketDataReader {
 
     private _info: TickerInfoModel | null = null;
     get info(): TickerInfoModel | null {
+        if(!this._info) {
+            this.getSymbolInfoAsync();
+        }
         return this._info;
     }
     private _metrics: TickerMetricsModel | null = null;
     get metrics(): TickerMetricsModel | null {
+        if(!this._metrics) {
+            this.getSymbolMetricsAsync();
+        }
         return this._metrics;
     }
-    private _optionsChain: OptionsExpirationModel[] = [];
+    private _optionsChain: OptionsExpirationModel[] | null = null;
     get optionsChain(): OptionsExpirationModel[] {
-        return this._optionsChain;
+        if(!this._optionsChain) {
+            this.getSymbolOptionsChainAsync();
+        }
+        return this._optionsChain ?? [];
     }
 
     async loadAll(): Promise<void> {
-        await Promise.all([this.getSymbolInfo(), this.getSymbolMetrics(), this.getSymbolOptionsChain()])
+        await Promise.all([this.getSymbolInfoAsync(), this.getSymbolMetricsAsync(), this.getSymbolOptionsChainAsync()])
     }
 
     private _symbolInfoPromise: Promise<TickerInfoModel> | null = null;
 
-    getSymbolInfo(): Promise<TickerInfoModel> {
+    getSymbolInfoAsync(): Promise<TickerInfoModel> {
         if(!this._symbolInfoPromise) {
             this._symbolInfoPromise = this.services.marketDataProvider.getSymbolInfo(this.symbol).then(data => {
                 const info =  new TickerInfoModel(data);
@@ -58,7 +67,7 @@ export class TickerMarketDataReader {
 
     private _symbolMetricsPromise: Promise<TickerMetricsModel | null> | null = null;
 
-    getSymbolMetrics(): Promise<TickerMetricsModel | null> {
+    getSymbolMetricsAsync(): Promise<TickerMetricsModel | null> {
         if(!this._symbolMetricsPromise) {
             this._symbolMetricsPromise = this.services.marketDataProvider.getSymbolMetrics(this.symbol).then(data => {
                 if(data) {
@@ -84,7 +93,7 @@ export class TickerMarketDataReader {
 
     private _symbolOptionsChainPromise: Promise<OptionsExpirationModel[]> | null = null;
 
-    getSymbolOptionsChain(): Promise<OptionsExpirationModel[]> {
+    getSymbolOptionsChainAsync(): Promise<OptionsExpirationModel[]> {
         if(!this._symbolOptionsChainPromise) {
             this._symbolOptionsChainPromise = this.services.marketDataProvider.getOptionsChain(this.symbol)
                 .then(data => {
