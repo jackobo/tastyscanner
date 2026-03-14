@@ -68,6 +68,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
         try {
 
+            //VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER is here in order to be able to test the logic in development while the market is closed.
             if(this.tastyOrderRawData.status !== "Live" && import.meta.env.VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER !== 'true') {
                 this._replaceAttemptsStorageHandler.setLastAttemptTime();
                 return;
