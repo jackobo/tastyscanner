@@ -267,7 +267,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
      * @private
      */
     private _clearOrderReplaceAttemptStorageKeys() {
-        const storageDiscriminators = this.services.localStorage.getDiscriminators(AppLocalStorageKeys.orderAutoReplaceAttempts);
+        const storageDiscriminators = this.services.localStorage.getDiscriminators(AppLocalStorageKeys.orderAutoReplace);
         const currentWorkingOrdersStorageDiscriminators: UndefinedString[] = this._workingOrders.filter(wo => wo.isGobyOrder)
                                                                                                 .map(wo => wo.getAutoReplaceAttemptStorageDiscriminator());
 

@@ -187,12 +187,12 @@ class AutoReplaceAttemptsStorageHandler {
     }
 
     private _getStorageData(): IAutoReplaceAttemptStorageData | null {
-        return this.services.localStorage.getJson<IAutoReplaceAttemptStorageData>(AppLocalStorageKeys.orderAutoReplaceAttempts,
+        return this.services.localStorage.getJson<IAutoReplaceAttemptStorageData>(AppLocalStorageKeys.orderAutoReplace,
                                                   this.getStorageDiscriminator());
     }
 
     private _setStorageData(data: IAutoReplaceAttemptStorageData): void {
-        this.services.localStorage.setJson(AppLocalStorageKeys.orderAutoReplaceAttempts, data, this.getStorageDiscriminator());
+        this.services.localStorage.setJson(AppLocalStorageKeys.orderAutoReplace, data, this.getStorageDiscriminator());
     }
 
 }
