@@ -14,6 +14,8 @@ import {ITastyOrderRawData, TASTY_WORKING_ORDER_STATUSES} from "./raw-data/tasty
 import {TastyWorkingOrderModel} from "./tasty-working-order.model";
 import {ORDERS_SOURCE_NAME} from "../constants";
 import {TimeSpan} from "../../../../framework/types/time-span";
+import {Check} from "../../../../framework/utils/type-checking";
+import {Debounce} from "../../../../framework/utils/debounce";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -184,6 +186,8 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     }
 
 
+    private _orderFillDebounce: Debounce = new Debounce(TimeSpan.fromSeconds(1));
+
     async updateOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
 
         const existingWorkingOrderIndex = this._workingOrders.findIndex(wo => wo.id === rawOrderData.id);
@@ -191,36 +195,40 @@ export class TastyAccountModel implements IBrokerageAccountModel {
             runInAction(() => {
                 this._workingOrders.splice(existingWorkingOrderIndex, 1);
             });
-
         }
-        switch(rawOrderData.status) {
-            case "Live":
-            case "Routed":
-                runInAction(() => {
-                    this._workingOrders.push(this._createWorkingOrderModel(rawOrderData));
-                });
 
+        if(TASTY_WORKING_ORDER_STATUSES.includes(rawOrderData.status)) {
+            runInAction(() => {
+                this._workingOrders.push(this._createWorkingOrderModel(rawOrderData));
+            });
+
+            let toastMessage: string = '';
+            if(rawOrderData.status === "Received") {
+                toastMessage = this.services.language.translate('Order sent');
+            } else if(rawOrderData.status === "Live") {
+                toastMessage = this.services.language.translate('Order is live');
+            }
+
+            if(!Check.isEmpty(toastMessage)) {
                 await this.services.toaster.showInfoToast({
-                    renderContent: () => rawOrderData.status === "Routed"
-                                            ? this.services.language.translate('Order sent')
-                                            : this.services.language.translate('Order is live'),
-                    autoCloseTime: TimeSpan.fromSeconds(3)
+                    renderContent: () => toastMessage,
+                    autoCloseTime: TimeSpan.fromSeconds(2)
                 })
-                break;
-            case "Cancelled":
-                await this.services.toaster.showInfoToast({
-                    renderContent: () => this.services.language.translate('Order canceled'),
-                    autoCloseTime: TimeSpan.fromSeconds(3)
-                })
-                break;
-            case "Filled":
-                //TODO - optimize and load only this position (will be tricky when an order is closed)
+            }
+        } else if (rawOrderData.status === "Cancelled") {
+            await this.services.toaster.showInfoToast({
+                renderContent: () => this.services.language.translate('Order canceled'),
+                autoCloseTime: TimeSpan.fromSeconds(2)
+            })
+        } else if(rawOrderData.status === "Filled") {
+            this._orderFillDebounce.execute(async () => {
                 await this._loadActivePositions();
                 await this.services.toaster.showInfoToast({
                     renderContent: () => this.services.language.translate('Order filled'),
-                    autoCloseTime: TimeSpan.fromSeconds(3)
+                    autoCloseTime: TimeSpan.fromSeconds(2)
                 })
-                break;
+            });
+
         }
     }
 
