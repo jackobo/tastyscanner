@@ -1,7 +1,6 @@
 import {IWorkingOrderViewModel} from "../interfaces/working-order.interfaces";
 import {ITastyOrderRawData} from "./raw-data/tasty-order.raw-data.interfaces";
 import {ORDERS_SOURCE_NAME} from "../constants";
-import {TastyAccountModel} from "./tasty-account.model";
 import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 
