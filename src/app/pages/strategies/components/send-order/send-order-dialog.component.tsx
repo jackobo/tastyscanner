@@ -284,6 +284,9 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
     const [orderType] = React.useState<OrderType>("Limit");
     const [timeInForce] = React.useState<TimeInForce>("Day");
 
+    const limitPriceAsNumber = limitPrice ? parseFloat(limitPrice) : null;
+
+    const optionPriceTickSize = props.strategy.getOptionTickSize(limitPriceAsNumber ?? props.strategy.credit);
 
     const onLockerClick = (isLocked: boolean) => {
         if(isLocked) {
@@ -300,8 +303,8 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
             timeInForce: timeInForce
         }
 
-        if(limitPrice) {
-            orderParams.price = parseFloat(limitPrice);
+        if(limitPriceAsNumber) {
+            orderParams.price = limitPriceAsNumber;
         }
 
         //TODO - better handle error reporting
@@ -350,7 +353,7 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                                            onValueChanged={setLimitPrice}
                                            parseValue={value => parseFloat(value ?? "")}
                                            label={"Limit Price"}
-                                           offset={0.01}
+                                           offset={optionPriceTickSize}
                                            onLockerClick={onLockerClick}/>
 
 

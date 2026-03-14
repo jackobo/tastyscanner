@@ -226,7 +226,7 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
 
     private _mapTickSize = (data: any): ITickSizeRawData => {
         return {
-            threshold: data.threshold,
+            threshold: Check.isNullOrUndefined(data.threshold) ? undefined : parseFloat(data.threshold),
             value: parseFloat(data.value)
         };
     }

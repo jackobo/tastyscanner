@@ -43,6 +43,10 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
         return Math.round((this.btoOption.theta - this.stoOption.theta) * 10000)/100;
     }
 
+    getOptionTickSize(price: number): number {
+        return this.stoOption.getOptionTickSize(price);
+    }
+
     async sendOrder(orderParams: IOptionsStrategySendOrderParams): Promise<void> {
         const account = this.services.brokers.currentAccount;
         if(!account) {

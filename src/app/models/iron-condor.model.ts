@@ -31,6 +31,9 @@ export class IronCondorModel implements IIronCondorViewModel {
         return Math.round(rr * 100) / 100;
     }
 
+    getOptionTickSize(price: number): number {
+        return this.stoPut.getOptionTickSize(price);
+    }
 
     //https://www.tastylive.com/shows/options-jive/episodes/calculating-pop-for-various-strategies-08-23-2017#:~:text=For%20Various%20Strategies-,Aug%2023%2C%202017,look%20at%20calculating%20POP%20in:
     get pop(): number {

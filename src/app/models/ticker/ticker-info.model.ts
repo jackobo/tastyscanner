@@ -11,4 +11,20 @@ export class TickerInfoModel implements TickerInfoViewModel {
     public  get listedMarket(): string {
         return this.symbolRawInfo.listedMarket;
     }
+
+    getOptionTickSize(orderPrice: number): number {
+        const tickSizes = this.symbolRawInfo.optionTickSizes ?? [];
+        for(const tickSize of tickSizes) {
+           if(tickSize.threshold) {
+               if(orderPrice > tickSize.threshold) {
+                   continue;
+               }
+               return tickSize.value;
+           }
+
+           return tickSize.value;
+        }
+
+        return 0.01;
+    }
 }

@@ -103,7 +103,7 @@ export interface ISymbolInfoRawData {
 }
 
 export interface ITickSizeRawData {
-    threshold?: string;
+    threshold?: number;
     value: number;
 }
 

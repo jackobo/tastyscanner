@@ -125,6 +125,10 @@ export abstract class OptionModel implements IOptionViewModel {
         return this.services.brokers.currentAccount?.countBoughtLegs(this.symbol) ?? 0;
     }
 
+    getOptionTickSize(price: number): number {
+        const tickSize = this.ticker.info?.getOptionTickSize(price);
+        return tickSize ?? 0.01;
+    }
 }
 
 export class PutOptionModel extends OptionModel {
