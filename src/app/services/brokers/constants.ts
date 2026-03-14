@@ -1,1 +1,1 @@
-export const ORDERS_SOURCE_NAME = "operatiunea-guvidul";
+export const ORDERS_SOURCE_NAME = "operation-goby";

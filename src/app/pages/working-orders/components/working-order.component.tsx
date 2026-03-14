@@ -41,7 +41,7 @@ const WorkingOrderHeaderButtonsBox = styled.div`
 `
 
 
-const GuvidulIndicatorBox = styled.div`
+const GobyIndicatorBox = styled.div`
     cursor: pointer;
 `
 
@@ -52,18 +52,18 @@ const TooltipContentBox = styled.div`
 
 export const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
     const services = useServices();
-    const guvidulIndicatorRef = useRef<HTMLDivElement | null>(null)
+    const gobyIndicatorRef = useRef<HTMLDivElement | null>(null)
 
-    const renderGuvidulIndicator = () => {
-        if(props.workingOrder.hasGuvidulSource) {
+    const renderGobyIndicator = () => {
+        if(props.workingOrder.hasGoby) {
             return (
                 <>
-                    <GuvidulIndicatorBox ref={guvidulIndicatorRef}>
+                    <GobyIndicatorBox ref={gobyIndicatorRef}>
                         <IonIcon icon={fishOutline}/>
-                    </GuvidulIndicatorBox>
-                    <TooltipComponent targetRef={guvidulIndicatorRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                    </GobyIndicatorBox>
+                    <TooltipComponent targetRef={gobyIndicatorRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
                         <TooltipContentBox>
-                            Source: Operatiunea Guvidul
+                            {services.language.translate('Source: Operation Goby')}
                         </TooltipContentBox>
 
                     </TooltipComponent>
@@ -80,7 +80,7 @@ export const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewMod
     return (
         <WorkingOrderBox>
             <WorkingOrderHeaderBox>
-                {renderGuvidulIndicator()}
+                {renderGobyIndicator()}
                 <WorkingOrderHeaderButtonsBox>
                     <RemoveButtonComponent onClick={cancelClick}
                                            tooltipText={services.language.translate('Cancel order')}/>

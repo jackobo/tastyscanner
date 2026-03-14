@@ -23,7 +23,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     }
 
 
-    get hasGuvidulSource(): boolean {
+    get hasGoby(): boolean {
         return this.tastyOrderRawData.source === ORDERS_SOURCE_NAME;
     }
 
