@@ -154,12 +154,12 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
         try {
             const rawActivePositions = await new TastyOrdersReader(this.accountNumber, this.tastyClient, this.services).readActivePositions();
-            const openOrdersModels = rawActivePositions.map(order => new TastyActivePositionModel(this.services, order));
+            const openPositionsModels = rawActivePositions.map(position => new TastyActivePositionModel(this.services, position));
 
-            const streamerSymbols = openOrdersModels.selectMany(order => order.getAllStreamerSymbols());
+            const streamerSymbols = openPositionsModels.selectMany(position => position.getAllStreamerSymbols());
             this.services.marketDataProvider.subscribeToStreamer(streamerSymbols);
 
-            this._setActivePositions(openOrdersModels);
+            this._setActivePositions(openPositionsModels);
         } catch (err) {
             this.services.logger.error('Failed to load open orders from Tasty Trade', err);
             await this.services.toaster.showErrorToast({
@@ -254,7 +254,11 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                     autoCloseTime: TimeSpan.fromSeconds(2)
                 })
             });
-
+        } else if(rawOrderData.status === "Rejected") {
+            await this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translate('Order rejected'),
+                autoCloseTime: TimeSpan.fromSeconds(3)
+            })
         }
     }
 
