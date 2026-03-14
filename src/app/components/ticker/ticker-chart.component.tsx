@@ -18,6 +18,7 @@ const NoTickerSelectedBox = styled.div`
 
 export const TickerChartComponent: React.FC<{ticker: ITickerViewModel | null}> = observer((props) => {
     const services = useServices();
+    const info = props.ticker?.info;
     if(!props.ticker) {
         return (
             <NoTickerSelectedBox>
@@ -25,8 +26,17 @@ export const TickerChartComponent: React.FC<{ticker: ITickerViewModel | null}> =
             </NoTickerSelectedBox>
         );
     }
+
+    if(!info) {
+        return (
+            <NoTickerSelectedBox>
+                {services.language.translate('Not listed market available for selected ticker.')}
+            </NoTickerSelectedBox>
+        );
+    }
+
     return (
-        <TradingViewWidgetComponent symbol={props.ticker.symbol} listedMarket={props.ticker.listedMarket}/>
+        <TradingViewWidgetComponent symbol={props.ticker.symbol} listedMarket={info.listedMarket}/>
     )
 
 

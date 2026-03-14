@@ -45,22 +45,23 @@ const TickerDescriptionBox = styled.span`
 export const TastyScannerStandardPageHeaderComponent: React.FC = observer(() => {
     const services = useServices();
     const ticker = services.tickers.currentTicker;
-
+    const metrics = ticker?.metrics;
+    const info = ticker?.info;
 
     return (
         <PageTitleBox>
             <SymbolSearchDropDownComponent/>
             <span>{ticker?.currentPrice?.toFixed(2)}</span>
             <span>|</span>
-            <IVRankBox $ivr={ticker?.ivRank ?? 0}>
+            <IVRankBox $ivr={metrics?.ivRank ?? 0}>
                 <span>IVR:</span>
-                <span>{ticker?.ivRank}</span>
+                <span>{metrics?.ivRank}</span>
             </IVRankBox>
             <span>|</span>
             <span>Beta:</span>
-            <span>{ticker?.beta?.toFixed(2)}</span>
+            <span>{metrics?.beta?.toFixed(2)}</span>
             <TickerDescriptionBox>
-                {ticker?.description}
+                {info?.description}
             </TickerDescriptionBox>
         </PageTitleBox>
 

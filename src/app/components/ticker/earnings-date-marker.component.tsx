@@ -55,23 +55,30 @@ export const EarningsDateMarkerComponent: React.FC<{earningsDate: string; daysUn
 });
 
 export const EarningsDateMarkerBeforeExpirationComponent: React.FC<{ticker: ITickerViewModel; position: EarningsDatePositionEnum}> = observer((props) => {
+    if(!props.ticker.metrics) {
+        return null;
+    }
     if(props.position !== EarningsDatePositionEnum.Before) {
         return null;
     }
 
     return (
-        <EarningsDateMarkerComponent earningsDate={props.ticker.earningsDate} daysUntilEarnings={props.ticker.daysUntilEarnings ?? 0}/>
+        <EarningsDateMarkerComponent earningsDate={props.ticker.metrics.earningsDate} daysUntilEarnings={props.ticker.metrics.daysUntilEarnings ?? 0}/>
     )
 
 })
 
 export const EarningsDateMarkerAfterExpirationComponent: React.FC<{ticker: ITickerViewModel; position: EarningsDatePositionEnum}> = observer((props) => {
+    if(!props.ticker.metrics) {
+        return null;
+    }
+
     if(props.position !== EarningsDatePositionEnum.After) {
         return null;
     }
 
     return (
-        <EarningsDateMarkerComponent earningsDate={props.ticker.earningsDate} daysUntilEarnings={props.ticker.daysUntilEarnings ?? 0}/>
+        <EarningsDateMarkerComponent earningsDate={props.ticker.metrics.earningsDate} daysUntilEarnings={props.ticker.metrics.daysUntilEarnings ?? 0}/>
     )
 
 })

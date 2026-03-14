@@ -4,38 +4,115 @@ import {
     ISymbolInfoRawData,
     ISymbolMetricsRawData
 } from "../../services/market-data-provider/market-data-provider.service.interface";
+import {TickerInfoModel} from "./ticker-info.model";
+import {TickerMetricsModel} from "./ticker-metrics.model";
+import {makeObservable, observable, runInAction} from "mobx";
+import {OptionsExpirationModel} from "../options-expiration.model";
+import {TickerModel} from "./ticker.model";
 
 export class TickerMarketDataReader {
-    constructor(private readonly symbol: string, private readonly services: IAppServiceFactory) {
-
+    constructor(private readonly ticker: TickerModel, private readonly services: IAppServiceFactory) {
+        makeObservable<this, '_info' | '_metrics' | '_optionsChain'>(this, {
+            _info: observable.ref,
+            _metrics: observable.ref,
+            _optionsChain: observable.ref,
+        })
     }
 
-    private _symbolInfoPromise: Promise<ISymbolInfoRawData> | null = null;
+    get symbol(): string {
+        return this.ticker.symbol;
+    }
 
-    getSymbolInfo(): Promise<ISymbolInfoRawData> {
+    private _info: TickerInfoModel | null = null;
+    get info(): TickerInfoModel | null {
+        return this._info;
+    }
+    private _metrics: TickerMetricsModel | null = null;
+    get metrics(): TickerMetricsModel | null {
+        return this._metrics;
+    }
+    private _optionsChain: OptionsExpirationModel[] = [];
+    get optionsChain(): OptionsExpirationModel[] {
+        return this._optionsChain;
+    }
+
+    async loadAll(): Promise<void> {
+        await Promise.all([this.getSymbolInfo(), this.getSymbolMetrics(), this.getSymbolOptionsChain()])
+    }
+
+    private _symbolInfoPromise: Promise<TickerInfoModel> | null = null;
+
+    getSymbolInfo(): Promise<TickerInfoModel> {
         if(!this._symbolInfoPromise) {
-            this._symbolInfoPromise = this.services.marketDataProvider.getSymbolInfo(this.symbol);
+            this._symbolInfoPromise = this.services.marketDataProvider.getSymbolInfo(this.symbol).then(data => {
+                const info =  new TickerInfoModel(data);
+                runInAction(() => {
+                    this._info = info;
+                })
+                return info;
+            }).catch(err => {
+                this.services.logger.error(`Failed to read ${this.symbol} info`, err);
+                this._symbolInfoPromise = null;
+                throw err;
+            });
         }
 
         return this._symbolInfoPromise;
 
     }
 
-    private _symbolMetricsPromise: Promise<ISymbolMetricsRawData | null> | null = null;
+    private _symbolMetricsPromise: Promise<TickerMetricsModel | null> | null = null;
 
-    getSymbolMetrics(): Promise<ISymbolMetricsRawData | null> {
+    getSymbolMetrics(): Promise<TickerMetricsModel | null> {
         if(!this._symbolMetricsPromise) {
-            this._symbolMetricsPromise = this.services.marketDataProvider.getSymbolMetrics(this.symbol);
+            this._symbolMetricsPromise = this.services.marketDataProvider.getSymbolMetrics(this.symbol).then(data => {
+                if(data) {
+                    const metrics = new TickerMetricsModel(data);
+                    runInAction(() => {
+                        this._metrics = metrics;
+                    })
+                    return metrics;
+                }
+
+                this._symbolMetricsPromise = null;
+                return null;
+
+            }).catch(err => {
+                this.services.logger.error(`Failed to read ${this.symbol} metrics`, err);
+                this._symbolMetricsPromise = null;
+                throw err;
+            });
         }
 
         return this._symbolMetricsPromise;
     }
 
-    private _symbolOptionsChainPromise: Promise<IOptionChainRawData[]> | null = null;
+    private _symbolOptionsChainPromise: Promise<OptionsExpirationModel[]> | null = null;
 
-    getSymbolOptionsChain(): Promise<IOptionChainRawData[]> {
+    getSymbolOptionsChain(): Promise<OptionsExpirationModel[]> {
         if(!this._symbolOptionsChainPromise) {
-            this._symbolOptionsChainPromise = this.services.marketDataProvider.getOptionsChain(this.symbol);
+            this._symbolOptionsChainPromise = this.services.marketDataProvider.getOptionsChain(this.symbol)
+                .then(data => {
+                    const optionsChain: OptionsExpirationModel[] = []
+
+                    for(const optionChain of data) {
+                        for(const expiration of optionChain.expirations) {
+                            if(expiration.daysToExpiration <= 365) { //maximum 1 year is enough
+                                optionsChain.push(new OptionsExpirationModel(expiration, this.ticker))
+                            }
+                        }
+                    }
+
+                    runInAction(() => {
+                        this._optionsChain = optionsChain;
+                    })
+                    return optionsChain;
+                })
+                .catch(err => {
+                    this.services.logger.error(`Failed to read ${this.symbol} options chain`, err);
+                    this._symbolOptionsChainPromise = null;
+                    throw err;
+                });
         }
 
         return this._symbolOptionsChainPromise;

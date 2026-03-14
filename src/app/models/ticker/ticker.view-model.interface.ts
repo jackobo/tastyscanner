@@ -1,17 +1,17 @@
 import {IOptionsExpirationVewModel} from "../options-expiration.view-model.interface";
 import {NullableNumber} from "../../../framework/types/nullable-types";
+import {TickerInfoViewModel} from "./ticker-info.view-model.interface";
+import {ITickerMetricsViewModel} from "./ticker-metrics.view-model.interface";
 
 export interface ITickerViewModel {
     readonly symbol: string;
-    readonly description: string;
+    readonly info: TickerInfoViewModel | null;
+    readonly metrics: ITickerMetricsViewModel | null;
+
     readonly currentPrice: number;
-    readonly ivRank: number;
-    readonly beta: number;
     readonly isLoading: boolean;
-    readonly expirations: IOptionsExpirationVewModel[];
-    readonly earningsDate: string;
-    readonly daysUntilEarnings: NullableNumber;
-    readonly listedMarket: string;
+    readonly optionsChain: IOptionsExpirationVewModel[];
+
 
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[];
     getExpirationsWithPutCreditSpreads(): IOptionsExpirationVewModel[];

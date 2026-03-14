@@ -10,17 +10,18 @@ export enum EarningsDatePositionEnum {
 }
 
 export function getEarningsDateRenderPosition(ticker: ITickerViewModel, expirations: IOptionsExpirationVewModel[], expirationIndex: number): EarningsDatePositionEnum {
-    if(Check.isNullOrUndefined(ticker.daysUntilEarnings)) {
+    const metrics = ticker?.metrics;
+    if(Check.isNullOrUndefined(metrics?.daysUntilEarnings)) {
         return EarningsDatePositionEnum.None;
     }
 
-    const earningsDate = new Date(ticker.earningsDate);
+    const earningsDate = new Date(metrics.earningsDate);
 
     if(earningsDate.getTime() < Date.now()) {
         return EarningsDatePositionEnum.None;
     }
 
-    const daysUntilEarnings = ticker.daysUntilEarnings;
+    const daysUntilEarnings = metrics.daysUntilEarnings;
     const currentExpiration = expirations[expirationIndex];
 
     if(expirationIndex === 0) {

@@ -5,68 +5,43 @@ import {IAppServiceFactory} from "../../services/app-service-factory.interface";
 import {IOptionsExpirationVewModel} from "../options-expiration.view-model.interface";
 import {
     IGreeksRawData,
-    IQuoteRawData, ISymbolInfoRawData, ISymbolMetricsRawData, ITradeRawData
+    IQuoteRawData, ITradeRawData
 } from "../../services/market-data-provider/market-data-provider.service.interface";
-import {NullableNumber} from "../../../framework/types/nullable-types";
 import {TickerMarketDataReader} from "./ticker-market-data.reader";
+import {TickerMetricsModel} from "./ticker-metrics.model";
+import {TickerInfoModel} from "./ticker-info.model";
 
 
 export class TickerModel implements ITickerViewModel {
     constructor(public readonly symbol: string,
                 public readonly services: IAppServiceFactory) {
 
-        this._tickerMarketDataReader = new TickerMarketDataReader(symbol, services);
+        this._tickerMarketDataReader = new TickerMarketDataReader(this, services);
 
-        makeObservable<this, '_isLoading' | '_marketMetrics' | '_symbolInfo'>(this, {
-            expirations: observable,
-            _isLoading: observable.ref,
-            _marketMetrics: observable.ref,
-            _symbolInfo: observable.ref,
+        makeObservable<this, '_isLoading'>(this, {
+            _isLoading: observable.ref
         });
     }
 
-    public expirations: OptionsExpirationModel[] = [];
-    private _marketMetrics: ISymbolMetricsRawData | null = null;
-    private _symbolInfo: ISymbolInfoRawData | null = null;
+    private _isLoading: boolean = true;
 
     private readonly _tickerMarketDataReader: TickerMarketDataReader;
 
-    private _isLoading: boolean = true;
 
+    get metrics(): TickerMetricsModel | null {
+        return this._tickerMarketDataReader.metrics;
+    }
 
-    public get description(): string {
-        return this._symbolInfo?.description ?? "";
+    get info(): TickerInfoModel | null {
+        return this._tickerMarketDataReader.info;
+    }
+
+    get optionsChain(): OptionsExpirationModel[] {
+        return this._tickerMarketDataReader.optionsChain;
     }
 
     public get currentPrice(): number {
         return this.getSymbolTrade(this.symbol)?.price ?? 0;
-    }
-
-    public get ivRank(): number {
-        return Math.round((this._marketMetrics?.impliedVolatilityIndexRank ?? 0) * 10000) / 100;
-    }
-
-
-    public  get beta(): number {
-        return Math.round((this._marketMetrics?.beta ?? 0) * 100) / 100;
-    }
-
-    public get earningsDate(): string {
-        return this._marketMetrics?.earnings?.expectedReportDate ?? "";
-    }
-
-    public  get listedMarket(): string {
-        return this._symbolInfo?.listedMarket ?? "";
-    }
-
-    public get daysUntilEarnings(): NullableNumber {
-        const earningsDateStr = this.earningsDate;
-        if(!earningsDateStr) {
-            return null;
-        }
-
-        const earningsDate = new Date(earningsDateStr);
-        return Math.round((earningsDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
     }
 
 
@@ -89,47 +64,9 @@ export class TickerModel implements ITickerViewModel {
         return this.services.marketDataProvider.getSymbolGreeks(symbol);
     }
 
-
-    private async _loadMarketData(): Promise<void> {
-
-        if(!this._marketMetrics) {
-            const mm = await this.services.marketDataProvider.getSymbolMetrics(this.symbol);
-            runInAction(() => {
-                this._marketMetrics = mm;
-            });
-        }
-
-        if(!this._symbolInfo) {
-            const si = await this.services.marketDataProvider.getSymbolInfo(this.symbol);
-            runInAction(() => {
-                this._symbolInfo = si;
-            });
-        }
-
-        if(this.expirations.length > 0) {
-            return;
-        }
-
-        const optionsChain = await this.services.marketDataProvider.getOptionsChain(this.symbol);
-        const expirations: OptionsExpirationModel[] = []
-
-        for(const optionChain of optionsChain) {
-            for(const expiration of optionChain.expirations) {
-                if(expiration.daysToExpiration <= 365) { //maximum 1 year is enough
-                    expirations.push(new OptionsExpirationModel(expiration, this))
-                }
-
-            }
-        }
-
-        runInAction(() => {
-            this.expirations = expirations.sort((a, b) => a.daysToExpiration - b.daysToExpiration);
-        });
-    }
-
     private _getAllStreamerSymbols(): string[] {
         const allStreamerSymbols: string[] = [this.symbol];
-        for(const expiration of this.expirations) {
+        for(const expiration of this.optionsChain) {
             expiration.getAllStreamerSymbols().forEach(s => allStreamerSymbols.push(s));
         }
 
@@ -139,7 +76,7 @@ export class TickerModel implements ITickerViewModel {
     async start(): Promise<void> {
         this.isLoading = true;
         try {
-            await this._loadMarketData();
+            await this._tickerMarketDataReader.loadAll();
 
             this.services.marketDataProvider.subscribeToStreamer(this._getAllStreamerSymbols());
 
@@ -160,7 +97,7 @@ export class TickerModel implements ITickerViewModel {
             return false;
         }
 
-        const daysUntilEarnings = this.daysUntilEarnings ?? 0;
+        const daysUntilEarnings = this.metrics?.daysUntilEarnings ?? 0;
 
         if(daysUntilEarnings <= 0) {
             return true;
@@ -178,7 +115,7 @@ export class TickerModel implements ITickerViewModel {
     }
 
     private _filterExpirations(): IOptionsExpirationVewModel[] {
-        return this.expirations.filter(expiration => this._shouldIncludeExpiration(expiration))
+        return this.optionsChain.filter(expiration => this._shouldIncludeExpiration(expiration))
             .sort((a, b) => a.daysToExpiration - b.daysToExpiration);
     }
 

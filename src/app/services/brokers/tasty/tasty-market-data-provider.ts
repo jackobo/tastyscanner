@@ -256,8 +256,8 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
             shortDescription: data["short-description"],
             streamerSymbol: data["streamer-symbol"],
             symbol: data.symbol,
-            optionTickSizes: data["option-tick-sizes"].map(this._mapTickSize),
-            tickSizes: data["tick-sizes"].map(this._mapTickSize)
+            optionTickSizes: (data["option-tick-sizes"] ?? []).map(this._mapTickSize),
+            tickSizes: (data["tick-sizes"] ?? []).map(this._mapTickSize)
         };
     }
 
