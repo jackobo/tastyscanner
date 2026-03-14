@@ -11,7 +11,7 @@ import {TastyActivePositionLegModel, TastyActivePositionModel} from "./tasty-act
 import {computed, makeObservable, observable, runInAction} from "mobx";
 import {TastyAccountInfoModel} from "./tasty-account-info.model";
 import {ITastyOrderRawData, TASTY_WORKING_ORDER_STATUSES} from "./raw-data/tasty-order.raw-data.interfaces";
-import {TastyWorkingOrderModel, WORKING_ORDERS_MAX_REPLACE_INTERVAL} from "./tasty-working-order.model";
+import {TastyWorkingOrderModel, WORKING_ORDERS_MAX_REPLACE_TIME_INTERVAL} from "./tasty-working-order.model";
 import {ORDERS_SOURCE_NAME} from "../constants";
 import {TimeSpan} from "../../../../framework/types/time-span";
 import {Check} from "../../../../framework/utils/type-checking";
@@ -261,7 +261,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
     private _startReplaceWorkingOrders(): void {
         //this random stuff is to reduce the likelihood that multiple browser tabs to execute the order replacement at the same time
-        const timeIntervalMS = Math.max(3000, Math.round(Math.random() * WORKING_ORDERS_MAX_REPLACE_INTERVAL.totalMilliseconds));
+        const timeIntervalMS = Math.max(3000, Math.round(Math.random() * WORKING_ORDERS_MAX_REPLACE_TIME_INTERVAL.totalMilliseconds));
         this._replaceWorkingOrdersTimerRef = setTimeout(async () => {
             const workingOrders = [...this.workingOrders]
 

@@ -8,7 +8,6 @@ import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework
 import styled from "styled-components";
 import {RemoveButtonComponent} from "../../../../framework/components/specialized-buttons/remove-button.component";
 import {CardBox} from "../../../../framework/components/card/card.box";
-import {PrimaryButton} from "../../../../framework/components/buttons/primary-button";
 
 const WorkingOrderBox = styled(CardBox)`
     display: flex;
@@ -78,9 +77,6 @@ export const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewMod
         await props.workingOrder.cancel();
     }
 
-    const replaceClick = async () => {
-        await props.workingOrder.replace();
-    }
 
     return (
         <WorkingOrderBox>
@@ -102,9 +98,6 @@ export const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewMod
                 <div>{props.workingOrder.tradingPrice}</div>
             </WorkingOrderFieldsBox>
 
-            <PrimaryButton onClick={replaceClick}>
-                Replace
-            </PrimaryButton>
         </WorkingOrderBox>
     )
 })

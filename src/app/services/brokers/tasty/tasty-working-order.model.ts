@@ -7,7 +7,7 @@ import {AppLocalStorageKeys} from "../../storage/app-local-storage-keys";
 import {Check} from "../../../../framework/utils/type-checking";
 import {TimeSpan} from "../../../../framework/types/time-span";
 
-export const WORKING_ORDERS_MAX_REPLACE_INTERVAL = TimeSpan.fromSeconds(10);
+export const WORKING_ORDERS_MAX_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(10);
 const WORKING_ORDER_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
 const WORKING_ORDER_REPLACE_ATTEMPTS_LIMIT = 3;
 
