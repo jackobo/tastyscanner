@@ -93,14 +93,14 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
             }
 
 
-            this._gobySource = this._gobySource.withAutoReplaceAttempts(this.numberOfAutoReplaceAttempts + 1);
+            const gobySource = this._gobySource.withAutoReplaceAttempts(this.numberOfAutoReplaceAttempts + 1);
 
             await this.tastyClient.orderService.replaceOrder(this.accountNumber, this.orderIdAsNumber, {
                 "order-type": this.tastyOrderRawData.orderType,
                 "time-in-force": this.tastyOrderRawData.timeInForce,
                 "price": newPrice,
                 "price-effect": this.tastyOrderRawData.priceEffect,
-                "source": this._gobySource.toString(),
+                "source": gobySource.toString(),
                 "legs": this.tastyOrderRawData.legs.map(leg => {
                     return {
                         "action": leg.action,
@@ -110,6 +110,8 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                     }
                 })
             });
+
+            this._gobySource = gobySource;
         } catch (err) {
             this.services.logger.error('Failed to auto replace order', err);
             await this.services.toaster.showErrorToast({
