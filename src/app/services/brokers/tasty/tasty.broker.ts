@@ -238,7 +238,7 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
         return (this._accounts ?? []).find(acc => acc.accountNumber === accountNumber) ?? null;
     }
 
-    private _accountStreamerMessageObserver = (json: any) => {
+    private _accountStreamerMessageObserver = async (json: any) => {
         if(json?.action !== 'heartbeat') {
             console.log("messageObserver", json);
         }
@@ -257,7 +257,7 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
                     const rawOrderData = TastyOrdersReader.mapRawOrderData(json.data);
                     const account = this._findAccount(rawOrderData.accountNumber);
                     if(account) {
-                        account.updateOrder(rawOrderData);
+                        await account.updateOrder(rawOrderData);
                     }
                 }
                 break;

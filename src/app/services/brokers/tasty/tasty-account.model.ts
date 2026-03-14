@@ -10,7 +10,7 @@ import {TastyOrdersReader} from "./tasty-orders-reader";
 import {TastyActivePositionLegModel, TastyActivePositionModel} from "./tasty-active-position.model";
 import {computed, makeObservable, observable, runInAction} from "mobx";
 import {TastyAccountInfoModel} from "./tasty-account-info.model";
-import {ITastyOrderRawData} from "./raw-data/tasty-order.raw-data.interfaces";
+import {ITastyOrderRawData, TASTY_WORKING_ORDER_STATUSES} from "./raw-data/tasty-order.raw-data.interfaces";
 import {TastyWorkingOrderModel} from "./tasty-working-order.model";
 import {ORDERS_SOURCE_NAME} from "../constants";
 import {TimeSpan} from "../../../../framework/types/time-span";
@@ -163,14 +163,14 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     }
 
     private _createWorkingOrderModel(rawOrderData: ITastyOrderRawData): TastyWorkingOrderModel {
-        return new TastyWorkingOrderModel(rawOrderData, this);
+        return new TastyWorkingOrderModel(rawOrderData, this.tastyClient, this.services);
     }
 
     private async _loadWorkingOrders(): Promise<void> {
         try {
             const rawWorkingOrders = await new TastyOrdersReader(this.accountNumber, this.tastyClient, this.services).readWorkingOrders();
             runInAction(() => {
-                this._workingOrders = rawWorkingOrders.filter(wo => wo.status === 'Live')
+                this._workingOrders = rawWorkingOrders.filter(wo =>  TASTY_WORKING_ORDER_STATUSES.includes(wo.status))
                     .map(wo => this._createWorkingOrderModel(wo));
             });
 
@@ -183,9 +183,6 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }
     }
 
-    async cancelOrder(orderId: string): Promise<void> {
-        await this.tastyClient.orderService.cancelOrder(this.accountNumber, parseInt(orderId));
-    }
 
     async updateOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
 
@@ -198,12 +195,15 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }
         switch(rawOrderData.status) {
             case "Live":
+            case "Routed":
                 runInAction(() => {
                     this._workingOrders.push(this._createWorkingOrderModel(rawOrderData));
                 });
 
                 await this.services.toaster.showInfoToast({
-                    renderContent: () => this.services.language.translate('Order is live'),
+                    renderContent: () => rawOrderData.status === "Routed"
+                                            ? this.services.language.translate('Order sent')
+                                            : this.services.language.translate('Order is live'),
                     autoCloseTime: TimeSpan.fromSeconds(3)
                 })
                 break;
