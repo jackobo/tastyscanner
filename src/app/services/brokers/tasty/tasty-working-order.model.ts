@@ -9,8 +9,8 @@ import {NullableNumber} from "../../../../framework/types/nullable-types";
 import {GobyOrderSource} from "../goby-order-source";
 import {Lazy} from "../../../../framework/utils/lazy";
 
-export const WORKING_ORDERS_MAX_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(10);
-const WORKING_ORDER_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
+export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(10);
+const WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
 
 
 export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
@@ -18,13 +18,13 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
         this._gobySource = GobyOrderSource.tryParse(tastyOrderRawData.source);
-        this._replaceAttemptsStorageHandler = new Lazy<ReplaceAttemptsStorageHandler>(() => new ReplaceAttemptsStorageHandler(tastyOrderRawData, services));
+        this._autoReplaceAttemptsStorageHandler = new Lazy<AutoReplaceAttemptsStorageHandler>(() => new AutoReplaceAttemptsStorageHandler(tastyOrderRawData, services));
         if(this._gobySource) {
-            this._replaceAttemptsStorageHandler.forceInit();
+            this._autoReplaceAttemptsStorageHandler.forceInit();
         }
     }
 
-    private readonly _replaceAttemptsStorageHandler: Lazy<ReplaceAttemptsStorageHandler>;
+    private readonly _autoReplaceAttemptsStorageHandler: Lazy<AutoReplaceAttemptsStorageHandler>;
     private _gobySource: GobyOrderSource | null = null;
 
     get id(): string {
@@ -35,8 +35,8 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return this.tastyOrderRawData.id;
     }
 
-    getReplaceAttemptStorageDiscriminator(): string {
-        return this._replaceAttemptsStorageHandler.value.getStorageDiscriminator().discriminator;
+    getAutoReplaceAttemptStorageDiscriminator(): string {
+        return this._autoReplaceAttemptsStorageHandler.value.getStorageDiscriminator().discriminator;
     }
 
     get underlyingSymbol(): string {
@@ -55,8 +55,8 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return this.tastyOrderRawData.accountNumber;
     }
 
-    private get numberOfReplaceAttempts(): number {
-        return this._gobySource?.replaceAttempts ?? 0;
+    private get numberOfAutoReplaceAttempts(): number {
+        return this._gobySource?.autoReplaceAttempts ?? 0;
     }
 
     public  async cancel(): Promise<void> {
@@ -69,7 +69,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         }
     }
 
-    async replace(): Promise<void> {
+    async autoReplace(): Promise<void> {
         if(!this._gobySource) {
             return;
         }
@@ -78,22 +78,22 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
             //VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER is here in order to be able to test the logic in development while the market is closed.
             if(this.tastyOrderRawData.status !== "Live" && import.meta.env.VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER !== 'true') {
-                this._replaceAttemptsStorageHandler.value.setLastAttemptTime();
+                this._autoReplaceAttemptsStorageHandler.value.setLastAttemptTime();
                 return;
             }
 
-            if((this.services.time.currentDate.getTime() - this._replaceAttemptsStorageHandler.value.lastAttemptTime) < WORKING_ORDER_REPLACE_TIME_LIMIT.totalMilliseconds) {
+            if((this.services.time.currentDate.getTime() - this._autoReplaceAttemptsStorageHandler.value.lastAttemptTime) < WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT.totalMilliseconds) {
                 return;
             }
 
-            const newPrice = await this._getPriceForReplace();
+            const newPrice = await this._getPriceForAutoReplace();
 
             if(Check.isNullOrUndefined(newPrice)) {
                 return;
             }
 
 
-            this._gobySource = this._gobySource.withReplaceAttempts(this.numberOfReplaceAttempts + 1);
+            this._gobySource = this._gobySource.withAutoReplaceAttempts(this.numberOfAutoReplaceAttempts + 1);
 
             await this.tastyClient.orderService.replaceOrder(this.accountNumber, this.orderIdAsNumber, {
                 "order-type": this.tastyOrderRawData.orderType,
@@ -111,14 +111,14 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 })
             });
         } catch (err) {
-            this.services.logger.error('Failed to replace order', err);
+            this.services.logger.error('Failed to auto replace order', err);
             await this.services.toaster.showErrorToast({
-                renderContent: () => this.services.language.translate(`Failed to replace order! ${err}`)
+                renderContent: () => this.services.language.translate(`Failed to auto eplace order! ${err}`)
             });
         }
     }
 
-    private async _getPriceForReplace(): Promise<NullableNumber> {
+    private async _getPriceForAutoReplace(): Promise<NullableNumber> {
 
 
         const tickerInfo = await this.services.tickers.getTicker(this.underlyingSymbol).getInfoAsync();
@@ -135,7 +135,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
             maxAttempts = 1;
         }
 
-        if(this.numberOfReplaceAttempts >= maxAttempts) {
+        if(this.numberOfAutoReplaceAttempts >= maxAttempts) {
             return null;
         }
 
@@ -152,11 +152,11 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
 }
 
-interface IReplaceAttemptStorageData {
+interface IAutoReplaceAttemptStorageData {
     lastAttemptTime: number;
 }
 
-class ReplaceAttemptsStorageHandler {
+class AutoReplaceAttemptsStorageHandler {
     constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
                 private readonly services: IAppServiceFactory) {
         this.setLastAttemptTime();
@@ -186,13 +186,13 @@ class ReplaceAttemptsStorageHandler {
         }
     }
 
-    private _getStorageData(): IReplaceAttemptStorageData | null {
-        return this.services.localStorage.getJson<IReplaceAttemptStorageData>(AppLocalStorageKeys.orderReplaceAttempts,
+    private _getStorageData(): IAutoReplaceAttemptStorageData | null {
+        return this.services.localStorage.getJson<IAutoReplaceAttemptStorageData>(AppLocalStorageKeys.orderAutoReplaceAttempts,
                                                   this.getStorageDiscriminator());
     }
 
-    private _setStorageData(data: IReplaceAttemptStorageData): void {
-        this.services.localStorage.setJson(AppLocalStorageKeys.orderReplaceAttempts, data, this.getStorageDiscriminator());
+    private _setStorageData(data: IAutoReplaceAttemptStorageData): void {
+        this.services.localStorage.setJson(AppLocalStorageKeys.orderAutoReplaceAttempts, data, this.getStorageDiscriminator());
     }
 
 }
