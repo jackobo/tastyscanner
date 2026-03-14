@@ -48,7 +48,7 @@ export class MarketDataProviderService extends AppServiceBase implements IMarket
         return this._currentProvider.getPlatformWatchLists();
     }
 
-    getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null> {
+    getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData> {
         return this._currentProvider.getSymbolMetrics(symbol);
     }
     async getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData> {

@@ -56,22 +56,16 @@ export class TickerMarketDataReader {
 
     }
 
-    private _symbolMetricsPromise: Promise<TickerMetricsModel | null> | null = null;
+    private _symbolMetricsPromise: Promise<TickerMetricsModel> | null = null;
 
-    getSymbolMetricsAsync(): Promise<TickerMetricsModel | null> {
+    getSymbolMetricsAsync(): Promise<TickerMetricsModel> {
         if(!this._symbolMetricsPromise) {
             this._symbolMetricsPromise = this.services.marketDataProvider.getSymbolMetrics(this.symbol).then(data => {
-                if(data) {
-                    const metrics = new TickerMetricsModel(data);
-                    runInAction(() => {
-                        this._metrics = metrics;
-                    })
-                    return metrics;
-                }
-
-                this._symbolMetricsPromise = null;
-                return null;
-
+                const metrics = new TickerMetricsModel(data);
+                runInAction(() => {
+                    this._metrics = metrics;
+                })
+                return metrics;
             }).catch(err => {
                 this.services.logger.error(`Failed to read ${this.symbol} metrics`, err);
                 this._symbolMetricsPromise = null;

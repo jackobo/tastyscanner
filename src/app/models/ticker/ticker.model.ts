@@ -10,6 +10,8 @@ import {
 import {TickerMarketDataReader} from "./ticker-market-data.reader";
 import {TickerMetricsModel} from "./ticker-metrics.model";
 import {TickerInfoModel} from "./ticker-info.model";
+import {ITickerInfoViewModel} from "./ticker-info.view-model.interface";
+import {ITickerMetricsViewModel} from "./ticker-metrics.view-model.interface";
 
 
 export class TickerModel implements ITickerViewModel {
@@ -37,6 +39,16 @@ export class TickerModel implements ITickerViewModel {
 
     get optionsChain(): OptionsExpirationModel[] {
         return this._tickerMarketDataReader.optionsChain;
+    }
+
+    getInfoAsync(): Promise<ITickerInfoViewModel> {
+        return this._tickerMarketDataReader.getSymbolInfoAsync();
+    }
+    getMetricsAsync(): Promise<ITickerMetricsViewModel> {
+        return this._tickerMarketDataReader.getSymbolMetricsAsync();
+    }
+    getOptionsChainAsync(): Promise<IOptionsExpirationVewModel[]> {
+        return this._tickerMarketDataReader.getSymbolOptionsChainAsync();
     }
 
     public get currentPrice(): number {

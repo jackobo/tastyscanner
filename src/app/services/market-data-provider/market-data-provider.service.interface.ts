@@ -7,7 +7,7 @@ export interface IMarketDataProviderService {
     getSymbolGreeks(symbol: string): IGreeksRawData | undefined;
     getUserWatchLists(): Promise<IWatchListRawData[]>; //TODO - move this in the brokerage account mode.
     getPlatformWatchLists(): Promise<IWatchListRawData[]>;
-    getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null>;
+    getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData>;
     getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData>;
     searchSymbol(query: string): Promise<ISearchSymbolItemRawData[]>;
 }

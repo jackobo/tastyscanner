@@ -288,7 +288,7 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
 
     }
 
-    async getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null> {
+    async getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData> {
         return await this._executeMarketProviderApi(async (marketDataProvider) => {
             return marketDataProvider.getSymbolMetrics(symbol);
         });

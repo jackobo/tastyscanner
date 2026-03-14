@@ -190,11 +190,11 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
             }
         })
     }
-    async getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData | null> {
+    async getSymbolMetrics(symbol: string): Promise<ISymbolMetricsRawData> {
         const result = await this.tastyClient.marketMetricsService.getMarketMetrics({symbols: symbol});
 
         if(!Check.isArray(result) || result.length === 0) {
-            return null;
+            throw new Error(`No market metrics data for ${symbol} returned from Tasty API`);
         }
 
         const data = result[0] as any;
