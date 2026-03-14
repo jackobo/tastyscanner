@@ -17,9 +17,6 @@ export class TickersService extends AppServiceBase implements ITickersService {
         });
 
         runInAction(() => {
-            this.recentTickers = [
-                new TickerModel("SPY", this.services)
-            ];
             this._loadRecentTickers();
             const lastTicker = this.recentTickers.find(t => t.symbol === this.services.localStorage.getItem(AppLocalStorageKeys.lastSelectedTicker));
             if(lastTicker) {
@@ -76,8 +73,15 @@ export class TickersService extends AppServiceBase implements ITickersService {
         const symbols = this.services.localStorage.getJson<string[]>(AppLocalStorageKeys.recentTickers) ?? [];
         if(symbols.length > 0) {
             runInAction(() => {
-                this.recentTickers = symbols.map(s => new TickerModel(s, this.services));
+                this.recentTickers = symbols.map(s => this.getTicker(s));
             });
+        } else {
+            runInAction(() => {
+                this.recentTickers = [
+                    this.getTicker("SPY"),
+                ];
+            });
+
         }
 
     }
