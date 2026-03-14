@@ -6,7 +6,7 @@ import {
     IQuoteRawData,
     ISearchSymbolItemRawData, ISymbolEarningsRawData,
     ISymbolInfoRawData,
-    ISymbolMetricsRawData,
+    ISymbolMetricsRawData, ITickSizeRawData,
     ITradeRawData,
     IWatchListRawData
 } from "../../market-data-provider/market-data-provider.service.interface";
@@ -220,12 +220,47 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
     }
 
     async getSymbolInfo(symbol: string): Promise<ISymbolInfoRawData> {
-        const response = await this.tastyClient.instrumentsService.getSingleEquity(symbol);
-        return {
-            listedMarket: response['listed-market'],
-            description: response['description']
-        }
+        const data = await this.tastyClient.instrumentsService.getSingleEquity(symbol);
+        return  this._mapSymbolInfo(data);
     }
+
+    private _mapTickSize = (data: any): ITickSizeRawData => {
+        return {
+            threshold: data.threshold,
+            value: parseFloat(data.value)
+        };
+    }
+
+    private _mapSymbolInfo(data: any) : ISymbolInfoRawData {
+        return {
+            //id: data.id,
+            active: data.active,
+            borrowRate: parseFloat(data["borrow-rate"]),
+            bypassManualReview: data["bypass-manual-review"],
+            countryOfIncorporation: data["country-of-incorporation"],
+            countryOfTaxation: data["country-of-taxation"],
+            cusip: data.cusip,
+            description: data.description,
+            instrumentType: data["instrument-type"],
+            isClosingOnly: data["is-closing-only"],
+            isEtf: data["is-etf"],
+            isFractionalQuantityEligible: data["is-fractional-quantity-eligible"],
+            isFraudRisk: data["is-fraud-risk"],
+            isIlliquid: data["is-illiquid"],
+            isIndex: data["is-index"],
+            isOptionsClosingOnly: data["is-options-closing-only"],
+            lendability: data.lendability,
+            listedMarket: data["listed-market"],
+            marketTimeInstrumentCollection: data["market-time-instrument-collection"],
+            overnightTradingPermitted: data["overnight-trading-permitted"],
+            shortDescription: data["short-description"],
+            streamerSymbol: data["streamer-symbol"],
+            symbol: data.symbol,
+            optionTickSizes: data["option-tick-sizes"].map(this._mapTickSize),
+            tickSizes: data["tick-sizes"].map(this._mapTickSize)
+        };
+    }
+
     async searchSymbol(query: string): Promise<ISearchSymbolItemRawData[]> {
         const result: any[] = (await this.tastyClient.symbolSearchService.getSymbolData(query)) ?? [];
 

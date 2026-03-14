@@ -75,8 +75,36 @@ export interface ISymbolMetricsRawData {
 }
 
 export interface ISymbolInfoRawData {
+    //id: number;
+    active: boolean;
+    borrowRate: number;
+    bypassManualReview: boolean;
+    countryOfIncorporation: string;
+    countryOfTaxation: string;
+    cusip: string;
     description: string;
+    instrumentType: string;
+    isClosingOnly: boolean;
+    isEtf: boolean;
+    isFractionalQuantityEligible: boolean;
+    isFraudRisk: boolean;
+    isIlliquid: boolean;
+    isIndex: boolean;
+    isOptionsClosingOnly: boolean;
+    lendability: string;
     listedMarket: string;
+    marketTimeInstrumentCollection: string;
+    overnightTradingPermitted: boolean;
+    shortDescription: string;
+    streamerSymbol: string;
+    symbol: string;
+    optionTickSizes: ITickSizeRawData[];
+    tickSizes: ITickSizeRawData[];
+}
+
+export interface ITickSizeRawData {
+    threshold?: string;
+    value: number;
 }
 
 export interface ISearchSymbolItemRawData {
