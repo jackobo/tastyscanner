@@ -23,10 +23,9 @@ export class TickerModel implements ITickerViewModel {
         });
     }
 
-    private _isLoading: boolean = true;
+
 
     private readonly _tickerMarketDataReader: TickerMarketDataReader;
-
 
     get metrics(): TickerMetricsModel | null {
         return this._tickerMarketDataReader.metrics;
@@ -44,6 +43,7 @@ export class TickerModel implements ITickerViewModel {
         return this.getSymbolTrade(this.symbol)?.price ?? 0;
     }
 
+    private _isLoading: boolean = true;
 
     get isLoading(): boolean {
         return this._isLoading;
@@ -64,15 +64,6 @@ export class TickerModel implements ITickerViewModel {
         return this.services.marketDataProvider.getSymbolGreeks(symbol);
     }
 
-    private _getAllStreamerSymbols(): string[] {
-        const allStreamerSymbols: string[] = [this.symbol];
-        for(const expiration of this.optionsChain) {
-            expiration.getAllStreamerSymbols().forEach(s => allStreamerSymbols.push(s));
-        }
-
-        return allStreamerSymbols;
-    }
-
     async start(): Promise<void> {
         this.isLoading = true;
         try {
@@ -83,11 +74,22 @@ export class TickerModel implements ITickerViewModel {
         } finally {
             this.isLoading = false;
         }
-
     }
 
     async stop(): Promise<void> {
         this.services.marketDataProvider.unsubscribeFromStreamer(this._getAllStreamerSymbols());
+    }
+
+    getExpirationsWithIronCondors(): IOptionsExpirationVewModel[] {
+        return this._filterExpirations().filter(expiration => expiration.ironCondors.length > 0);
+    }
+
+    getExpirationsWithPutCreditSpreads(): IOptionsExpirationVewModel[] {
+        return this._filterExpirations().filter(expiration => expiration.putCreditSpreads.length > 0);
+    }
+
+    getExpirationsWithCallCreditSpreads(): IOptionsExpirationVewModel[] {
+        return this._filterExpirations().filter(expiration => expiration.callCreditSpreads.length > 0);
     }
 
     private _shouldIncludeExpiration(expiration: OptionsExpirationModel): boolean {
@@ -119,16 +121,14 @@ export class TickerModel implements ITickerViewModel {
             .sort((a, b) => a.daysToExpiration - b.daysToExpiration);
     }
 
-    getExpirationsWithIronCondors(): IOptionsExpirationVewModel[] {
-        return this._filterExpirations().filter(expiration => expiration.ironCondors.length > 0);
+    private _getAllStreamerSymbols(): string[] {
+        const allStreamerSymbols: string[] = [this.symbol];
+        for(const expiration of this.optionsChain) {
+            expiration.getAllStreamerSymbols().forEach(s => allStreamerSymbols.push(s));
+        }
+
+        return allStreamerSymbols;
     }
 
-    getExpirationsWithPutCreditSpreads(): IOptionsExpirationVewModel[] {
-        return this._filterExpirations().filter(expiration => expiration.putCreditSpreads.length > 0);
-    }
-
-    getExpirationsWithCallCreditSpreads(): IOptionsExpirationVewModel[] {
-        return this._filterExpirations().filter(expiration => expiration.callCreditSpreads.length > 0);
-    }
 
 }

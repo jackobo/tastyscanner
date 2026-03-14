@@ -11,9 +11,4 @@ export class TickerInfoModel implements TickerInfoViewModel {
     public  get listedMarket(): string {
         return this.symbolRawInfo.listedMarket;
     }
-
-
-
-
-
 }

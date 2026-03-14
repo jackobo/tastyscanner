@@ -20,23 +20,14 @@ export class TickerMarketDataReader {
 
     private _info: TickerInfoModel | null = null;
     get info(): TickerInfoModel | null {
-        if(!this._info) {
-            this.getSymbolInfoAsync();
-        }
         return this._info;
     }
     private _metrics: TickerMetricsModel | null = null;
     get metrics(): TickerMetricsModel | null {
-        if(!this._metrics) {
-            this.getSymbolMetricsAsync();
-        }
         return this._metrics;
     }
-    private _optionsChain: OptionsExpirationModel[] | null = null;
+    private _optionsChain: OptionsExpirationModel[] = [];
     get optionsChain(): OptionsExpirationModel[] {
-        if(!this._optionsChain) {
-            this.getSymbolOptionsChainAsync();
-        }
         return this._optionsChain ?? [];
     }
 
