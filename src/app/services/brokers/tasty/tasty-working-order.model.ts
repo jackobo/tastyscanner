@@ -31,7 +31,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     }
 
     getReplaceAttemptStorageDiscriminator(): string {
-        return this._replaceAttemptsStorageHandler.getLocalStorageDiscriminator().discriminator;
+        return this._replaceAttemptsStorageHandler.getStorageDiscriminator().discriminator;
     }
 
     get underlyingSymbol(): string {
@@ -122,7 +122,7 @@ class ReplaceAttemptsStorageHandler {
     }
 
     get lastAttemptTime(): number {
-        const replaceAttempts = this._getReplaceAttemptStorageData();
+        const replaceAttempts = this._getStorageData();
         if(Check.isNullOrUndefined(replaceAttempts)) {
             return 0;
         }
@@ -132,7 +132,7 @@ class ReplaceAttemptsStorageHandler {
 
 
     get numberOfReplaceAttempts(): number {
-        const replaceAttempts = this._getReplaceAttemptStorageData();
+        const replaceAttempts = this._getStorageData();
         if(Check.isNullOrUndefined(replaceAttempts)) {
             return 0;
         }
@@ -146,18 +146,18 @@ class ReplaceAttemptsStorageHandler {
         this.services.localStorage.setJson(AppLocalStorageKeys.orderReplaceAttempts, {
             count: value,
             lastAttemptTime: Date.now()
-        }, this.getLocalStorageDiscriminator());
+        }, this.getStorageDiscriminator());
     }
 
-    getLocalStorageDiscriminator(orderId?: string): {discriminator: string} {
+    getStorageDiscriminator(orderId?: string): {discriminator: string} {
         return {
             discriminator: `Tasty.${this.tastyOrderRawData.accountNumber}.${orderId ?? this.tastyOrderRawData.id.toString()}`
         }
     }
 
-    private _getReplaceAttemptStorageData(orderId?: string): IReplaceAttemptStorageData | null {
+    private _getStorageData(orderId?: string): IReplaceAttemptStorageData | null {
         return this.services.localStorage.getJson<IReplaceAttemptStorageData>(AppLocalStorageKeys.orderReplaceAttempts,
-                                                  this.getLocalStorageDiscriminator(orderId));
+                                                  this.getStorageDiscriminator(orderId));
     }
 
     private _replaceStorageKey() {
@@ -165,7 +165,7 @@ class ReplaceAttemptsStorageHandler {
             return;
         }
 
-        const replaceAttempts = this._getReplaceAttemptStorageData(this.tastyOrderRawData.replacesOrderId.toString());
+        const replaceAttempts = this._getStorageData(this.tastyOrderRawData.replacesOrderId.toString());
 
         if(Check.isNullOrUndefined(replaceAttempts)) {
             return;
@@ -173,9 +173,9 @@ class ReplaceAttemptsStorageHandler {
 
 
         this.services.localStorage.removeItem(AppLocalStorageKeys.orderReplaceAttempts,
-                                              this.getLocalStorageDiscriminator(this.tastyOrderRawData.replacesOrderId.toString()));
+                                              this.getStorageDiscriminator(this.tastyOrderRawData.replacesOrderId.toString()));
 
-        this.services.localStorage.setJson(AppLocalStorageKeys.orderReplaceAttempts, replaceAttempts, this.getLocalStorageDiscriminator());
+        this.services.localStorage.setJson(AppLocalStorageKeys.orderReplaceAttempts, replaceAttempts, this.getStorageDiscriminator());
     }
 
 }
