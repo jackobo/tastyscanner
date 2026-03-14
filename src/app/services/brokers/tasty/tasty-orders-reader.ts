@@ -141,6 +141,7 @@ export class TastyOrdersReader {
             underlyingSymbol: order['underlying-symbol'],
             updatedAt: new Date(order['updated-at']),
             replacesOrderId: order['replaces-order-id'] as NullableUndefinedNumber,
+            replacingOrderId: order['replacing-order-id'] as NullableUndefinedNumber,
             legs: (order.legs ?? []).map((leg: any): ITastyOrderLegRawData => ({
                 action: leg.action,
                 instrumentType: leg['instrument-type'],

@@ -27,7 +27,8 @@ export interface ITastyOrderRawData {
     underlyingInstrumentType: string;
     underlyingSymbol: string;
     updatedAt: Date;
-    replacesOrderId: NullableUndefinedNumber;
+    replacesOrderId: NullableUndefinedNumber; // order that was replaced by this order
+    replacingOrderId: NullableUndefinedNumber; // order who replaced this order (When replacingOrderId exists the status is Cancelled)
     legs: ITastyOrderLegRawData[];
 }
 

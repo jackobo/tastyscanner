@@ -5,10 +5,11 @@ import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {AppLocalStorageKeys} from "../../storage/app-local-storage-keys";
 import {Check} from "../../../../framework/utils/type-checking";
-import {
-    NullableString,
-    NullableUndefinedString
-} from "../../../../framework/types/nullable-types";
+import {TimeSpan} from "../../../../framework/types/time-span";
+
+export const WORKING_ORDERS_MAX_REPLACE_INTERVAL = TimeSpan.fromSeconds(10);
+const WORKING_ORDER_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
+const WORKING_ORDER_REPLACE_ATTEMPTS_LIMIT = 3;
 
 export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
@@ -16,6 +17,8 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 private readonly services: IAppServiceFactory) {
         this._replaceAttemptsStorageHandler = new ReplaceAttemptsStorageHandler(tastyOrderRawData, services);
     }
+
+
 
     private readonly _replaceAttemptsStorageHandler: ReplaceAttemptsStorageHandler;
 
@@ -48,7 +51,11 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
             return;
         }
 
-        if(this._replaceAttemptsStorageHandler.numberOfReplaceAttempts >= 3) {
+        if(this._replaceAttemptsStorageHandler.numberOfReplaceAttempts >= WORKING_ORDER_REPLACE_ATTEMPTS_LIMIT) {
+            return;
+        }
+
+        if((this.services.time.currentDate.getTime() - this._replaceAttemptsStorageHandler.lastAttemptTime) < WORKING_ORDER_REPLACE_TIME_LIMIT.totalMilliseconds) {
             return;
         }
 
@@ -60,6 +67,8 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         } else if(this.tastyOrderRawData.priceEffect === "Debit") {
             newPrice = this.tradingPrice + 0.01; //make it a little bit expensive to get filled
         }
+
+        console.log(`Replacing order ${this.id} with ${newPrice}`);
 
         try {
             await this.tastyClient.orderService.replaceOrder(this.accountNumber, this.orderIdAsNumber, {
@@ -97,31 +106,43 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     }
 }
 
+interface IReplaceAttemptStorageData {
+    count: number;
+    lastAttemptTime: number;
+}
+
 class ReplaceAttemptsStorageHandler {
     constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
                 private readonly services: IAppServiceFactory) {
         this._replaceStorageKey();
     }
 
+    get lastAttemptTime(): number {
+        const replaceAttempts = this._getReplaceAttemptStorageData();
+        if(Check.isNullOrUndefined(replaceAttempts)) {
+            return 0;
+        }
+
+        return replaceAttempts.lastAttemptTime;
+    }
 
 
     get numberOfReplaceAttempts(): number {
-        const storedValue = this._getNumberOfReplaceAttemptsFromStorage();
-        if(Check.isNullOrUndefined(storedValue)) {
+        const replaceAttempts = this._getReplaceAttemptStorageData();
+        if(Check.isNullOrUndefined(replaceAttempts)) {
             return 0;
         }
 
-        const parsedValue = parseInt(storedValue);
-        if(!Check.isNumber(parsedValue)) {
-            return 0;
-        }
+        return replaceAttempts.count;
 
-        return parsedValue;
     }
 
 
     set numberOfReplaceAttempts(value: number) {
-        this.services.localStorage.setItem(AppLocalStorageKeys.orderReplaceAttemptCount, value.toString(), this._getLocalStorageDiscriminator());
+        this.services.localStorage.setJson(AppLocalStorageKeys.orderReplaceAttemptCount, {
+            count: value,
+            lastAttemptTime: Date.now()
+        }, this._getLocalStorageDiscriminator());
     }
 
     private _getLocalStorageDiscriminator(orderId?: string): {discriminator: string} {
@@ -130,8 +151,9 @@ class ReplaceAttemptsStorageHandler {
         }
     }
 
-    private _getNumberOfReplaceAttemptsFromStorage(orderId?: string): NullableUndefinedString {
-        return this.services.localStorage.getItem(AppLocalStorageKeys.orderReplaceAttemptCount, this._getLocalStorageDiscriminator(orderId)) as NullableString;
+    private _getReplaceAttemptStorageData(orderId?: string): IReplaceAttemptStorageData | null {
+        return this.services.localStorage.getJson<IReplaceAttemptStorageData>(AppLocalStorageKeys.orderReplaceAttemptCount,
+                                                  this._getLocalStorageDiscriminator(orderId));
     }
 
     private _replaceStorageKey() {
@@ -139,20 +161,17 @@ class ReplaceAttemptsStorageHandler {
             return;
         }
 
-        const storedValue = this._getNumberOfReplaceAttemptsFromStorage(this.tastyOrderRawData.replacesOrderId.toString());
-        if(Check.isNullOrUndefined(storedValue)) {
+        const replaceAttempts = this._getReplaceAttemptStorageData(this.tastyOrderRawData.replacesOrderId.toString());
+
+        if(Check.isNullOrUndefined(replaceAttempts)) {
             return;
         }
 
-        const numberOfAttempts = parseInt(storedValue);
-        if(!Check.isNumber(numberOfAttempts)) {
-            return;
-        }
 
         this.services.localStorage.removeItem(AppLocalStorageKeys.orderReplaceAttemptCount,
                                               this._getLocalStorageDiscriminator(this.tastyOrderRawData.replacesOrderId.toString()));
 
-        this.numberOfReplaceAttempts = numberOfAttempts;
+        this.services.localStorage.setJson(AppLocalStorageKeys.orderReplaceAttemptCount, replaceAttempts, this._getLocalStorageDiscriminator());
     }
 
 }

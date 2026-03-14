@@ -4,4 +4,5 @@ export interface IWorkingOrderViewModel {
     readonly tradingPrice: number;
     readonly isGobyOrder: boolean
     cancel(): Promise<void>;
+    replace(): Promise<void>;
 }

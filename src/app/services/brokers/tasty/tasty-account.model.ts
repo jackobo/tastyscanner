@@ -11,11 +11,12 @@ import {TastyActivePositionLegModel, TastyActivePositionModel} from "./tasty-act
 import {computed, makeObservable, observable, runInAction} from "mobx";
 import {TastyAccountInfoModel} from "./tasty-account-info.model";
 import {ITastyOrderRawData, TASTY_WORKING_ORDER_STATUSES} from "./raw-data/tasty-order.raw-data.interfaces";
-import {TastyWorkingOrderModel} from "./tasty-working-order.model";
+import {TastyWorkingOrderModel, WORKING_ORDERS_MAX_REPLACE_INTERVAL} from "./tasty-working-order.model";
 import {ORDERS_SOURCE_NAME} from "../constants";
 import {TimeSpan} from "../../../../framework/types/time-span";
 import {Check} from "../../../../framework/utils/type-checking";
 import {Debounce} from "../../../../framework/utils/debounce";
+import {NullableUndefinedNumber} from "../../../../framework/types/nullable-types";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -28,6 +29,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 private readonly tastyClient: TastyTradeClient,
                 public readonly services: IAppServiceFactory) {
 
+
         makeObservable<this, '_activePositions' | '_workingOrders' | 'openOrdersLegsMap' | '_accountInfo'>(this, {
             _activePositions: observable.ref,
             _workingOrders: observable,
@@ -36,7 +38,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         });
     }
 
-    private _autoAdjustWorkingOrdersTimerRef: any;
+    private _replaceWorkingOrdersTimerRef: any;
 
     get id(): string {
         return `${this.brokerName}-${this.accountNumber}`
@@ -60,28 +62,17 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         await this._loadAccountInfo();
         await this._loadWorkingOrders();
         await this._loadActivePositions();
-        this._startAutoAdjustWorkingOrdersTimer();
+        this._startReplaceWorkingOrders();
 
     }
 
     async disconnect(): Promise<void> {
         const streamerSymbols = this.activePositions.positions.selectMany(o => o.getAllStreamerSymbols());
         this.services.marketDataProvider.unsubscribeFromStreamer(streamerSymbols);
-        this._stopAutoAdjustWorkingOrdersTimer();
+        this._stopReplaceWorkingOrders();
     }
 
 
-    private _startAutoAdjustWorkingOrdersTimer(): void {
-        this._autoAdjustWorkingOrdersTimerRef = setInterval(async () => {
-            for(const workingOrder of this._workingOrders) {
-                await workingOrder.replace();
-            }
-        }, 20000);
-    }
-
-    private _stopAutoAdjustWorkingOrdersTimer(): void {
-        clearInterval(this._autoAdjustWorkingOrdersTimerRef);
-    }
 
     private _activePositions: TastyActivePositionsResult = new TastyActivePositionsResult(true, []);
 
@@ -204,14 +195,24 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
     private _orderFillDebounce: Debounce = new Debounce(TimeSpan.fromSeconds(1));
 
-    async updateOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
+    private _tryRemoveWorkingOrder(workingOrderId: NullableUndefinedNumber): void {
+        if(!workingOrderId) {
+            return;
+        }
 
-        const existingWorkingOrderIndex = this._workingOrders.findIndex(wo => wo.id === rawOrderData.id.toString());
+        const existingWorkingOrderIndex = this._workingOrders.findIndex(wo => wo.id === workingOrderId.toString());
+
         if(existingWorkingOrderIndex >= 0) {
             runInAction(() => {
                 this._workingOrders.splice(existingWorkingOrderIndex, 1);
             });
         }
+    }
+
+    async updateOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
+
+        this._tryRemoveWorkingOrder(rawOrderData.id);
+        this._tryRemoveWorkingOrder(rawOrderData.replacesOrderId);
 
         if(TASTY_WORKING_ORDER_STATUSES.includes(rawOrderData.status)) {
             runInAction(() => {
@@ -220,7 +221,12 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
             let toastMessage: string = '';
             if(rawOrderData.status === "Received") {
-                toastMessage = this.services.language.translate('Order sent');
+                if(rawOrderData.replacesOrderId) {
+                    toastMessage = this.services.language.translate('Order replaced');
+                } else {
+                    toastMessage = this.services.language.translate('Order sent');
+                }
+
             } else if(rawOrderData.status === "Live") {
                 toastMessage = this.services.language.translate('Order is live');
             }
@@ -232,10 +238,14 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 })
             }
         } else if (rawOrderData.status === "Cancelled") {
-            await this.services.toaster.showInfoToast({
-                renderContent: () => this.services.language.translate('Order canceled'),
-                autoCloseTime: TimeSpan.fromSeconds(2)
-            })
+            if(!rawOrderData.replacingOrderId) {
+                //it means the order was explicitly canceled and was not canceled as a result of a replacement
+                await this.services.toaster.showInfoToast({
+                    renderContent: () => this.services.language.translate('Order canceled'),
+                    autoCloseTime: TimeSpan.fromSeconds(2)
+                })
+            }
+
         } else if(rawOrderData.status === "Filled") {
             this._orderFillDebounce.execute(async () => {
                 await this._loadActivePositions();
@@ -247,6 +257,27 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
         }
     }
+
+
+    private _startReplaceWorkingOrders(): void {
+        //this random stuff is to reduce the likelihood that multiple browser tabs to execute the order replacement at the same time
+        const timeIntervalMS = Math.max(3000, Math.round(Math.random() * WORKING_ORDERS_MAX_REPLACE_INTERVAL.totalMilliseconds));
+        this._replaceWorkingOrdersTimerRef = setTimeout(async () => {
+            const workingOrders = [...this.workingOrders]
+
+            for(const workingOrder of workingOrders) {
+                await workingOrder.replace();
+            }
+            this._startReplaceWorkingOrders();
+
+        }, timeIntervalMS);
+    }
+
+
+    private _stopReplaceWorkingOrders(): void {
+        clearInterval(this._replaceWorkingOrdersTimerRef);
+    }
+
 
     /*
     {
