@@ -6,6 +6,7 @@ export enum AppLocalStorageKeys {
     lastSelectedTicker = "lastSelectedTicker",
     recentTickersSideMenuExpanded = "recentTickersSideMenuExpanded",
     appSettings = "appSettings",
+    orderReplaceAttemptCount = "orderReplaceAttemptCount",
 
 }
 

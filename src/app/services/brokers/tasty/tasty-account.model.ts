@@ -36,6 +36,8 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         });
     }
 
+    private _autoAdjustWorkingOrdersTimerRef: any;
+
     get id(): string {
         return `${this.brokerName}-${this.accountNumber}`
     }
@@ -58,14 +60,28 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         await this._loadAccountInfo();
         await this._loadWorkingOrders();
         await this._loadActivePositions();
+        this._startAutoAdjustWorkingOrdersTimer();
 
     }
 
     async disconnect(): Promise<void> {
         const streamerSymbols = this.activePositions.positions.selectMany(o => o.getAllStreamerSymbols());
         this.services.marketDataProvider.unsubscribeFromStreamer(streamerSymbols);
+        this._stopAutoAdjustWorkingOrdersTimer();
     }
 
+
+    private _startAutoAdjustWorkingOrdersTimer(): void {
+        this._autoAdjustWorkingOrdersTimerRef = setInterval(async () => {
+            for(const workingOrder of this._workingOrders) {
+                await workingOrder.replace();
+            }
+        }, 20000);
+    }
+
+    private _stopAutoAdjustWorkingOrdersTimer(): void {
+        clearInterval(this._autoAdjustWorkingOrdersTimerRef);
+    }
 
     private _activePositions: TastyActivePositionsResult = new TastyActivePositionsResult(true, []);
 
@@ -190,7 +206,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
     async updateOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
 
-        const existingWorkingOrderIndex = this._workingOrders.findIndex(wo => wo.id === rawOrderData.id);
+        const existingWorkingOrderIndex = this._workingOrders.findIndex(wo => wo.id === rawOrderData.id.toString());
         if(existingWorkingOrderIndex >= 0) {
             runInAction(() => {
                 this._workingOrders.splice(existingWorkingOrderIndex, 1);

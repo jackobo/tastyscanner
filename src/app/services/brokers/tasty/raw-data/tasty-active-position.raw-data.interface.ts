@@ -1,6 +1,6 @@
 import {InstrumentType} from "../../interfaces/open-order-request.interface";
 
-export interface ITastyOpenPositionRawData {
+export interface ITastyActivePositionRawData {
     accountNumber: string;
     instrumentType: InstrumentType;
     streamerSymbol: string;

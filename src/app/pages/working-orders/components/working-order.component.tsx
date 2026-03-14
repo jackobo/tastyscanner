@@ -55,7 +55,7 @@ export const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewMod
     const gobyIndicatorRef = useRef<HTMLDivElement | null>(null)
 
     const renderGobyIndicator = () => {
-        if(props.workingOrder.hasGoby) {
+        if(props.workingOrder.isGobyOrder) {
             return (
                 <>
                     <GobyIndicatorBox ref={gobyIndicatorRef}>
@@ -74,7 +74,7 @@ export const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewMod
     }
 
     const cancelClick = async () => {
-        await props.workingOrder.cancelOrder();
+        await props.workingOrder.cancel();
     }
 
     return (

@@ -20,7 +20,7 @@ export class TastyActivePositionModel implements IActivePositionViewModel {
     }
 
     get id(): string {
-        return this.orderRawData.id;
+        return this.orderRawData.id.toString();
     }
     get underlyingSymbol(): string {
         return this.orderRawData.underlyingSymbol;

@@ -1,6 +1,6 @@
 import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
-import {ITastyOpenPositionRawData} from "./raw-data/tasty-open-position.raw-data.interface";
+import {ITastyActivePositionRawData} from "./raw-data/tasty-active-position.raw-data.interface";
 import {
     ITastyOrderLegFillRawData,
     ITastyOrderLegRawData,
@@ -12,53 +12,13 @@ import {
 } from "./raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
 import {isOrderLegOpenAction} from "../interfaces/open-order-request.interface";
 import {Check} from "../../../../framework/utils/type-checking";
+import {NullableUndefinedNumber} from "../../../../framework/types/nullable-types";
 
 
 export class TastyOrdersReader {
     constructor(private readonly accountNumber: string,
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
-    }
-
-
-    public static mapRawOrderData(order: any): ITastyOrderRawData {
-        return {
-            id: order.id.toString(),
-            accountNumber: order['account-number'],
-            cancellable: order.cancellable,
-            editable: order.editable,
-            edited: order.edited,
-            extClientOrderId: order['ext-client-order-id'],
-            extExchangeOrderNumber: order['ext-exchange-order-number'],
-            extGlobalOrderNumber: order['ext-global-order-number'],
-            globalRequestId: order['global-request-id'],
-            orderType: order['order-type'],
-            price: order.price,
-            priceEffect: order['price-effect'],
-            receivedAt:  new Date(order['received-at']),
-            size: order.size,
-            source: order.source,
-            status: order.status,
-            terminalAt: new Date(order['terminal-at']),
-            timeInForce: order['time-in-force'],
-            underlyingInstrumentType: order['underlying-instrument-type'],
-            underlyingSymbol: order['underlying-symbol'],
-            updatedAt: new Date(order['updated-at']),
-            legs: (order.legs ?? []).map((leg: any): ITastyOrderLegRawData => ({
-                action: leg.action,
-                instrumentType: leg['instrument-type'],
-                quantity: leg.quantity,
-                remainingQuantity: leg['remaining-quantity'],
-                symbol: leg.symbol,
-                fills: (leg.fills ?? []).map((fill: any): ITastyOrderLegFillRawData => ({
-                    destinationVenue: fill['destination-venue'],
-                    fillId: fill['fill-id'],
-                    fillPrice: fill['fill-price'],
-                    filledAt: fill['filled-at'],
-                    quantity: fill.quantity,
-                }))
-            }))
-        };
     }
 
     async readActivePositions(): Promise<ITastyOrderConsolidatedWithPositions[]> {
@@ -118,48 +78,16 @@ export class TastyOrdersReader {
         return response.map(TastyOrdersReader.mapRawOrderData);
     }
 
-    private async _getOpenPositionsRawData(): Promise<ITastyOpenPositionRawData[]> {
+    private async _getOpenPositionsRawData(): Promise<ITastyActivePositionRawData[]> {
         const positionsList = await this.tastyClient.balancesAndPositionsService.getPositionsList(this.accountNumber, {
             "include-closed-positions": false
         });
 
-        return positionsList.map((position: any) => {
-            return {
-                accountNumber: position["account-number"],
-                instrumentType: position["instrument-type"],
-                streamerSymbol: position["streamer-symbol"],
-                symbol: position["symbol"],
-                underlyingSymbol: position["underlying-symbol"],
-                quantity: position["quantity"],
-                averageDailyMarketClosePrice: position["average-daily-market-close-price"],
-                averageOpenPrice: position["average-open-price"],
-                averageYearlyMarketClosePrice: position["average-yearly-market-close-price"],
-                closePrice: position["close-price"],
-                costEffect: position["cost-effect"],
-                isFrozen: position["is-frozen"],
-                isSuppressed: position["is-suppressed"],
-                multiplier: position["multiplier"],
-                quantityDirection: position["quantity-direction"],
-                restrictedQuantity: position["restricted-quantity"],
-                expiresAt: position["expires-at"] ? new Date(position["expires-at"]) : undefined,
-                realizedDayGain: position["realized-day-gain"],
-                realizedDayGainDate: new Date(position["realized-day-gain-date"]),
-                realizedDayGainEffect: position["realized-day-gain-effect"],
-                realizedToday: position["realized-today"],
-                realizedTodayDate: new Date(position["realized-today-date"]),
-                realizedTodayEffect: position["realized-today-effect"],
-                createdAt: new Date(position["created-at"]),
-                updatedAt: new Date(position["updated-at"]),
-            };
-        });
+        return positionsList.map((position: any) => TastyOrdersReader.mapRawActivePositionData(position));
     }
 
     private async _getFilledOrdersRawData(minDate: Date): Promise<ITastyOrderRawData[]> {
 
-
-        const mapOrder = (order: any): ITastyOrderRawData => {
-            return TastyOrdersReader.mapRawOrderData(order);
-        }
 
         let pageOffset = 0;
         const pageSize = 200;
@@ -186,6 +114,77 @@ export class TastyOrdersReader {
 
         } while(shouldContinue);
 
-        return orders.map(mapOrder);
+        return orders.map(order => TastyOrdersReader.mapRawOrderData(order));
+    }
+
+    public static mapRawOrderData(order: any): ITastyOrderRawData {
+        return {
+            id: order.id.toString(),
+            accountNumber: order['account-number'],
+            cancellable: order.cancellable,
+            editable: order.editable,
+            edited: order.edited,
+            extClientOrderId: order['ext-client-order-id'],
+            extExchangeOrderNumber: order['ext-exchange-order-number'],
+            extGlobalOrderNumber: order['ext-global-order-number'],
+            globalRequestId: order['global-request-id'],
+            orderType: order['order-type'],
+            price: order.price,
+            priceEffect: order['price-effect'],
+            receivedAt:  new Date(order['received-at']),
+            size: order.size,
+            source: order.source,
+            status: order.status,
+            terminalAt: new Date(order['terminal-at']),
+            timeInForce: order['time-in-force'],
+            underlyingInstrumentType: order['underlying-instrument-type'],
+            underlyingSymbol: order['underlying-symbol'],
+            updatedAt: new Date(order['updated-at']),
+            replacesOrderId: order['replaces-order-id'] as NullableUndefinedNumber,
+            legs: (order.legs ?? []).map((leg: any): ITastyOrderLegRawData => ({
+                action: leg.action,
+                instrumentType: leg['instrument-type'],
+                quantity: leg.quantity,
+                remainingQuantity: leg['remaining-quantity'],
+                symbol: leg.symbol,
+                fills: (leg.fills ?? []).map((fill: any): ITastyOrderLegFillRawData => ({
+                    destinationVenue: fill['destination-venue'],
+                    fillId: fill['fill-id'],
+                    fillPrice: fill['fill-price'],
+                    filledAt: fill['filled-at'],
+                    quantity: fill.quantity,
+                }))
+            }))
+        };
+    }
+
+    public static mapRawActivePositionData(position: any): ITastyActivePositionRawData {
+        return {
+            accountNumber: position["account-number"],
+            instrumentType: position["instrument-type"],
+            streamerSymbol: position["streamer-symbol"],
+            symbol: position["symbol"],
+            underlyingSymbol: position["underlying-symbol"],
+            quantity: position["quantity"],
+            averageDailyMarketClosePrice: position["average-daily-market-close-price"],
+            averageOpenPrice: position["average-open-price"],
+            averageYearlyMarketClosePrice: position["average-yearly-market-close-price"],
+            closePrice: position["close-price"],
+            costEffect: position["cost-effect"],
+            isFrozen: position["is-frozen"],
+            isSuppressed: position["is-suppressed"],
+            multiplier: position["multiplier"],
+            quantityDirection: position["quantity-direction"],
+            restrictedQuantity: position["restricted-quantity"],
+            expiresAt: position["expires-at"] ? new Date(position["expires-at"]) : undefined,
+            realizedDayGain: position["realized-day-gain"],
+            realizedDayGainDate: new Date(position["realized-day-gain-date"]),
+            realizedDayGainEffect: position["realized-day-gain-effect"],
+            realizedToday: position["realized-today"],
+            realizedTodayDate: new Date(position["realized-today-date"]),
+            realizedTodayEffect: position["realized-today-effect"],
+            createdAt: new Date(position["created-at"]),
+            updatedAt: new Date(position["updated-at"]),
+        };
     }
 }

@@ -1,11 +1,12 @@
 import {InstrumentType, OrderLegAction, PriceEffect} from "../../interfaces/open-order-request.interface";
+import {NullableUndefinedNumber} from "../../../../../framework/types/nullable-types";
 
 export type TastyOrderStatus = "Received" | "Routed" | "In Flight" | "Live" | "Cancel Requested" | "Replace Requested" | "Contingent" | "Filled" | "Cancelled" | "Expired" | "Rejected" | "Removed" | "Partially Removed";
 
 export const TASTY_WORKING_ORDER_STATUSES: TastyOrderStatus[] = ["Received", "Routed", "In Flight", "Live"];
 
 export interface ITastyOrderRawData {
-    id: string;
+    id: number;
     accountNumber: string;
     cancellable: boolean;
     editable: boolean;
@@ -26,6 +27,7 @@ export interface ITastyOrderRawData {
     underlyingInstrumentType: string;
     underlyingSymbol: string;
     updatedAt: Date;
+    replacesOrderId: NullableUndefinedNumber;
     legs: ITastyOrderLegRawData[];
 }
 
