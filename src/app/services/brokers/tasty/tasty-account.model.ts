@@ -9,12 +9,12 @@ import {computed, makeObservable, observable, runInAction} from "mobx";
 import {TastyAccountInfoModel} from "./tasty-account-info.model";
 import {ITastyOrderRawData, TASTY_WORKING_ORDER_STATUSES} from "./raw-data/tasty-order.raw-data.interfaces";
 import {TastyWorkingOrderModel, WORKING_ORDERS_MAX_REPLACE_TIME_INTERVAL} from "./tasty-working-order.model";
-import {ORDERS_SOURCE_NAME} from "../constants";
 import {TimeSpan} from "../../../../framework/types/time-span";
 import {Check} from "../../../../framework/utils/type-checking";
 import {Debounce} from "../../../../framework/utils/debounce";
 import {NullableUndefinedNumber, UndefinedString} from "../../../../framework/types/nullable-types";
 import {AppLocalStorageKeys} from "../../storage/app-local-storage-keys";
+import {GobyOrderSource} from "../goby-order-source";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -102,7 +102,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 "time-in-force": order.timeInForce,
                 "price": order.price,
                 "price-effect": order.priceEffect,
-                "source": ORDERS_SOURCE_NAME,
+                "source": GobyOrderSource.createInitial().toString(),
                 "advanced-instructions": {
                     "strict-position-effect-validation": true
                 },
@@ -268,7 +268,8 @@ export class TastyAccountModel implements IBrokerageAccountModel {
      */
     private _clearOrderReplaceAttemptStorageKeys() {
         const storageDiscriminators = this.services.localStorage.getDiscriminators(AppLocalStorageKeys.orderReplaceAttempts);
-        const currentWorkingOrdersStorageDiscriminators: UndefinedString[] = this._workingOrders.map(wo => wo.getReplaceAttemptStorageDiscriminator())
+        const currentWorkingOrdersStorageDiscriminators: UndefinedString[] = this._workingOrders.filter(wo => wo.isGobyOrder)
+                                                                                                .map(wo => wo.getReplaceAttemptStorageDiscriminator());
 
         for(const storageDisc of storageDiscriminators) {
             if(!currentWorkingOrdersStorageDiscriminators.includes(storageDisc.discriminator)) {

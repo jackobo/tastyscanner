@@ -1,12 +1,13 @@
 import {IWorkingOrderViewModel} from "../interfaces/working-order.interfaces";
 import {ITastyOrderRawData} from "./raw-data/tasty-order.raw-data.interfaces";
-import {ORDERS_SOURCE_NAME} from "../constants";
 import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {AppLocalStorageKeys} from "../../storage/app-local-storage-keys";
 import {Check} from "../../../../framework/utils/type-checking";
 import {TimeSpan} from "../../../../framework/types/time-span";
 import {NullableNumber} from "../../../../framework/types/nullable-types";
+import {GobyOrderSource} from "../goby-order-source";
+import {Lazy} from "../../../../framework/utils/lazy";
 
 export const WORKING_ORDERS_MAX_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(10);
 const WORKING_ORDER_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
@@ -16,12 +17,14 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
-        this._replaceAttemptsStorageHandler = new ReplaceAttemptsStorageHandler(tastyOrderRawData, services);
+        this._gobySource = GobyOrderSource.tryParse(tastyOrderRawData.source);
+        this._replaceAttemptsStorageHandler = new Lazy<ReplaceAttemptsStorageHandler>(() => new ReplaceAttemptsStorageHandler(this._gobySource, tastyOrderRawData, services));
     }
 
 
 
-    private readonly _replaceAttemptsStorageHandler: ReplaceAttemptsStorageHandler;
+    private readonly _replaceAttemptsStorageHandler: Lazy<ReplaceAttemptsStorageHandler>;
+    private _gobySource: GobyOrderSource | null = null;
 
     get id(): string {
         return this.tastyOrderRawData.id.toString();
@@ -32,7 +35,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     }
 
     getReplaceAttemptStorageDiscriminator(): string {
-        return this._replaceAttemptsStorageHandler.getStorageDiscriminator().discriminator;
+        return this._replaceAttemptsStorageHandler.value.getStorageDiscriminator().discriminator;
     }
 
     get underlyingSymbol(): string {
@@ -44,7 +47,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     }
 
     get isGobyOrder(): boolean {
-        return this.tastyOrderRawData.source === ORDERS_SOURCE_NAME;
+        return Boolean(this._gobySource);
     }
 
     private get accountNumber(): string {
@@ -62,7 +65,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     }
 
     async replace(): Promise<void> {
-        if(!this.isGobyOrder) {
+        if(!this._gobySource) {
             return;
         }
 
@@ -70,7 +73,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
             //VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER is here in order to be able to test the logic in development while the market is closed.
             if(this.tastyOrderRawData.status !== "Live" && import.meta.env.VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER !== 'true') {
-                this._replaceAttemptsStorageHandler.setLastAttemptTime();
+                this._replaceAttemptsStorageHandler.value.setLastAttemptTime();
                 return;
             }
 
@@ -80,14 +83,15 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 return;
             }
 
-            this._replaceAttemptsStorageHandler.numberOfReplaceAttempts++;
+            this._replaceAttemptsStorageHandler.value.numberOfReplaceAttempts++;
+            this._gobySource = this._gobySource.withReplaceAttempts(this._replaceAttemptsStorageHandler.value.numberOfReplaceAttempts);
 
             await this.tastyClient.orderService.replaceOrder(this.accountNumber, this.orderIdAsNumber, {
                 "order-type": this.tastyOrderRawData.orderType,
                 "time-in-force": this.tastyOrderRawData.timeInForce,
                 "price": newPrice,
                 "price-effect": this.tastyOrderRawData.priceEffect,
-                "source": this.tastyOrderRawData.source,
+                "source": this._gobySource.toString(),
                 "legs": this.tastyOrderRawData.legs.map(leg => {
                     return {
                         "action": leg.action,
@@ -108,7 +112,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     private async _getPriceForReplace(): Promise<NullableNumber> {
 
 
-        if((this.services.time.currentDate.getTime() - this._replaceAttemptsStorageHandler.lastAttemptTime) < WORKING_ORDER_REPLACE_TIME_LIMIT.totalMilliseconds) {
+        if((this.services.time.currentDate.getTime() - this._replaceAttemptsStorageHandler.value.lastAttemptTime) < WORKING_ORDER_REPLACE_TIME_LIMIT.totalMilliseconds) {
             return null;
         }
 
@@ -126,7 +130,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
             maxAttempts = 1;
         }
 
-        if(this._replaceAttemptsStorageHandler.numberOfReplaceAttempts >= maxAttempts) {
+        if(this._replaceAttemptsStorageHandler.value.numberOfReplaceAttempts >= maxAttempts) {
             return null;
         }
 
@@ -149,9 +153,13 @@ interface IReplaceAttemptStorageData {
 }
 
 class ReplaceAttemptsStorageHandler {
-    constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
+    constructor(gobyOrderSource: GobyOrderSource | null,
+                private readonly tastyOrderRawData: ITastyOrderRawData,
                 private readonly services: IAppServiceFactory) {
-        this.setLastAttemptTime();
+        this._setStorageData({
+            count: gobyOrderSource?.replaceAttempts ?? 0,
+            lastAttemptTime: this.services.time.currentDate.getTime(),
+        });
         this._replaceStorageKey();
     }
 

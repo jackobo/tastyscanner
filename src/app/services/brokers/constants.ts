@@ -1,1 +1,0 @@
-export const ORDERS_SOURCE_NAME = "operation-goby";
