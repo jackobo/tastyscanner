@@ -3,7 +3,7 @@ import {NullableUndefinedNumber} from "../../../../../framework/types/nullable-t
 
 export type TastyOrderStatus = "Received" | "Routed" | "In Flight" | "Live" | "Cancel Requested" | "Replace Requested" | "Contingent" | "Filled" | "Cancelled" | "Expired" | "Rejected" | "Removed" | "Partially Removed";
 
-export const TASTY_WORKING_ORDER_STATUSES: TastyOrderStatus[] = ["Received", "Routed", "In Flight", "Live"];
+export const TASTY_WORKING_ORDER_STATUSES: TastyOrderStatus[] = ["Received", "Routed", "Contingent", "In Flight", "Live"];
 
 export interface ITastyOrderRawData {
     id: number;

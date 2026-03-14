@@ -69,7 +69,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         try {
 
             if(this.tastyOrderRawData.status !== "Live" && import.meta.env.VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER !== 'true') {
-                this._replaceAttemptsStorageHandler.setLastAttemptTime()
+                this._replaceAttemptsStorageHandler.setLastAttemptTime();
                 return;
             }
 
@@ -150,6 +150,7 @@ interface IReplaceAttemptStorageData {
 class ReplaceAttemptsStorageHandler {
     constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
                 private readonly services: IAppServiceFactory) {
+        this.setLastAttemptTime();
         this._replaceStorageKey();
     }
 
@@ -165,8 +166,9 @@ class ReplaceAttemptsStorageHandler {
     setLastAttemptTime(): void {
         const replaceAttempts = this._getStorageData();
         this._setStorageData({
-            count: replaceAttempts?.count ?? 0,
-            lastAttemptTime: Date.now()
+            count: 0,
+            ...replaceAttempts,
+            lastAttemptTime: this.services.time.currentDate.getTime()
         });
 
     }
@@ -185,7 +187,7 @@ class ReplaceAttemptsStorageHandler {
     set numberOfReplaceAttempts(value: number) {
         this._setStorageData({
             count: value,
-            lastAttemptTime: Date.now()
+            lastAttemptTime: this.services.time.currentDate.getTime()
         });
     }
 
@@ -219,7 +221,10 @@ class ReplaceAttemptsStorageHandler {
         this.services.localStorage.removeItem(AppLocalStorageKeys.orderReplaceAttempts,
                                               this.getStorageDiscriminator(this.tastyOrderRawData.replacesOrderId.toString()));
 
-        this._setStorageData(replaceAttempts);
+        this._setStorageData({
+            ...replaceAttempts,
+            lastAttemptTime: this.services.time.currentDate.getTime(),
+        });
 
     }
 
