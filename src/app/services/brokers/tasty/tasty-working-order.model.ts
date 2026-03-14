@@ -6,10 +6,11 @@ import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {AppLocalStorageKeys} from "../../storage/app-local-storage-keys";
 import {Check} from "../../../../framework/utils/type-checking";
 import {TimeSpan} from "../../../../framework/types/time-span";
+import {NullableNumber} from "../../../../framework/types/nullable-types";
 
 export const WORKING_ORDERS_MAX_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(10);
 const WORKING_ORDER_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
-const WORKING_ORDER_REPLACE_ATTEMPTS_LIMIT = 3;
+
 
 export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
@@ -50,31 +51,32 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return this.tastyOrderRawData.accountNumber;
     }
 
+    public  async cancel(): Promise<void> {
+        try {
+            await this.tastyClient.orderService.cancelOrder(this.accountNumber, this.orderIdAsNumber);
+        } catch (err) {
+            await this.services.toaster.showErrorToast({
+                renderContent: () => this.services.language.translate(`Failed to cancel order! ${err}`)
+            });
+        }
+    }
+
     async replace(): Promise<void> {
         if(!this.isGobyOrder) {
             return;
         }
 
-        if(this._replaceAttemptsStorageHandler.numberOfReplaceAttempts >= WORKING_ORDER_REPLACE_ATTEMPTS_LIMIT) {
-            return;
-        }
-
-        if((this.services.time.currentDate.getTime() - this._replaceAttemptsStorageHandler.lastAttemptTime) < WORKING_ORDER_REPLACE_TIME_LIMIT.totalMilliseconds) {
-            return;
-        }
-
-        this._replaceAttemptsStorageHandler.numberOfReplaceAttempts++;
-
-        let newPrice = this.tradingPrice;
-        if(this.tastyOrderRawData.priceEffect === "Credit") {
-            newPrice = this.tradingPrice - 0.01; //make it a little bit cheaper to get filled
-        } else if(this.tastyOrderRawData.priceEffect === "Debit") {
-            newPrice = this.tradingPrice + 0.01; //make it a little bit expensive to get filled
-        }
-
-        console.log(`Replacing order ${this.id} with ${newPrice}`);
-
         try {
+            const newPrice = await this._getPriceForReplace();
+
+            if(Check.isNullOrUndefined(newPrice)) {
+                return;
+            }
+
+            console.log(`Replacing order! Old price: ${this.tradingPrice} | New price: ${newPrice}`);
+
+            this._replaceAttemptsStorageHandler.numberOfReplaceAttempts++;
+
             await this.tastyClient.orderService.replaceOrder(this.accountNumber, this.orderIdAsNumber, {
                 "order-type": this.tastyOrderRawData.orderType,
                 "time-in-force": this.tastyOrderRawData.timeInForce,
@@ -91,23 +93,52 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 })
             });
         } catch (err) {
-            console.error(err);
+            this.services.logger.error('Failed to replace order', err);
             await this.services.toaster.showErrorToast({
                 renderContent: () => this.services.language.translate(`Failed to replace order! ${err}`)
             });
         }
-
     }
 
-    public  async cancel(): Promise<void> {
-        try {
-            await this.tastyClient.orderService.cancelOrder(this.accountNumber, this.orderIdAsNumber);
-        } catch (err) {
-            await this.services.toaster.showErrorToast({
-                renderContent: () => this.services.language.translate(`Failed to cancel order! ${err}`)
-            });
+    private async _getPriceForReplace(): Promise<NullableNumber> {
+
+        if(this.tastyOrderRawData.status !== "Live") {
+            return null;
+        }
+
+        if((this.services.time.currentDate.getTime() - this._replaceAttemptsStorageHandler.lastAttemptTime) < WORKING_ORDER_REPLACE_TIME_LIMIT.totalMilliseconds) {
+            return null;
+        }
+
+        const tickerInfo = await this.services.tickers.getTicker(this.underlyingSymbol).getInfoAsync();
+
+        const tickSize = tickerInfo.getOptionTickSize(this.tradingPrice);
+
+        let maxAttempts: number;
+
+        if(tickSize === 0.01) {
+            maxAttempts = 4;
+        } else if(tickSize === 0.02) {
+            maxAttempts = 2;
+        } else {
+            maxAttempts = 1;
+        }
+
+        if(this._replaceAttemptsStorageHandler.numberOfReplaceAttempts >= maxAttempts) {
+            return null;
+        }
+
+        if(this.tastyOrderRawData.priceEffect === "Credit") {
+            return this.tradingPrice - tickSize; //make it a little bit cheaper to get filled
+        } else if(this.tastyOrderRawData.priceEffect === "Debit") {
+            return  this.tradingPrice + tickSize; //make it a little bit expensive to get filled
+        } else {
+            this.services.logger.error('Unexpected price effect', this.tastyOrderRawData.priceEffect);
+            return null;
         }
     }
+
+
 }
 
 interface IReplaceAttemptStorageData {

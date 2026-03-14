@@ -16,8 +16,6 @@ export class TickersService extends AppServiceBase implements ITickersService {
             recentTickers: observable
         });
 
-
-
         runInAction(() => {
             this.recentTickers = [
                 new TickerModel("SPY", this.services)
@@ -35,6 +33,7 @@ export class TickersService extends AppServiceBase implements ITickersService {
         this._currentTicker?.start();
     }
 
+    private _loadedTickers: Record<string, TickerModel> = {};
 
     public recentTickers: TickerModel[] = [];
 
@@ -46,10 +45,7 @@ export class TickersService extends AppServiceBase implements ITickersService {
     async setCurrentTicker(symbol: string): Promise<void> {
         await this._currentTicker?.stop();
 
-        let ticker = this.recentTickers.find(t => t.symbol === symbol);
-        if(!ticker) {
-            ticker = new TickerModel(symbol, this.services);
-        }
+        const ticker = this.getTicker(symbol);
 
         this._addToRecentTickers(ticker);
 
@@ -62,6 +58,14 @@ export class TickersService extends AppServiceBase implements ITickersService {
             await this._currentTicker.start();
         }
 
+    }
+
+    getTicker(symbol: string): TickerModel {
+        if(!this._loadedTickers[symbol]) {
+            this._loadedTickers[symbol] = new TickerModel(symbol, this.services);
+        }
+
+        return this._loadedTickers[symbol];
     }
 
     private _saveRecentTickers(): void {
