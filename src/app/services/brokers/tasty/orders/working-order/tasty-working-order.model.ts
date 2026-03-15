@@ -249,6 +249,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 return;
             }
 
+            debugger;
             this._autoReplaceAttemptsStorageHandler.value.setLastAttemptTime();
             this._gobySource = await this._replaceOrder(newPrice, this._gobySource.withAutoReplaceAttempts(this.numberOfAutoReplaceAttempts + 1));
 
@@ -322,7 +323,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
 interface IAutoReplaceAttemptStorageData {
     lastAttemptTime: number;
-    paused: boolean | undefined;
+    paused: boolean;
 }
 
 class AutoReplaceAttemptsStorageHandler {
@@ -343,8 +344,16 @@ class AutoReplaceAttemptsStorageHandler {
 
     private _paused: NullableUndefinedBoolean = null;
     get paused(): boolean {
+        const isPausedFromStorage = this._getStorageData().paused;
+
+        if(isPausedFromStorage !== this._paused) {
+            runInAction(() => {
+                this._paused = isPausedFromStorage;
+            })
+        }
+
         if(Check.isNullOrUndefined(this._paused)) {
-            return this._getStorageData()?.paused ?? false;
+            return isPausedFromStorage;
         }
 
         return this._paused;

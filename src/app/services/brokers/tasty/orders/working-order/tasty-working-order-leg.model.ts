@@ -41,6 +41,10 @@ export class TastyWorkingOrderLegModel implements IWorkingOrderLegViewModel {
         return this.legRawData.symbol;
     }
 
+    get symbol(): string {
+        return this.legRawData.symbol;
+    }
+
     get isBuy(): boolean {
         return isBuyAction(this.legRawData.action);
     }
@@ -62,6 +66,10 @@ export class TastyWorkingOrderLegModel implements IWorkingOrderLegViewModel {
                 return null;
 
         }
+    }
+
+    get rawQuantity(): number {
+        return this.legRawData.quantity;
     }
 
     get quantity(): number {

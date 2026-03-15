@@ -11,8 +11,8 @@ export interface IBrokerageAccountViewModel {
     readonly workingOrders: IWorkingOrderViewModel[];
     readonly accountInfo: IBrokerageAccountInfoViewModel | null;
     sendOrder(order: IOpenOrderRequest): Promise<void>;
-    countSoldLegs(symbol: string): number;
-    countBoughtLegs(symbol: string): number;
+    countSellLegs(symbol: string): number;
+    countBuysLegs(symbol: string): number;
 }
 
 export interface IBrokerageAccountInfoViewModel {

@@ -19,6 +19,7 @@ import {
     showWorkingOrderUpdateConfirmationToast
 } from "../../../pages/working-orders/show-working-order-update-confirmation-toast";
 import {OrderUpdateType} from "../../../pages/working-orders/components/working-order-confirmation-toast.component";
+import {TastyWorkingOrderLegModel} from "./orders/working-order/tasty-working-order-leg.model";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -32,12 +33,13 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 public readonly services: IAppServiceFactory) {
 
 
-        makeObservable<this, '_activePositions' | '_workingOrders' | 'openOrdersLegsMap' | '_accountInfo'>(this, {
+        makeObservable<this, '_activePositions' | '_workingOrders' | '_accountInfo'>(this, {
             _activePositions: observable.ref,
             _workingOrders: observable,
             _accountInfo: observable.ref,
-            openOrdersLegsMap: computed,
-            workingOrders: computed
+            activePositionsLegsMap: computed,
+            workingOrders: computed,
+            workingOrdersLegsMap: computed,
         });
     }
 
@@ -82,9 +84,14 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
     private _activePositions: TastyActivePositionsResult = new TastyActivePositionsResult(true, []);
 
-    private get openOrdersLegsMap(): Record<string, TastyActivePositionLegModel> {
+    get activePositionsLegsMap(): Record<string, TastyActivePositionLegModel> {
         return this._activePositions.positions.selectMany(o => o.legs)
                                       .toDictionaryOfType(leg => leg.symbol, leg => leg);
+    }
+
+    get workingOrdersLegsMap(): Record<string, TastyWorkingOrderLegModel[]> {
+        return this._workingOrders.selectMany(o => o.legs)
+                                  .groupByKey(leg => leg.symbol);
     }
 
     private _setActivePositions(orders: TastyActivePositionModel[]): void {
@@ -132,9 +139,16 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }
 
     }
+    countSellLegs(symbol: string): number {
+        return this.countActiveSellLegs(symbol) + this.countWorkingSellLegs(symbol);
+    }
 
-    countSoldLegs(symbol: string): number {
-        const leg = this.openOrdersLegsMap[symbol];
+    countBuysLegs(symbol: string): number {
+        return this.countActiveBuyLegs(symbol) + this.countWorkingBuyLegs(symbol);
+    }
+
+    countActiveSellLegs(symbol: string): number {
+        const leg = this.activePositionsLegsMap[symbol];
         if(!leg?.isSell) {
             return 0;
         }
@@ -142,13 +156,31 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         return leg.rawQuantity;
     }
 
-    countBoughtLegs(symbol: string): number {
-        const leg = this.openOrdersLegsMap[symbol];
+    countActiveBuyLegs(symbol: string): number {
+        const leg = this.activePositionsLegsMap[symbol];
         if(!leg?.isBuy) {
             return 0;
         }
 
-        return Math.abs(leg.quantity);
+        return leg.rawQuantity;
+    }
+
+    countWorkingSellLegs(symbol: string): number {
+        const workingLegs = this.workingOrdersLegsMap[symbol];
+        if(!workingLegs) {
+            return 0;
+        }
+
+        return workingLegs.filter(leg => leg.isSell).sum(leg => leg.rawQuantity);
+    }
+
+    countWorkingBuyLegs(symbol: string): number {
+        const workingLegs = this.workingOrdersLegsMap[symbol];
+        if(!workingLegs) {
+            return 0;
+        }
+
+        return workingLegs.filter(leg => leg.isBuy).sum(leg => leg.rawQuantity);
     }
 
     private async _loadAccountInfo(): Promise<void> {

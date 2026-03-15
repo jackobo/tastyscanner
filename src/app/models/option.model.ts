@@ -119,11 +119,11 @@ export abstract class OptionModel implements IOptionViewModel {
     }
 
     get countSells(): number {
-        return this.services.brokers.currentAccount?.countSoldLegs(this.symbol) ?? 0;
+        return this.services.brokers.currentAccount?.countSellLegs(this.symbol) ?? 0;
     }
 
     get countBuys(): number {
-        return this.services.brokers.currentAccount?.countBoughtLegs(this.symbol) ?? 0;
+        return this.services.brokers.currentAccount?.countBuysLegs(this.symbol) ?? 0;
     }
 
     getOptionTickSize(price: number): number {
