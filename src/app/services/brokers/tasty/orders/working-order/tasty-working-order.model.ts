@@ -5,7 +5,7 @@ import {IAppServiceFactory} from "../../../../app-service-factory.interface";
 import {AppLocalStorageKeys} from "../../../../storage/app-local-storage-keys";
 import {Check} from "../../../../../../framework/utils/type-checking";
 import {TimeSpan} from "../../../../../../framework/types/time-span";
-import {NullableNumber} from "../../../../../../framework/types/nullable-types";
+import {NullableNumber, NullableUndefinedBoolean} from "../../../../../../framework/types/nullable-types";
 import {GobyOrderSource} from "../../../goby-order-source";
 import {Lazy} from "../../../../../../framework/utils/lazy";
 import {TastyWorkingOrderLegModel} from "./tasty-working-order-leg.model";
@@ -67,6 +67,14 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     }
     set autoReplacePaused(value) {
         this._autoReplaceAttemptsStorageHandler.value.paused = value;
+    }
+
+    private _isAutoReplaceSuspended: boolean = false;
+    suspendAutoReplace(): void {
+        this._isAutoReplaceSuspended = true;
+    }
+    resumeAutoReplace(): void {
+        this._isAutoReplaceSuspended = false;
     }
 
     get id(): string {
@@ -186,6 +194,10 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 return;
             }
 
+            if(this._isAutoReplaceSuspended) {
+                return;
+            }
+
             //VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER is here in order to be able to test the logic in development while the market is closed.
             if(this.tastyOrderRawData.status !== "Live" && import.meta.env.VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER !== 'true') {
                 this._autoReplaceAttemptsStorageHandler.value.setLastAttemptTime();
@@ -286,11 +298,21 @@ class AutoReplaceAttemptsStorageHandler {
         if(gobySource) {
             this.paused = gobySource.autoReplacePaused || this.paused;
         }
+
+        makeObservable<this, '_paused'>(this, {
+            _paused: observable.ref
+        })
     }
 
 
+    private _paused: NullableUndefinedBoolean = null;
     get paused(): boolean {
-        return this._getStorageData()?.paused ?? false;
+        if(Check.isNullOrUndefined(this._paused)) {
+            return this._getStorageData()?.paused ?? false;
+        }
+
+        return this._paused;
+
     }
 
     set paused(value: boolean) {
@@ -298,6 +320,9 @@ class AutoReplaceAttemptsStorageHandler {
             paused: value,
             lastAttemptTime: this.services.time.currentDate.getTime()
         });
+        runInAction(() => {
+            this._paused = value;
+        })
     }
 
     get lastAttemptTime(): number {

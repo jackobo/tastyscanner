@@ -15,6 +15,8 @@ export interface IWorkingOrderViewModel {
     cancel(): Promise<void>;
     replace(newPrice: number, options?: IReplaceWorkingOrderOptions): Promise<void>;
     autoReplacePaused: boolean;
+    suspendAutoReplace(): void;
+    resumeAutoReplace(): void;
 }
 
 export interface IReplaceWorkingOrderOptions {

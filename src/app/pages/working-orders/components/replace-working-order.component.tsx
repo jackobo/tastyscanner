@@ -22,17 +22,25 @@ import {
 const ContainerBox = styled.div`
     display: flex;
     flex-direction: column;
-    gap: var(--ion-space-24);
-    padding: var(--ion-space-16);
-    //max-width: 200px;
 `
+const HeaderBox = styled.div`
+    border-bottom: 1px solid var(--ion-color-border);
+`
+
+const BodyBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: var(--ion-space-16);
+    padding: var(--ion-space-20);
+`
+
 
 const TitleContainerBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding-bottom: var(--ion-space-12);
-    border-bottom: 1px solid var(--ion-color-border);
+    padding: var(--ion-space-20);
+    
 `
 
 const TitleBox = styled.div`
@@ -101,11 +109,12 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
 
     useEffect(() => {
         const form = formRef.current;
+        props.workingOrder.suspendAutoReplace();
         return () => {
             form.dispose();
+            props.workingOrder.resumeAutoReplace();
         }
-
-    }, [])
+    })
 
     const togglePriceLock = () => {
         formRef.current.togglePriceLock();
@@ -147,37 +156,43 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
 
     return (
         <ContainerBox>
-            <TitleContainerBox>
-                <TitleBox>
-                    {services.language.translate('Replace order')}
-                </TitleBox>
-                <CloseButtonBox onClick={props.onCloseClick}>
-                    <IonIcon icon={closeOutline}/>
-                </CloseButtonBox>
-            </TitleContainerBox>
-            <PriceContainerBox>
-                <PriceLabelContainerBox>
-                    <span>{formRef.current.fields.price.fieldName}</span>
-                    <SpecializedButtonComponent renderIcon={renderLockIcon} onClick={togglePriceLock}/>
-                </PriceLabelContainerBox>
-                <PriceInputContainerBox>
+            <HeaderBox>
+                <TitleContainerBox>
+                    <TitleBox>
+                        {services.language.translate('Replace order')}
+                    </TitleBox>
+                    <CloseButtonBox onClick={props.onCloseClick}>
+                        <IonIcon icon={closeOutline}/>
+                    </CloseButtonBox>
+                </TitleContainerBox>
+            </HeaderBox>
 
-                    {renderPlusMinus(removeCircleOutline, decrementPrice)}
+            <BodyBox>
+                <PriceContainerBox>
+                    <PriceLabelContainerBox>
+                        <span>{formRef.current.fields.price.fieldName}</span>
+                        <SpecializedButtonComponent renderIcon={renderLockIcon} onClick={togglePriceLock}/>
+                    </PriceLabelContainerBox>
+                    <PriceInputContainerBox>
 
-                    <PriceInputComponent field={formRef.current.fields.price} hideLabel={true} cssClassesForOutsideBordersStyle={{
-                        inputAndIconContainer: 'price-input-container',
-                    }}/>
+                        {renderPlusMinus(removeCircleOutline, decrementPrice)}
 
-                    {renderPlusMinus(addCircleOutline, incrementPrice)}
+                        <PriceInputComponent field={formRef.current.fields.price} hideLabel={true} cssClassesForOutsideBordersStyle={{
+                            inputAndIconContainer: 'price-input-container',
+                        }}/>
 
-                </PriceInputContainerBox>
-            </PriceContainerBox>
+                        {renderPlusMinus(addCircleOutline, incrementPrice)}
 
-            <BooleanFieldEditorComponent field={formRef.current.fields.resetAutoReplaceAttempts}/>
+                    </PriceInputContainerBox>
+                </PriceContainerBox>
 
-            <PrimaryButton showArrow={true} onClick={sendOrder}>
-                {services.language.translate('Send order')}
-            </PrimaryButton>
+                {props.workingOrder.isGobyOrder && <BooleanFieldEditorComponent field={formRef.current.fields.resetAutoReplaceAttempts}/>}
+
+                <PrimaryButton showArrow={true} onClick={sendOrder}>
+                    {services.language.translate('Send order')}
+                </PrimaryButton>
+
+            </BodyBox>
 
         </ContainerBox>
     )

@@ -40,27 +40,40 @@ const ReplaceButtonBox = styled.div`
     justify-content: center;
 `
 
+const ReplaceButtonToolTipContentBox = styled.div`
+    padding: var(--ion-space-16);
+    font-size: var(--ion-font-size-body2);
+`
+
 
 export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
     const services = useServices();
-    const tradingPriceValueRef = useRef<HTMLDivElement | null>(null);
+    const tradingPriceValueElementRef = useRef<HTMLDivElement | null>(null);
+    const replaceButtonElementRef = useRef<HTMLDivElement | null>(null);
     const replaceWorkingOrderTooltipControllerRef = useRef<ITooltipController | null>(null);
     return (
         <BodyBox>
             <PriceContainerBox>
                 <div>{services.language.translate('Trading price')}</div>
-                <TradingPriceValueBox ref={tradingPriceValueRef}>
+                <TradingPriceValueBox ref={tradingPriceValueElementRef}>
                     <div>{props.workingOrder.tradingPrice.toFixed(2)}</div>
-                    <ReplaceButtonBox>
+                    <ReplaceButtonBox ref={replaceButtonElementRef}>
                         <IonIcon icon={repeatOutline}/>
                     </ReplaceButtonBox>
                 </TradingPriceValueBox>
 
 
-                <TooltipComponent targetRef={tradingPriceValueRef} placement={"bottom"}
+                <TooltipComponent targetRef={tradingPriceValueElementRef} placement={"bottom"}
                                   toggleBehavior={TooltipToggleBehaviorEnum.OnTargetClick}
                                   tooltipControllerRef={replaceWorkingOrderTooltipControllerRef}>
                     <ReplaceWorkingOrderComponent workingOrder={props.workingOrder} onCloseClick={() => replaceWorkingOrderTooltipControllerRef.current?.close()}/>
+                </TooltipComponent>
+
+                <TooltipComponent targetRef={replaceButtonElementRef} placement={"bottom"}
+                                  toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                    <ReplaceButtonToolTipContentBox>
+                        {services.language.translate('Replace order')}
+                    </ReplaceButtonToolTipContentBox>
                 </TooltipComponent>
 
 
