@@ -14,6 +14,7 @@ const WorkingOrderHeaderBox = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: var(--ion-space-8);
+    border-bottom: 1px solid var(--ion-color-border);
 `
 
 const UnderlyingSymbolBox = styled.div`

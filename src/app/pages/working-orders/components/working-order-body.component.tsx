@@ -7,19 +7,18 @@ import {IonIcon} from "@ionic/react";
 import {repeatOutline} from "ionicons/icons";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
 
-const WorkingOrderFieldsBox = styled.div`
+const BodyBox = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: var(--ion-space-16);
-    row-gap: var(--ion-space-8);
 `
 
-const PriceBox = styled.div`
+const PriceContainerBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    gap: var(--ion-space-8);
+    gap: 2px;
 `
 
 const TradingPriceValueBox = styled.div`
@@ -42,8 +41,8 @@ export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderView
     const tradingPriceValueRef = useRef<HTMLDivElement | null>(null);
 
     return (
-        <WorkingOrderFieldsBox>
-            <PriceBox>
+        <BodyBox>
+            <PriceContainerBox>
                 <div>{services.language.translate('Trading price')}</div>
                 <TradingPriceValueBox ref={tradingPriceValueRef}>
                     <div>{props.workingOrder.tradingPrice.toFixed(2)}</div>
@@ -59,12 +58,12 @@ export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderView
                 </TooltipComponent>
 
 
-            </PriceBox>
-            <PriceBox>
+            </PriceContainerBox>
+            <PriceContainerBox>
                 <div>{services.language.translate('Mid price')}</div>
                 <div>{props.workingOrder.midPrice?.toFixed(2)}</div>
-            </PriceBox>
+            </PriceContainerBox>
 
-        </WorkingOrderFieldsBox>
+        </BodyBox>
     )
 });
