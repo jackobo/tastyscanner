@@ -9,7 +9,11 @@ export interface IWorkingOrderViewModel {
     readonly midPrice: NullableNumber;
     readonly isGobyOrder: boolean
     readonly legs: IWorkingOrderLegViewModel[];
+    readonly numberOfAutoReplaceAttempts: number;
+    readonly maxAutoReplaceAttempts: NullableNumber;
+    readonly optionsTickSize: NullableNumber;
     cancel(): Promise<void>;
+    autoReplacePaused: boolean;
 }
 
 export interface IWorkingOrderLegViewModel {

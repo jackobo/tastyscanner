@@ -10,6 +10,7 @@ import {GobyOrderSource} from "../../../goby-order-source";
 import {Lazy} from "../../../../../../framework/utils/lazy";
 import {TastyWorkingOrderLegModel} from "./tasty-working-order-leg.model";
 import {MathUtils} from "../../../../../../framework/utils/math-utils";
+import {makeObservable, observable, runInAction} from "mobx";
 
 export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(10);
 const WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
@@ -25,6 +26,11 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
             this._autoReplaceAttemptsStorageHandler.forceInit();
         }
         this.legs = tastyOrderRawData.legs.map(leg => new TastyWorkingOrderLegModel(leg, tastyOrderRawData.underlyingSymbol, services));
+
+        makeObservable<this, '_maxAutoReplaceAttempts' | '_optionsTickSize'>(this, {
+            _maxAutoReplaceAttempts: observable.ref,
+            _optionsTickSize: observable.ref
+        })
     }
 
     private readonly _autoReplaceAttemptsStorageHandler: Lazy<AutoReplaceAttemptsStorageHandler>;
@@ -76,8 +82,33 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return this.tastyOrderRawData.accountNumber;
     }
 
-    private get numberOfAutoReplaceAttempts(): number {
+    private _optionsTickSize: NullableNumber = null;
+    get optionsTickSize(): NullableNumber {
+        if(Check.isNullOrUndefined(this._optionsTickSize)) {
+            this._getMaxAttemptsAndTickSize().then(result => {
+                runInAction(() => {
+                    this._optionsTickSize = result.tickSize;
+                })
+            });
+        }
+
+        return this._optionsTickSize;
+    }
+
+    get numberOfAutoReplaceAttempts(): number {
         return this._gobySource?.autoReplaceAttempts ?? 0;
+    }
+    private _maxAutoReplaceAttempts: NullableNumber = null;
+    get maxAutoReplaceAttempts(): NullableNumber {
+        if(Check.isNullOrUndefined(this._maxAutoReplaceAttempts)) {
+            this._getMaxAttemptsAndTickSize().then(result => {
+                runInAction(() => {
+                    this._maxAutoReplaceAttempts = result.maxAttempts;
+                })
+            });
+        }
+
+        return this._maxAutoReplaceAttempts;
     }
 
     public  async cancel(): Promise<void> {
@@ -91,11 +122,16 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     }
 
     async autoReplace(): Promise<void> {
-        if(!this._gobySource) {
-            return;
-        }
 
         try {
+
+            if(!this._gobySource) {
+                return;
+            }
+
+            if(this.autoReplacePaused) {
+                return;
+            }
 
             //VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER is here in order to be able to test the logic in development while the market is closed.
             if(this.tastyOrderRawData.status !== "Live" && import.meta.env.VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER !== 'true') {
@@ -141,9 +177,14 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         }
     }
 
-    private async _getPriceForAutoReplace(): Promise<NullableNumber> {
+    get autoReplacePaused(): boolean {
+        return this._autoReplaceAttemptsStorageHandler.value.paused;
+    }
+    set autoReplacePaused(value) {
+        this._autoReplaceAttemptsStorageHandler.value.paused = value;
+    }
 
-
+    private async _getMaxAttemptsAndTickSize(): Promise<{maxAttempts: number, tickSize: number}> {
         const tickerInfo = await this.services.tickers.getTicker(this.underlyingSymbol).getInfoAsync();
 
         const tickSize = tickerInfo.getOptionTickSize(this.tradingPrice);
@@ -157,6 +198,13 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         } else {
             maxAttempts = 1;
         }
+
+        return {maxAttempts, tickSize};
+    }
+
+    private async _getPriceForAutoReplace(): Promise<NullableNumber> {
+
+        const {maxAttempts, tickSize} = await this._getMaxAttemptsAndTickSize();
 
         if(this.numberOfAutoReplaceAttempts >= maxAttempts) {
             return null;
@@ -177,12 +225,24 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
 interface IAutoReplaceAttemptStorageData {
     lastAttemptTime: number;
+    paused: boolean | undefined;
 }
 
 class AutoReplaceAttemptsStorageHandler {
     constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
                 private readonly services: IAppServiceFactory) {
         this.setLastAttemptTime();
+    }
+
+
+    get paused(): boolean {
+        return this._getStorageData()?.paused ?? false;
+    }
+
+    set paused(value: boolean) {
+        this._setStorageData({
+            paused: value
+        });
     }
 
     get lastAttemptTime(): number {
@@ -195,9 +255,7 @@ class AutoReplaceAttemptsStorageHandler {
     }
 
     setLastAttemptTime(): void {
-        const replaceAttempts = this._getStorageData();
         this._setStorageData({
-            ...replaceAttempts,
             lastAttemptTime: this.services.time.currentDate.getTime()
         });
 
@@ -209,13 +267,20 @@ class AutoReplaceAttemptsStorageHandler {
         }
     }
 
-    private _getStorageData(): IAutoReplaceAttemptStorageData | null {
+    private _getStorageData(): IAutoReplaceAttemptStorageData {
         return this.services.localStorage.getJson<IAutoReplaceAttemptStorageData>(AppLocalStorageKeys.orderAutoReplace,
-                                                  this.getStorageDiscriminator());
+                                                  this.getStorageDiscriminator())
+            ?? {
+                paused: false,
+                lastAttemptTime: this.services.time.currentDate.getTime(),
+            };
     }
 
-    private _setStorageData(data: IAutoReplaceAttemptStorageData): void {
-        this.services.localStorage.setJson(AppLocalStorageKeys.orderAutoReplace, data, this.getStorageDiscriminator());
+    private _setStorageData(data: Partial<IAutoReplaceAttemptStorageData>): void {
+        this.services.localStorage.setJson(AppLocalStorageKeys.orderAutoReplace, {
+            ...this._getStorageData(),
+            ...data
+        }, this.getStorageDiscriminator());
     }
 
 }
