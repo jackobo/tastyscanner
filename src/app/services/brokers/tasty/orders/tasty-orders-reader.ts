@@ -1,18 +1,18 @@
 import TastyTradeClient from "@tastytrade/api";
-import {IAppServiceFactory} from "../../app-service-factory.interface";
-import {ITastyActivePositionRawData} from "./raw-data/tasty-active-position.raw-data.interface";
+import {IAppServiceFactory} from "../../../app-service-factory.interface";
+import {ITastyActivePositionRawData} from "../raw-data/tasty-active-position.raw-data.interface";
 import {
     ITastyOrderLegFillRawData,
     ITastyOrderLegRawData,
     ITastyOrderRawData
-} from "./raw-data/tasty-order.raw-data.interfaces";
+} from "../raw-data/tasty-order.raw-data.interfaces";
 import {
     ITastyLegConsolidatedWithPosition,
     ITastyOrderConsolidatedWithPositions
-} from "./raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
-import {isOrderLegOpenAction} from "../interfaces/open-order-request.interface";
-import {Check} from "../../../../framework/utils/type-checking";
-import {NullableUndefinedNumber} from "../../../../framework/types/nullable-types";
+} from "../raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
+import {isOrderLegOpenAction} from "../../interfaces/open-order-request.interface";
+import {Check} from "../../../../../framework/utils/type-checking";
+import {NullableUndefinedNumber} from "../../../../../framework/types/nullable-types";
 
 
 export class TastyOrdersReader {

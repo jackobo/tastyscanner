@@ -18,7 +18,7 @@ import {TastyAccountModel} from "./tasty-account.model";
 import {IBroker} from "../interfaces/broker.interface";
 import {TastyMarketDataProvider} from "./tasty-market-data-provider";
 import {NullableUndefinedString} from "../../../../framework/types/nullable-types";
-import {TastyOrdersReader} from "./tasty-orders-reader";
+import {TastyOrdersReader} from "./orders/tasty-orders-reader";
 
 class TastyConnection {
     constructor(public readonly tastyClient: TastyTradeClient,

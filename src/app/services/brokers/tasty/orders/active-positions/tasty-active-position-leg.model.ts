@@ -1,76 +1,12 @@
-import {IActivePositionLegViewModel,
-    IActivePositionViewModel
-} from "../interfaces/active-position.interfaces";
-import {IAppServiceFactory} from "../../app-service-factory.interface";
+import {IActivePositionLegViewModel} from "../../../interfaces/active-position.interfaces";
+import {OptionType} from "../../../../../models/option.view-model.interface";
+import {NullableDate, NullableNumber} from "../../../../../../framework/types/nullable-types";
+import {IQuoteRawData, ITradeRawData} from "../../../../market-data-provider/market-data-provider.service.interface";
+import {isBuyToOpenAction, isSellToOpenAction} from "../../../interfaces/open-order-request.interface";
+import {IAppServiceFactory} from "../../../../app-service-factory.interface";
 import {
-    ITastyLegConsolidatedWithPosition,
-    ITastyOrderConsolidatedWithPositions
-} from "./raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
-import {isBuyToOpenAction, isSellToOpenAction} from "../interfaces/open-order-request.interface";
-import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
-import {Check} from "../../../../framework/utils/type-checking";
-import {IQuoteRawData, ITradeRawData} from "../../market-data-provider/market-data-provider.service.interface";
-import {OptionType} from "../../../models/option.view-model.interface";
-
-export class TastyActivePositionModel implements IActivePositionViewModel {
-    constructor(private readonly services: IAppServiceFactory,
-                private readonly orderRawData: ITastyOrderConsolidatedWithPositions) {
-        this.legs = orderRawData.legs.map(leg => new TastyActivePositionLegModel(services, leg))
-                                     .sort((l1, l2) => (l1.strikePrice ?? 0) - (l2.strikePrice ?? 0));
-    }
-
-    get id(): string {
-        return this.orderRawData.id.toString();
-    }
-    get underlyingSymbol(): string {
-        return this.orderRawData.underlyingSymbol;
-    }
-    get createdAt(): Date {
-        return this.orderRawData.terminalAt;
-    }
-
-    private _sumValues(values: number[]): number {
-        return Math.round(values.sum(val => val) * 100)/100;
-    }
-
-    get profitLossPercent(): number {
-        return 100 * (this.profitLoss / Math.abs(this.tradingCost));
-    }
-
-    get profitLoss(): number {
-        return this._sumValues(this.legs.map(leg => leg.profitLoss));
-    }
-
-    get marketPrice(): number {
-        return this._sumValues(this.legs.map(leg => leg.marketPrice));
-    }
-    get tradingPrice(): number {
-        return this._sumValues(this.legs.map(leg => leg.tradingPrice));
-    }
-
-    get tradingCost(): number {
-        return this._sumValues(this.legs.map(leg => leg.tradingCost));
-    }
-
-
-
-    get daysToExpiration(): NullableNumber {
-        const daysToExpiration =  this.legs.filter(l => !Check.isNullOrUndefined(l.daysToExpiration))
-            .map(l => l.daysToExpiration ?? 0);
-        if(daysToExpiration.length === 0) {
-            return null;
-        }
-        return Math.min(...daysToExpiration);
-    }
-
-
-
-    public readonly legs: TastyActivePositionLegModel[];
-
-    getAllStreamerSymbols(): string[] {
-        return this.legs.map(leg => leg.streamerSymbol);
-    }
-}
+    ITastyLegConsolidatedWithPosition
+} from "../../raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
 
 export class TastyActivePositionLegModel implements IActivePositionLegViewModel {
     constructor(private readonly services: IAppServiceFactory,
@@ -207,6 +143,7 @@ export class TastyActivePositionLegModel implements IActivePositionLegViewModel 
         return this.quote?.askPrice ?? null;
     }
 }
+
 
 interface IParsedOptionStreamerSymbol {
     underlyingSymbol: string;

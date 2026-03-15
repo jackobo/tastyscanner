@@ -9,6 +9,7 @@ import {
 import {IAppServiceFactory} from "../services/app-service-factory.interface";
 import {computed, makeObservable} from "mobx";
 import {Check} from "../../framework/utils/type-checking";
+import {MathUtils} from "../../framework/utils/math-utils";
 
 export abstract class OptionModel implements IOptionViewModel {
     constructor(public readonly symbol: string,
@@ -78,7 +79,7 @@ export abstract class OptionModel implements IOptionViewModel {
     }
 
     get midPrice(): number {
-        return Math.round(((this.bidPrice + this.askPrice) / 2) * 100) / 100;
+        return MathUtils.round((this.bidPrice + this.askPrice) / 2);
     }
 
 
