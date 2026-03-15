@@ -70,6 +70,7 @@ const PriceInputContainerBox = styled.div`
     display: flex;
     flex-direction: row;
     gap: var(--ion-space-8);
+    align-items: center;
     
 `
 
@@ -81,11 +82,6 @@ const PriceLabelContainerBox = styled.div`
     gap: var(--ion-space-8);
     border-bottom: 1px solid var(--ion-color-border);
     margin: 0 calc(-1 * var(--ion-space-8));
-`
-
-
-const PlusMinusIconBox = styled(SpecializedButtonComponent)`
-    font-size: 24px;
 `
 
 const PriceInputComponent = styled(StringFieldEditorComponent)`
@@ -143,14 +139,15 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
         }
     }
 
-    const renderPlusMinus = (iconName: string, onClick: () => void  ) => {
+    const renderPlusMinus = (iconName: string, getToolTipText: (tickSize: number) => string, onClick: () => void  ) => {
         if(Check.isNullOrUndefined(props.workingOrder.optionsTickSize)) {
             return null;
         }
 
         return (
-            <PlusMinusIconBox renderIcon={() => (<IonIcon icon={iconName}/>)}
-                              onClick={onClick}/>
+            <SpecializedButtonComponent renderIcon={() => (<IonIcon icon={iconName}/>)}
+                                        onClick={onClick}
+                                        tooltipText={getToolTipText(props.workingOrder.optionsTickSize)}/>
         )
     }
 
@@ -173,11 +170,13 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
                 <PriceContainerBox>
                     <PriceLabelContainerBox>
                         <span>{formRef.current.fields.price.fieldName}</span>
-                        <SpecializedButtonComponent renderIcon={renderLockIcon} onClick={togglePriceLock}/>
+                        <SpecializedButtonComponent renderIcon={renderLockIcon} onClick={togglePriceLock} tooltipText={services.language.translate('Lock price')}/>
                     </PriceLabelContainerBox>
                     <PriceInputContainerBox>
 
-                        {renderPlusMinus(removeCircleOutline, decrementPrice)}
+                        {renderPlusMinus(removeCircleOutline,
+                                        tickSize => services.language.translationFor('Decrement with {tickSize}').withParams({tickSize: tickSize.toFixed(2)}),
+                                        decrementPrice)}
 
                         <PriceInputComponent field={formRef.current.fields.price} hideLabel={true} cssClassesForOutsideBordersStyle={{
                             inputAndIconContainer: 'price-input-container',
@@ -186,7 +185,9 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
                             errorContainer: 'price-input-error-container',
                         }}/>
 
-                        {renderPlusMinus(addCircleOutline, incrementPrice)}
+                        {renderPlusMinus(addCircleOutline,
+                                        tickSize => services.language.translationFor('Increment with {tickSize}').withParams({tickSize: tickSize.toFixed(2)}),
+                                        incrementPrice)}
 
                     </PriceInputContainerBox>
                 </PriceContainerBox>

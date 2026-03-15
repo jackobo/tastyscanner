@@ -82,8 +82,12 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
         })
     }
 
+    get tickSize(): NullableNumber {
+        return this.workingOrder.optionsTickSize;
+    }
+
     private _updatePrice(tickSign: number) {
-        const tickSize = this.workingOrder.optionsTickSize;
+        const tickSize = this.tickSize;
         if(Check.isNullOrUndefined(tickSize)) {
             return;
         }
@@ -115,7 +119,7 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
         if(this.activateErrorsValidation().length > 0) {
             return;
         }
-        
+
         const newPrice = parseFloat(this.fields.price.value ?? '0');
         await this.workingOrder.replace(newPrice, {
             resetAutoReplaceAttempts: this.fields.resetAutoReplaceAttempts.value ?? false
