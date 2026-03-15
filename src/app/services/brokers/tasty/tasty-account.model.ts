@@ -198,65 +198,89 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     }
 
 
-    private _orderFillDebounce: Debounce = new Debounce(TimeSpan.fromSeconds(1));
 
-    private _tryRemoveWorkingOrder(workingOrderId: NullableUndefinedNumber): void {
+
+    private _tryRemoveWorkingOrder(workingOrderId: NullableUndefinedNumber): TastyWorkingOrderModel | null {
         if(!workingOrderId) {
-            return;
+            return null;
         }
 
         const existingWorkingOrderIndex = this._workingOrders.findIndex(wo => wo.id === workingOrderId.toString());
 
-        if(existingWorkingOrderIndex >= 0) {
-            this._workingOrders[existingWorkingOrderIndex].dispose();
-            runInAction(() => {
-                this._workingOrders.splice(existingWorkingOrderIndex, 1);
-            });
-
+        if(existingWorkingOrderIndex < 0) {
+            return null;
         }
+
+        const existingOrder = this._workingOrders[existingWorkingOrderIndex];
+        existingOrder.dispose();
+        runInAction(() => {
+            this._workingOrders.splice(existingWorkingOrderIndex, 1);
+        });
+
+        return existingOrder;
     }
 
     async updateOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
 
-        this._tryRemoveWorkingOrder(rawOrderData.id);
-        this._tryRemoveWorkingOrder(rawOrderData.replacesOrderId);
-        const updatedOrderModel = this._createWorkingOrderModel(rawOrderData);
-
         if(TASTY_WORKING_ORDER_STATUSES.includes(rawOrderData.status)) {
-            runInAction(() => {
-                this._workingOrders.push(this._createWorkingOrderModel(rawOrderData));
-            });
-
-            let orderUpdateType: OrderUpdateType | null = null;
-
-            if(rawOrderData.status === "Received") {
-                if(rawOrderData.replacesOrderId) {
-                    orderUpdateType = 'Replaced';
-                } else {
-                    orderUpdateType = 'Sent';
-                }
-
-            } else if(rawOrderData.status === "Live") {
-                orderUpdateType = 'Live';
-            }
-
-            if(orderUpdateType) {
-                await showWorkingOrderUpdateConfirmationToast(orderUpdateType, updatedOrderModel, this.services);
-            }
+            await this._processWorkingOrder(rawOrderData);
         } else if (rawOrderData.status === "Cancelled") {
-            if(!rawOrderData.replacingOrderId) {
-                //it means the order was explicitly canceled and was not canceled as a result of a replacement
-                await showWorkingOrderUpdateConfirmationToast("Canceled", updatedOrderModel, this.services);
+            await this._processCanceledOrder(rawOrderData);
+        } else if(rawOrderData.status === "Filled") {
+            this._processFilledOrder(rawOrderData);
+        } else if(rawOrderData.status === "Rejected") {
+            await this._processRejectedOrder(rawOrderData);
+        }
+    }
 
+    private async _processWorkingOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
+        const updatedOrderModel = this._createWorkingOrderModel(rawOrderData);
+        runInAction(() => {
+            this._workingOrders.push(updatedOrderModel);
+        });
+
+        let orderUpdateType: OrderUpdateType | null = null;
+
+        if(rawOrderData.status === "Received") {
+            if(rawOrderData.replacesOrderId) {
+                orderUpdateType = 'Replaced';
+            } else {
+                orderUpdateType = 'Sent';
             }
 
-        } else if(rawOrderData.status === "Filled") {
-            this._orderFillDebounce.execute(async () => {
-                await this._loadActivePositions();
-                await showWorkingOrderUpdateConfirmationToast('Filled', updatedOrderModel, this.services);
-            });
-        } else if(rawOrderData.status === "Rejected") {
-            await showWorkingOrderUpdateConfirmationToast('Rejected', updatedOrderModel, this.services);
+        } else if(rawOrderData.status === "Live") {
+            orderUpdateType = 'Live';
+        }
+
+        if(orderUpdateType) {
+            await showWorkingOrderUpdateConfirmationToast(orderUpdateType, updatedOrderModel, this.services);
+        }
+    }
+
+    private async _processCanceledOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
+        const workingOrder = this._tryRemoveWorkingOrder(rawOrderData.id);
+        if(!rawOrderData.replacingOrderId) { //it means the order was explicitly canceled and was not canceled as a result of a replacement
+            if(workingOrder) {
+                await showWorkingOrderUpdateConfirmationToast("Canceled", workingOrder, this.services);
+            }
+        }
+    }
+    private _orderFillDebounce: Debounce = new Debounce(TimeSpan.fromSeconds(1));
+    private _processFilledOrder(rawOrderData: ITastyOrderRawData): void {
+        this._orderFillDebounce.execute(async () => {
+            const workingOrder = this._tryRemoveWorkingOrder(rawOrderData.id);
+            if(workingOrder) {
+                await showWorkingOrderUpdateConfirmationToast("Filled", workingOrder, this.services);
+            }
+        })
+
+
+    }
+
+    private async _processRejectedOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
+        const workingOrder = this._tryRemoveWorkingOrder(rawOrderData.id);
+        if(workingOrder) {
+            await showWorkingOrderUpdateConfirmationToast("Rejected", workingOrder, this.services);
         }
     }
 
