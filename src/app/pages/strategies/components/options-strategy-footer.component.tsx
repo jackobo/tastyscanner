@@ -45,7 +45,7 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
         }
 
         return {
-            renderTooltipContent: () => services.language.translate("Some of the legs in this strategy have opposite positions in already open orders.")
+            renderTooltipContent: () => services.language.translate("Some of the legs in this strategy have opposite positions in already active/working orders.")
         }
     }
 
