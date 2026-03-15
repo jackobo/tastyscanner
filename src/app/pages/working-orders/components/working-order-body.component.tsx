@@ -43,6 +43,7 @@ const ReplaceButtonBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.1rem;
 `
 
 const ReplaceButtonToolTipContentBox = styled.div`
