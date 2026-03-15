@@ -12,15 +12,14 @@ import {TastyWorkingOrderLegModel} from "./tasty-working-order-leg.model";
 import {MathUtils} from "../../../../../../framework/utils/math-utils";
 import {makeObservable, observable, runInAction} from "mobx";
 
-export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(10);
+export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(5);
 const WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
 
 
 export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
                 private readonly tastyClient: TastyTradeClient,
-                private readonly services: IAppServiceFactory,
-                private readonly getTimeUntilNextAutoReplaceRun: () => TimeSpan) {
+                private readonly services: IAppServiceFactory) {
         this._gobySource = GobyOrderSource.tryParse(tastyOrderRawData.source);
         this._autoReplaceAttemptsStorageHandler = new Lazy<AutoReplaceAttemptsStorageHandler>(() =>
             new AutoReplaceAttemptsStorageHandler(tastyOrderRawData, services, this._gobySource));
@@ -149,7 +148,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         }
 
         const lastAttemptTime = this._autoReplaceAttemptsStorageHandler.value.lastAttemptTime;
-        const nextAttemptTime = lastAttemptTime + WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT.totalMilliseconds + this.getTimeUntilNextAutoReplaceRun().totalMilliseconds - this.services.time.currentDate.getTime();
+        const nextAttemptTime = lastAttemptTime + WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT.totalMilliseconds - this.services.time.currentDate.getTime();
         if(nextAttemptTime < 0) {
             return TimeSpan.Zero;
         }

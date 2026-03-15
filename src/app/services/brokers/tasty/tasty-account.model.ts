@@ -12,7 +12,7 @@ import {ITastyOrderRawData, TASTY_WORKING_ORDER_STATUSES} from "./raw-data/tasty
 import {TastyWorkingOrderModel, WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL} from "./orders/working-order/tasty-working-order.model";
 import {TimeSpan} from "../../../../framework/types/time-span";
 import {Debounce} from "../../../../framework/utils/debounce";
-import {NullableNumber, NullableUndefinedNumber, UndefinedString} from "../../../../framework/types/nullable-types";
+import {NullableUndefinedNumber, UndefinedString} from "../../../../framework/types/nullable-types";
 import {AppLocalStorageKeys} from "../../storage/app-local-storage-keys";
 import {GobyOrderSource} from "../goby-order-source";
 import {
@@ -175,7 +175,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
 
     private _createWorkingOrderModel(rawOrderData: ITastyOrderRawData): TastyWorkingOrderModel {
-        return new TastyWorkingOrderModel(rawOrderData, this.tastyClient, this.services, this._getTimeUntilNextAutoReplaceRun);
+        return new TastyWorkingOrderModel(rawOrderData, this.tastyClient, this.services);
     }
 
     private async _loadWorkingOrders(): Promise<void> {
@@ -301,12 +301,11 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
     }
 
-    private _nextAutoReplaceStartTime: NullableNumber = null;
+
 
     private _startAutoReplaceWorkingOrders(): void {
         //this random stuff is to reduce the likelihood that multiple browser tabs to execute the order replacement at the same time
-        const timeIntervalMS = Math.max(3000, Math.round(Math.random() * WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL.totalMilliseconds));
-        this._nextAutoReplaceStartTime = this.services.time.currentDate.getTime() + timeIntervalMS;
+        const timeIntervalMS = Math.max(1000, Math.round(Math.random() * WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL.totalMilliseconds));
         this._autoReplaceWorkingOrdersTimerRef = setTimeout(async () => {
             const workingOrders = [...this.workingOrders]
 
@@ -318,24 +317,9 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }, timeIntervalMS);
     }
 
-    private _getTimeUntilNextAutoReplaceRun = () => {
-        if(!this._nextAutoReplaceStartTime) {
-            return TimeSpan.Zero;
-        }
-
-        const timeMS = this._nextAutoReplaceStartTime - this.services.time.currentDate.getTime();
-        if(timeMS <= 0) {
-            return TimeSpan.Zero;
-        }
-
-        return TimeSpan.fromMilliseconds(timeMS);
-    }
-
-
 
     private _stopReplaceWorkingOrders(): void {
         clearInterval(this._autoReplaceWorkingOrdersTimerRef);
-        this._nextAutoReplaceStartTime = null;
     }
 
 

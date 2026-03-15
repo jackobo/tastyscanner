@@ -10,6 +10,7 @@ import {pauseCircleOutline, playCircleOutline} from "ionicons/icons";
 import {useServices} from "../../../hooks/use-services.hook";
 import {Check} from "../../../../framework/utils/type-checking";
 import {TimeSpan} from "../../../../framework/types/time-span";
+import {IonSpinnerComponent} from "../../../../framework/components/spinner/ion-spinner.component";
 
 const FooterBox = styled.div`
     display: flex;
@@ -27,6 +28,14 @@ const AutoReplaceInfoBox = styled.div`
 
 
 const AutoReplaceCountBox = styled.div`
+`
+
+const NextAutoReplaceTimeBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--ion-space-8);
+    
 `
 
 
@@ -86,9 +95,17 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
             return null;
         }
         return (
-            <div>
-                {`Next auto replace in: ${nextAutoReplaceTime.toMinutesAndSecondsString()}`}
-            </div>
+            <NextAutoReplaceTimeBox>
+                <span>
+                    {services.language.translate('Next auto replace in:')}
+                </span>
+                {
+                    nextAutoReplaceTime.totalMilliseconds === 0
+                        ? <IonSpinnerComponent/>
+                        : <span>{nextAutoReplaceTime.toMinutesAndSecondsString()}</span>
+                }
+
+            </NextAutoReplaceTimeBox>
         )
     }
 
