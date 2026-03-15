@@ -21,7 +21,9 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
         this._gobySource = GobyOrderSource.tryParse(tastyOrderRawData.source);
-        this._autoReplaceAttemptsStorageHandler = new Lazy<AutoReplaceAttemptsStorageHandler>(() => new AutoReplaceAttemptsStorageHandler(tastyOrderRawData, services, this._gobySource));
+        this._autoReplaceAttemptsStorageHandler = new Lazy<AutoReplaceAttemptsStorageHandler>(() =>
+            new AutoReplaceAttemptsStorageHandler(tastyOrderRawData, services, this._gobySource));
+
         if(this._gobySource) {
             this._autoReplaceAttemptsStorageHandler.forceInit();
         }
@@ -54,6 +56,17 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         this.legs.forEach(leg => {
             leg.dispose();
         });
+    }
+
+    private get accountNumber(): string {
+        return this.tastyOrderRawData.accountNumber;
+    }
+
+    get autoReplacePaused(): boolean {
+        return this._autoReplaceAttemptsStorageHandler.value.paused;
+    }
+    set autoReplacePaused(value) {
+        this._autoReplaceAttemptsStorageHandler.value.paused = value;
     }
 
     get id(): string {
@@ -90,9 +103,8 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return Boolean(this._gobySource);
     }
 
-    private get accountNumber(): string {
-        return this.tastyOrderRawData.accountNumber;
-    }
+
+
 
     private _optionsTickSize: NullableNumber = null;
     get optionsTickSize(): NullableNumber {
@@ -220,12 +232,6 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return gobySource;
     }
 
-    get autoReplacePaused(): boolean {
-        return this._autoReplaceAttemptsStorageHandler.value.paused;
-    }
-    set autoReplacePaused(value) {
-        this._autoReplaceAttemptsStorageHandler.value.paused = value;
-    }
 
     private async _getMaxAttemptsAndTickSize(): Promise<{maxAttempts: number, tickSize: number}> {
         const tickerInfo = await this.services.tickers.getTicker(this.underlyingSymbol).getInfoAsync();
@@ -278,7 +284,7 @@ class AutoReplaceAttemptsStorageHandler {
         this.setLastAttemptTime();
 
         if(gobySource) {
-            this.paused = gobySource.autoReplacePaused;
+            this.paused = gobySource.autoReplacePaused || this.paused;
         }
     }
 

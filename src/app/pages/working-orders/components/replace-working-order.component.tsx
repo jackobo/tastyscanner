@@ -24,6 +24,7 @@ const ContainerBox = styled.div`
     flex-direction: column;
     gap: var(--ion-space-24);
     padding: var(--ion-space-16);
+    //max-width: 200px;
 `
 
 const TitleContainerBox = styled.div`
@@ -96,31 +97,35 @@ interface ReplaceWorkingOrderComponentProps {
 
 export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponentProps> = observer((props) => {
     const services = useServices();
-    const form = useRef<ReplaceWorkingOrderFormModel>(new ReplaceWorkingOrderFormModel(props.workingOrder, services));
+    const formRef = useRef<ReplaceWorkingOrderFormModel>(new ReplaceWorkingOrderFormModel(props.workingOrder, services));
 
     useEffect(() => {
-        form.current.dispose();
+        const form = formRef.current;
+        return () => {
+            form.dispose();
+        }
+
     }, [])
 
     const togglePriceLock = () => {
-        form.current.togglePriceLock();
+        formRef.current.togglePriceLock();
     }
 
     const decrementPrice = () => {
-        form.current.decrementPrice();
+        formRef.current.decrementPrice();
     }
 
     const incrementPrice = () => {
-        form.current.incrementPrice();
+        formRef.current.incrementPrice();
     }
 
     const sendOrder = async () => {
-        await form.current.sendOrder();
+        await formRef.current.sendOrder();
     }
 
 
     const renderLockIcon = () => {
-        if(form.current.fields.isPriceLocked.value) {
+        if(formRef.current.fields.isPriceLocked.value) {
             return (<IonIcon icon={lockClosedOutline}/>)
         } else {
             return (<IonIcon icon={lockOpenOutline}/>)
@@ -152,14 +157,14 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
             </TitleContainerBox>
             <PriceContainerBox>
                 <PriceLabelContainerBox>
-                    <span>{form.current.fields.price.fieldName}</span>
+                    <span>{formRef.current.fields.price.fieldName}</span>
                     <SpecializedButtonComponent renderIcon={renderLockIcon} onClick={togglePriceLock}/>
                 </PriceLabelContainerBox>
                 <PriceInputContainerBox>
 
                     {renderPlusMinus(removeCircleOutline, decrementPrice)}
 
-                    <PriceInputComponent field={form.current.fields.price} hideLabel={true} cssClassesForOutsideBordersStyle={{
+                    <PriceInputComponent field={formRef.current.fields.price} hideLabel={true} cssClassesForOutsideBordersStyle={{
                         inputAndIconContainer: 'price-input-container',
                     }}/>
 
@@ -168,7 +173,7 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
                 </PriceInputContainerBox>
             </PriceContainerBox>
 
-            <BooleanFieldEditorComponent field={form.current.fields.resetAutoReplaceAttempts}/>
+            <BooleanFieldEditorComponent field={formRef.current.fields.resetAutoReplaceAttempts}/>
 
             <PrimaryButton showArrow={true} onClick={sendOrder}>
                 {services.language.translate('Send order')}

@@ -24,21 +24,19 @@ export function renderApp<TServiceFactory extends IFrameworkServiceFactory>(opti
     const root = createRoot(container);
     const AppServiceFactoryContext = options.appServiceFactoryContext;
     root.render(
-        <React.StrictMode>
-            <FrameworkServiceFactoryContext.Provider value={options.serviceFactory}>
-                <AppServiceFactoryContext value={options.serviceFactory}>
+        <FrameworkServiceFactoryContext.Provider value={options.serviceFactory}>
+            <AppServiceFactoryContext value={options.serviceFactory}>
+                <ScreenMediaQueriesChecksContext.Provider value={options.serviceFactory.screenMediaQuery}>
                     <ScreenMediaQueriesChecksContext.Provider value={options.serviceFactory.screenMediaQuery}>
-                        <ScreenMediaQueriesChecksContext.Provider value={options.serviceFactory.screenMediaQuery}>
-                            <ThemeProvider theme={options.serviceFactory.theme.currentTheme as any}>
-                                {options.renderGlobalStyles()}
-                                <App appTitle={options.appTitle} renderLogo={options.renderLogo}/>
-                            </ThemeProvider>
+                        <ThemeProvider theme={options.serviceFactory.theme.currentTheme as any}>
+                            {options.renderGlobalStyles()}
+                            <App appTitle={options.appTitle} renderLogo={options.renderLogo}/>
+                        </ThemeProvider>
 
-                        </ScreenMediaQueriesChecksContext.Provider>
                     </ScreenMediaQueriesChecksContext.Provider>
+                </ScreenMediaQueriesChecksContext.Provider>
 
-                </AppServiceFactoryContext>
-            </FrameworkServiceFactoryContext.Provider>
-        </React.StrictMode>
+            </AppServiceFactoryContext>
+        </FrameworkServiceFactoryContext.Provider>
     );
 }
