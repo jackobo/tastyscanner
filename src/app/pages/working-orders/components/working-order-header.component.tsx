@@ -25,9 +25,6 @@ const WorkingOrderHeaderButtonsBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-end;
-    gap: var(--ion-space-16);
-    flex-grow: 1;
 `
 
 const GobyIndicatorBox = styled.div`
@@ -63,7 +60,8 @@ export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderV
                     <OrderIdBox>
                         {`#${props.workingOrder.id}`}
                     </OrderIdBox>
-                    <TooltipComponent targetRef={gobyIndicatorRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                    <TooltipComponent targetRef={gobyIndicatorRef} placement={"bottom"}
+                                      toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
                         <GobyTooltipContentBox>
                             {services.language.translate('Source: Operation Goby')}
                         </GobyTooltipContentBox>
@@ -83,7 +81,7 @@ export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderV
             {renderGobyIndicator()}
             <WorkingOrderHeaderButtonsBox>
                 <RemoveButtonComponent onClick={cancelClick}
-                                       tooltipText={services.language.translate('Cancel order')}/>
+                                       tooltipText={services.language.translate('Cancel order')} />
             </WorkingOrderHeaderButtonsBox>
 
         </WorkingOrderHeaderBox>
