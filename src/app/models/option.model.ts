@@ -130,6 +130,13 @@ export abstract class OptionModel implements IOptionViewModel {
         const tickSize = this.ticker.info?.getOptionTickSize(price);
         return tickSize ?? 0.01;
     }
+
+    subscribeToStreamer(): void {
+        this.strike.expiration.services.marketDataProvider.subscribeToStreamer([this.streamerSymbol]);
+    }
+    unsubscribeFromStreamer(): void {
+        this.strike.expiration.services.marketDataProvider.unsubscribeFromStreamer([this.streamerSymbol]);
+    }
 }
 
 export class PutOptionModel extends OptionModel {

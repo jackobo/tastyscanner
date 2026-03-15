@@ -17,9 +17,7 @@ export class TastyWorkingOrderLegModel implements IWorkingOrderLegViewModel {
         });
 
         this._optionReactionDisposer= reaction(() => this.option, (opt) => {
-            if(opt) {
-                this.services.marketDataProvider.subscribeToStreamer([opt.streamerSymbol]);
-            }
+            opt?.subscribeToStreamer();
         }, {
             fireImmediately: true
         })
@@ -29,9 +27,7 @@ export class TastyWorkingOrderLegModel implements IWorkingOrderLegViewModel {
 
     dispose(): void {
         this._optionReactionDisposer();
-        if(this.option) {
-            this.services.marketDataProvider.unsubscribeFromStreamer([this.option.streamerSymbol]);
-        }
+        this.option?.unsubscribeFromStreamer();
     }
 
     get key(): string {

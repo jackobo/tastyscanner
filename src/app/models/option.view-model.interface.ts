@@ -1,7 +1,5 @@
 export type OptionType = 'C' | 'P'; //call or put
 export interface IOptionViewModel {
-    readonly symbol: string;
-    readonly streamerSymbol: string;
     readonly optionType: OptionType;
     readonly strikePrice: number;
     readonly midPrice: number;
@@ -15,5 +13,7 @@ export interface IOptionViewModel {
     readonly daysToExpiration: number;
     readonly countSells: number;
     readonly countBuys: number;
+    subscribeToStreamer(): void;
+    unsubscribeFromStreamer(): void;
 
 }
