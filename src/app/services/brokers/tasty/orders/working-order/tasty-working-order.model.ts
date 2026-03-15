@@ -8,7 +8,6 @@ import {TimeSpan} from "../../../../../../framework/types/time-span";
 import {NullableNumber} from "../../../../../../framework/types/nullable-types";
 import {GobyOrderSource} from "../../../goby-order-source";
 import {Lazy} from "../../../../../../framework/utils/lazy";
-import {pulse} from "ionicons/icons";
 
 export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(10);
 const WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
