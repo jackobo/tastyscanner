@@ -12,7 +12,7 @@ const LegsContainerBox = styled.div`
     flex-direction: column;
     gap: 4px;
     width: 100%;
-    font-size: var(--ion-font-size-body2);
+    
 `
 
 const LegContainerBox = styled.div<{$isSell: boolean}>`
@@ -26,6 +26,7 @@ const LegContainerBox = styled.div<{$isSell: boolean}>`
     padding: var(--ion-space-8);
     background-color: ${props => props.$isSell ? 'var(--ion-color-danger)' : 'var(--ion-color-success)'};
     color: ${props => props.$isSell ? 'var(--ion-color-danger-contrast)' : 'var(--ion-color-success-contrast)'};
+    font-size: inherit;
 `
 
 

@@ -41,12 +41,29 @@ export class ToasterService implements IToasterService {
 
   public async showInfoToast(options: ShowToastOptions): Promise<IToastHandler> {
     return await this._executeShowToast(() => {
+
       const toastId = toast.info(options.renderContent(), this._createToastOptions(options));
 
       return new ToastHandler(toastId);
     })
   }
 
+  async showSuccessToast(options: ShowToastOptions): Promise<IToastHandler> {
+    return await this._executeShowToast(() => {
+
+      const toastId = toast.success(options.renderContent(), this._createToastOptions(options));
+
+      return new ToastHandler(toastId);
+    })
+  }
+  async showWarningToast(options: ShowToastOptions): Promise<IToastHandler> {
+    return await this._executeShowToast(() => {
+
+      const toastId = toast.warning(options.renderContent(), this._createToastOptions(options));
+
+      return new ToastHandler(toastId);
+    })
+  }
 
   async showErrorToast(options: ShowToastOptions): Promise<IToastHandler> {
 

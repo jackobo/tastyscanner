@@ -16,6 +16,7 @@ const BodyBox = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: var(--ion-space-16);
+    width: 100%;
 `
 
 const PriceContainerBox = styled.div`
@@ -26,12 +27,16 @@ const PriceContainerBox = styled.div`
     gap: 2px;
 `
 
-const TradingPriceValueBox = styled.div`
+const PriceValueBox = styled.div`
+    font-weight: var(--ion-font-weight-bold);
+`
+
+const TradingPriceValueBox = styled(PriceValueBox)<{$isReadOnly: boolean}>`
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: var(--ion-space-8);
-    cursor: pointer;
+    cursor: ${props => props.$isReadOnly ? "default" : "pointer"};
 `
 
 const ReplaceButtonBox = styled.div`
@@ -46,20 +51,30 @@ const ReplaceButtonToolTipContentBox = styled.div`
 `
 
 
-export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
+export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderViewModel;isReadOnly?: boolean;}> = observer((props) => {
     const services = useServices();
     const tradingPriceValueElementRef = useRef<HTMLDivElement | null>(null);
     const replaceButtonElementRef = useRef<HTMLDivElement | null>(null);
     const replaceWorkingOrderTooltipControllerRef = useRef<ITooltipController | null>(null);
+
+    const renderReplaceButton = () => {
+        if(props.isReadOnly) {
+            return null;
+        }
+        return (
+            <ReplaceButtonBox ref={replaceButtonElementRef}>
+                <IonIcon icon={repeatOutline}/>
+            </ReplaceButtonBox>
+        )
+    }
+
     return (
         <BodyBox>
             <PriceContainerBox>
                 <div>{services.language.translate('Trading price')}</div>
-                <TradingPriceValueBox ref={tradingPriceValueElementRef}>
+                <TradingPriceValueBox ref={tradingPriceValueElementRef} $isReadOnly={Boolean(props.isReadOnly)}>
                     <div>{props.workingOrder.tradingPrice.toFixed(2)}</div>
-                    <ReplaceButtonBox ref={replaceButtonElementRef}>
-                        <IonIcon icon={repeatOutline}/>
-                    </ReplaceButtonBox>
+                    {renderReplaceButton()}
                 </TradingPriceValueBox>
 
 
@@ -80,7 +95,7 @@ export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderView
             </PriceContainerBox>
             <PriceContainerBox>
                 <div>{services.language.translate('Mid price')}</div>
-                <div>{props.workingOrder.midPrice?.toFixed(2)}</div>
+                <PriceValueBox>{props.workingOrder.midPrice?.toFixed(2)}</PriceValueBox>
             </PriceContainerBox>
 
         </BodyBox>

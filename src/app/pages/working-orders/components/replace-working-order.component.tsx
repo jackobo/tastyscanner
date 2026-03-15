@@ -44,7 +44,6 @@ const TitleContainerBox = styled.div`
 `
 
 const TitleBox = styled.div`
-    font-size: var(--ion-font-size-body1);
     font-weight: var(--ion-font-weight-bold);
     flex-grow: 1;
 `

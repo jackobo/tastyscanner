@@ -1,29 +1,42 @@
 import React from "react";
 import {observer} from "mobx-react";
 import {IWorkingOrderViewModel} from "../../../services/brokers/interfaces/working-order.interfaces";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import {CardBox} from "../../../../framework/components/card/card.box";
 import {WorkingOrderHeaderComponent} from "./working-order-header.component";
 import {WorkingOrderLegsComponent} from "./working-order-legs.component";
 import {WokingOrderFooterComponent} from "./working-order-footer.component";
 import {WokingOrderBodyComponent} from "./working-order-body.component";
 
-const WorkingOrderBox = styled(CardBox)`
+const WorkingOrderBox = styled(CardBox)<{$isReadOnly: boolean}>`
     display: flex;
     flex-direction: column;
     gap: var(--ion-space-12);
+    font-size: var(--ion-font-size-body2);
+    ${props => props.$isReadOnly 
+            ? css`
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                align-items: center;
+                width: 100%;
+                font-size: var(--ion-font-size-caption);
+            `
+            : css``
+    }
 `
-
-export const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
+interface WorkingOrderComponentProps {
+    workingOrder: IWorkingOrderViewModel;
+    isReadOnly?: boolean;
+}
+export const WorkingOrderComponent: React.FC<WorkingOrderComponentProps> = observer((props) => {
 
     return (
-        <WorkingOrderBox>
-
-            <WorkingOrderHeaderComponent workingOrder={props.workingOrder}/>
-            <WokingOrderBodyComponent workingOrder={props.workingOrder}/>
+        <WorkingOrderBox $isReadOnly={Boolean(props.isReadOnly)}>
+            <WorkingOrderHeaderComponent workingOrder={props.workingOrder} isReadOnly={props.isReadOnly}/>
+            <WokingOrderBodyComponent workingOrder={props.workingOrder} isReadOnly={props.isReadOnly}/>
             <WorkingOrderLegsComponent workingOrder={props.workingOrder}/>
-
-            <WokingOrderFooterComponent workingOrder={props.workingOrder}/>
+            {!props.isReadOnly && <WokingOrderFooterComponent workingOrder={props.workingOrder}/>}
         </WorkingOrderBox>
     )
 })

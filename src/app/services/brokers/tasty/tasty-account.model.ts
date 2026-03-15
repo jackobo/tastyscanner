@@ -11,11 +11,14 @@ import {TastyAccountInfoModel} from "./tasty-account-info.model";
 import {ITastyOrderRawData, TASTY_WORKING_ORDER_STATUSES} from "./raw-data/tasty-order.raw-data.interfaces";
 import {TastyWorkingOrderModel, WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL} from "./orders/working-order/tasty-working-order.model";
 import {TimeSpan} from "../../../../framework/types/time-span";
-import {Check} from "../../../../framework/utils/type-checking";
 import {Debounce} from "../../../../framework/utils/debounce";
 import {NullableUndefinedNumber, UndefinedString} from "../../../../framework/types/nullable-types";
 import {AppLocalStorageKeys} from "../../storage/app-local-storage-keys";
 import {GobyOrderSource} from "../goby-order-source";
+import {
+    showWorkingOrderUpdateConfirmationToast
+} from "../../../pages/working-orders/show-working-order-update-confirmation-toast";
+import {OrderUpdateType} from "../../../pages/working-orders/components/working-order-confirmation-toast.component";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -216,52 +219,43 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
         this._tryRemoveWorkingOrder(rawOrderData.id);
         this._tryRemoveWorkingOrder(rawOrderData.replacesOrderId);
+        const updatedOrderModel = new TastyWorkingOrderModel(rawOrderData, this.tastyClient, this.services);
 
         if(TASTY_WORKING_ORDER_STATUSES.includes(rawOrderData.status)) {
             runInAction(() => {
                 this._workingOrders.push(this._createWorkingOrderModel(rawOrderData));
             });
 
-            let toastMessage: string = '';
+            let orderUpdateType: OrderUpdateType | null = null;
+
             if(rawOrderData.status === "Received") {
                 if(rawOrderData.replacesOrderId) {
-                    toastMessage = this.services.language.translate('Order replaced');
+                    orderUpdateType = 'Replaced';
                 } else {
-                    toastMessage = this.services.language.translate('Order sent');
+                    orderUpdateType = 'Sent';
                 }
 
             } else if(rawOrderData.status === "Live") {
-                toastMessage = this.services.language.translate('Order is live');
+                orderUpdateType = 'Live';
             }
 
-            if(!Check.isEmpty(toastMessage)) {
-                await this.services.toaster.showInfoToast({
-                    renderContent: () => toastMessage,
-                    autoCloseTime: TimeSpan.fromSeconds(2)
-                })
+            if(orderUpdateType) {
+                await showWorkingOrderUpdateConfirmationToast(orderUpdateType, updatedOrderModel, this.services);
             }
         } else if (rawOrderData.status === "Cancelled") {
             if(!rawOrderData.replacingOrderId) {
                 //it means the order was explicitly canceled and was not canceled as a result of a replacement
-                await this.services.toaster.showInfoToast({
-                    renderContent: () => this.services.language.translate('Order canceled'),
-                    autoCloseTime: TimeSpan.fromSeconds(2)
-                })
+                await showWorkingOrderUpdateConfirmationToast("Canceled", updatedOrderModel, this.services);
+
             }
 
         } else if(rawOrderData.status === "Filled") {
             this._orderFillDebounce.execute(async () => {
                 await this._loadActivePositions();
-                await this.services.toaster.showInfoToast({
-                    renderContent: () => this.services.language.translate('Order filled'),
-                    autoCloseTime: TimeSpan.fromSeconds(2)
-                })
+                await showWorkingOrderUpdateConfirmationToast('Filled', updatedOrderModel, this.services);
             });
         } else if(rawOrderData.status === "Rejected") {
-            await this.services.toaster.showErrorToast({
-                renderContent: () => this.services.language.translate('Order rejected'),
-                autoCloseTime: TimeSpan.fromSeconds(3)
-            })
+            await showWorkingOrderUpdateConfirmationToast('Rejected', updatedOrderModel, this.services);
         }
     }
 

@@ -14,7 +14,6 @@ const FooterBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    font-size: var(--ion-font-size-body2);
     padding-top: var(--ion-space-8);
 `
 

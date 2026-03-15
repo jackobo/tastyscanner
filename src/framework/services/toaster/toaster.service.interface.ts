@@ -15,5 +15,7 @@ export interface IToasterService {
     setContainerElementRef(elementRef: HTMLElement): void;
     showToast(options: ShowToastOptions): Promise<IToastHandler>;
     showInfoToast(options: ShowToastOptions): Promise<IToastHandler>;
+    showSuccessToast(options: ShowToastOptions): Promise<IToastHandler>;
+    showWarningToast(options: ShowToastOptions): Promise<IToastHandler>;
     showErrorToast(options: ShowToastOptions): Promise<IToastHandler>;
 }

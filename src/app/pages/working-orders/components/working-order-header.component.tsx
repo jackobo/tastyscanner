@@ -14,12 +14,13 @@ const WorkingOrderHeaderBox = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: var(--ion-space-8);
+    padding-bottom: 4px;
     border-bottom: 1px solid var(--ion-color-border);
+    width: 100%;
 `
 
 const UnderlyingSymbolBox = styled.div`
     font-weight: bold;
-    font-size: var(--ion-font-size-body1);
 `
 
 const WorkingOrderHeaderButtonsBox = styled.div`
@@ -35,16 +36,14 @@ const GobyIndicatorBox = styled.div`
 
 const GobyTooltipContentBox = styled.div`
     padding: var(--ion-space-16);
-    font-size: var(--ion-font-size-body2);
 `
 
-const OrderIdBox = styled.div`
-    font-size: var(--ion-font-size-body2);
+const OrderIdBox = styled.div<{$isReadOnly: boolean}>`
     flex-grow: 1;
-    text-align: center;
+    text-align: ${props => props.$isReadOnly ? 'right' : 'center'};
 `
 
-export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
+export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderViewModel; isReadOnly?: boolean;}> = observer((props) => {
     const services = useServices();
     const gobyIndicatorRef = useRef<HTMLDivElement | null>(null)
     const cancelClick = async () => {
@@ -78,12 +77,11 @@ export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderV
                 {props.workingOrder.underlyingSymbol}
             </UnderlyingSymbolBox>
             {renderGobyIndicator()}
-            <OrderIdBox>
+            <OrderIdBox $isReadOnly={Boolean(props.isReadOnly)}>
                 {`#${props.workingOrder.id}`}
             </OrderIdBox>
             <WorkingOrderHeaderButtonsBox>
-                <RemoveButtonComponent onClick={cancelClick}
-                                       tooltipText={services.language.translate('Cancel order')} />
+                {!props.isReadOnly && <RemoveButtonComponent onClick={cancelClick} tooltipText={services.language.translate('Cancel order')} />}
             </WorkingOrderHeaderButtonsBox>
 
         </WorkingOrderHeaderBox>
