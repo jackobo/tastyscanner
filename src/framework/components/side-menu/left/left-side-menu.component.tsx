@@ -29,11 +29,8 @@ const IonMenuBox = styled(IonMenu)`
 const HeaderBox = styled(IonHeader)`
     display: flex;
     flex-direction: row;
-    text-align: center;
-    justify-content: center;
-    align-content: center;
     align-items: center;
-    gap: var(--ion-space-8);
+    gap: var(--ion-space-12);
     font-size: var(--ion-font-size-h4);
     font-weight: bold;
     min-height: 20px;

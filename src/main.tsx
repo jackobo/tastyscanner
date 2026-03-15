@@ -23,7 +23,7 @@ root.render(
 
 renderApp({
     rootElementId: "root",
-    appTitle: "Tasty Scanner",
+    appTitle: "Tasty Goby",
     renderLogo: () => <AppLogo/>,
     serviceFactory: serviceFactory,
     appServiceFactoryContext: AppServiceFactoryContext,
