@@ -11,6 +11,8 @@ export interface IOpenOrderRequest {
 
 export type OrderLegAction = "Allocate" | "Buy" | "Buy to Close" | "Buy to Open" | "Sell" | "Sell to Close" | "Sell to Open";
 
+export type OrderSimpleLegActionType = 'BTO' | 'STO' | 'BTC' | 'STC';
+
 export function isOrderLegOpenAction(action: OrderLegAction): boolean {
     return action === "Buy to Open" || action === "Sell to Open";
 }

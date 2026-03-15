@@ -49,8 +49,8 @@ export abstract class OptionModel implements IOptionViewModel {
     }
 
 
-    get expirationDate(): string {
-        return this.strike.expiration.expirationDate;
+    get expirationDate(): Date {
+        return this.services.time.parseIsoDate(this.strike.expiration.expirationDate);
     }
 
     get daysToExpiration(): number {

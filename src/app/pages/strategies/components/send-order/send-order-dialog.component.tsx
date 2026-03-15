@@ -148,9 +148,10 @@ const TimeInForceBox = styled.div`
 `
 
 const LegComponent: React.FC<{leg: IOptionsStrategyLegViewModel}> = observer((props) => {
+    const services = useServices();
     return (
         <>
-            <LegExpirationCellBox>{props.leg.option.expirationDate}</LegExpirationCellBox>
+            <LegExpirationCellBox>{services.time.formatUserFriendlyMonthDay(props.leg.option.expirationDate)}</LegExpirationCellBox>
             <LegCellBox>{`${props.leg.option.daysToExpiration}d`}</LegCellBox>
             <LegCellBox>{props.leg.option.strikePrice}</LegCellBox>
             <LegCellBox>{props.leg.option.optionType}</LegCellBox>

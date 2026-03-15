@@ -1,10 +1,14 @@
 import {IWorkingOrderLegViewModel} from "../../../interfaces/working-order.interfaces";
 import {ITastyOrderLegRawData} from "../../raw-data/tasty-order.raw-data.interfaces";
 import {IAppServiceFactory} from "../../../../app-service-factory.interface";
-import {isBuyAction, isSellAction} from "../../../interfaces/open-order-request.interface";
-import {IOptionViewModel} from "../../../../../models/option.view-model.interface";
+import {isBuyAction, isSellAction, OrderSimpleLegActionType} from "../../../interfaces/open-order-request.interface";
+import {IOptionViewModel, OptionType} from "../../../../../models/option.view-model.interface";
 import {computed, IReactionDisposer, makeObservable, reaction} from "mobx";
-import {NullableUndefinedNumber} from "../../../../../../framework/types/nullable-types";
+import {
+    NullableDate,
+    NullableNumber,
+    NullableUndefinedNumber
+} from "../../../../../../framework/types/nullable-types";
 import {Check} from "../../../../../../framework/utils/type-checking";
 import {MathUtils} from "../../../../../../framework/utils/math-utils";
 
@@ -16,12 +20,15 @@ export class TastyWorkingOrderLegModel implements IWorkingOrderLegViewModel {
             option: computed
         });
 
-        this._optionReactionDisposer= reaction(() => this.option, (opt) => {
+        this._optionReactionDisposer = reaction(() => this.option, (opt) => {
             opt?.subscribeToStreamer();
         }, {
             fireImmediately: true
         })
     }
+
+
+
 
     private readonly _optionReactionDisposer: IReactionDisposer;
 
@@ -41,7 +48,26 @@ export class TastyWorkingOrderLegModel implements IWorkingOrderLegViewModel {
         return isSellAction(this.legRawData.action);
     }
 
+    get actionType(): OrderSimpleLegActionType | null {
+        switch (this.legRawData.action) {
+            case "Sell to Open":
+                return 'STO';
+            case "Buy to Open":
+                return 'BTO';
+            case "Sell to Close":
+                return 'STC';
+            case "Buy to Close":
+                return 'BTC';
+            default:
+                return null;
+
+        }
+    }
+
     get quantity(): number {
+        if(this.isSell) {
+            return -1 * this.legRawData.quantity;
+        }
         return this.legRawData.quantity;
     }
 
@@ -68,4 +94,16 @@ export class TastyWorkingOrderLegModel implements IWorkingOrderLegViewModel {
         return -1 * mdp;
     }
 
+    get expirationDate(): NullableDate {
+        return this.option?.expirationDate ?? null;
+    }
+    get daysToExpiration(): NullableNumber {
+        return this.option?.daysToExpiration ?? null;
+    }
+    get strikePrice(): NullableNumber {
+        return this.option?.strikePrice ?? null;
+    }
+    get optionType(): OptionType | null {
+        return this.option?.optionType ?? null;
+    }
 }

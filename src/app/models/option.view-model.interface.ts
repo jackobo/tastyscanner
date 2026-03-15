@@ -9,7 +9,7 @@ export interface IOptionViewModel {
     readonly absoluteDeltaPercent: number;
     readonly theta: number;
     readonly bidAskSpread: number;
-    readonly expirationDate: string;
+    readonly expirationDate: Date;
     readonly daysToExpiration: number;
     readonly countSells: number;
     readonly countBuys: number;

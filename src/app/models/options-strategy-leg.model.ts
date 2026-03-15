@@ -1,9 +1,10 @@
 import {IOptionViewModel} from "./option.view-model.interface";
-import {IOptionsStrategyLegViewModel, StrategyLegActionType} from "./options-strategy-leg.view-model.interface";
+import {IOptionsStrategyLegViewModel} from "./options-strategy-leg.view-model.interface";
+import {OrderSimpleLegActionType} from "../services/brokers/interfaces/open-order-request.interface";
 
 export class OptionsStrategyLegModel implements IOptionsStrategyLegViewModel {
     constructor(public readonly option: IOptionViewModel,
-                public readonly legActionType: StrategyLegActionType) {
+                public readonly legActionType: OrderSimpleLegActionType) {
     }
 
     get key(): string {

@@ -13,7 +13,7 @@ const WorkingOrderHeaderBox = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: var(--ion-space-16);
+    gap: var(--ion-space-8);
 `
 
 const UnderlyingSymbolBox = styled.div`
@@ -32,13 +32,19 @@ const WorkingOrderHeaderButtonsBox = styled.div`
 
 const GobyIndicatorBox = styled.div`
     cursor: pointer;
+    
 `
 
-const TooltipContentBox = styled.div`
+const GobyTooltipContentBox = styled.div`
     padding: var(--ion-space-16);
     font-size: var(--ion-font-size-body2);
 `
 
+const OrderIdBox = styled.div`
+    font-size: var(--ion-font-size-body2);
+    flex-grow: 1;
+    text-align: center;
+`
 
 export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
     const services = useServices();
@@ -54,10 +60,13 @@ export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderV
                     <GobyIndicatorBox ref={gobyIndicatorRef}>
                         <IonIcon icon={fishOutline}/>
                     </GobyIndicatorBox>
+                    <OrderIdBox>
+                        {`#${props.workingOrder.id}`}
+                    </OrderIdBox>
                     <TooltipComponent targetRef={gobyIndicatorRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                        <TooltipContentBox>
+                        <GobyTooltipContentBox>
                             {services.language.translate('Source: Operation Goby')}
-                        </TooltipContentBox>
+                        </GobyTooltipContentBox>
 
                     </TooltipComponent>
                 </>
