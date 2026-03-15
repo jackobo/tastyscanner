@@ -66,8 +66,8 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
     return (
         <FooterBox>
             <AutoReplaceCountBox>
-                {services.language.translationFor('Auto replace {attempts} attempts')
-                    .withParams({attempts: `${currentAutoReplaceAttempt}/${maxAutoReplaceAttempts}`})}
+                {services.language.translationFor('Auto replace {xOfy} attempts')
+                    .withParams({xOfy: `${currentAutoReplaceAttempt}/${maxAutoReplaceAttempts}`})}
             </AutoReplaceCountBox>
             <SpecializedButtonComponent renderIcon={renderPauseResumeIcon} onClick={onPauseResumeClick} tooltipText={renderToolTipText()}/>
 

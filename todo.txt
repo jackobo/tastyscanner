@@ -2,3 +2,4 @@
  - allow to enable/disable auto replace when placing the order
  - in strategies page look for working orders
  - reuse the same components in send-order-dialog.component
+ - config for auto replace: enabled/disabled, replace interval.

@@ -58,9 +58,7 @@ export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderV
                     <GobyIndicatorBox ref={gobyIndicatorRef}>
                         <IonIcon icon={fishOutline}/>
                     </GobyIndicatorBox>
-                    <OrderIdBox>
-                        {`#${props.workingOrder.id}`}
-                    </OrderIdBox>
+
                     <TooltipComponent targetRef={gobyIndicatorRef} placement={"bottom"}
                                       toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
                         <GobyTooltipContentBox>
@@ -80,6 +78,9 @@ export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderV
                 {props.workingOrder.underlyingSymbol}
             </UnderlyingSymbolBox>
             {renderGobyIndicator()}
+            <OrderIdBox>
+                {`#${props.workingOrder.id}`}
+            </OrderIdBox>
             <WorkingOrderHeaderButtonsBox>
                 <RemoveButtonComponent onClick={cancelClick}
                                        tooltipText={services.language.translate('Cancel order')} />

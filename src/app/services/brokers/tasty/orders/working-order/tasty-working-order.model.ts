@@ -37,6 +37,12 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     private _gobySource: GobyOrderSource | null = null;
     readonly legs: TastyWorkingOrderLegModel[] = [];
 
+    private _isCancelInProgress: boolean = false;
+    private _isAutoReplaceInProgress: boolean = false;
+
+    get isActionInProgress(): boolean {
+        return this._isCancelInProgress || this._isAutoReplaceInProgress;
+    }
 
     dispose(): void {
         this.legs.forEach(leg => {
@@ -111,18 +117,36 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return this._maxAutoReplaceAttempts;
     }
 
+
     public  async cancel(): Promise<void> {
+        if(this.isActionInProgress) {
+            return;
+        }
+
+        this._isCancelInProgress = true;
+
         try {
+            this.autoReplacePaused = true;
             await this.tastyClient.orderService.cancelOrder(this.accountNumber, this.orderIdAsNumber);
         } catch (err) {
             await this.services.toaster.showErrorToast({
                 renderContent: () => this.services.language.translate(`Failed to cancel order! ${err}`)
             });
         }
+        finally {
+            this._isCancelInProgress = false;
+        }
     }
+
+
 
     async autoReplace(): Promise<void> {
 
+        if(this.isActionInProgress) {
+            return;
+        }
+
+        this._isAutoReplaceInProgress = true;
         try {
 
             if(!this._gobySource) {
@@ -174,6 +198,8 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
             await this.services.toaster.showErrorToast({
                 renderContent: () => this.services.language.translate(`Failed to auto eplace order! ${err}`)
             });
+        } finally {
+            this._isAutoReplaceInProgress = false;
         }
     }
 
@@ -241,7 +267,8 @@ class AutoReplaceAttemptsStorageHandler {
 
     set paused(value: boolean) {
         this._setStorageData({
-            paused: value
+            paused: value,
+            lastAttemptTime: this.services.time.currentDate.getTime()
         });
     }
 

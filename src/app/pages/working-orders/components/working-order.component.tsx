@@ -11,7 +11,7 @@ import {WokingOrderBodyComponent} from "./working-order-body.component";
 const WorkingOrderBox = styled(CardBox)`
     display: flex;
     flex-direction: column;
-    gap: var(--ion-space-8);
+    gap: var(--ion-space-12);
 `
 
 export const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {

@@ -6,6 +6,7 @@ import styled from "styled-components";
 import {IonIcon} from "@ionic/react";
 import {repeatOutline} from "ionicons/icons";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {ReplaceWorkingOrderComponent} from "./replace-working-order.component";
 
 const BodyBox = styled.div`
     display: grid;
@@ -52,9 +53,7 @@ export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderView
                 </TradingPriceValueBox>
 
                 <TooltipComponent targetRef={tradingPriceValueRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetClick}>
-                    <div>
-                        Replace content here
-                    </div>
+                    <ReplaceWorkingOrderComponent workingOrder={props.workingOrder}/>
                 </TooltipComponent>
 
 
