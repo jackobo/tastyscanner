@@ -22,4 +22,5 @@ export interface IOptionsStrategySendOrderParams {
     price?: number;
     timeInForce: TimeInForce;
     orderType: OrderType;
+    enableAutoReplace: boolean
 }

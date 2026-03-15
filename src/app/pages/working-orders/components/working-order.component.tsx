@@ -31,12 +31,22 @@ interface WorkingOrderComponentProps {
 }
 export const WorkingOrderComponent: React.FC<WorkingOrderComponentProps> = observer((props) => {
 
+    const renderFooter = () => {
+        if(props.isReadOnly || !props.workingOrder.autoReplaceEnabled) {
+            return null;
+        }
+
+        return (
+            <WokingOrderFooterComponent workingOrder={props.workingOrder}/>
+        )
+    }
+
     return (
         <WorkingOrderBox $isReadOnly={Boolean(props.isReadOnly)}>
             <WorkingOrderHeaderComponent workingOrder={props.workingOrder} isReadOnly={props.isReadOnly}/>
             <WokingOrderBodyComponent workingOrder={props.workingOrder} isReadOnly={props.isReadOnly}/>
             <WorkingOrderLegsComponent workingOrder={props.workingOrder}/>
-            {!props.isReadOnly && <WokingOrderFooterComponent workingOrder={props.workingOrder}/>}
+            {renderFooter()}
         </WorkingOrderBox>
     )
 })

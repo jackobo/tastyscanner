@@ -75,6 +75,7 @@ export class IronCondorModel implements IIronCondorViewModel {
             priceEffect: "Credit",
             timeInForce: orderParams.timeInForce,
             orderType: orderParams.orderType,
+            enableAutoReplace: orderParams.enableAutoReplace,
             legs: [
                 {
                     instrumentType: "Equity Option",

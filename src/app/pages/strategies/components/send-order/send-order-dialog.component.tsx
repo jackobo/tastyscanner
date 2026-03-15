@@ -1,10 +1,10 @@
 import React from "react";
 import {IOptionsStrategySendOrderParams, IOptionsStrategyViewModel} from "../../../../models/options-strategy.view-model.interface";
-import {IonIcon} from "@ionic/react";
+import {IonIcon, IonToggle} from "@ionic/react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
 import {InputBaseBox} from "../../../../components/input-base.box";
-import {chevronDown, chevronUp, lockClosedOutline, lockOpenOutline} from "ionicons/icons";
+import {chevronDown, chevronUp, informationCircleOutline, lockClosedOutline, lockOpenOutline} from "ionicons/icons";
 import {IOptionsStrategyLegViewModel} from "../../../../models/options-strategy-leg.view-model.interface";
 import {NullableString} from "../../../../../framework/types/nullable-types";
 import {Check} from "../../../../../framework/utils/type-checking";
@@ -147,6 +147,29 @@ const TimeInForceBox = styled.div`
     width: 100%;
 `
 
+const FooterContentBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ion-space-16);
+    width: 100%;
+`
+
+const EnableAutoReplaceLabelBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--ion-space-8);
+`
+
+const EnableAutoReplaceInfoIconBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+`
+
 const LegComponent: React.FC<{leg: IOptionsStrategyLegViewModel}> = observer((props) => {
     const services = useServices();
     return (
@@ -282,6 +305,7 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
     const services = useServices();
     const [limitPrice, setLimitPrice] = React.useState<NullableString>(null);
     const [quantity, setQuantity] = React.useState<number>(1);
+    const [enableAutoReplace, setEnableAutoReplace] = React.useState<boolean>(true);
     const [orderType] = React.useState<OrderType>("Limit");
     const [timeInForce] = React.useState<TimeInForce>("Day");
 
@@ -301,7 +325,8 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
         const orderParams: IOptionsStrategySendOrderParams = {
             quantity: quantity,
             orderType: orderType,
-            timeInForce: timeInForce
+            timeInForce: timeInForce,
+            enableAutoReplace
         }
 
         if(limitPriceAsNumber) {
@@ -386,9 +411,22 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                 </FieldsGridBox>
             </StandardDialogContentComponent>
             <StandardDialogFooterComponent dialogHandler={props.dialogHandler}>
-                <PrimaryButton onClick={sendOrder}>
-                    {services.language.translate("Send order")}
-                </PrimaryButton>
+                <FooterContentBox>
+                    <IonToggle labelPlacement="end" checked={enableAutoReplace} onIonChange={e => setEnableAutoReplace(e.detail.checked)}>
+                        <EnableAutoReplaceLabelBox>
+                            <span>{services.language.translate("Enable auto replace")}</span>
+                            <EnableAutoReplaceInfoIconBox>
+                                <IonIcon icon={informationCircleOutline} />
+                            </EnableAutoReplaceInfoIconBox>
+                        </EnableAutoReplaceLabelBox>
+
+                    </IonToggle>
+
+                    <PrimaryButton onClick={sendOrder} fullWidth={true} showArrow={true}>
+                        {services.language.translate("Send order")}
+                    </PrimaryButton>
+                </FooterContentBox>
+
             </StandardDialogFooterComponent>
         </StandardDialogPageComponent>
     );

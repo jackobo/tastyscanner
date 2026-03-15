@@ -10,13 +10,13 @@ interface ICreateInitialGobySourceOptions {
 
 export class GobyOrderSource {
     private constructor(public readonly version: number,
-                        readonly autoReplaceAttempts: number,
                         readonly autoReplaceEnabled: boolean,
+                        readonly autoReplaceAttempts: number,
                         readonly autoReplacePaused: boolean) {
     }
 
     static createInitial(options?: ICreateInitialGobySourceOptions): GobyOrderSource {
-        return new GobyOrderSource(CURRENT_GOBY_VERSION, 0, options?.autoReplaceEnabled ?? true, false);
+        return new GobyOrderSource(CURRENT_GOBY_VERSION, options?.autoReplaceEnabled ?? true, 0, false);
     }
     static tryParse(source: string): GobyOrderSource | null {
         if(Check.isEmpty(source)) {
@@ -35,31 +35,31 @@ export class GobyOrderSource {
 
 
         const version = parseInt(parts[1]);
-        const autoReplaceAttempts: number =  (Check.isEmpty(parts[2]) ? 0 : parseInt(parts[2]));
-        const autoReplaceEnabled: boolean =  parts[3] === '1';
+        const autoReplaceEnabled: boolean = parts[2] === '1';
+        const autoReplaceAttempts: number = (Check.isEmpty(parts[3]) ? 0 : parseInt(parts[2]));
         const autoReplacePaused: boolean =  parts[4] === '1';
 
-        return new GobyOrderSource(version, autoReplaceAttempts, autoReplaceEnabled, autoReplacePaused);
+        return new GobyOrderSource(version, autoReplaceEnabled, autoReplaceAttempts, autoReplacePaused);
     }
 
     withAutoReplaceAttempts(count: number): GobyOrderSource {
-        return new GobyOrderSource(this.version, count, this.autoReplaceEnabled, this.autoReplacePaused);
+        return new GobyOrderSource(this.version, this.autoReplaceEnabled, count, this.autoReplacePaused);
     }
 
     withAutoReplaceEnabled(enabled: boolean): GobyOrderSource {
-        return new GobyOrderSource(this.version, this.autoReplaceAttempts, enabled, this.autoReplacePaused);
+        return new GobyOrderSource(this.version, enabled, this.autoReplaceAttempts, this.autoReplacePaused);
     }
 
     withAutoReplacePaused(paused: boolean): GobyOrderSource {
-        return new GobyOrderSource(this.version, this.autoReplaceAttempts, this.autoReplaceEnabled, paused);
+        return new GobyOrderSource(this.version, this.autoReplaceEnabled, this.autoReplaceAttempts, paused);
     }
 
     toString(): string {
         const parts: string[] = [
             GOBY_ORDERS_SOURCE_NAME,
             this.version.toString(),
-            this.autoReplaceAttempts.toString(),
             this.autoReplaceEnabled ? '1' : '0',
+            this.autoReplaceAttempts.toString(),
             this.autoReplacePaused ? '1' : '0'
         ];
 

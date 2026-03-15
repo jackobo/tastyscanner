@@ -6,6 +6,7 @@ export interface IOpenOrderRequest {
     priceEffect: PriceEffect;
     orderType: OrderType;
     timeInForce: TimeInForce;
+    enableAutoReplace: boolean;
     legs: IOpenOrderRequestLeg[];
 }
 

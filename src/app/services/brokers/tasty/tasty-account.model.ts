@@ -117,7 +117,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 "time-in-force": order.timeInForce,
                 "price": order.price,
                 "price-effect": order.priceEffect,
-                "source": GobyOrderSource.createInitial().toString(),
+                "source": GobyOrderSource.createInitial().withAutoReplaceEnabled(order.enableAutoReplace).toString(),
                 "advanced-instructions": {
                     "strict-position-effect-validation": true
                 },

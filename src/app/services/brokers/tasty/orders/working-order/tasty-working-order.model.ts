@@ -63,6 +63,10 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return this.tastyOrderRawData.accountNumber;
     }
 
+    get autoReplaceEnabled(): boolean {
+        return Boolean(this._gobySource?.autoReplaceEnabled);
+    }
+
     get autoReplacePaused(): boolean {
         return this._autoReplaceAttemptsStorageHandler.value.paused;
     }
@@ -221,6 +225,9 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     public async autoReplace(): Promise<void> {
 
         await this._executeAction(this.services.language.translate('Failed to auto replace order!'), async () => {
+            if(!this.autoReplaceEnabled) {
+                return;
+            }
             if(!this._gobySource) {
                 return;
             }

@@ -15,11 +15,12 @@ export interface IWorkingOrderViewModel {
     readonly numberOfAutoReplaceAttempts: number;
     readonly maxAutoReplaceAttempts: NullableNumber;
     readonly optionsTickSize: NullableNumber;
-    cancel(): Promise<void>;
-    replace(newPrice: number, options?: IReplaceWorkingOrderOptions): Promise<void>;
+    readonly autoReplaceEnabled: boolean;
     autoReplacePaused: boolean;
     suspendAutoReplace(): void;
     resumeAutoReplace(): void;
+    cancel(): Promise<void>;
+    replace(newPrice: number, options?: IReplaceWorkingOrderOptions): Promise<void>;
 }
 
 export interface IReplaceWorkingOrderOptions {

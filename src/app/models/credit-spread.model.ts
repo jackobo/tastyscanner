@@ -61,6 +61,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
             priceEffect: "Credit",
             timeInForce: orderParams.timeInForce,
             orderType: orderParams.orderType,
+            enableAutoReplace: orderParams.enableAutoReplace,
             legs: [
                 {
                     instrumentType: "Equity Option",
