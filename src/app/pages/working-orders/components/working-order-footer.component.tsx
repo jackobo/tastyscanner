@@ -29,10 +29,15 @@ const AutoReplaceCountBox = styled.div`
     flex-direction: row;
     align-items: center;
     flex-grow: 1;
+    gap: var(--ion-space-8);
 `
 
 const NextAutoReplaceTimeBox = styled.div`
-    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: var(--ion-space-8);
 `
 
 const PauseResumeButtonBox = styled.div`
@@ -55,7 +60,7 @@ const PauseResumeButtonTooltipContentBox = styled.div`
 
 export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
     const services = useServices();
-    const [paused, setPaused] = useState(props.workingOrder.autoReplacePaused);
+
     const [nextAutoReplaceTime, setNextAutoReplaceTime] = useState<TimeSpan | null>(props.workingOrder.timeUntilNextAutoReplace);
     const pauseResumeButtonBoxRef = useRef<HTMLDivElement | null>(null);
 
@@ -82,7 +87,7 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
     }
 
     const renderPauseResumeIcon = () => {
-        if(paused) {
+        if(props.workingOrder.autoReplacePaused) {
             return (
                 <IonIcon icon={playCircleOutline} />
             );
@@ -93,12 +98,12 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
     }
 
     const onPauseResumeClick = () => {
-        props.workingOrder.autoReplacePaused = !paused;
-        setPaused(props.workingOrder.autoReplacePaused);
+        props.workingOrder.autoReplacePaused = !props.workingOrder.autoReplacePaused;
+
     }
 
     const renderPauseResumeButtonToolTipText = () =>  {
-        if(paused) {
+        if(props.workingOrder.autoReplacePaused) {
             return services.language.translate('Resume auto replace');
         } else {
             return services.language.translate('Pause auto replace');
@@ -106,7 +111,7 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
     }
 
     const renderNextAutoReplaceTime = () => {
-        if(!nextAutoReplaceTime) {
+        if(!nextAutoReplaceTime || props.workingOrder.autoReplacePaused) {
             return null;
         }
         return (
@@ -150,8 +155,13 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
         <FooterBox>
             <AutoReplaceInfoBox>
                 <AutoReplaceCountBox>
-                    {services.language.translationFor('Auto replace: {xOfy} attempts')
-                        .withParams({xOfy: `${currentAutoReplaceAttempt}/${maxAutoReplaceAttempts}`})}
+                    <span>
+                        {services.language.translate('Auto replace attempts:')}
+                    </span>
+                    <span>
+                        {`${currentAutoReplaceAttempt}/${maxAutoReplaceAttempts}`}
+                    </span>
+
                 </AutoReplaceCountBox>
                 {renderPauseResumeButton()}
             </AutoReplaceInfoBox>
