@@ -249,7 +249,6 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 return;
             }
 
-            debugger;
             this._autoReplaceAttemptsStorageHandler.value.setLastAttemptTime();
             this._gobySource = await this._replaceOrder(newPrice, this._gobySource.withAutoReplaceAttempts(this.numberOfAutoReplaceAttempts + 1));
 
