@@ -65,9 +65,12 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
         return this._sortedStrikes;
     }
 
+    getAllOptions(): OptionModel[] {
+        return this.strikes.map(s => s.put).concat(this.strikes.map(s => s.call));
+    }
+
     getAllStreamerSymbols(): string[] {
-        return this.strikes.map(s => s.call.streamerSymbol)
-                           .concat(this.strikes.map(s => s.put.streamerSymbol));
+        return this.getAllOptions().map(o => o.streamerSymbol);
     }
 
     public getOTMPuts(): OptionModel[] {

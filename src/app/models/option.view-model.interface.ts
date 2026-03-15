@@ -1,5 +1,7 @@
 export type OptionType = 'C' | 'P'; //call or put
 export interface IOptionViewModel {
+    readonly symbol: string;
+    readonly streamerSymbol: string;
     readonly optionType: OptionType;
     readonly strikePrice: number;
     readonly midPrice: number;

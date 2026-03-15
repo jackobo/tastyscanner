@@ -1,4 +1,4 @@
-import {makeObservable, observable, runInAction} from "mobx";
+import {computed, makeObservable, observable, runInAction} from "mobx";
 import {OptionsExpirationModel} from "../options-expiration.model";
 import {ITickerViewModel} from "./ticker.view-model.interface";
 import {IAppServiceFactory} from "../../services/app-service-factory.interface";
@@ -12,6 +12,8 @@ import {TickerMetricsModel} from "./ticker-metrics.model";
 import {TickerInfoModel} from "./ticker-info.model";
 import {ITickerInfoViewModel} from "./ticker-info.view-model.interface";
 import {ITickerMetricsViewModel} from "./ticker-metrics.view-model.interface";
+import {IOptionViewModel} from "../option.view-model.interface";
+import {OptionModel} from "../option.model";
 
 
 export class TickerModel implements ITickerViewModel {
@@ -21,7 +23,8 @@ export class TickerModel implements ITickerViewModel {
         this._tickerMarketDataReader = new TickerMarketDataReader(this, services);
 
         makeObservable<this, '_isLoading'>(this, {
-            _isLoading: observable.ref
+            _isLoading: observable.ref,
+            optionsBySymbolDictionary: computed
         });
     }
 
@@ -49,6 +52,15 @@ export class TickerModel implements ITickerViewModel {
     }
     getOptionsChainAsync(): Promise<IOptionsExpirationVewModel[]> {
         return this._tickerMarketDataReader.getSymbolOptionsChainAsync();
+    }
+
+    get optionsBySymbolDictionary(): Record<string, OptionModel> {
+        return this.optionsChain.selectMany(expiration => expiration.getAllOptions())
+                                .toDictionary(option => option.symbol);
+    }
+
+    getOptionBySymbol(optionSymbol: string): IOptionViewModel | null {
+        return this.optionsBySymbolDictionary[optionSymbol] ?? null;
     }
 
     public get currentPrice(): number {

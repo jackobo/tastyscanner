@@ -8,6 +8,7 @@ import {TimeSpan} from "../../../../../../framework/types/time-span";
 import {NullableNumber} from "../../../../../../framework/types/nullable-types";
 import {GobyOrderSource} from "../../../goby-order-source";
 import {Lazy} from "../../../../../../framework/utils/lazy";
+import {TastyWorkingOrderLegModel} from "./tasty-working-order-leg.model";
 
 export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(10);
 const WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
@@ -22,10 +23,12 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         if(this._gobySource) {
             this._autoReplaceAttemptsStorageHandler.forceInit();
         }
+        this.legs = tastyOrderRawData.legs.map(leg => new TastyWorkingOrderLegModel(leg, tastyOrderRawData.underlyingSymbol, services));
     }
 
     private readonly _autoReplaceAttemptsStorageHandler: Lazy<AutoReplaceAttemptsStorageHandler>;
     private _gobySource: GobyOrderSource | null = null;
+    readonly legs: TastyWorkingOrderLegModel[] = [];
 
     get id(): string {
         return this.tastyOrderRawData.id.toString();

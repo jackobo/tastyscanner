@@ -1,6 +1,7 @@
 import {IOptionsExpirationVewModel} from "../options-expiration.view-model.interface";
 import {ITickerInfoViewModel} from "./ticker-info.view-model.interface";
 import {ITickerMetricsViewModel} from "./ticker-metrics.view-model.interface";
+import {IOptionViewModel} from "../option.view-model.interface";
 
 export interface ITickerViewModel {
     readonly isLoading: boolean;
@@ -15,6 +16,7 @@ export interface ITickerViewModel {
     getMetricsAsync(): Promise<ITickerMetricsViewModel>;
     getOptionsChainAsync(): Promise<IOptionsExpirationVewModel[]>;
 
+    getOptionBySymbol(optionSymbol: string): IOptionViewModel | null;
 
     getExpirationsWithIronCondors(): IOptionsExpirationVewModel[];
     getExpirationsWithPutCreditSpreads(): IOptionsExpirationVewModel[];
