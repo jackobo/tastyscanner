@@ -19,7 +19,7 @@ const WorkingOrdersContainerBox = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: var(--ion-space-24);
+    gap: var(--ion-space-36);
     width: 100%;
 `
 
