@@ -93,6 +93,9 @@ const PriceInputComponent = styled(StringFieldEditorComponent)`
     & .price-input-container {
         border: none;
     }
+    & .price-input-error-container {
+        transform: unset;
+    }
 `
 
 
@@ -178,6 +181,9 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
 
                         <PriceInputComponent field={formRef.current.fields.price} hideLabel={true} cssClassesForOutsideBordersStyle={{
                             inputAndIconContainer: 'price-input-container',
+
+                        }} cssClasses={{
+                            errorContainer: 'price-input-error-container',
                         }}/>
 
                         {renderPlusMinus(addCircleOutline, incrementPrice)}

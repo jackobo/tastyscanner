@@ -4,7 +4,7 @@ import {AppFormModel} from "../../../models/forms/app-form.model";
 import {IAppServiceFactory} from "../../../services/app-service-factory.interface";
 import {IReactionDisposer, reaction} from "mobx";
 import {FormFields} from "../../../../framework/models/forms/form-field.interface";
-import {NullableNumber} from "../../../../framework/types/nullable-types";
+import {NullableNumber, NullableString} from "../../../../framework/types/nullable-types";
 
 interface IReplaceWorkingOrderFormFields {
     price: string;
@@ -34,11 +34,13 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
     protected _createFields(): FormFields<IReplaceWorkingOrderFormFields> {
         return {
             price: this._createField<string>({
-                fieldName: () => this.services.language.translate('Trading Price')
+                fieldName: () => this.services.language.translate('Trading Price'),
+                validate: () => this._validatePrice(),
             }),
             isPriceLocked: this._createField<boolean>({
                 fieldName: () => this.services.language.translate('Price locked'),
-                defaultValue: false
+                defaultValue: false,
+                isRequired: false,
             }),
             resetAutoReplaceAttempts: this._createField<boolean>({
                 fieldName: () => this.services.language.translate('Reset auto replace attempts'),
@@ -46,6 +48,25 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
                 isRequired: false,
             })
         }
+    }
+
+    private _validatePrice(): NullableString {
+        if(Check.isNullOrUndefined(this.fields.price.value)) {
+            return null;
+        }
+
+        const newPrice = parseFloat(this.fields.price.value);
+        if(!Check.isNumber(newPrice)) {
+            return this.services.language.translate('Not a valid value');
+        }
+
+        if(newPrice <= 0) {
+            return this.services.language.translate('Price must be greater than zero');
+        }
+
+        return null;
+
+
     }
 
     private _setPriceValue(value: NullableNumber) {
@@ -67,7 +88,12 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
             return;
         }
 
+
+
         let newPrice = parseFloat(this.fields.price.value ?? '0');
+        if(!Check.isNumber(newPrice)) {
+            return;
+        }
         newPrice = newPrice + tickSign * tickSize;
         this.fields.price.setValue(newPrice.toFixed(2));
         this.fields.isPriceLocked.setValue(true);
@@ -86,6 +112,10 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
     }
 
     async sendOrder(): Promise<void> {
+        if(this.activateErrorsValidation().length > 0) {
+            return;
+        }
+        
         const newPrice = parseFloat(this.fields.price.value ?? '0');
         await this.workingOrder.replace(newPrice, {
             resetAutoReplaceAttempts: this.fields.resetAutoReplaceAttempts.value ?? false

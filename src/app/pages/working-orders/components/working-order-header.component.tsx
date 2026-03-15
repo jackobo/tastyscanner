@@ -30,7 +30,11 @@ const WorkingOrderHeaderButtonsBox = styled.div`
 `
 
 const GobyIndicatorBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     cursor: pointer;
+    font-size: 1.1rem;
     
 `
 
