@@ -1,1 +1,3 @@
  - specific toaster for tasty api errors.
+ - allow to enable/disable auto replace when placing the order
+ - in strategies page look for working orders
