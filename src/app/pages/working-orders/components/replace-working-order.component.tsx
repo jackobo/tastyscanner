@@ -186,7 +186,7 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
                     </PriceInputContainerBox>
                 </PriceContainerBox>
 
-                {props.workingOrder.isGobyOrder && <BooleanFieldEditorComponent field={formRef.current.fields.resetAutoReplaceAttempts}/>}
+                {props.workingOrder.isGobyOrder && props.workingOrder.numberOfAutoReplaceAttempts > 0 && <BooleanFieldEditorComponent field={formRef.current.fields.resetAutoReplaceAttempts}/>}
 
                 <PrimaryButton showArrow={true} onClick={sendOrder}>
                     {services.language.translate('Send order')}
