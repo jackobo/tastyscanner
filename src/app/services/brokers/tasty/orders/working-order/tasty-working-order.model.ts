@@ -19,7 +19,8 @@ const WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
 export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
                 private readonly tastyClient: TastyTradeClient,
-                private readonly services: IAppServiceFactory) {
+                private readonly services: IAppServiceFactory,
+                private readonly getTimeUntilNextAutoReplaceRun: () => TimeSpan) {
         this._gobySource = GobyOrderSource.tryParse(tastyOrderRawData.source);
         this._autoReplaceAttemptsStorageHandler = new Lazy<AutoReplaceAttemptsStorageHandler>(() =>
             new AutoReplaceAttemptsStorageHandler(tastyOrderRawData, services, this._gobySource));
@@ -133,6 +134,28 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         }
 
         return this._optionsTickSize;
+    }
+    get timeUntilNextAutoReplace(): TimeSpan | null {
+        if(this.autoReplacePaused || this._isAutoReplaceSuspended) {
+            return null;
+        }
+
+        if(!this.maxAutoReplaceAttempts) {
+            return null;
+        }
+
+        if(this.numberOfAutoReplaceAttempts >= this.maxAutoReplaceAttempts) {
+         return null;
+        }
+
+        const lastAttemptTime = this._autoReplaceAttemptsStorageHandler.value.lastAttemptTime;
+        const nextAttemptTime = lastAttemptTime + WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT.totalMilliseconds + this.getTimeUntilNextAutoReplaceRun().totalMilliseconds - this.services.time.currentDate.getTime();
+        if(nextAttemptTime < 0) {
+            return TimeSpan.Zero;
+        }
+        return TimeSpan.fromMilliseconds(nextAttemptTime);
+
+
     }
 
 

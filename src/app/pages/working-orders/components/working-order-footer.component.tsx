@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {IWorkingOrderViewModel} from "../../../services/brokers/interfaces/working-order.interfaces";
 import {observer} from "mobx-react";
 import styled from "styled-components";
@@ -9,6 +9,7 @@ import {IonIcon} from "@ionic/react";
 import {pauseCircleOutline, playCircleOutline} from "ionicons/icons";
 import {useServices} from "../../../hooks/use-services.hook";
 import {Check} from "../../../../framework/utils/type-checking";
+import {TimeSpan} from "../../../../framework/types/time-span";
 
 const FooterBox = styled.div`
     display: flex;
@@ -17,15 +18,33 @@ const FooterBox = styled.div`
     padding-top: var(--ion-space-8);
 `
 
-const AutoReplaceCountBox = styled.div`
+const AutoReplaceInfoBox = styled.div`
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 `
 
+
+const AutoReplaceCountBox = styled.div`
+`
 
 
 export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
     const services = useServices();
     const [paused, setPaused] = useState(props.workingOrder.autoReplacePaused);
+    const [nextAutoReplaceTime, setNextAutoReplaceTime] = useState<TimeSpan | null>(props.workingOrder.timeUntilNextAutoReplace);
+
+    useEffect(() => {
+        const intervalRef = setInterval(() => {
+            setNextAutoReplaceTime(props.workingOrder.timeUntilNextAutoReplace);
+        }, 1000);
+
+        return () => {
+            clearInterval(intervalRef);
+        }
+
+    }, [props.workingOrder.timeUntilNextAutoReplace]);
 
     if(!props.workingOrder.isGobyOrder) {
         return null;
@@ -62,12 +81,27 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
         }
     }
 
+    const renderNextAutoReplaceTime = () => {
+        if(!nextAutoReplaceTime) {
+            return null;
+        }
+        return (
+            <div>
+                {`Next auto replace in: ${nextAutoReplaceTime.toMinutesAndSecondsString()}`}
+            </div>
+        )
+    }
+
     return (
         <FooterBox>
-            <AutoReplaceCountBox>
-                {services.language.translationFor('Auto replace {xOfy} attempts')
-                    .withParams({xOfy: `${currentAutoReplaceAttempt}/${maxAutoReplaceAttempts}`})}
-            </AutoReplaceCountBox>
+            <AutoReplaceInfoBox>
+                <AutoReplaceCountBox>
+                    {services.language.translationFor('Auto replace: {xOfy} attempts')
+                        .withParams({xOfy: `${currentAutoReplaceAttempt}/${maxAutoReplaceAttempts}`})}
+                </AutoReplaceCountBox>
+                {renderNextAutoReplaceTime()}
+            </AutoReplaceInfoBox>
+
             <SpecializedButtonComponent renderIcon={renderPauseResumeIcon} onClick={onPauseResumeClick} tooltipText={renderToolTipText()}/>
 
         </FooterBox>

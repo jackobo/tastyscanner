@@ -1,6 +1,7 @@
 import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
 import {OptionType} from "../../../models/option.view-model.interface";
 import {OrderSimpleLegActionType} from "./open-order-request.interface";
+import {TimeSpan} from "../../../../framework/types/time-span";
 
 export interface IWorkingOrderViewModel {
     readonly id: string;
@@ -9,6 +10,7 @@ export interface IWorkingOrderViewModel {
     readonly midPrice: NullableNumber;
     readonly isGobyOrder: boolean
     readonly legs: IWorkingOrderLegViewModel[];
+    readonly timeUntilNextAutoReplace: TimeSpan | null;
     readonly numberOfAutoReplaceAttempts: number;
     readonly maxAutoReplaceAttempts: NullableNumber;
     readonly optionsTickSize: NullableNumber;
