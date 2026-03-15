@@ -5,7 +5,11 @@ import {useServices} from "../../../hooks/use-services.hook";
 import styled from "styled-components";
 import {IonIcon} from "@ionic/react";
 import {repeatOutline} from "ionicons/icons";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {
+    ITooltipController,
+    TooltipComponent,
+    TooltipToggleBehaviorEnum
+} from "../../../../framework/components/tooltip/tooltip.component";
 import {ReplaceWorkingOrderComponent} from "./replace-working-order.component";
 
 const BodyBox = styled.div`
@@ -40,7 +44,7 @@ const ReplaceButtonBox = styled.div`
 export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
     const services = useServices();
     const tradingPriceValueRef = useRef<HTMLDivElement | null>(null);
-
+    const replaceWorkingOrderTooltipControllerRef = useRef<ITooltipController | null>(null);
     return (
         <BodyBox>
             <PriceContainerBox>
@@ -52,8 +56,11 @@ export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderView
                     </ReplaceButtonBox>
                 </TradingPriceValueBox>
 
-                <TooltipComponent targetRef={tradingPriceValueRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetClick}>
-                    <ReplaceWorkingOrderComponent workingOrder={props.workingOrder}/>
+
+                <TooltipComponent targetRef={tradingPriceValueRef} placement={"bottom"}
+                                  toggleBehavior={TooltipToggleBehaviorEnum.OnTargetClick}
+                                  tooltipControllerRef={replaceWorkingOrderTooltipControllerRef}>
+                    <ReplaceWorkingOrderComponent workingOrder={props.workingOrder} onCloseClick={() => replaceWorkingOrderTooltipControllerRef.current?.close()}/>
                 </TooltipComponent>
 
 

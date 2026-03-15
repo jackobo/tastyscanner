@@ -9,6 +9,15 @@ import {
 import { FieldLabelBox } from "../field-label.box";
 import {CheckboxComponent, CheckBoxLabelPlacement} from "../../checkbox/checkbox.component";
 
+const ContainerBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: flex-end;
+    
+`
+
 const CheckBoxLabelBox = styled(FieldLabelBox)<{$hasHtmlContent: boolean; $hasError: boolean}>`
     font-weight: var(--ion-font-weight-regular);
     ${props => props.$hasHtmlContent  && !props.$hasError
@@ -46,14 +55,18 @@ export const BooleanFieldEditorComponent: React.FC<BooleanFieldEditorComponentPr
     const renderCheck = () => {
         return (
             <CheckboxComponent checked={props.field.value || false}
-                               onChange={isChecked => props.field.setValue(isChecked)} label={renderLabel()}
-                               labelPlacement={props.labelPlacement ?? "end"}
-                />
+                               isReadOnly={props.field.isReadOnly}
+                               onChange={isChecked => props.field.setValue(isChecked)}
+                               label={renderLabel()}
+                               labelPlacement={props.labelPlacement ?? "end"}/>
         );
     }
 
 
     return (
-        <FieldInputContainerComponent {...props} hideLabel={true} renderInput={renderCheck}/>
+        <ContainerBox>
+            <FieldInputContainerComponent {...props} hideLabel={true} renderInput={renderCheck}/>
+        </ContainerBox>
+
     );
 });

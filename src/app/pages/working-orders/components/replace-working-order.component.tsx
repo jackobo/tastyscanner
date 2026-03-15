@@ -4,7 +4,7 @@ import {observer} from "mobx-react";
 import styled from "styled-components";
 import {useServices} from "../../../hooks/use-services.hook";
 import {IonIcon} from "@ionic/react";
-import {addCircleOutline, lockClosedOutline, lockOpenOutline, removeCircleOutline} from "ionicons/icons";
+import {addCircleOutline, closeOutline, lockClosedOutline, lockOpenOutline, removeCircleOutline} from "ionicons/icons";
 import {
     SpecializedButtonComponent
 } from "../../../../framework/components/specialized-buttons/specialized-button.component";
@@ -14,6 +14,9 @@ import {
 } from "../../../../framework/components/forms/string-field/string-field-editor.component";
 import {Check} from "../../../../framework/utils/type-checking";
 import {ReplaceWorkingOrderFormModel} from "./replace-working-order-form.model";
+import {
+    BooleanFieldEditorComponent
+} from "../../../../framework/components/forms/boolean-field/boolean-field-editor.component";
 
 
 const ContainerBox = styled.div`
@@ -23,11 +26,28 @@ const ContainerBox = styled.div`
     padding: var(--ion-space-16);
 `
 
+const TitleContainerBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: var(--ion-space-12);
+    border-bottom: 1px solid var(--ion-color-border);
+`
+
 const TitleBox = styled.div`
     font-size: var(--ion-font-size-body1);
     font-weight: var(--ion-font-weight-bold);
-    padding-bottom: var(--ion-space-12);
-    border-bottom: 1px solid var(--ion-color-border);
+    flex-grow: 1;
+`
+
+const CloseButtonBox = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    width: 24px;
+    cursor: pointer;
+    
 `
 
 const PriceContainerBox = styled.div`
@@ -61,13 +81,23 @@ const PriceInputComponent = styled(StringFieldEditorComponent)`
 `
 
 
-export const ReplaceWorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
+
+interface ReplaceWorkingOrderComponentProps {
+    workingOrder: IWorkingOrderViewModel;
+    onCloseClick: () => void;
+}
+
+export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponentProps> = observer((props) => {
     const services = useServices();
     const form = useRef<ReplaceWorkingOrderFormModel>(new ReplaceWorkingOrderFormModel(props.workingOrder, services));
 
     useEffect(() => {
         form.current.dispose();
     }, [])
+
+    const togglePriceLock = () => {
+        form.current.togglePriceLock();
+    }
 
     const decrementPrice = () => {
         form.current.decrementPrice();
@@ -77,17 +107,13 @@ export const ReplaceWorkingOrderComponent: React.FC<{workingOrder: IWorkingOrder
         form.current.incrementPrice();
     }
 
-
     const sendOrder = async () => {
-
+        await form.current.sendOrder();
     }
 
-    const toggleLockPrice = () => {
-        form.current.fields.lockPrice.setValue(!form.current.fields.lockPrice.value);
-    }
 
     const renderLockIcon = () => {
-        if(form.current.fields.lockPrice.value) {
+        if(form.current.fields.isPriceLocked.value) {
             return (<IonIcon icon={lockClosedOutline}/>)
         } else {
             return (<IonIcon icon={lockOpenOutline}/>)
@@ -109,13 +135,18 @@ export const ReplaceWorkingOrderComponent: React.FC<{workingOrder: IWorkingOrder
 
     return (
         <ContainerBox>
-            <TitleBox>
-                {services.language.translate('Replace order')}
-            </TitleBox>
+            <TitleContainerBox>
+                <TitleBox>
+                    {services.language.translate('Replace order')}
+                </TitleBox>
+                <CloseButtonBox onClick={props.onCloseClick}>
+                    <IonIcon icon={closeOutline}/>
+                </CloseButtonBox>
+            </TitleContainerBox>
             <PriceContainerBox>
                 <PriceLabelContainerBox>
                     <span>{form.current.fields.price.fieldName}</span>
-                    <SpecializedButtonComponent renderIcon={renderLockIcon} onClick={toggleLockPrice}/>
+                    <SpecializedButtonComponent renderIcon={renderLockIcon} onClick={togglePriceLock}/>
                 </PriceLabelContainerBox>
                 <PriceInputContainerBox>
 
@@ -128,6 +159,7 @@ export const ReplaceWorkingOrderComponent: React.FC<{workingOrder: IWorkingOrder
                 </PriceInputContainerBox>
             </PriceContainerBox>
 
+            <BooleanFieldEditorComponent field={form.current.fields.resetAutoReplaceAttempts}/>
 
             <PrimaryButton showArrow={true} onClick={sendOrder}>
                 {services.language.translate('Send order')}

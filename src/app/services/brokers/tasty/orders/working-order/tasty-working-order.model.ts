@@ -1,4 +1,4 @@
-import {IWorkingOrderViewModel} from "../../../interfaces/working-order.interfaces";
+import {IReplaceWorkingOrderOptions, IWorkingOrderViewModel} from "../../../interfaces/working-order.interfaces";
 import {ITastyOrderRawData} from "../../raw-data/tasty-order.raw-data.interfaces";
 import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../../../app-service-factory.interface";
@@ -21,15 +21,16 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 private readonly tastyClient: TastyTradeClient,
                 private readonly services: IAppServiceFactory) {
         this._gobySource = GobyOrderSource.tryParse(tastyOrderRawData.source);
-        this._autoReplaceAttemptsStorageHandler = new Lazy<AutoReplaceAttemptsStorageHandler>(() => new AutoReplaceAttemptsStorageHandler(tastyOrderRawData, services));
+        this._autoReplaceAttemptsStorageHandler = new Lazy<AutoReplaceAttemptsStorageHandler>(() => new AutoReplaceAttemptsStorageHandler(tastyOrderRawData, services, this._gobySource));
         if(this._gobySource) {
             this._autoReplaceAttemptsStorageHandler.forceInit();
         }
         this.legs = tastyOrderRawData.legs.map(leg => new TastyWorkingOrderLegModel(leg, tastyOrderRawData.underlyingSymbol, services));
 
-        makeObservable<this, '_maxAutoReplaceAttempts' | '_optionsTickSize'>(this, {
+        makeObservable<this, '_maxAutoReplaceAttempts' | '_optionsTickSize' | '_isActionInProgress'>(this, {
             _maxAutoReplaceAttempts: observable.ref,
-            _optionsTickSize: observable.ref
+            _optionsTickSize: observable.ref,
+            _isActionInProgress: observable.ref
         })
     }
 
@@ -37,11 +38,16 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     private _gobySource: GobyOrderSource | null = null;
     readonly legs: TastyWorkingOrderLegModel[] = [];
 
-    private _isCancelInProgress: boolean = false;
-    private _isAutoReplaceInProgress: boolean = false;
+    private _isActionInProgress: boolean = false;
 
     get isActionInProgress(): boolean {
-        return this._isCancelInProgress || this._isAutoReplaceInProgress;
+        return this._isActionInProgress;
+    }
+
+    set isActionInProgress(value: boolean) {
+        runInAction(() => {
+            this._isActionInProgress = value;
+        })
     }
 
     dispose(): void {
@@ -117,38 +123,49 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return this._maxAutoReplaceAttempts;
     }
 
-
-    public  async cancel(): Promise<void> {
+    private async _executeAction(failMessage: string, action: () => Promise<void>): Promise<void> {
         if(this.isActionInProgress) {
             return;
         }
 
-        this._isCancelInProgress = true;
-
+        this.isActionInProgress = true;
         try {
-            this.autoReplacePaused = true;
-            await this.tastyClient.orderService.cancelOrder(this.accountNumber, this.orderIdAsNumber);
-        } catch (err) {
+            await action();
+        } catch(err) {
+            this.services.logger.error('Failed to execute action', err);
             await this.services.toaster.showErrorToast({
-                renderContent: () => this.services.language.translate(`Failed to cancel order! ${err}`)
+                renderContent: () => `${failMessage}} Error: ${err}`
             });
-        }
-        finally {
-            this._isCancelInProgress = false;
+        } finally {
+            this.isActionInProgress = false;
         }
     }
 
 
+    public  async cancel(): Promise<void> {
 
-    async autoReplace(): Promise<void> {
+        await this._executeAction( this.services.language.translate('Failed to cancel order!'), async () => {
+            await this.tastyClient.orderService.cancelOrder(this.accountNumber, this.orderIdAsNumber);
+        })
 
-        if(this.isActionInProgress) {
-            return;
-        }
+    }
 
-        this._isAutoReplaceInProgress = true;
-        try {
+    public async replace(newPrice: number, options?: IReplaceWorkingOrderOptions): Promise<void> {
 
+        await this._executeAction(this.services.language.translate('Failed to replace order!'), async () => {
+            let gobySource = this._gobySource;
+            if(gobySource && options?.resetAutoReplaceAttempts) {
+                gobySource = gobySource.withAutoReplaceAttempts(0);
+            }
+            this._gobySource = await this._replaceOrder(newPrice, gobySource);
+        })
+
+    }
+
+
+    public async autoReplace(): Promise<void> {
+
+        await this._executeAction(this.services.language.translate('Failed to auto replace order!'), async () => {
             if(!this._gobySource) {
                 return;
             }
@@ -173,34 +190,34 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 return;
             }
 
+            this._gobySource = await this._replaceOrder(newPrice, this._gobySource.withAutoReplaceAttempts(this.numberOfAutoReplaceAttempts + 1));
 
-            const gobySource = this._gobySource.withAutoReplaceAttempts(this.numberOfAutoReplaceAttempts + 1);
+        });
 
-            await this.tastyClient.orderService.replaceOrder(this.accountNumber, this.orderIdAsNumber, {
-                "order-type": this.tastyOrderRawData.orderType,
-                "time-in-force": this.tastyOrderRawData.timeInForce,
-                "price": newPrice,
-                "price-effect": this.tastyOrderRawData.priceEffect,
-                "source": gobySource.toString(),
-                "legs": this.tastyOrderRawData.legs.map(leg => {
-                    return {
-                        "action": leg.action,
-                        "instrument-type": leg.instrumentType,
-                        "quantity": leg.quantity,
-                        "symbol": leg.symbol
-                    }
-                })
-            });
 
-            this._gobySource = gobySource;
-        } catch (err) {
-            this.services.logger.error('Failed to auto replace order', err);
-            await this.services.toaster.showErrorToast({
-                renderContent: () => this.services.language.translate(`Failed to auto eplace order! ${err}`)
-            });
-        } finally {
-            this._isAutoReplaceInProgress = false;
+    }
+
+    private async _replaceOrder(newPrice: number, gobySource: GobyOrderSource | null): Promise<GobyOrderSource | null> {
+        if(gobySource) {
+            gobySource = gobySource.withAutoReplacePaused(this.autoReplacePaused);
         }
+        await this.tastyClient.orderService.replaceOrder(this.accountNumber, this.orderIdAsNumber, {
+            "order-type": this.tastyOrderRawData.orderType,
+            "time-in-force": this.tastyOrderRawData.timeInForce,
+            "price": newPrice,
+            "price-effect": this.tastyOrderRawData.priceEffect,
+            "source": Check.isNullOrUndefined(gobySource) ? this.tastyOrderRawData.source : gobySource.toString(),
+            "legs": this.tastyOrderRawData.legs.map(leg => {
+                return {
+                    "action": leg.action,
+                    "instrument-type": leg.instrumentType,
+                    "quantity": leg.quantity,
+                    "symbol": leg.symbol
+                }
+            })
+        });
+
+        return gobySource;
     }
 
     get autoReplacePaused(): boolean {
@@ -256,8 +273,13 @@ interface IAutoReplaceAttemptStorageData {
 
 class AutoReplaceAttemptsStorageHandler {
     constructor(private readonly tastyOrderRawData: ITastyOrderRawData,
-                private readonly services: IAppServiceFactory) {
+                private readonly services: IAppServiceFactory,
+                gobySource: GobyOrderSource | null) {
         this.setLastAttemptTime();
+
+        if(gobySource) {
+            this.paused = gobySource.autoReplacePaused;
+        }
     }
 
 

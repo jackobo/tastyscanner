@@ -13,7 +13,12 @@ export interface IWorkingOrderViewModel {
     readonly maxAutoReplaceAttempts: NullableNumber;
     readonly optionsTickSize: NullableNumber;
     cancel(): Promise<void>;
+    replace(newPrice: number, options?: IReplaceWorkingOrderOptions): Promise<void>;
     autoReplacePaused: boolean;
+}
+
+export interface IReplaceWorkingOrderOptions {
+    resetAutoReplaceAttempts?: boolean;
 }
 
 export interface IWorkingOrderLegViewModel {

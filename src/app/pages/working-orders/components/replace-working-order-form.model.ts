@@ -8,14 +8,15 @@ import {NullableNumber} from "../../../../framework/types/nullable-types";
 
 interface IReplaceWorkingOrderFormFields {
     price: string;
-    lockPrice: boolean;
+    isPriceLocked: boolean;
+    resetAutoReplaceAttempts: boolean;
 }
 
 export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOrderFormFields>{
     constructor(private readonly workingOrder: IWorkingOrderViewModel, services: IAppServiceFactory) {
         super(services);
         this._midPriceReactionDispose = reaction(() => this.workingOrder.midPrice, (midPrice) => {
-            if(!this.fields.lockPrice.value) {
+            if(!this.fields.isPriceLocked.value) {
                 this._setPriceValue(midPrice);
             }
         }, {
@@ -35,9 +36,14 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
             price: this._createField<string>({
                 fieldName: () => this.services.language.translate('Trading Price')
             }),
-            lockPrice: this._createField<boolean>({
-                fieldName: () => this.services.language.translate('Lock price'),
+            isPriceLocked: this._createField<boolean>({
+                fieldName: () => this.services.language.translate('Price locked'),
                 defaultValue: false
+            }),
+            resetAutoReplaceAttempts: this._createField<boolean>({
+                fieldName: () => this.services.language.translate('Reset auto replace attempts'),
+                defaultValue: false,
+                isRequired: false,
             })
         }
     }
@@ -48,7 +54,7 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
 
     protected _onFieldsCreated(fields: FormFields<IReplaceWorkingOrderFormFields>) {
         super._onFieldsCreated(fields);
-        this.fields.lockPrice.onChange(newValue => {
+        this.fields.isPriceLocked.onChange(newValue => {
             if(!newValue) {
                 this._setPriceValue(this.workingOrder.midPrice);
             }
@@ -64,7 +70,7 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
         let newPrice = parseFloat(this.fields.price.value ?? '0');
         newPrice = newPrice + tickSign * tickSize;
         this.fields.price.setValue(newPrice.toFixed(2));
-        this.fields.lockPrice.setValue(true);
+        this.fields.isPriceLocked.setValue(true);
     }
 
     incrementPrice(): void {
@@ -75,4 +81,14 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
         this._updatePrice(-1);
     }
 
+    togglePriceLock(): void {
+        this.fields.isPriceLocked.setValue(!this.fields.isPriceLocked.value);
+    }
+
+    async sendOrder(): Promise<void> {
+        const newPrice = parseFloat(this.fields.price.value ?? '0');
+        await this.workingOrder.replace(newPrice, {
+            resetAutoReplaceAttempts: this.fields.resetAutoReplaceAttempts.value ?? false
+        });
+    }
 }
