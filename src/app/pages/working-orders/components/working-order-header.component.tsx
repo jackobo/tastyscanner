@@ -15,6 +15,12 @@ const WorkingOrderHeaderBox = styled.div`
     justify-content: space-between;
     gap: var(--ion-space-16);
 `
+
+const UnderlyingSymbolBox = styled.div`
+    font-weight: bold;
+    font-size: var(--ion-font-size-body1);
+`
+
 const WorkingOrderHeaderButtonsBox = styled.div`
     display: flex;
     flex-direction: row;
@@ -23,7 +29,6 @@ const WorkingOrderHeaderButtonsBox = styled.div`
     gap: var(--ion-space-16);
     flex-grow: 1;
 `
-
 
 const GobyIndicatorBox = styled.div`
     cursor: pointer;
@@ -63,6 +68,9 @@ export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderV
 
     return (
         <WorkingOrderHeaderBox>
+            <UnderlyingSymbolBox>
+                {props.workingOrder.underlyingSymbol}
+            </UnderlyingSymbolBox>
             {renderGobyIndicator()}
             <WorkingOrderHeaderButtonsBox>
                 <RemoveButtonComponent onClick={cancelClick}

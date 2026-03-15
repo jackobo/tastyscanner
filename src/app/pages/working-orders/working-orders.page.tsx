@@ -46,7 +46,8 @@ export const WorkingOrdersPage: React.FC = observer(() => {
         );
     }
 
-    const workingOrders = services.brokers.currentAccount?.workingOrders ?? [];
+    const workingOrders = [...(services.brokers.currentAccount?.workingOrders ?? [])]
+                                                .sort((a, b) => a.underlyingSymbol.localeCompare(b.underlyingSymbol));
 
 
 

@@ -10,6 +10,7 @@ const WorkingOrderBox = styled(CardBox)`
     display: flex;
     flex-direction: column;
     gap: var(--ion-space-8);
+    font-size: var(--ion-font-size-body2);
 `
 
 
