@@ -70,6 +70,10 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         this._autoReplaceAttemptsStorageHandler.value.paused = value;
     }
 
+    get receivedAt(): Date {
+        return this.tastyOrderRawData.receivedAt;
+    }
+
     private _isAutoReplaceSuspended: boolean = false;
     suspendAutoReplace(): void {
         runInAction(() => {

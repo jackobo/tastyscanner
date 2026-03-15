@@ -6,6 +6,7 @@ import {TimeSpan} from "../../../../framework/types/time-span";
 export interface IWorkingOrderViewModel {
     readonly id: string;
     readonly underlyingSymbol: string;
+    readonly receivedAt: Date;
     readonly tradingPrice: number;
     readonly midPrice: NullableNumber;
     readonly isGobyOrder: boolean

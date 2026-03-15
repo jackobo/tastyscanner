@@ -17,7 +17,6 @@ const ContainerBox = styled.div<{$backColor: string; $color: string; $fontSize: 
     font-size: ${props => props.$fontSize};
     padding: var(--ion-space-8);
     border-radius: 50%;
-    
 `
 
 const ToolTipTextBox = styled.div`

@@ -37,6 +37,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
             _workingOrders: observable,
             _accountInfo: observable.ref,
             openOrdersLegsMap: computed,
+            workingOrders: computed
         });
     }
 
@@ -71,7 +72,10 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     async disconnect(): Promise<void> {
         const streamerSymbols = this.activePositions.positions.selectMany(o => o.getAllStreamerSymbols());
         this.services.marketDataProvider.unsubscribeFromStreamer(streamerSymbols);
-        this._stopReplaceWorkingOrders();
+        this._stopAutoReplaceWorkingOrders();
+        for(const workingOrder of this._workingOrders) {
+            workingOrder.dispose();
+        }
     }
 
 
@@ -95,7 +99,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
     private _workingOrders: TastyWorkingOrderModel[] = [];
     get workingOrders(): TastyWorkingOrderModel[] {
-        return this._workingOrders;
+        return [...this._workingOrders].sort((a, b) => b.receivedAt.getTime() - a.receivedAt.getTime());
     }
 
 
@@ -197,9 +201,6 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }
     }
 
-
-
-
     private _tryRemoveWorkingOrder(workingOrderId: NullableUndefinedNumber): TastyWorkingOrderModel | null {
         if(!workingOrderId) {
             return null;
@@ -211,11 +212,15 @@ export class TastyAccountModel implements IBrokerageAccountModel {
             return null;
         }
 
+
         const existingOrder = this._workingOrders[existingWorkingOrderIndex];
-        existingOrder.dispose();
+
         runInAction(() => {
             this._workingOrders.splice(existingWorkingOrderIndex, 1);
         });
+
+        existingOrder.dispose();
+
 
         return existingOrder;
     }
@@ -298,10 +303,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
                 });
             }
         }
-
     }
-
-
 
     private _startAutoReplaceWorkingOrders(): void {
         //this random stuff is to reduce the likelihood that multiple browser tabs to execute the order replacement at the same time
@@ -318,7 +320,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     }
 
 
-    private _stopReplaceWorkingOrders(): void {
+    private _stopAutoReplaceWorkingOrders(): void {
         clearInterval(this._autoReplaceWorkingOrdersTimerRef);
     }
 
