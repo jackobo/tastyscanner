@@ -272,9 +272,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
             if(workingOrder) {
                 await showWorkingOrderUpdateConfirmationToast("Filled", workingOrder, this.services);
             }
-        })
-
-
+        });
     }
 
     private async _processRejectedOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
