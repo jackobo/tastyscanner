@@ -1,71 +1,106 @@
-import React, {MouseEvent} from "react";
+import React, {CSSProperties} from "react";
 import {observer} from "mobx-react-lite";
-import styled from "styled-components";
-import {IonCheckbox} from "@ionic/react";
+import styled, {css} from "styled-components";
+import {IonIcon} from "@ionic/react";
+import {checkmarkCircleOutline, radioButtonOffOutline} from "ionicons/icons";
 
-const CheckBox = styled(IonCheckbox)<{isDisplayedInTheHeader?: boolean;}>`
-  --size: 22px;
-  --border-width: 2px;
-  --border-color: var(--ion-color-dark);
-  --border-color-checked: var(--ion-color-primary);
-    z-index: 0;
-    && {
-        --checkbox-background: transparent;
-    }
-
-    --checkbox-background: var(--ion-color-primary-contrast);
-    --checkbox-background-checked: var(--ion-color-primary);
-    --checkmark-color: var(--ion-color-primary-contrast);
-  
-   
+const ContainerBox = styled.div<{$isReadOnly: boolean}>`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--ion-space-8);
+    cursor: ${props => props.$isReadOnly ? 'not-allowed' : 'pointer'};
+    
 `
 
-export type CheckBoxLabelPlacement = 'start' | 'end' | 'fixed' | 'stacked';
+
+const CheckIconBox = styled.div<{$isChecked: boolean}>`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    font-size: 24px;
+    background-color: transparent;
+    
+    ${props => props.$isChecked 
+            ? css`
+                color: var(--ion-color-success);
+            `
+            : css`
+                color: var(--ion-color-dark);
+            `
+    }
+`
+
+export type CheckBoxLabelPlacement = 'start' | 'end' | 'stacked';
 
 interface CheckboxComponentProps {
-    isDisplayedInTheHeader?: boolean;
     className?: string;
     checked: boolean;
     onChange?: (isChecked: boolean) => void;
-    onClick?: (event: MouseEvent<HTMLElement>) => void;
+    //onClick?: (event: MouseEvent<HTMLElement>) => void;
     disabled?: boolean;
     label?: string | React.ReactElement;
     labelPlacement?: CheckBoxLabelPlacement;
     isReadOnly?: boolean;
-    mode?: "ios" | "md";
 }
 
 export const CheckboxComponent: React.FC<CheckboxComponentProps> = observer((props) => {
-    const onClickHandler = (event: MouseEvent<HTMLElement>) => {
-        if(props.isReadOnly) {
-            event.preventDefault();
-        }
+    const isChecked = props.checked;
+    const isReadOnly = Boolean(props.isReadOnly || props.disabled);
 
+    //event: MouseEvent<HTMLElement>
+    const onClickHandler = () => {
+        if(isReadOnly) {
+            return;
+        }
+/*
         if(props.onClick) {
             props.onClick(event);
         }
+*/
 
+        if(props.onChange) {
+            props.onChange(!isChecked);
+        }
+    }
+
+    const renderCheckIcon = () => {
+        if(isChecked) {
+            return (
+                <IonIcon icon={checkmarkCircleOutline}/>
+            )
+        } else {
+            return (
+                <IonIcon icon={radioButtonOffOutline}/>
+            )
+        }
+    }
+
+    const containerCSSProps: CSSProperties = {};
+
+    switch (props.labelPlacement) {
+        case "start":
+            containerCSSProps.flexDirection = "row-reverse";
+            break;
+        case "stacked":
+            containerCSSProps.flexDirection = "column";
+            break;
     }
 
     return (
+        <ContainerBox $isReadOnly={isReadOnly}
+                      className={props.className}
+                      onClick={onClickHandler}
+                      style={containerCSSProps}>
+            <CheckIconBox $isChecked={isChecked}>
+                {renderCheckIcon()}
+            </CheckIconBox>
+            <div>
+                {props.label}
+            </div>
+        </ContainerBox>
 
-        <CheckBox mode={props.mode ?? "ios"}
-                  isDisplayedInTheHeader={props.isDisplayedInTheHeader}
-                  className={props.className}
-                  checked={props.checked}
-                  onIonChange={e => {
-                      if(props.isReadOnly) {
-                          e.preventDefault();
-                          e.stopPropagation();
-                      } else if(props.onChange){
-                          props.onChange(e.detail.checked)
-                      }
-                  }}
-                  onClick={onClickHandler}
-                  disabled={props.disabled}
-                  labelPlacement={props.labelPlacement}>
-            {props.label}
-
-        </CheckBox>
     )
 });

@@ -53,14 +53,16 @@ const CloseButtonBox = styled.div`
 const PriceContainerBox = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    
+    border-radius: var(--ion-border-radius);
+    padding: var(--ion-space-8);
+    border: 1px solid var(--ion-color-border);
 `
 
 const PriceInputContainerBox = styled.div`
     display: flex;
     flex-direction: row;
     gap: var(--ion-space-8);
+    
 `
 
 const PriceLabelContainerBox = styled.div`
@@ -69,15 +71,20 @@ const PriceLabelContainerBox = styled.div`
     align-items: center;
     justify-content: center;
     gap: var(--ion-space-8);
+    border-bottom: 1px solid var(--ion-color-border);
+    margin: 0 calc(-1 * var(--ion-space-8));
 `
 
 
 const PlusMinusIconBox = styled(SpecializedButtonComponent)`
-    font-size: 32px;
+    font-size: 24px;
 `
 
 const PriceInputComponent = styled(StringFieldEditorComponent)`
     text-align: center;
+    & .price-input-container {
+        border: none;
+    }
 `
 
 
@@ -152,7 +159,9 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
 
                     {renderPlusMinus(removeCircleOutline, decrementPrice)}
 
-                    <PriceInputComponent field={form.current.fields.price} hideLabel={true}/>
+                    <PriceInputComponent field={form.current.fields.price} hideLabel={true} cssClassesForOutsideBordersStyle={{
+                        inputAndIconContainer: 'price-input-container',
+                    }}/>
 
                     {renderPlusMinus(addCircleOutline, incrementPrice)}
 
