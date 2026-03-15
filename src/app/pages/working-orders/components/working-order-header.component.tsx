@@ -1,0 +1,74 @@
+import React, {useRef} from "react";
+import {IWorkingOrderViewModel} from "../../../services/brokers/interfaces/working-order.interfaces";
+import {observer} from "mobx-react";
+import {RemoveButtonComponent} from "../../../../framework/components/specialized-buttons/remove-button.component";
+import {useServices} from "../../../hooks/use-services.hook";
+import styled from "styled-components";
+import {IonIcon} from "@ionic/react";
+import {fishOutline} from "ionicons/icons";
+import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+
+const WorkingOrderHeaderBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ion-space-16);
+`
+const WorkingOrderHeaderButtonsBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--ion-space-16);
+    flex-grow: 1;
+`
+
+
+const GobyIndicatorBox = styled.div`
+    cursor: pointer;
+`
+
+const TooltipContentBox = styled.div`
+    padding: var(--ion-space-16);
+    font-size: var(--ion-font-size-body2);
+`
+
+
+export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
+    const services = useServices();
+    const gobyIndicatorRef = useRef<HTMLDivElement | null>(null)
+    const cancelClick = async () => {
+        await props.workingOrder.cancel();
+    }
+
+    const renderGobyIndicator = () => {
+        if(props.workingOrder.isGobyOrder) {
+            return (
+                <>
+                    <GobyIndicatorBox ref={gobyIndicatorRef}>
+                        <IonIcon icon={fishOutline}/>
+                    </GobyIndicatorBox>
+                    <TooltipComponent targetRef={gobyIndicatorRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                        <TooltipContentBox>
+                            {services.language.translate('Source: Operation Goby')}
+                        </TooltipContentBox>
+
+                    </TooltipComponent>
+                </>
+            )
+        }
+        return null;
+    }
+
+    return (
+        <WorkingOrderHeaderBox>
+            {renderGobyIndicator()}
+            <WorkingOrderHeaderButtonsBox>
+                <RemoveButtonComponent onClick={cancelClick}
+                                       tooltipText={services.language.translate('Cancel order')}/>
+            </WorkingOrderHeaderButtonsBox>
+
+        </WorkingOrderHeaderBox>
+    );
+})
