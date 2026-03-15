@@ -9,6 +9,7 @@ import {NullableNumber} from "../../../../../../framework/types/nullable-types";
 import {GobyOrderSource} from "../../../goby-order-source";
 import {Lazy} from "../../../../../../framework/utils/lazy";
 import {TastyWorkingOrderLegModel} from "./tasty-working-order-leg.model";
+import {MathUtils} from "../../../../../../framework/utils/math-utils";
 
 export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(10);
 const WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
@@ -30,6 +31,13 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     private _gobySource: GobyOrderSource | null = null;
     readonly legs: TastyWorkingOrderLegModel[] = [];
 
+
+    dispose(): void {
+        this.legs.forEach(leg => {
+            leg.dispose();
+        });
+    }
+
     get id(): string {
         return this.tastyOrderRawData.id.toString();
     }
@@ -48,6 +56,16 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
     get tradingPrice(): number {
         return parseFloat(this.tastyOrderRawData.price);
+    }
+
+    get midPrice(): NullableNumber {
+        const legsWithMidPrices = this.legs.filter(leg => !Check.isNullOrUndefined(leg.midPrice));
+        if(legsWithMidPrices.length !== this.legs.length) {
+            return null;
+        }
+
+        return MathUtils.round(legsWithMidPrices.sum(leg => leg.midPrice ?? 0), 2);
+
     }
 
     get isGobyOrder(): boolean {

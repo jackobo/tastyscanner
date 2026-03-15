@@ -204,9 +204,11 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         const existingWorkingOrderIndex = this._workingOrders.findIndex(wo => wo.id === workingOrderId.toString());
 
         if(existingWorkingOrderIndex >= 0) {
+            this._workingOrders[existingWorkingOrderIndex].dispose();
             runInAction(() => {
                 this._workingOrders.splice(existingWorkingOrderIndex, 1);
             });
+
         }
     }
 

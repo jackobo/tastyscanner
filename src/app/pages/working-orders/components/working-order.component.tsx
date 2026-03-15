@@ -95,7 +95,9 @@ export const WorkingOrderComponent: React.FC<{workingOrder: IWorkingOrderViewMod
                 <div>{services.language.translate('Underlying symbol:')}</div>
                 <div>{props.workingOrder.underlyingSymbol}</div>
                 <div>{services.language.translate('Trading price:')}</div>
-                <div>{props.workingOrder.tradingPrice}</div>
+                <div>{props.workingOrder.tradingPrice.toFixed(2)}</div>
+                <div>{services.language.translate('Mid price:')}</div>
+                <div>{props.workingOrder.midPrice?.toFixed(2)}</div>
             </WorkingOrderFieldsBox>
 
         </WorkingOrderBox>

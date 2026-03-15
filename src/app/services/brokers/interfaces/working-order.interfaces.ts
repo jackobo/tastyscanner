@@ -1,7 +1,10 @@
+import {NullableNumber} from "../../../../framework/types/nullable-types";
+
 export interface IWorkingOrderViewModel {
     readonly id: string;
     readonly underlyingSymbol: string;
     readonly tradingPrice: number;
+    readonly midPrice: NullableNumber;
     readonly isGobyOrder: boolean
     cancel(): Promise<void>;
 }
