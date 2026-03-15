@@ -29,10 +29,11 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         }
         this.legs = tastyOrderRawData.legs.map(leg => new TastyWorkingOrderLegModel(leg, tastyOrderRawData.underlyingSymbol, services));
 
-        makeObservable<this, '_maxAutoReplaceAttempts' | '_optionsTickSize' | '_isActionInProgress'>(this, {
+        makeObservable<this, '_maxAutoReplaceAttempts' | '_optionsTickSize' | '_isActionInProgress' | '_isAutoReplaceSuspended'>(this, {
             _maxAutoReplaceAttempts: observable.ref,
             _optionsTickSize: observable.ref,
-            _isActionInProgress: observable.ref
+            _isActionInProgress: observable.ref,
+            _isAutoReplaceSuspended: observable.ref
         })
     }
 
@@ -71,11 +72,18 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
     private _isAutoReplaceSuspended: boolean = false;
     suspendAutoReplace(): void {
-        this._isAutoReplaceSuspended = true;
+        runInAction(() => {
+            this._isAutoReplaceSuspended = true;
+        })
+
     }
     resumeAutoReplace(): void {
-        this._isAutoReplaceSuspended = false;
+        runInAction(() => {
+            this._isAutoReplaceSuspended = false;
+        })
     }
+
+
 
     get id(): string {
         return this.tastyOrderRawData.id.toString();
@@ -126,6 +134,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
         return this._optionsTickSize;
     }
+
 
     get numberOfAutoReplaceAttempts(): number {
         return this._gobySource?.autoReplaceAttempts ?? 0;
