@@ -23,6 +23,7 @@ const PageContentBox = styled.div`
     flex-grow: 1;
     max-height: 100%;
     overflow-y: auto;
+    padding-bottom: var(--ion-space-30);
 `
 
 export const ActivePositionsPage: React.FC = observer(() => {
