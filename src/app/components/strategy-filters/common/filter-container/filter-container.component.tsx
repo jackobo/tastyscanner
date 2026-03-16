@@ -15,7 +15,7 @@ const FilterContentBox = styled.div`
     display: flex;
     flex-direction: column;
     gap:4px;
-    padding: var(--ion-space-16);
+    padding: var(--ion-space-12);
 `
 
 interface FilterContainerComponentProps extends PropsWithChildren {
