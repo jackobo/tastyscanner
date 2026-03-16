@@ -1,11 +1,10 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {useServices} from "../../../../hooks/use-services.hook";
 import {FilterLabelBox} from "../../boxes/filter-label.box";
 import styled from "styled-components";
-import {FilterContainerBox} from "../../boxes/filter-container.box";
 import {IonRange} from "@ionic/react";
 import {FilterValueBox} from "../../boxes/filter-value.box";
+import {FilterContainerComponent} from "../filter-container/filter-container.component";
 
 
 const RangeBox = styled.div`
@@ -13,7 +12,7 @@ const RangeBox = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--ion-space-8);
 `
 
 
@@ -38,7 +37,7 @@ export const RangeEditorComponent: React.FC<RangeEditorComponentProps> = observe
     }
 
     return (
-        <FilterContainerBox>
+        <FilterContainerComponent>
             <FilterLabelBox>
                 {props.label}
             </FilterLabelBox>
@@ -57,6 +56,6 @@ export const RangeEditorComponent: React.FC<RangeEditorComponentProps> = observe
                 </FilterValueBox>
             </RangeBox>
 
-        </FilterContainerBox>
+        </FilterContainerComponent>
     )
 })

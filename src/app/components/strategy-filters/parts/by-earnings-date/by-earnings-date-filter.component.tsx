@@ -5,6 +5,8 @@ import {IonRadio} from "@ionic/react";
 import styled from "styled-components";
 import {IStrategyFiltersViewModel} from "../../../../services/strategy-settings/strategy-settings.service.interface";
 import {RadioGroupBox} from "../../boxes/radio-group.box";
+import {FilterContainerComponent} from "../../common/filter-container/filter-container.component";
+
 
 const ByEarningDateRadioGroupBox = styled(RadioGroupBox)`
     & .radio-group-wrapper {
@@ -19,7 +21,7 @@ const ByEarningDateRadioGroupBox = styled(RadioGroupBox)`
 export const ByEarningsDateFilterComponent: React.FC<{filters: IStrategyFiltersViewModel}> = observer((props) => {
     const filters = props.filters;
     return (
-        <>
+        <FilterContainerComponent hideBorder={true}>
             <FilterLabelBox>
                 Filter expirations by earnings date
             </FilterLabelBox>
@@ -39,6 +41,6 @@ export const ByEarningsDateFilterComponent: React.FC<{filters: IStrategyFiltersV
                 </IonRadio>
 
             </ByEarningDateRadioGroupBox>
-        </>
+        </FilterContainerComponent>
     )
 })

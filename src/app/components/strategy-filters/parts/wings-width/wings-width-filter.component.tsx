@@ -5,6 +5,8 @@ import styled from "styled-components";
 import {useServices} from "../../../../hooks/use-services.hook";
 import {IonToggle} from "@ionic/react";
 import {IStrategyFiltersViewModel} from "../../../../services/strategy-settings/strategy-settings.service.interface";
+import {FilterContainerComponent} from "../../common/filter-container/filter-container.component";
+
 
 const WingsEditorBox = styled.div`
     display: flex;
@@ -37,13 +39,13 @@ const WingValueComponent: React.FC<{value: number}> = observer((props) => {
 export const WingsWidthFilterComponent: React.FC<{filters: IStrategyFiltersViewModel}> = observer((props) => {
     const filters = props.filters;
     return (
-        <>
+        <FilterContainerComponent>
             <FilterLabelBox>
                 Wings/Spread size
             </FilterLabelBox>
             <WingsEditorBox>
                 {filters.availableWings.map(w => <WingValueComponent key={w} value={w}/>)}
             </WingsEditorBox>
-        </>
+        </FilterContainerComponent>
     )
 })

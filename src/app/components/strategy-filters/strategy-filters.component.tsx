@@ -13,16 +13,6 @@ const FiltersContainerBox = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 8px;
-    padding: 16px;
-`
-
-const SeparatorBox = styled.hr`
-    background-color: var(--ion-color-light-shade);
-    height: 1px;
-    margin-left: -12px;
-    margin-right: -12px;
-    box-sizing: border-box;
 `
 
 
@@ -34,28 +24,11 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
     return (
         <FiltersContainerBox>
             <RiskRewardFilterComponent filters={filters}/>
-
-            <SeparatorBox/>
-
             <DeltaRangeFilterComponent filters={filters}/>
-
-            <SeparatorBox/>
-
             <DTEFilterComponent filters={filters}/>
-
-            <SeparatorBox/>
-
             <BidAskSpreadFilterComponent filters={filters}/>
-
-            <SeparatorBox/>
-
             <WingsWidthFilterComponent filters={filters}/>
-
-            <SeparatorBox/>
-
             <ByEarningsDateFilterComponent filters={filters}/>
-
-
         </FiltersContainerBox>
     )
 })

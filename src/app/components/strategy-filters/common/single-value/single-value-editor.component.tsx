@@ -1,11 +1,10 @@
 import React from "react";
 import {observer} from "mobx-react";
-import styled from "styled-components";
-import {FilterContainerBox} from "../../boxes/filter-container.box";
 import {FilterLabelBox} from "../../boxes/filter-label.box";
 import {IonRange} from "@ionic/react";
 import {RangeBox} from "../../boxes/range.box";
 import {FilterValueBox} from "../../boxes/filter-value.box";
+import {FilterContainerComponent} from "../filter-container/filter-container.component";
 
 
 interface SingleValueEditorComponentProps {
@@ -18,7 +17,7 @@ interface SingleValueEditorComponentProps {
 }
 export const SingleValueEditorComponent: React.FC<SingleValueEditorComponentProps> = observer((props) => {
     return (
-        <FilterContainerBox>
+        <FilterContainerComponent>
             <FilterLabelBox>
                 {props.label}
             </FilterLabelBox>
@@ -31,6 +30,6 @@ export const SingleValueEditorComponent: React.FC<SingleValueEditorComponentProp
                 </FilterValueBox>
             </RangeBox>
 
-        </FilterContainerBox>
+        </FilterContainerComponent>
     )
 })
