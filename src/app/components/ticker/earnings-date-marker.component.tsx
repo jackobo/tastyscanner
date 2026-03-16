@@ -51,8 +51,8 @@ export const EarningsDateMarkerComponent: React.FC<{earningsDate: Date; daysUnti
     const services = useServices();
     return (
         <ContainerBox>
-            <LineBox $isLowEarningDays={props.daysUntilEarnings <= 20}/>
-            <EarningsDateBox $isLowEarningDays={props.daysUntilEarnings <= 20}>
+            <LineBox $isLowEarningDays={props.daysUntilEarnings <= 21}/>
+            <EarningsDateBox $isLowEarningDays={props.daysUntilEarnings <= 21}>
                 <span>
                     Earnings date:
                 </span>
