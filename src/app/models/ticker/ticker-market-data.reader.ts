@@ -70,7 +70,7 @@ export class TickerMarketDataReader {
     getSymbolMetricsAsync(): Promise<TickerMetricsModel> {
         if(!this._symbolMetricsPromise) {
             this._symbolMetricsPromise = this.services.marketDataProvider.getSymbolMetrics(this.symbol).then(data => {
-                const metrics = new TickerMetricsModel(data);
+                const metrics = new TickerMetricsModel(data, this.services);
                 runInAction(() => {
                     this._metrics = metrics;
                 })

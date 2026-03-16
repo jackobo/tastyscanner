@@ -3,6 +3,7 @@ import {observer} from "mobx-react";
 import styled, {css} from "styled-components";
 import {ITickerViewModel} from "../../models/ticker/ticker.view-model.interface";
 import {EarningsDatePositionEnum} from "../../pages/strategies/components/helper-functions";
+import {useServices} from "../../hooks/use-services.hook";
 
 const ContainerBox = styled.div`
     display: flex;
@@ -27,7 +28,10 @@ const LineBox= styled.div<{$isLowEarningDays: boolean}>`
 `
 
 const EarningsDateBox = styled.div<{$isLowEarningDays: boolean}>`
-    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
     padding: 4px 8px;
     border-radius: 8px;
     font-size: 0.8rem;
@@ -43,19 +47,31 @@ const EarningsDateBox = styled.div<{$isLowEarningDays: boolean}>`
     };
 `
 
-export const EarningsDateMarkerComponent: React.FC<{earningsDate: string; daysUntilEarnings: number}> = observer((props) => {
+export const EarningsDateMarkerComponent: React.FC<{earningsDate: Date; daysUntilEarnings: number}> = observer((props) => {
+    const services = useServices();
     return (
         <ContainerBox>
             <LineBox $isLowEarningDays={props.daysUntilEarnings <= 20}/>
             <EarningsDateBox $isLowEarningDays={props.daysUntilEarnings <= 20}>
-                {`Earnings date: ${props.earningsDate} (${props.daysUntilEarnings} days)`}
+                <span>
+                    Earnings date:
+                </span>
+                <span>
+                    {services.time.formatUserFriendlyMonthDay(props.earningsDate)}
+                </span>
+                <span>
+                   ♦
+                </span>
+                <span>
+                    {props.daysUntilEarnings} days
+                </span>
             </EarningsDateBox>
         </ContainerBox>
     )
 });
 
 export const EarningsDateMarkerBeforeExpirationComponent: React.FC<{ticker: ITickerViewModel; position: EarningsDatePositionEnum}> = observer((props) => {
-    if(!props.ticker.metrics) {
+    if(!props.ticker.metrics?.earningsDate) {
         return null;
     }
     if(props.position !== EarningsDatePositionEnum.Before) {
@@ -69,7 +85,7 @@ export const EarningsDateMarkerBeforeExpirationComponent: React.FC<{ticker: ITic
 })
 
 export const EarningsDateMarkerAfterExpirationComponent: React.FC<{ticker: ITickerViewModel; position: EarningsDatePositionEnum}> = observer((props) => {
-    if(!props.ticker.metrics) {
+    if(!props.ticker.metrics?.earningsDate) {
         return null;
     }
 
