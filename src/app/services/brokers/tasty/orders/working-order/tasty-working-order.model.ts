@@ -64,7 +64,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     }
 
     get autoReplaceEnabled(): boolean {
-        return Boolean(this._gobySource?.autoReplaceEnabled);
+        return Boolean(this._gobySource?.autoReplaceEnabled) && this.isLiveOrder;
     }
 
     get autoReplacePaused(): boolean {
@@ -221,6 +221,10 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
     }
 
+    private get isLiveOrder(): boolean {
+        //VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER is here to be able to test the logic in development while the market is closed.
+        return this.tastyOrderRawData.status === "Live" || import.meta.env.VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER === 'true'
+    }
 
     public async autoReplace(): Promise<void> {
 
@@ -240,11 +244,6 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
                 return;
             }
 
-            //VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER is here in order to be able to test the logic in development while the market is closed.
-            if(this.tastyOrderRawData.status !== "Live" && import.meta.env.VITE_IGNORE_LIVE_STATUS_FOR_WORKING_ORDER !== 'true') {
-                this._autoReplaceAttemptsStorageHandler.value.setLastAttemptTime();
-                return;
-            }
 
             if((this.services.time.currentDate.getTime() - this._autoReplaceAttemptsStorageHandler.value.lastAttemptTime) < WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT.totalMilliseconds) {
                 return;
