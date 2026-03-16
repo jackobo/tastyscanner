@@ -40,7 +40,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderModel {
         });
     }
 
-    private get accountNumber(): string {
+    get accountNumber(): string {
         return this.tastyOrderRawData.accountNumber;
     }
 
