@@ -17,7 +17,12 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
         super(services);
         this._midPriceReactionDispose = reaction(() => this.workingOrder.midPrice, (midPrice) => {
             if(!this.fields.isPriceLocked.value) {
-                this._setPriceValue(midPrice);
+                if(Check.isNullOrUndefined(midPrice)) {
+                    this._setPriceValue(this.workingOrder.tradingPrice);
+                } else {
+                    this._setPriceValue(midPrice);
+                }
+
             }
         }, {
             fireImmediately: true

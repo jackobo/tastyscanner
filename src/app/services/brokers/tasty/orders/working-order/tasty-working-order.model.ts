@@ -11,6 +11,7 @@ import {Lazy} from "../../../../../../framework/utils/lazy";
 import {TastyWorkingOrderLegModel} from "./tasty-working-order-leg.model";
 import {MathUtils} from "../../../../../../framework/utils/math-utils";
 import {makeObservable, observable, runInAction} from "mobx";
+import {PriceEffect, PriceEffectShort} from "../../../interfaces/open-order-request.interface";
 
 export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(5);
 const WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
@@ -113,13 +114,25 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return parseFloat(this.tastyOrderRawData.price);
     }
 
+    get priceEffect(): PriceEffect {
+        return this.tastyOrderRawData.priceEffect;
+    }
+
+    get priceEffectShort(): PriceEffectShort {
+        if(this.tastyOrderRawData.priceEffect === "Credit") {
+            return "cr";
+        } else {
+            return "db";
+        }
+    }
+
     get midPrice(): NullableNumber {
         const legsWithMidPrices = this.legs.filter(leg => !Check.isNullOrUndefined(leg.midPrice));
         if(legsWithMidPrices.length !== this.legs.length) {
             return null;
         }
 
-        return MathUtils.round(legsWithMidPrices.sum(leg => leg.midPrice ?? 0), 2);
+        return Math.abs(MathUtils.round(legsWithMidPrices.sum(leg => leg.midPrice ?? 0), 2));
 
     }
 
@@ -313,12 +326,12 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
             return null;
         }
 
-        if(this.tastyOrderRawData.priceEffect === "Credit") {
+        if(this.priceEffect === "Credit") {
             return this.tradingPrice - tickSize; //make it a little bit cheaper to get filled
-        } else if(this.tastyOrderRawData.priceEffect === "Debit") {
+        } else if(this.priceEffect === "Debit") {
             return  this.tradingPrice + tickSize; //make it a little bit expensive to get filled
         } else {
-            this.services.logger.error('Unexpected price effect', this.tastyOrderRawData.priceEffect);
+            this.services.logger.error('Unexpected price effect', this.priceEffect);
             return null;
         }
     }

@@ -1,6 +1,6 @@
 import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
 import {OptionType} from "../../../models/option.view-model.interface";
-import {OrderSimpleLegActionType} from "./open-order-request.interface";
+import {OrderSimpleLegActionType, PriceEffect, PriceEffectShort} from "./open-order-request.interface";
 import {TimeSpan} from "../../../../framework/types/time-span";
 
 export interface IWorkingOrderViewModel {
@@ -8,6 +8,8 @@ export interface IWorkingOrderViewModel {
     readonly underlyingSymbol: string;
     readonly receivedAt: Date;
     readonly tradingPrice: number;
+    readonly priceEffect: PriceEffect;
+    readonly priceEffectShort: PriceEffectShort;
     readonly midPrice: NullableNumber;
     readonly isGobyOrder: boolean
     readonly legs: IWorkingOrderLegViewModel[];

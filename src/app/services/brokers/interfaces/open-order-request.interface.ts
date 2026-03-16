@@ -1,5 +1,6 @@
 export type OrderType = "Limit" | "Market" | "Marketable Limit" | "Notional Market" | "Stop or Stop Limit"
 export type PriceEffect = "Credit" | "Debit";
+export type PriceEffectShort = "cr" | "db";
 export type TimeInForce = "Day" | "Ext" | "Ext Overnight"  | "GTC" | "GTC Ext" | "GTC Ext Overnight" | "GTD" | "IOC";
 export interface IOpenOrderRequest {
     price: number;

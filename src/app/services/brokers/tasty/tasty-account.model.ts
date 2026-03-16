@@ -258,7 +258,6 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     }
 
     async updateOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
-
         if(TASTY_WORKING_ORDER_STATUSES.includes(rawOrderData.status)) {
             await this._processWorkingOrder(rawOrderData);
         } else if (rawOrderData.status === "Cancelled") {
@@ -271,6 +270,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     }
 
     private async _processWorkingOrder(rawOrderData: ITastyOrderRawData): Promise<void> {
+        this._tryRemoveWorkingOrder(rawOrderData.id);
         const updatedOrderModel = this._createWorkingOrderModel(rawOrderData);
         runInAction(() => {
             this._workingOrders.push(updatedOrderModel);
