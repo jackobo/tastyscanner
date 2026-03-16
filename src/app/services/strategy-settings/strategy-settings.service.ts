@@ -33,7 +33,7 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     _minDelta: number = 10;
     _maxDelta: number = 30;
     _condorsDeltaSkew: number = 0;
-    _condorsDeltaSkewTolerance: number = 10;
+    _condorsDeltaSkewTolerance: number = 50;
     _maxRiskRewardRatio: number = 4;
     _minDaysToExpiration: number = 35;
     _maxDaysToExpiration: number = 60;

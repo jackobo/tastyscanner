@@ -7,8 +7,8 @@ export const CondorsDeltaSkewToleranceFilterComponent: React.FC<{filters: IStrat
     const filters = props.filters;
     return (
         <SingleValueEditorComponent label="Condors delta skew tolerance"
-                                    min={1}
-                                    max={25}
+                                    min={10}
+                                    max={100}
                                     value={filters.condorsDeltaSkewTolerance}
                                     formatValue={value => `${value}%`}
                                     //tooltip={"Max risk/reward: The ratio between the wings size and the credit received."}
