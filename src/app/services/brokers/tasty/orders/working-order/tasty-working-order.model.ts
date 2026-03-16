@@ -1,7 +1,6 @@
 import {
     IReplaceWorkingOrderOptions,
-    IWorkingOrderModel,
-    IWorkingOrderViewModel
+    IWorkingOrderModel
 } from "../../../interfaces/working-order.interfaces";
 import {ITastyOrderRawData} from "../../raw-data/tasty-order.raw-data.interfaces";
 import TastyTradeClient from "@tastytrade/api";
