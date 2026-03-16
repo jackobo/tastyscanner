@@ -18,6 +18,13 @@ export class Price {
         return `${this.value.toFixed(2)} ${this.priceEffectAbbr}`;
     }
 
+    get isCredit(): boolean {
+        return this.priceEffect === "Credit";
+    }
+
+    get isDebit(): boolean {
+        return this.priceEffect === "Debit";
+    }
 
     public addValue(value: number): Price {
         return Price.fromValue(this.value + value);
@@ -73,3 +80,5 @@ export class Price {
         }
     }
 }
+
+export type NullablePrice = Price | null;

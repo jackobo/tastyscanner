@@ -11,7 +11,7 @@ import {Lazy} from "../../../../../../framework/utils/lazy";
 import {TastyWorkingOrderLegModel} from "./tasty-working-order-leg.model";
 import {MathUtils} from "../../../../../../framework/utils/math-utils";
 import {makeObservable, observable, runInAction} from "mobx";
-import {PriceEffect, PriceEffectShort} from "../../../interfaces/open-order-request.interface";
+import {NullablePrice, Price} from "../../../../../models/price/price";
 
 export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(5);
 const WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
@@ -110,29 +110,18 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return this.tastyOrderRawData.underlyingSymbol;
     }
 
-    get tradingPrice(): number {
-        return parseFloat(this.tastyOrderRawData.price);
+    get tradingPrice(): Price {
+        return new Price(this.tastyOrderRawData.price, this.tastyOrderRawData.priceEffect);
     }
 
-    get priceEffect(): PriceEffect {
-        return this.tastyOrderRawData.priceEffect;
-    }
 
-    get priceEffectShort(): PriceEffectShort {
-        if(this.tastyOrderRawData.priceEffect === "Credit") {
-            return "cr";
-        } else {
-            return "db";
-        }
-    }
-
-    get midPrice(): NullableNumber {
+    get midPrice(): NullablePrice {
         const legsWithMidPrices = this.legs.filter(leg => !Check.isNullOrUndefined(leg.midPrice));
         if(legsWithMidPrices.length !== this.legs.length) {
             return null;
         }
 
-        return Math.abs(MathUtils.round(legsWithMidPrices.sum(leg => leg.midPrice ?? 0), 2));
+        return Price.fromValue(Math.abs(MathUtils.round(legsWithMidPrices.sum(leg => leg.midPrice ?? 0), 2)));
 
     }
 
@@ -222,7 +211,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
     }
 
-    public async replace(newPrice: number, options?: IReplaceWorkingOrderOptions): Promise<void> {
+    public async replace(newPrice: Price, options?: IReplaceWorkingOrderOptions): Promise<void> {
 
         await this._executeAction(this.services.language.translate('Failed to replace order!'), async () => {
             let gobySource = this._gobySource;
@@ -276,14 +265,14 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
 
     }
 
-    private async _replaceOrder(newPrice: number, gobySource: GobyOrderSource | null): Promise<GobyOrderSource | null> {
+    private async _replaceOrder(newPrice: Price, gobySource: GobyOrderSource | null): Promise<GobyOrderSource | null> {
         if(gobySource) {
             gobySource = gobySource.withAutoReplacePaused(this.autoReplacePaused);
         }
         await this.tastyClient.orderService.replaceOrder(this.accountNumber, this.orderIdAsNumber, {
             "order-type": this.tastyOrderRawData.orderType,
             "time-in-force": this.tastyOrderRawData.timeInForce,
-            "price": newPrice,
+            "price": newPrice.value,
             "price-effect": this.tastyOrderRawData.priceEffect,
             "source": Check.isNullOrUndefined(gobySource) ? this.tastyOrderRawData.source : gobySource.toString(),
             "legs": this.tastyOrderRawData.legs.map(leg => {
@@ -303,7 +292,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
     private async _getMaxAttemptsAndTickSize(): Promise<{maxAttempts: number, tickSize: number}> {
         const tickerInfo = await this.services.tickers.getTicker(this.underlyingSymbol).getInfoAsync();
 
-        const tickSize = tickerInfo.getOptionTickSize(this.tradingPrice);
+        const tickSize = tickerInfo.getOptionTickSize(this.tradingPrice.value);
 
         let maxAttempts: number;
 
@@ -318,7 +307,7 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
         return {maxAttempts, tickSize};
     }
 
-    private async _getPriceForAutoReplace(): Promise<NullableNumber> {
+    private async _getPriceForAutoReplace(): Promise<NullablePrice> {
 
         const {maxAttempts, tickSize} = await this._getMaxAttemptsAndTickSize();
 
@@ -326,12 +315,12 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
             return null;
         }
 
-        if(this.priceEffect === "Credit") {
-            return this.tradingPrice - tickSize; //make it a little bit cheaper to get filled
-        } else if(this.priceEffect === "Debit") {
-            return  this.tradingPrice + tickSize; //make it a little bit expensive to get filled
+        if(this.tradingPrice.isCredit) {
+            return this.tradingPrice.subtractValue(tickSize); //make it a little bit cheaper to get filled
+        } else if(this.tradingPrice.isDebit) {
+            return  this.tradingPrice.addValue(tickSize); //make it a little bit expensive to get filled
         } else {
-            this.services.logger.error('Unexpected price effect', this.priceEffect);
+            this.services.logger.error('Unexpected price effect', this.tastyOrderRawData.priceEffect);
             return null;
         }
     }

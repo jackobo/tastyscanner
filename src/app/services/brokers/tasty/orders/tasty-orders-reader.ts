@@ -129,7 +129,7 @@ export class TastyOrdersReader {
             extGlobalOrderNumber: order['ext-global-order-number'],
             globalRequestId: order['global-request-id'],
             orderType: order['order-type'],
-            price: order.price,
+            price: parseFloat(order.price),
             priceEffect: order['price-effect'],
             receivedAt:  new Date(order['received-at']),
             size: order.size,

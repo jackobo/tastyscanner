@@ -5,9 +5,10 @@ import {IAppServiceFactory} from "../../../services/app-service-factory.interfac
 import {IReactionDisposer, reaction} from "mobx";
 import {FormFields} from "../../../../framework/models/forms/form-field.interface";
 import {NullableNumber, NullableString} from "../../../../framework/types/nullable-types";
+import {NullablePrice, Price} from "../../../models/price/price";
 
 interface IReplaceWorkingOrderFormFields {
-    price: string;
+    price: Price;
     isPriceLocked: boolean;
     resetAutoReplaceAttempts: boolean;
 }
@@ -38,8 +39,8 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
 
     protected _createFields(): FormFields<IReplaceWorkingOrderFormFields> {
         return {
-            price: this._createField<string>({
-                fieldName: () => this.services.language.translate('Price') + ` (${this.workingOrder.priceEffect})`,
+            price: this._createField<Price>({
+                fieldName: () => this.services.language.translate('Price') + ` (${this.workingOrder.tradingPrice.priceEffect})`,
                 validate: () => this._validatePrice(),
             }),
             isPriceLocked: this._createField<boolean>({
@@ -60,12 +61,8 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
             return null;
         }
 
-        const newPrice = parseFloat(this.fields.price.value);
-        if(!Check.isNumber(newPrice)) {
-            return this.services.language.translate('Not a valid value');
-        }
 
-        if(newPrice <= 0) {
+        if(this.fields.price.value.value <= 0) {
             return this.services.language.translate('Price must be greater than zero');
         }
 
@@ -74,8 +71,8 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
 
     }
 
-    private _setPriceValue(value: NullableNumber) {
-        this.fields.price.setValue(value?.toFixed(2) ?? null);
+    private _setPriceValue(value: NullablePrice) {
+        this.fields.price.setValue(value);
     }
 
     protected _onFieldsCreated(fields: FormFields<IReplaceWorkingOrderFormFields>) {
@@ -85,6 +82,8 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
                 this._setPriceValue(this.workingOrder.midPrice);
             }
         })
+
+
     }
 
     get tickSize(): NullableNumber {
@@ -97,14 +96,12 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
             return;
         }
 
-
-
-        let newPrice = parseFloat(this.fields.price.value ?? '0');
-        if(!Check.isNumber(newPrice)) {
+        if(Check.isNullOrUndefined(this.fields.price.value)) {
             return;
         }
-        newPrice = newPrice + tickSign * tickSize;
-        this.fields.price.setValue(newPrice.toFixed(2));
+
+        const newPrice = this.fields.price.value.addValue(tickSign * tickSize);
+        this.fields.price.setValue(newPrice);
         this.fields.isPriceLocked.setValue(true);
     }
 
@@ -125,8 +122,12 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
             return;
         }
 
-        const newPrice = parseFloat(this.fields.price.value ?? '0');
-        await this.workingOrder.replace(newPrice, {
+        if(!this.fields.price.value) {
+            await this.services.alert.showErrorAsync(this.services.language.translate('Must enter the price'))
+            return;
+        }
+
+        await this.workingOrder.replace(this.fields.price.value, {
             resetAutoReplaceAttempts: this.fields.resetAutoReplaceAttempts.value ?? false
         });
     }

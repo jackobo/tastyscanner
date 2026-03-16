@@ -16,7 +16,7 @@ export interface ITastyOrderRawData {
     extGlobalOrderNumber: number;
     globalRequestId: string;
     orderType: string;
-    price: string;
+    price: number;
     priceEffect: PriceEffect;
     receivedAt: Date;
     size: number;
