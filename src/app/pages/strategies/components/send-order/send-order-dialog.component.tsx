@@ -1,5 +1,8 @@
-import React from "react";
-import {IOptionsStrategySendOrderParams, IOptionsStrategyViewModel} from "../../../../models/options-strategy.view-model.interface";
+import React, {useRef} from "react";
+import {
+    IOptionsStrategySendOrderParams,
+    IOptionsStrategyViewModel
+} from "../../../../models/options-strategy.view-model.interface";
 import {IonIcon, IonToggle} from "@ionic/react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
@@ -24,6 +27,10 @@ import {
 } from "../../../../../framework/components/modal/footer/standard-dialog-footer.component";
 import {PrimaryButton} from "../../../../../framework/components/buttons/primary-button";
 import {OrderType, TimeInForce} from "../../../../services/brokers/interfaces/open-order-request.interface";
+import {
+    TooltipComponent,
+    TooltipToggleBehaviorEnum
+} from "../../../../../framework/components/tooltip/tooltip.component";
 
 const SpacerBox = styled.div`
     grid-column: 1/-1;
@@ -170,6 +177,34 @@ const EnableAutoReplaceInfoIconBox = styled.div`
     justify-items: center;
 `
 
+const AutoReplaceInfoTooltipContentBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    
+    padding: var(--ion-space-16);
+    font-size: var(--ion-font-size-body2);
+    max-width: 400px;
+    
+`
+
+const AutoReplaceInfoTooltipContentComponent: React.FC = observer(() => {
+    return (
+        <AutoReplaceInfoTooltipContentBox>
+            <div>
+                Order auto replace is a feature that automatically adjust an order price if it doesn't get filled in a certain amount of time.
+                The price is adjusted base on the underlying asset options ticker size. The order price will be decremented with ticker size if the order price effect is Credit and it will be incremented with ticker size if the order price effect is Debit.
+                <br/>
+                The auto replace attempts executes every 20 seconds and the following rules are applied:
+            </div>
+            <ul>
+                <li>If the underlying asset options ticker size is $0.01 there will be a maximum of 4 attempts.</li>
+                <li>If the underlying asset options ticker size is $0.02 there will be a maximum of 2 attempts.</li>
+                <li>For any other ticker size value there will be maximum one attempt.</li>
+            </ul>
+        </AutoReplaceInfoTooltipContentBox>
+    )
+})
+
 const LegComponent: React.FC<{leg: IOptionsStrategyLegViewModel}> = observer((props) => {
     const services = useServices();
     return (
@@ -308,6 +343,7 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
     const [enableAutoReplace, setEnableAutoReplace] = React.useState<boolean>(true);
     const [orderType] = React.useState<OrderType>("Limit");
     const [timeInForce] = React.useState<TimeInForce>("Day");
+    const enableAutoReplaceInfoIconBoxRef = useRef<HTMLDivElement | null>(null);
 
     const limitPriceAsNumber = limitPrice ? parseFloat(limitPrice) : null;
 
@@ -333,7 +369,6 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
             orderParams.price = limitPriceAsNumber;
         }
 
-        //TODO - better handle error reporting
         try {
             await props.strategy.sendOrder(orderParams);
             props.dialogHandler.accept();
@@ -415,9 +450,12 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                     <IonToggle labelPlacement="end" checked={enableAutoReplace} onIonChange={e => setEnableAutoReplace(e.detail.checked)}>
                         <EnableAutoReplaceLabelBox>
                             <span>{services.language.translate("Enable auto replace")}</span>
-                            <EnableAutoReplaceInfoIconBox>
+                            <EnableAutoReplaceInfoIconBox ref={enableAutoReplaceInfoIconBoxRef}>
                                 <IonIcon icon={informationCircleOutline} />
                             </EnableAutoReplaceInfoIconBox>
+                            <TooltipComponent targetRef={enableAutoReplaceInfoIconBoxRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                                <AutoReplaceInfoTooltipContentComponent/>
+                            </TooltipComponent>
                         </EnableAutoReplaceLabelBox>
 
                     </IonToggle>

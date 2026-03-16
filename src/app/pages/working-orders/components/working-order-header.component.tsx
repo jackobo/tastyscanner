@@ -40,6 +40,7 @@ const GobyIndicatorBox = styled.div`
 
 const GobyTooltipContentBox = styled.div`
     padding: var(--ion-space-16);
+    font-size: var(--ion-font-size-body2);
 `
 
 const OrderIdBox = styled.div<{$isReadOnly: boolean}>`
