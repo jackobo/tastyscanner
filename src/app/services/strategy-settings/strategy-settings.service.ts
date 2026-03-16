@@ -15,16 +15,11 @@ export class StrategySettingsService extends AppServiceBase implements IStrategy
 export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     constructor(private readonly services: IAppServiceFactory) {
         this._loadFromStorage();
-        makeObservable<this, '_minDelta'
-            | '_maxDelta'
-            | '_maxRiskRewardRatio'
-            | '_minDaysToExpiration'
-            | '_maxDaysToExpiration'
-            | '_maxBidAskSpread'
-            | '_wings'
-            | '_byEarningsDate'>(this, {
+        makeObservable(this, {
             _minDelta: observable.ref,
             _maxDelta: observable.ref,
+            _condorsDeltaSkew: observable.ref,
+            _condorsDeltaSkewTolerance: observable.ref,
             _maxRiskRewardRatio: observable.ref,
             _minDaysToExpiration: observable.ref,
             _maxDaysToExpiration: observable.ref,
@@ -37,6 +32,8 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
 
     _minDelta: number = 10;
     _maxDelta: number = 30;
+    _condorsDeltaSkew: number = 0;
+    _condorsDeltaSkewTolerance: number = 10;
     _maxRiskRewardRatio: number = 4;
     _minDaysToExpiration: number = 35;
     _maxDaysToExpiration: number = 60;
@@ -64,6 +61,20 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     }
     set maxDelta(value) {
         this._setProperty("_maxDelta", value);
+    }
+
+    get condorsDeltaSkew(): number {
+        return this._condorsDeltaSkew;
+    }
+    set condorsDeltaSkew(value) {
+        this._setProperty("_condorsDeltaSkew", value);
+    }
+
+    get condorsDeltaSkewTolerance(): number {
+        return this._condorsDeltaSkewTolerance;
+    }
+    set condorsDeltaSkewTolerance(value) {
+        this._setProperty("_condorsDeltaSkewTolerance", value);
     }
 
     get maxRiskRewardRatio(): number {

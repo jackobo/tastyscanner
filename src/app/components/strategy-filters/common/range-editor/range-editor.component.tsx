@@ -1,10 +1,10 @@
 import React from "react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
-import {IonRange} from "@ionic/react";
 import {FilterValueBox} from "../../boxes/filter-value.box";
 import {FilterContainerComponent} from "../filter-container/filter-container.component";
 import {FilterLabelComponent} from "../filter-label/filter-label.component";
+import {IonRangeBox} from "../../boxes/range.box";
 
 
 const RangeBox = styled.div`
@@ -43,7 +43,7 @@ export const RangeEditorComponent: React.FC<RangeEditorComponentProps> = observe
                 {props.label}
             </FilterLabelComponent>
             <RangeBox>
-                <IonRange dualKnobs={true}
+                <IonRangeBox dualKnobs={true}
                           min={props.min}
                           max={props.max}
                           value={{lower: props.lower, upper: props.upper}}

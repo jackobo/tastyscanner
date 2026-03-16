@@ -8,6 +8,10 @@ import {DTEFilterComponent} from "./parts/dte-range/dte-range-filter.component";
 import {BidAskSpreadFilterComponent} from "./parts/bid-ask-spread/bid-ask-spread-filter.component";
 import {WingsWidthFilterComponent} from "./parts/wings-width/wings-width-filter.component";
 import {ByEarningsDateFilterComponent} from "./parts/by-earnings-date/by-earnings-date-filter.component";
+import {CondorsDeltaSkewFilterComponent} from "./parts/condors-delta-skew/condors-delta-skew-filter.component";
+import {
+    CondorsDeltaSkewToleranceFilterComponent
+} from "./parts/condors-delta-skew/condors-delta-skew-tolerance-filter.component";
 
 const FiltersContainerBox = styled.div`
     display: flex;
@@ -25,6 +29,8 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
         <FiltersContainerBox>
             <RiskRewardFilterComponent filters={filters}/>
             <DeltaRangeFilterComponent filters={filters}/>
+            <CondorsDeltaSkewFilterComponent filters={filters}/>
+            <CondorsDeltaSkewToleranceFilterComponent filters={filters}/>
             <DTEFilterComponent filters={filters}/>
             <BidAskSpreadFilterComponent filters={filters}/>
             <WingsWidthFilterComponent filters={filters}/>
