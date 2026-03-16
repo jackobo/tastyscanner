@@ -8,5 +8,4 @@ export const FilterValueBox = styled(IonChip)`
     justify-content: center;
     text-align: center;
     min-width: 70px;
-    
 `
