@@ -28,10 +28,14 @@ const PriceContainerBox = styled.div`
 `
 
 const PriceValueBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
     font-weight: var(--ion-font-weight-bold);
 `
 
-const TradingPriceValueBox = styled(PriceValueBox)<{$isReadOnly: boolean}>`
+const TradingPriceValueBox = styled.div<{$isReadOnly: boolean}>`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -74,7 +78,11 @@ export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderView
             <PriceContainerBox>
                 <div>{services.language.translate('Trading price')}</div>
                 <TradingPriceValueBox ref={tradingPriceValueElementRef} $isReadOnly={Boolean(props.isReadOnly)}>
-                    <div>{props.workingOrder.tradingPrice.toFixed(2)}</div>
+                    <PriceValueBox>
+                        <div>{props.workingOrder.tradingPrice.toFixed(2)}</div>
+                        <span>{props.workingOrder.priceEffectShort}</span>
+                    </PriceValueBox>
+
                     {renderReplaceButton()}
                 </TradingPriceValueBox>
 
@@ -96,7 +104,10 @@ export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderView
             </PriceContainerBox>
             <PriceContainerBox>
                 <div>{services.language.translate('Mid price')}</div>
-                <PriceValueBox>{props.workingOrder.midPrice?.toFixed(2)}</PriceValueBox>
+                <PriceValueBox>
+                    <span>{props.workingOrder.midPrice?.toFixed(2)}</span>
+                    <span>{props.workingOrder.priceEffectShort}</span>
+                </PriceValueBox>
             </PriceContainerBox>
 
         </BodyBox>
