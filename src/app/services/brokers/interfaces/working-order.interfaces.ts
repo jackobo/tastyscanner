@@ -18,6 +18,10 @@ export interface IWorkingOrderViewModel {
     replace(newPrice: Price, options?: IReplaceWorkingOrderOptions): Promise<void>;
 }
 
+export interface IWorkingOrderModel extends IWorkingOrderViewModel {
+    startAutoReplace(): Promise<void>;
+}
+
 export interface IWorkingOrderAutoReplaceHandlerViewModel {
     readonly timeUntilNextAutoReplace: TimeSpan | null;
     readonly numberOfAutoReplaceAttempts: number;
@@ -26,7 +30,6 @@ export interface IWorkingOrderAutoReplaceHandlerViewModel {
     autoReplacePaused: boolean;
     suspendAutoReplace(): void;
     resumeAutoReplace(): void;
-    autoReplace(): Promise<void>;
 }
 
 export interface IReplaceWorkingOrderOptions {

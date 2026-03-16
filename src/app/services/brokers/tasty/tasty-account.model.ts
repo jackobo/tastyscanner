@@ -20,9 +20,6 @@ import {
 } from "../../../pages/working-orders/show-working-order-update-confirmation-toast";
 import {OrderUpdateType} from "../../../pages/working-orders/components/working-order-confirmation-toast.component";
 import {TastyWorkingOrderLegModel} from "./orders/working-order/tasty-working-order-leg.model";
-import {
-    WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL
-} from "./orders/working-order/tasty-working-order-auto-replace-handler.model";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -46,7 +43,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         });
     }
 
-    private _autoReplaceWorkingOrdersTimerRef: any;
+
 
     get id(): string {
         return `${this.brokerName}-${this.accountNumber}`
@@ -70,14 +67,11 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         await this._loadAccountInfo();
         await this._loadWorkingOrders();
         await this._loadActivePositions();
-        this._startAutoReplaceWorkingOrders();
-
     }
 
     async disconnect(): Promise<void> {
         const streamerSymbols = this.activePositions.positions.selectMany(o => o.getAllStreamerSymbols());
         this.services.marketDataProvider.unsubscribeFromStreamer(streamerSymbols);
-        this._stopAutoReplaceWorkingOrders();
         for(const workingOrder of this._workingOrders) {
             workingOrder.dispose();
         }
@@ -340,24 +334,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         }
     }
 
-    private _startAutoReplaceWorkingOrders(): void {
-        //this random stuff is to reduce the likelihood that multiple browser tabs to execute the order replacement at the same time
-        const timeIntervalMS = Math.max(1000, Math.round(Math.random() * WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL.totalMilliseconds));
-        this._autoReplaceWorkingOrdersTimerRef = setTimeout(async () => {
-            const workingOrders = this.workingOrders.filter(wo => wo.isGobyOrder);
 
-            for(const workingOrder of workingOrders) {
-                await workingOrder.autoReplaceHandler.autoReplace();
-            }
-            this._startAutoReplaceWorkingOrders();
-
-        }, timeIntervalMS);
-    }
-
-
-    private _stopAutoReplaceWorkingOrders(): void {
-        clearInterval(this._autoReplaceWorkingOrdersTimerRef);
-    }
 
 
     /*

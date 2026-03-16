@@ -7,6 +7,9 @@ import {FormFields} from "../../../framework/models/forms/form-field.interface";
 import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";
 import {AppFormModel} from "../../models/forms/app-form.model";
 import {IBrokerageAccountModel} from "./interfaces/brokerage-account.view-model.interface";
+import {TimeSpan} from "../../../framework/types/time-span";
+
+export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(5);
 
 export class BrokersService extends AppServiceBase implements IBrokersService {
     constructor(services: IAppServiceFactory, private readonly brokers: IBroker[]) {
@@ -24,12 +27,13 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
             if(value) {
                 await this.setCurrentAccount(value);
             }
-        })
+        });
 
         this._loadAccounts().finally(() => {
             runInAction(() => {
                 this.accountsLoadingInProgress = false
             });
+            this._startAutoReplaceWorkingOrders();
         });
 
     }
@@ -111,6 +115,22 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
         this._form.fields.lastUsedAccountId.setValue(this.currentAccount?.id ?? null);
         this._form.commitChanges();
     }
+
+    private _startAutoReplaceWorkingOrders(): void {
+        //this random stuff is to reduce the likelihood that multiple browser tabs to execute the order replacement at the same time
+        const timeIntervalMS = Math.max(1000, Math.round(Math.random() * WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL.totalMilliseconds));
+        setTimeout(async () => {
+            if(this.currentAccount) {
+                const workingOrders = this.currentAccount.workingOrders.filter(wo => wo.isGobyOrder);
+
+                for(const workingOrder of workingOrders) {
+                    await workingOrder.startAutoReplace();
+                }
+                this._startAutoReplaceWorkingOrders();
+            }
+        }, timeIntervalMS);
+    }
+
 
 }
 

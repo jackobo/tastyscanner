@@ -11,7 +11,6 @@ import {GobyOrderSource} from "../../../goby-order-source";
 import {AppLocalStorageKeys} from "../../../../storage/app-local-storage-keys";
 import {IWorkingOrderAutoReplaceHandlerViewModel} from "../../../interfaces/working-order.interfaces";
 
-export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(5);
 const WORKING_ORDER_AUTO_REPLACE_TIME_LIMIT = TimeSpan.fromSeconds(20);
 
 export class TastyWorkingOrderAutoReplaceHandlerModel implements IWorkingOrderAutoReplaceHandlerViewModel {

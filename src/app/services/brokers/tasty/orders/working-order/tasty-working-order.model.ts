@@ -1,4 +1,8 @@
-import {IReplaceWorkingOrderOptions, IWorkingOrderViewModel} from "../../../interfaces/working-order.interfaces";
+import {
+    IReplaceWorkingOrderOptions,
+    IWorkingOrderModel,
+    IWorkingOrderViewModel
+} from "../../../interfaces/working-order.interfaces";
 import {ITastyOrderRawData} from "../../raw-data/tasty-order.raw-data.interfaces";
 import TastyTradeClient from "@tastytrade/api";
 import {IAppServiceFactory} from "../../../../app-service-factory.interface";
@@ -13,7 +17,7 @@ import {NullablePrice, Price} from "../../../../../models/price/price";
 import {TastyWorkingOrderAutoReplaceHandlerModel} from "./tasty-working-order-auto-replace-handler.model";
 
 
-export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
+export class TastyWorkingOrderModel implements IWorkingOrderModel {
     constructor(public readonly tastyOrderRawData: ITastyOrderRawData,
                 private readonly tastyClient: TastyTradeClient,
                 public readonly services: IAppServiceFactory) {
@@ -161,6 +165,10 @@ export class TastyWorkingOrderModel implements IWorkingOrderViewModel {
             await this.replaceOrder(newPrice, gobySource);
         })
 
+    }
+
+    async startAutoReplace(): Promise<void> {
+        await this.autoReplaceHandler.autoReplace();
     }
 
 

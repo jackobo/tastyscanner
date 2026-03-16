@@ -1,6 +1,6 @@
 import {IOpenOrderRequest} from "./open-order-request.interface";
 import {IActivePositionViewModel} from "./active-position.interfaces";
-import {IWorkingOrderViewModel} from "./working-order.interfaces";
+import {IWorkingOrderModel, IWorkingOrderViewModel} from "./working-order.interfaces";
 
 
 export interface IBrokerageAccountViewModel {
@@ -25,6 +25,7 @@ export interface IBrokerageAccountInfoViewModel {
 export interface IBrokerageAccountModel extends IBrokerageAccountViewModel {
     connect(): Promise<void>;
     disconnect(): Promise<void>;
+    workingOrders: IWorkingOrderModel[];
 }
 
 export interface IActivePositionsResult {
