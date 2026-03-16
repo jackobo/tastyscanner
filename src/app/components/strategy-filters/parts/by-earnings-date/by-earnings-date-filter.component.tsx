@@ -1,12 +1,15 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {FilterLabelBox} from "../../boxes/filter-label.box";
 import {IonRadio} from "@ionic/react";
 import styled from "styled-components";
 import {IStrategyFiltersViewModel} from "../../../../services/strategy-settings/strategy-settings.service.interface";
 import {RadioGroupBox} from "../../boxes/radio-group.box";
 import {FilterContainerComponent} from "../../common/filter-container/filter-container.component";
+import {FilterLabelComponent} from "../../common/filter-label/filter-label.component";
 
+const LabelBox = styled(FilterLabelComponent)`
+    padding-bottom: var(--ion-space-8);
+`
 
 const ByEarningDateRadioGroupBox = styled(RadioGroupBox)`
     & .radio-group-wrapper {
@@ -22,9 +25,9 @@ export const ByEarningsDateFilterComponent: React.FC<{filters: IStrategyFiltersV
     const filters = props.filters;
     return (
         <FilterContainerComponent hideBorder={true}>
-            <FilterLabelBox>
+            <LabelBox>
                 Filter expirations by earnings date
-            </FilterLabelBox>
+            </LabelBox>
 
             <ByEarningDateRadioGroupBox value={filters.byEarningsDate}
                                         onIonChange={e => filters.byEarningsDate = e.detail.value}>

@@ -11,6 +11,7 @@ export const RiskRewardFilterComponent: React.FC<{filters: IStrategyFiltersViewM
                                     max={10}
                                     value={filters.maxRiskRewardRatio}
                                     formatValue={value => `${value}/1`}
+                                    tooltip={"Max risk/reward: The ratio between the wings size and the credit received."}
                                     onValueChanged={value => filters.maxRiskRewardRatio = value}/>
     )
 });

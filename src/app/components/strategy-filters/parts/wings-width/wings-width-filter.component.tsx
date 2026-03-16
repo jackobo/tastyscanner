@@ -1,11 +1,11 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {FilterLabelBox} from "../../boxes/filter-label.box";
 import styled from "styled-components";
 import {useServices} from "../../../../hooks/use-services.hook";
 import {IonToggle} from "@ionic/react";
 import {IStrategyFiltersViewModel} from "../../../../services/strategy-settings/strategy-settings.service.interface";
 import {FilterContainerComponent} from "../../common/filter-container/filter-container.component";
+import {FilterLabelComponent} from "../../common/filter-label/filter-label.component";
 
 
 const WingsEditorBox = styled.div`
@@ -14,6 +14,11 @@ const WingsEditorBox = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 8px;
+    padding-bottom: var(--ion-space-16);
+`
+
+const LabelBox = styled(FilterLabelComponent)`
+    padding-bottom: var(--ion-space-8);
 `
 
 const WingValueComponent: React.FC<{value: number}> = observer((props) => {
@@ -40,9 +45,9 @@ export const WingsWidthFilterComponent: React.FC<{filters: IStrategyFiltersViewM
     const filters = props.filters;
     return (
         <FilterContainerComponent>
-            <FilterLabelBox>
-                Wings/Spread size
-            </FilterLabelBox>
+            <LabelBox>
+                Wings size
+            </LabelBox>
             <WingsEditorBox>
                 {filters.availableWings.map(w => <WingValueComponent key={w} value={w}/>)}
             </WingsEditorBox>

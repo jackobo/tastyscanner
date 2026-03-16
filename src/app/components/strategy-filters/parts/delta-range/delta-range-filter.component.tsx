@@ -11,6 +11,7 @@ export const DeltaRangeFilterComponent: React.FC<{filters: IStrategyFiltersViewM
                               max={49}
                               lower={filters.minDelta}
                               upper={filters.maxDelta}
+                              tooltip={"Delta range: Only the strikes with delta within this range will be used to compose the final strategy."}
                               onValueChanged={value => {
                                   filters.minDelta = value.lower;
                                   filters.maxDelta = value.upper;

@@ -11,6 +11,7 @@ export const DTEFilterComponent: React.FC<{filters: IStrategyFiltersViewModel}> 
                               max={90}
                               lower={filters.minDaysToExpiration}
                               upper={filters.maxDaysToExpiration}
+                              tooltip={"Days to expiration range: Only the options expirations within this range will be considered."}
                               onValueChanged={value => {
                                   filters.minDaysToExpiration = value.lower;
                                   filters.maxDaysToExpiration = value.upper;
