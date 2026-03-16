@@ -25,7 +25,7 @@ export class GobyOrderSource {
 
         const parts = source.split("|");
 
-        if(parts.length < 2) {
+        if(parts.length < 5) {
             return null;
         }
 
