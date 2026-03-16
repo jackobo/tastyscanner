@@ -5,7 +5,7 @@ import {
     OrderUpdateType,
     WorkingOrderConfirmationToastComponent
 } from "./components/working-order-confirmation-toast.component";
-import {playCashRegisterSound} from "../../utils/play-toast-sound";
+import {playToastSound} from "../../utils/play-toast-sound";
 
 
 export async function showWorkingOrderUpdateConfirmationToast(orderUpdateType: OrderUpdateType,
@@ -18,6 +18,6 @@ export async function showWorkingOrderUpdateConfirmationToast(orderUpdateType: O
         renderContent: renderContent,
         autoCloseTime: autoCloseTime
     });
-    playCashRegisterSound();
+    playToastSound();
 
 }
