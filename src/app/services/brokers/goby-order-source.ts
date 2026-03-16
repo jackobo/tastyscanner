@@ -36,7 +36,7 @@ export class GobyOrderSource {
 
         const version = parseInt(parts[1]);
         const autoReplaceEnabled: boolean = parts[2] === '1';
-        const autoReplaceAttempts: number = (Check.isEmpty(parts[3]) ? 0 : parseInt(parts[2]));
+        const autoReplaceAttempts: number = (Check.isEmpty(parts[3]) ? 0 : parseInt(parts[3]));
         const autoReplacePaused: boolean =  parts[4] === '1';
 
         return new GobyOrderSource(version, autoReplaceEnabled, autoReplaceAttempts, autoReplacePaused);
