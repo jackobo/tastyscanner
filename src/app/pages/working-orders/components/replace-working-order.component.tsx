@@ -9,14 +9,12 @@ import {
     SpecializedButtonComponent
 } from "../../../../framework/components/specialized-buttons/specialized-button.component";
 import {PrimaryButton} from "../../../../framework/components/buttons/primary-button";
-import {
-    StringFieldEditorComponent
-} from "../../../../framework/components/forms/string-field/string-field-editor.component";
 import {Check} from "../../../../framework/utils/type-checking";
 import {ReplaceWorkingOrderFormModel} from "./replace-working-order-form.model";
 import {
     BooleanFieldEditorComponent
 } from "../../../../framework/components/forms/boolean-field/boolean-field-editor.component";
+import {PriceFieldEditorComponent} from "../../../components/price/price-field-editor.component";
 
 
 const ContainerBox = styled.div`
@@ -84,7 +82,7 @@ const PriceLabelContainerBox = styled.div`
     margin: 0 calc(-1 * var(--ion-space-8));
 `
 
-const PriceInputComponent = styled(StringFieldEditorComponent)`
+const PriceInputComponent = styled(PriceFieldEditorComponent)`
     text-align: center;
     & .price-input-container {
         border: none;
@@ -104,15 +102,16 @@ interface ReplaceWorkingOrderComponentProps {
 export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponentProps> = observer((props) => {
     const services = useServices();
     const formRef = useRef<ReplaceWorkingOrderFormModel>(new ReplaceWorkingOrderFormModel(props.workingOrder, services));
+    const autoReplaceHandler = props.workingOrder.autoReplaceHandler;
 
     useEffect(() => {
         const form = formRef.current;
-        props.workingOrder.suspendAutoReplace();
+        autoReplaceHandler.suspendAutoReplace();
         return () => {
             form.dispose();
-            props.workingOrder.resumeAutoReplace();
+            autoReplaceHandler.resumeAutoReplace();
         }
-    })
+    }, [autoReplaceHandler]);
 
     const togglePriceLock = () => {
         formRef.current.togglePriceLock();
@@ -132,15 +131,15 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
 
 
     const renderLockIcon = () => {
-        if(formRef.current.fields.isPriceLocked.value) {
+        if (formRef.current.fields.isPriceLocked.value) {
             return (<IonIcon icon={lockClosedOutline}/>)
         } else {
             return (<IonIcon icon={lockOpenOutline}/>)
         }
     }
 
-    const renderPlusMinus = (iconName: string, getToolTipText: (tickSize: number) => string, onClick: () => void  ) => {
-        if(Check.isNullOrUndefined(props.workingOrder.optionsTickSize)) {
+    const renderPlusMinus = (iconName: string, getToolTipText: (tickSize: number) => string, onClick: () => void) => {
+        if (Check.isNullOrUndefined(props.workingOrder.optionsTickSize)) {
             return null;
         }
 
@@ -150,7 +149,6 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
                                         tooltipText={getToolTipText(props.workingOrder.optionsTickSize)}/>
         )
     }
-
 
 
     return (
@@ -170,29 +168,36 @@ export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponent
                 <PriceContainerBox>
                     <PriceLabelContainerBox>
                         <span>{formRef.current.fields.price.fieldName}</span>
-                        <SpecializedButtonComponent renderIcon={renderLockIcon} onClick={togglePriceLock} tooltipText={services.language.translate('Lock price')}/>
+                        <SpecializedButtonComponent renderIcon={renderLockIcon} onClick={togglePriceLock}
+                                                    tooltipText={services.language.translate('Lock price')}/>
                     </PriceLabelContainerBox>
                     <PriceInputContainerBox>
 
                         {renderPlusMinus(removeCircleOutline,
-                                        tickSize => services.language.translationFor('Decrement with {tickSize}').withParams({tickSize: tickSize.toFixed(2)}),
-                                        decrementPrice)}
+                            tickSize => services.language.translationFor('Decrement with {tickSize}').withParams({tickSize: tickSize.toFixed(2)}),
+                            decrementPrice)}
 
-                        <PriceInputComponent field={formRef.current.fields.price} hideLabel={true} cssClassesForOutsideBordersStyle={{
-                            inputAndIconContainer: 'price-input-container',
+                        <PriceInputComponent field={formRef.current.fields.price}
+                                             priceEffect={props.workingOrder.tradingPrice.priceEffect}
+                                             hideLabel={true}
+                                             onChange={() => formRef.current.fields.isPriceLocked.setValue(true)}
+                                             cssClassesForOutsideBordersStyle={{
+                                                 inputAndIconContainer: 'price-input-container',
 
-                        }} cssClasses={{
-                            errorContainer: 'price-input-error-container',
-                        }}/>
+                                             }}
+                                             cssClasses={{
+                                                errorContainer: 'price-input-error-container',
+                                            }}/>
 
                         {renderPlusMinus(addCircleOutline,
-                                        tickSize => services.language.translationFor('Increment with {tickSize}').withParams({tickSize: tickSize.toFixed(2)}),
-                                        incrementPrice)}
+                            tickSize => services.language.translationFor('Increment with {tickSize}').withParams({tickSize: tickSize.toFixed(2)}),
+                            incrementPrice)}
 
                     </PriceInputContainerBox>
                 </PriceContainerBox>
 
-                {props.workingOrder.isGobyOrder && props.workingOrder.numberOfAutoReplaceAttempts > 0 && <BooleanFieldEditorComponent field={formRef.current.fields.resetAutoReplaceAttempts}/>}
+                {props.workingOrder.isGobyOrder && autoReplaceHandler.numberOfAutoReplaceAttempts > 0 &&
+                    <BooleanFieldEditorComponent field={formRef.current.fields.resetAutoReplaceAttempts}/>}
 
                 <PrimaryButton showArrow={true} onClick={sendOrder}>
                     {services.language.translate('Send order')}

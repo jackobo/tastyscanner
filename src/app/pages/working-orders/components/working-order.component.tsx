@@ -32,7 +32,7 @@ interface WorkingOrderComponentProps {
 export const WorkingOrderComponent: React.FC<WorkingOrderComponentProps> = observer((props) => {
 
     const renderFooter = () => {
-        if(props.isReadOnly || !props.workingOrder.autoReplaceEnabled) {
+        if(props.isReadOnly || !props.workingOrder.autoReplaceHandler.autoReplaceEnabled) {
             return null;
         }
 

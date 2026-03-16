@@ -9,7 +9,7 @@ import {TastyActivePositionLegModel} from "./orders/active-positions/tasty-activ
 import {computed, makeObservable, observable, runInAction} from "mobx";
 import {TastyAccountInfoModel} from "./tasty-account-info.model";
 import {ITastyOrderRawData, TASTY_WORKING_ORDER_STATUSES} from "./raw-data/tasty-order.raw-data.interfaces";
-import {TastyWorkingOrderModel, WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL} from "./orders/working-order/tasty-working-order.model";
+import {TastyWorkingOrderModel} from "./orders/working-order/tasty-working-order.model";
 import {TimeSpan} from "../../../../framework/types/time-span";
 import {Debounce} from "../../../../framework/utils/debounce";
 import {NullableUndefinedNumber, UndefinedString} from "../../../../framework/types/nullable-types";
@@ -20,6 +20,9 @@ import {
 } from "../../../pages/working-orders/show-working-order-update-confirmation-toast";
 import {OrderUpdateType} from "../../../pages/working-orders/components/working-order-confirmation-toast.component";
 import {TastyWorkingOrderLegModel} from "./orders/working-order/tasty-working-order-leg.model";
+import {
+    WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL
+} from "./orders/working-order/tasty-working-order-auto-replace-handler.model";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -326,7 +329,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     private _clearOrderReplaceAttemptStorageKeys() {
         const storageDiscriminators = this.services.localStorage.getDiscriminators(AppLocalStorageKeys.orderAutoReplace);
         const currentWorkingOrdersStorageDiscriminators: UndefinedString[] = this._workingOrders.filter(wo => wo.isGobyOrder)
-                                                                                                .map(wo => wo.getAutoReplaceAttemptStorageDiscriminator());
+                                                                                                .map(wo => wo.autoReplaceHandler.getAutoReplaceAttemptStorageDiscriminator());
 
         for(const storageDisc of storageDiscriminators) {
             if(!currentWorkingOrdersStorageDiscriminators.includes(storageDisc.discriminator)) {
@@ -341,10 +344,10 @@ export class TastyAccountModel implements IBrokerageAccountModel {
         //this random stuff is to reduce the likelihood that multiple browser tabs to execute the order replacement at the same time
         const timeIntervalMS = Math.max(1000, Math.round(Math.random() * WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL.totalMilliseconds));
         this._autoReplaceWorkingOrdersTimerRef = setTimeout(async () => {
-            const workingOrders = [...this.workingOrders]
+            const workingOrders = this.workingOrders.filter(wo => wo.isGobyOrder);
 
             for(const workingOrder of workingOrders) {
-                await workingOrder.autoReplace();
+                await workingOrder.autoReplaceHandler.autoReplace();
             }
             this._startAutoReplaceWorkingOrders();
 

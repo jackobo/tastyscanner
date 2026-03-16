@@ -79,8 +79,7 @@ export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderView
                 <div>{services.language.translate('Trading price')}</div>
                 <TradingPriceValueBox ref={tradingPriceValueElementRef} $isReadOnly={Boolean(props.isReadOnly)}>
                     <PriceValueBox>
-                        <div>{props.workingOrder.tradingPrice.toFixed(2)}</div>
-                        <span>{props.workingOrder.priceEffectShort}</span>
+                        {props.workingOrder.tradingPrice.toString()}
                     </PriceValueBox>
 
                     {renderReplaceButton()}
@@ -105,8 +104,7 @@ export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderView
             <PriceContainerBox>
                 <div>{services.language.translate('Mid price')}</div>
                 <PriceValueBox>
-                    <span>{props.workingOrder.midPrice?.toFixed(2)}</span>
-                    <span>{props.workingOrder.priceEffectShort}</span>
+                    {props.workingOrder.midPrice?.toString()}
                 </PriceValueBox>
             </PriceContainerBox>
 

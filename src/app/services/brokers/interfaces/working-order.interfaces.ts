@@ -1,28 +1,32 @@
 import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
 import {OptionType} from "../../../models/option.view-model.interface";
-import {OrderSimpleLegActionType, PriceEffect, PriceEffectShort} from "./open-order-request.interface";
+import {OrderSimpleLegActionType} from "./open-order-request.interface";
+import {NullablePrice, Price} from "../../../models/price/price";
 import {TimeSpan} from "../../../../framework/types/time-span";
 
 export interface IWorkingOrderViewModel {
     readonly id: string;
     readonly underlyingSymbol: string;
     readonly receivedAt: Date;
-    readonly tradingPrice: number;
-    readonly priceEffect: PriceEffect;
-    readonly priceEffectShort: PriceEffectShort;
-    readonly midPrice: NullableNumber;
+    readonly tradingPrice: Price;
+    readonly midPrice: NullablePrice;
     readonly isGobyOrder: boolean
     readonly legs: IWorkingOrderLegViewModel[];
+    readonly optionsTickSize: NullableNumber;
+    readonly autoReplaceHandler: IWorkingOrderAutoReplaceHandlerViewModel;
+    cancel(): Promise<void>;
+    replace(newPrice: Price, options?: IReplaceWorkingOrderOptions): Promise<void>;
+}
+
+export interface IWorkingOrderAutoReplaceHandlerViewModel {
     readonly timeUntilNextAutoReplace: TimeSpan | null;
     readonly numberOfAutoReplaceAttempts: number;
     readonly maxAutoReplaceAttempts: NullableNumber;
-    readonly optionsTickSize: NullableNumber;
     readonly autoReplaceEnabled: boolean;
     autoReplacePaused: boolean;
     suspendAutoReplace(): void;
     resumeAutoReplace(): void;
-    cancel(): Promise<void>;
-    replace(newPrice: number, options?: IReplaceWorkingOrderOptions): Promise<void>;
+    autoReplace(): Promise<void>;
 }
 
 export interface IReplaceWorkingOrderOptions {

@@ -60,34 +60,35 @@ const PauseResumeButtonTooltipContentBox = styled.div`
 
 export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
     const services = useServices();
-
-    const [nextAutoReplaceTime, setNextAutoReplaceTime] = useState<TimeSpan | null>(props.workingOrder.timeUntilNextAutoReplace);
+    const autoReplaceHandler = props.workingOrder.autoReplaceHandler;
+    const [nextAutoReplaceTime, setNextAutoReplaceTime] = useState<TimeSpan | null>(autoReplaceHandler.timeUntilNextAutoReplace);
     const pauseResumeButtonBoxRef = useRef<HTMLDivElement | null>(null);
+
 
     useEffect(() => {
         const intervalRef = setInterval(() => {
-            setNextAutoReplaceTime(props.workingOrder.timeUntilNextAutoReplace);
+            setNextAutoReplaceTime(autoReplaceHandler.timeUntilNextAutoReplace);
         }, 1000);
 
         return () => {
             clearInterval(intervalRef);
         }
 
-    }, [props.workingOrder.timeUntilNextAutoReplace]);
+    }, [autoReplaceHandler.timeUntilNextAutoReplace]);
 
     if(!props.workingOrder.isGobyOrder) {
         return null;
     }
 
-    const maxAutoReplaceAttempts = props.workingOrder.maxAutoReplaceAttempts;
-    const currentAutoReplaceAttempt = props.workingOrder.numberOfAutoReplaceAttempts;
+    const maxAutoReplaceAttempts = autoReplaceHandler.maxAutoReplaceAttempts;
+    const currentAutoReplaceAttempt = autoReplaceHandler.numberOfAutoReplaceAttempts;
 
     if(Check.isNullOrUndefined(maxAutoReplaceAttempts)) {
         return null;
     }
 
     const renderPauseResumeIcon = () => {
-        if(props.workingOrder.autoReplacePaused) {
+        if(autoReplaceHandler.autoReplacePaused) {
             return (
                 <IonIcon icon={playCircleOutline} />
             );
@@ -98,12 +99,12 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
     }
 
     const onPauseResumeClick = () => {
-        props.workingOrder.autoReplacePaused = !props.workingOrder.autoReplacePaused;
+        autoReplaceHandler.autoReplacePaused = !autoReplaceHandler.autoReplacePaused;
 
     }
 
     const renderPauseResumeButtonToolTipText = () =>  {
-        if(props.workingOrder.autoReplacePaused) {
+        if(autoReplaceHandler.autoReplacePaused) {
             return services.language.translate('Resume auto replace');
         } else {
             return services.language.translate('Pause auto replace');
@@ -111,7 +112,7 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
     }
 
     const renderNextAutoReplaceTime = () => {
-        if(!nextAutoReplaceTime || props.workingOrder.autoReplacePaused) {
+        if(!nextAutoReplaceTime || autoReplaceHandler.autoReplacePaused) {
             return null;
         }
         return (
