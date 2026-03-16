@@ -39,7 +39,7 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
     protected _createFields(): FormFields<IReplaceWorkingOrderFormFields> {
         return {
             price: this._createField<string>({
-                fieldName: () => this.services.language.translate('Trading Price'),
+                fieldName: () => this.services.language.translate('Price') + ` (${this.workingOrder.priceEffect})`,
                 validate: () => this._validatePrice(),
             }),
             isPriceLocked: this._createField<boolean>({
