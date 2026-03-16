@@ -15,6 +15,7 @@ import {
     BooleanFieldEditorComponent
 } from "../../../../framework/components/forms/boolean-field/boolean-field-editor.component";
 import {PriceFieldEditorComponent} from "../../../components/price/price-field-editor.component";
+import {Price} from "../../../models/price/price";
 
 
 const ContainerBox = styled.div`
@@ -67,7 +68,6 @@ const PriceContainerBox = styled.div`
 const PriceInputContainerBox = styled.div`
     display: flex;
     flex-direction: row;
-    gap: var(--ion-space-8);
     align-items: center;
     
 `
@@ -86,6 +86,8 @@ const PriceInputComponent = styled(PriceFieldEditorComponent)`
     text-align: center;
     & .price-input-container {
         border: none;
+        padding-left: 0;
+        padding-right: 0;
     }
     & .price-input-error-container {
         transform: unset;
@@ -97,11 +99,13 @@ const PriceInputComponent = styled(PriceFieldEditorComponent)`
 interface ReplaceWorkingOrderComponentProps {
     workingOrder: IWorkingOrderViewModel;
     onCloseClick: () => void;
+    initialPriceValue: Price;
+    isPriceInitiallyLocked: boolean;
 }
 
 export const ReplaceWorkingOrderComponent: React.FC<ReplaceWorkingOrderComponentProps> = observer((props) => {
     const services = useServices();
-    const formRef = useRef<ReplaceWorkingOrderFormModel>(new ReplaceWorkingOrderFormModel(props.workingOrder, services));
+    const formRef = useRef<ReplaceWorkingOrderFormModel>(new ReplaceWorkingOrderFormModel(props.workingOrder, props.initialPriceValue, props.isPriceInitiallyLocked, services));
     const autoReplaceHandler = props.workingOrder.autoReplaceHandler;
 
     useEffect(() => {

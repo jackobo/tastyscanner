@@ -14,38 +14,32 @@ interface IReplaceWorkingOrderFormFields {
 }
 
 export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOrderFormFields>{
-    constructor(private readonly workingOrder: IWorkingOrderViewModel, services: IAppServiceFactory) {
+    constructor(private readonly workingOrder: IWorkingOrderViewModel,
+                private readonly initialPriceValue: Price,
+                private readonly isPriceInitiallyLocked: boolean,
+                services: IAppServiceFactory) {
         super(services);
-        this._midPriceReactionDispose = reaction(() => this.workingOrder.midPrice, (midPrice) => {
-            if(!this.fields.isPriceLocked.value) {
-                if(Check.isNullOrUndefined(midPrice)) {
-                    this._setPriceValue(this.workingOrder.tradingPrice);
-                } else {
-                    this._setPriceValue(midPrice);
-                }
-
-            }
-        }, {
-            fireImmediately: true
-        })
-
     }
 
-    private readonly _midPriceReactionDispose: IReactionDisposer;
+    private _midPriceReactionDispose: IReactionDisposer | null = null;
 
     dispose(): void {
-        this._midPriceReactionDispose();
+        if(this._midPriceReactionDispose) {
+            this._midPriceReactionDispose();
+        }
+
     }
 
     protected _createFields(): FormFields<IReplaceWorkingOrderFormFields> {
         return {
             price: this._createField<Price>({
                 fieldName: () => this.services.language.translate('Price') + ` (${this.workingOrder.tradingPrice.priceEffect})`,
+                defaultValue: this.initialPriceValue,
                 validate: () => this._validatePrice(),
             }),
             isPriceLocked: this._createField<boolean>({
                 fieldName: () => this.services.language.translate('Price locked'),
-                defaultValue: false,
+                defaultValue: this.isPriceInitiallyLocked,
                 isRequired: false,
             }),
             resetAutoReplaceAttempts: this._createField<boolean>({
@@ -83,6 +77,16 @@ export class ReplaceWorkingOrderFormModel extends AppFormModel<IReplaceWorkingOr
             }
         })
 
+
+        this._midPriceReactionDispose = reaction(() => this.workingOrder.midPrice, (midPrice) => {
+            if(!this.fields.isPriceLocked.value) {
+                if(Check.isNullOrUndefined(midPrice)) {
+                    this._setPriceValue(this.workingOrder.tradingPrice);
+                } else {
+                    this._setPriceValue(midPrice);
+                }
+            }
+        })
 
     }
 
