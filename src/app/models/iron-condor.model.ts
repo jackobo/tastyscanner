@@ -106,7 +106,7 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     get delta(): number {
-        return  Math.round((this.stoPut.absoluteRawDelta + this.btoCall.absoluteRawDelta - this.btoPut.absoluteRawDelta - this.stoCall.absoluteRawDelta) * 10000) / 100;
+        return  Math.round((this.btoPut.rawDelta - this.stoPut.rawDelta + this.btoCall.rawDelta - this.stoCall.rawDelta) * 10000) / 100;
     }
 
     get theta(): number {

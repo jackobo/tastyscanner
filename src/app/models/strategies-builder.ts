@@ -39,38 +39,33 @@ export class StrategiesBuilder {
     }
 
     getCallsByDelta(): OptionModel[] {
-        return this._filterByDelta(this.expiration.getOTMCalls());
+        const otmCalls = this.expiration.getOTMCalls();
+        const nonZeroDeltaCalls = otmCalls.filter(o => o.absoluteDeltaPercent !== 0);
+        console.log(nonZeroDeltaCalls);
+        const filtered = this._filterByDelta(otmCalls);
+        return filtered;
     }
 
     buildIronCondors(): IronCondorModel[] {
-        const puts = this.getPutsByDelta().groupByKey(put => put.absoluteDeltaPercent.toString());
-        const calls = this.getCallsByDelta().groupByKey(call => call.absoluteDeltaPercent.toString());
-
-        const putsDeltas = Object.keys(puts).map(d => parseFloat(d)).sort((a, b) => b - a);
-        const callsDeltas = Object.keys(calls).map(d => parseFloat(d)).sort((a, b) => b - a);
+        const putCreditSpreadsByWings = this._buildPutCreditSpreadsUnsorted().groupByKey(pcs => pcs.wingsWidth.toString());
+        const callCreditSpreadsByWings = this._buildCallCreditSpreadsUnsorted().groupByKey(ccs => ccs.wingsWidth.toString());
 
         const condors: IronCondorModel[] = [];
 
-        const maxIndex = Math.min(putsDeltas.length, callsDeltas.length) - 1;
+        const condorsMinDelta = this.services.strategySettings.strategyFilters.condorsMinDelta;
+        const condorsMaxDelta = this.services.strategySettings.strategyFilters.condorsMaxDelta;
 
-        for(let i = 0; i <= maxIndex; i++) {
-            const stoPuts = puts[putsDeltas[i].toString()];
-            const stoCalls = calls[callsDeltas[i].toString()];
-            for(const stoPut of stoPuts) {
-                for(const stoCall of stoCalls) {
-                    for(const wingWidth of this.wings) {
-                        const btoPut = this.expiration.getStrikeByPrice(stoPut.strike.strikePrice - wingWidth)?.put;
-                        if(!btoPut) {
-                            continue;
-                        }
-                        const btoCall = this.expiration.getStrikeByPrice(stoCall.strike.strikePrice + wingWidth)?.call;
-                        if(!btoCall) {
-                            continue;
-                        }
-                        if(this._hasGoodBidAskSpread([btoPut, stoPut, stoCall, btoCall])) {
-                            condors.push(new IronCondorModel(wingWidth, btoPut, stoPut, stoCall, btoCall, this.services));
-                        }
-
+        for(const wing of Object.keys(putCreditSpreadsByWings)) {
+            const putCreditSpreads = putCreditSpreadsByWings[wing];
+            const callCreditSpreads = callCreditSpreadsByWings[wing];
+            if(Check.isEmpty(callCreditSpreads)) {
+                continue;
+            }
+            for(const putSpread of putCreditSpreads) {
+                for(const callSpread of callCreditSpreads) {
+                    const condor = new IronCondorModel( putSpread.wingsWidth, putSpread.btoOption, putSpread.stoOption, callSpread.stoOption, callSpread.btoOption, this.services);
+                    if(condorsMinDelta <= condor.delta && condor.delta <= condorsMaxDelta) {
+                        condors.push(condor);
                     }
                 }
             }
