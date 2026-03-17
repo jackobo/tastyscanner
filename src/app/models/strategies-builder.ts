@@ -6,6 +6,7 @@ import {PutCreditSpreadModel} from "./put-credit-spread.model";
 import {CallCreditSpreadModel} from "./call-credit-spread.model";
 import {CreditSpreadModel} from "./credit-spread.model";
 import {OptionStrikeModel} from "./option-strike.model";
+import {Check} from "../../framework/utils/type-checking";
 
 
 export class StrategiesBuilder {
@@ -80,19 +81,33 @@ export class StrategiesBuilder {
     }
 
     buildPutCreditSpreads(): PutCreditSpreadModel[] {
+        return this._buildPutCreditSpreadsUnsorted()
+                    .sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);
+
+    }
+
+    private _buildPutCreditSpreadsUnsorted(): PutCreditSpreadModel[] {
         return this._buildCreditSpreads(this.getPutsByDelta(),
-                                        -1,
-                                        strike => strike.put,
-                                        (spreadSize, stoOption, btoOption) => new PutCreditSpreadModel(spreadSize, stoOption, btoOption, this.services));
+            -1,
+            strike => strike.put,
+            (spreadSize, stoOption, btoOption) => new PutCreditSpreadModel(spreadSize, stoOption, btoOption, this.services));
 
     }
 
     buildCallCreditSpreads(): CallCreditSpreadModel[] {
 
+        return this._buildCallCreditSpreadsUnsorted()
+                    .sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);
+
+
+    }
+
+    private _buildCallCreditSpreadsUnsorted(): CallCreditSpreadModel[] {
+
         return this._buildCreditSpreads(this.getCallsByDelta(),
-                                        1,
-                                        strike => strike.call,
-                                        (spreadSize, stoOption, btoOption) => new CallCreditSpreadModel(spreadSize, stoOption, btoOption, this.services));
+            1,
+            strike => strike.call,
+            (spreadSize, stoOption, btoOption) => new CallCreditSpreadModel(spreadSize, stoOption, btoOption, this.services));
 
 
     }
@@ -125,7 +140,7 @@ export class StrategiesBuilder {
             }
         }
 
-        return creditSpreads.sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);
+        return creditSpreads;
     }
 
     private _hasGoodBidAskSpread(options: OptionModel[]): boolean {
