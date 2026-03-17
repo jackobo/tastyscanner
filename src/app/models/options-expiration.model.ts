@@ -92,15 +92,15 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     get ironCondors(): IronCondorModel[] {
-        return this._filterStrategies(this._strategiesBuilder.buildIronCondors());
+        return this._filterStrategies(this._strategiesBuilder.ironCondors);
     }
 
     get putCreditSpreads(): PutCreditSpreadModel[] {
-        return this._filterStrategies(this._strategiesBuilder.buildPutCreditSpreads());
+        return this._filterStrategies(this._strategiesBuilder.putCreditSpreadsSortedByRiskReward);
     }
 
     get callCreditSpreads(): PutCreditSpreadModel[] {
-        return this._filterStrategies(this._strategiesBuilder.buildCallCreditSpreads());
+        return this._filterStrategies(this._strategiesBuilder.callCreditSpreadsSortedByRiskReward);
     }
 
     getStrikeBelow(strikePrice: number): OptionStrikeModel | null {

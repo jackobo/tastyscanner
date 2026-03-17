@@ -7,10 +7,20 @@ import {CallCreditSpreadModel} from "./call-credit-spread.model";
 import {CreditSpreadModel} from "./credit-spread.model";
 import {OptionStrikeModel} from "./option-strike.model";
 import {Check} from "../../framework/utils/type-checking";
+import {computed, makeObservable} from "mobx";
 
 
 export class StrategiesBuilder {
     constructor(private readonly expiration: OptionsExpirationModel) {
+        makeObservable(this, {
+            putsFilteredByDelta: computed,
+            callsFilteredByDelta: computed,
+            putCreditSpreadsUnsorted: computed,
+            callCreditSpreadsUnsorted: computed,
+            ironCondors: computed,
+            putCreditSpreadsSortedByRiskReward: computed,
+            callCreditSpreadsSortedByRiskReward: computed,
+        })
     }
 
     get services(): IAppServiceFactory {
@@ -34,21 +44,17 @@ export class StrategiesBuilder {
             .sort((a, b) => b.absoluteDeltaPercent - a.absoluteDeltaPercent);
     }
 
-    getPutsByDelta(): OptionModel[] {
+    get putsFilteredByDelta(): OptionModel[] {
         return this._filterByDelta(this.expiration.getOTMPuts());
     }
 
-    getCallsByDelta(): OptionModel[] {
-        const otmCalls = this.expiration.getOTMCalls();
-        const nonZeroDeltaCalls = otmCalls.filter(o => o.absoluteDeltaPercent !== 0);
-        console.log(nonZeroDeltaCalls);
-        const filtered = this._filterByDelta(otmCalls);
-        return filtered;
+    get callsFilteredByDelta(): OptionModel[] {
+        return this._filterByDelta(this.expiration.getOTMCalls());
     }
 
-    buildIronCondors(): IronCondorModel[] {
-        const putCreditSpreadsByWings = this._buildPutCreditSpreadsUnsorted().groupByKey(pcs => pcs.wingsWidth.toString());
-        const callCreditSpreadsByWings = this._buildCallCreditSpreadsUnsorted().groupByKey(ccs => ccs.wingsWidth.toString());
+    get ironCondors(): IronCondorModel[] {
+        const putCreditSpreadsByWings = this.putCreditSpreadsUnsorted.groupByKey(pcs => pcs.wingsWidth.toString());
+        const callCreditSpreadsByWings = this.callCreditSpreadsUnsorted.groupByKey(ccs => ccs.wingsWidth.toString());
 
         const condors: IronCondorModel[] = [];
 
@@ -75,31 +81,31 @@ export class StrategiesBuilder {
 
     }
 
-    buildPutCreditSpreads(): PutCreditSpreadModel[] {
-        return this._buildPutCreditSpreadsUnsorted()
+    get putCreditSpreadsSortedByRiskReward(): PutCreditSpreadModel[] {
+        return this.putCreditSpreadsUnsorted
                     .sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);
 
     }
 
-    private _buildPutCreditSpreadsUnsorted(): PutCreditSpreadModel[] {
-        return this._buildCreditSpreads(this.getPutsByDelta(),
+    get putCreditSpreadsUnsorted(): PutCreditSpreadModel[] {
+        return this._buildCreditSpreads(this.putsFilteredByDelta,
             -1,
             strike => strike.put,
             (spreadSize, stoOption, btoOption) => new PutCreditSpreadModel(spreadSize, stoOption, btoOption, this.services));
 
     }
 
-    buildCallCreditSpreads(): CallCreditSpreadModel[] {
+    get callCreditSpreadsSortedByRiskReward(): CallCreditSpreadModel[] {
 
-        return this._buildCallCreditSpreadsUnsorted()
+        return this.callCreditSpreadsUnsorted
                     .sort((a, b) => a.riskRewardRatio - b.riskRewardRatio);
 
 
     }
 
-    private _buildCallCreditSpreadsUnsorted(): CallCreditSpreadModel[] {
+    get callCreditSpreadsUnsorted(): CallCreditSpreadModel[] {
 
-        return this._buildCreditSpreads(this.getCallsByDelta(),
+        return this._buildCreditSpreads(this.callsFilteredByDelta,
             1,
             strike => strike.call,
             (spreadSize, stoOption, btoOption) => new CallCreditSpreadModel(spreadSize, stoOption, btoOption, this.services));
