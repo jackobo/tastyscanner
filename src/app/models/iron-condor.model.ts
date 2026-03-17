@@ -113,4 +113,8 @@ export class IronCondorModel implements IIronCondorViewModel {
         return Math.round((this.btoPut.theta + this.btoCall.theta - this.stoPut.theta - this.stoCall.theta) * 10000) / 100;
     }
 
+    get hasLegsWithOppositePositions(): boolean {
+        return this.legs.some(l => l.hasOppositePositions);
+    }
+
 }
