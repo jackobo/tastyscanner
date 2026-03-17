@@ -3,14 +3,32 @@ import {IIronCondorViewModel} from "./iron-condor.view-model.interface";
 import {IAppServiceFactory} from "../services/app-service-factory.interface";
 import {IOptionsStrategySendOrderParams} from "./options-strategy.view-model.interface";
 import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
+import {PutCreditSpreadModel} from "./put-credit-spread.model";
+import {CallCreditSpreadModel} from "./call-credit-spread.model";
+import {MathUtils} from "../../framework/utils/math-utils";
+
 
 export class IronCondorModel implements IIronCondorViewModel {
     constructor(public readonly wingsWidth: number,
-                public readonly btoPut: OptionModel,
-                public readonly stoPut: OptionModel,
-                public readonly stoCall: OptionModel,
-                public readonly btoCall: OptionModel,
+                private readonly putSpread: PutCreditSpreadModel,
+                private readonly callSpread: CallCreditSpreadModel,
                 private readonly services: IAppServiceFactory) {
+    }
+
+
+
+    public get btoPut(): OptionModel {
+        return this.putSpread.btoOption;
+    }
+
+    public get stoPut(): OptionModel {
+        return this.putSpread.stoOption;
+    }
+    public get stoCall(): OptionModel{
+        return this.callSpread.stoOption;
+    }
+    public get btoCall(): OptionModel {
+        return this.callSpread.btoOption;
     }
 
     get strategyName(): string {
@@ -22,13 +40,11 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     get credit(): number {
-        const val = this.stoPut.midPrice + this.stoCall.midPrice - this.btoCall.midPrice - this.btoPut.midPrice;
-        return Math.round(val * 100) / 100;
+        return this.putSpread.credit + this.callSpread.credit;
     }
 
     get riskRewardRatio(): number {
-        const rr = this.wingsWidth / this.credit;
-        return Math.round(rr * 100) / 100;
+        return MathUtils.round(this.wingsWidth / this.credit);
     }
 
     getOptionTickSize(price: number): number {
@@ -106,11 +122,12 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     get delta(): number {
-        return  Math.round((this.btoPut.rawDelta - this.stoPut.rawDelta + this.btoCall.rawDelta - this.stoCall.rawDelta) * 10000) / 100;
+        return MathUtils.round(this.putSpread.delta + this.callSpread.delta);
     }
 
     get theta(): number {
-        return Math.round((this.btoPut.theta + this.btoCall.theta - this.stoPut.theta - this.stoCall.theta) * 10000) / 100;
+        return MathUtils.round(this.putSpread.theta + this.callSpread.theta);
+        //return Math.round((this.btoPut.theta + this.btoCall.theta - this.stoPut.theta - this.stoCall.theta) * 10000) / 100;
     }
 
     get hasLegsWithOppositePositions(): boolean {
