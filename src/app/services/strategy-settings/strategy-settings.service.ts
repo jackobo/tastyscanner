@@ -18,8 +18,8 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
         makeObservable(this, {
             _minDelta: observable.ref,
             _maxDelta: observable.ref,
-            _condorsDeltaSkew: observable.ref,
-            _condorsDeltaSkewTolerance: observable.ref,
+            _condorsMinDelta: observable.ref,
+            _condorsMaxDelta: observable.ref,
             _maxRiskRewardRatio: observable.ref,
             _minDaysToExpiration: observable.ref,
             _maxDaysToExpiration: observable.ref,
@@ -32,8 +32,8 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
 
     _minDelta: number = 10;
     _maxDelta: number = 30;
-    _condorsDeltaSkew: number = 0;
-    _condorsDeltaSkewTolerance: number = 50;
+    _condorsMinDelta: number = -5;
+    _condorsMaxDelta: number = 5;
     _maxRiskRewardRatio: number = 4;
     _minDaysToExpiration: number = 35;
     _maxDaysToExpiration: number = 60;
@@ -63,18 +63,18 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
         this._setProperty("_maxDelta", value);
     }
 
-    get condorsDeltaSkew(): number {
-        return this._condorsDeltaSkew;
+    get condorsMinDelta(): number {
+        return this._condorsMinDelta;
     }
-    set condorsDeltaSkew(value) {
-        this._setProperty("_condorsDeltaSkew", value);
+    set condorsMinDelta(value) {
+        this._setProperty("_condorsMinDelta", value);
     }
 
-    get condorsDeltaSkewTolerance(): number {
-        return this._condorsDeltaSkewTolerance;
+    get condorsMaxDelta(): number {
+        return this._condorsMaxDelta;
     }
-    set condorsDeltaSkewTolerance(value) {
-        this._setProperty("_condorsDeltaSkewTolerance", value);
+    set condorsMaxDelta(value) {
+        this._setProperty("_condorsMaxDelta", value);
     }
 
     get maxRiskRewardRatio(): number {

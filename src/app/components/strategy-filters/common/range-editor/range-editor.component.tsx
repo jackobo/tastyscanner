@@ -12,7 +12,7 @@ const RangeBox = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: var(--ion-space-8);
+    
 `
 
 
@@ -31,10 +31,10 @@ export const RangeEditorComponent: React.FC<RangeEditorComponentProps> = observe
 
     const formatValue = () => {
         if(props.formatValue) {
-            return `${props.formatValue(props.lower)} - ${props.formatValue(props.upper)}`
+            return `${props.formatValue(props.lower)} ↔ ${props.formatValue(props.upper)}`
         }
 
-        return `${props.lower} - ${props.upper}`
+        return `${props.lower} ↔ ${props.upper}`
     }
 
     return (

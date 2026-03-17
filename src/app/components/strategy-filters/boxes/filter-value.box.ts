@@ -7,5 +7,7 @@ export const FilterValueBox = styled(IonChip)`
     align-items: center;
     justify-content: center;
     text-align: center;
-    min-width: 70px;
+    min-width: 75px;
+    font-size: 0.8rem;
+    
 `

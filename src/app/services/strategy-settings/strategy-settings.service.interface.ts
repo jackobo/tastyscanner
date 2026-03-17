@@ -9,8 +9,8 @@ export type ByEarningsDate = 'before' | 'after' | 'all';
 export interface IStrategyFiltersViewModel {
     minDelta: number;
     maxDelta: number;
-    condorsDeltaSkew: number;
-    condorsDeltaSkewTolerance: number;
+    condorsMinDelta: number;
+    condorsMaxDelta: number;
     maxRiskRewardRatio: number;
     minDaysToExpiration: number;
     maxDaysToExpiration: number;

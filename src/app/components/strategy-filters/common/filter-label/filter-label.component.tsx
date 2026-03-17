@@ -17,7 +17,7 @@ export const FilterLabelBox = styled.div`
 
 const TooltipContentBox = styled.div`
     padding: var(--ion-space-12);
-    font-size: var(--ion-font-size-caption);
+    font-size: var(--ion-font-size-body2);
     max-width: 250px;
     line-height: 1.3;
 `
