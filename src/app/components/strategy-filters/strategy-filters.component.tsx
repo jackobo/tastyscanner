@@ -3,11 +3,15 @@ import { observer } from "mobx-react";
 import {useServices} from "../../hooks/use-services.hook";
 import styled from "styled-components";
 import {RiskRewardFilterComponent} from "./parts/risk-reward/risk-reward-filter.component";
-import {DeltaRangeFilterComponent} from "./parts/delta-range/delta-range-filter.component";
+import {StrikesDeltaRangeFilterComponent} from "./parts/strikes-delta-range/strikes-delta-range-filter.component";
 import {DTEFilterComponent} from "./parts/dte-range/dte-range-filter.component";
 import {BidAskSpreadFilterComponent} from "./parts/bid-ask-spread/bid-ask-spread-filter.component";
 import {WingsWidthFilterComponent} from "./parts/wings-width/wings-width-filter.component";
 import {ByEarningsDateFilterComponent} from "./parts/by-earnings-date/by-earnings-date-filter.component";
+import {CondorsDeltaRangeFilterComponent} from "./parts/condors-delta-range/condors-delta-range-filter.component";
+import {ByExistingPositionsFilterComponent} from "./parts/by-existing-positions/by-existing-positions-filter.component";
+import {PopFilterComponent} from "./parts/pop/pop-filter.component";
+
 
 const FiltersContainerBox = styled.div`
     display: flex;
@@ -24,10 +28,13 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
     return (
         <FiltersContainerBox>
             <RiskRewardFilterComponent filters={filters}/>
-            <DeltaRangeFilterComponent filters={filters}/>
+            <PopFilterComponent filters={filters}/>
+            <StrikesDeltaRangeFilterComponent filters={filters}/>
+            <CondorsDeltaRangeFilterComponent filters={filters}/>
             <DTEFilterComponent filters={filters}/>
             <BidAskSpreadFilterComponent filters={filters}/>
             <WingsWidthFilterComponent filters={filters}/>
+            <ByExistingPositionsFilterComponent filters={filters}/>
             <ByEarningsDateFilterComponent filters={filters}/>
         </FiltersContainerBox>
     )

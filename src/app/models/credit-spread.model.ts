@@ -47,6 +47,10 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
         return this.stoOption.getOptionTickSize(price);
     }
 
+    get hasLegsWithExistingPositions(){
+        return this.legs.some(l => l.hasExistingPositions);
+    }
+
     async sendOrder(orderParams: IOptionsStrategySendOrderParams): Promise<void> {
         const account = this.services.brokers.currentAccount;
         if(!account) {

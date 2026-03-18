@@ -3,14 +3,38 @@ import {IIronCondorViewModel} from "./iron-condor.view-model.interface";
 import {IAppServiceFactory} from "../services/app-service-factory.interface";
 import {IOptionsStrategySendOrderParams} from "./options-strategy.view-model.interface";
 import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
+import {PutCreditSpreadModel} from "./put-credit-spread.model";
+import {CallCreditSpreadModel} from "./call-credit-spread.model";
+import {MathUtils} from "../../framework/utils/math-utils";
+
 
 export class IronCondorModel implements IIronCondorViewModel {
     constructor(public readonly wingsWidth: number,
-                public readonly btoPut: OptionModel,
-                public readonly stoPut: OptionModel,
-                public readonly stoCall: OptionModel,
-                public readonly btoCall: OptionModel,
+                private readonly putSpread: PutCreditSpreadModel,
+                private readonly callSpread: CallCreditSpreadModel,
                 private readonly services: IAppServiceFactory) {
+        this.legs = [
+            new OptionsStrategyLegModel(this.btoPut, "BTO"),
+            new OptionsStrategyLegModel(this.stoPut, "STO"),
+            new OptionsStrategyLegModel(this.stoCall, "STO"),
+            new OptionsStrategyLegModel(this.btoCall, "BTO"),
+        ];
+    }
+
+
+
+    public get btoPut(): OptionModel {
+        return this.putSpread.btoOption;
+    }
+
+    public get stoPut(): OptionModel {
+        return this.putSpread.stoOption;
+    }
+    public get stoCall(): OptionModel{
+        return this.callSpread.stoOption;
+    }
+    public get btoCall(): OptionModel {
+        return this.callSpread.btoOption;
     }
 
     get strategyName(): string {
@@ -22,13 +46,11 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     get credit(): number {
-        const val = this.stoPut.midPrice + this.stoCall.midPrice - this.btoCall.midPrice - this.btoPut.midPrice;
-        return Math.round(val * 100) / 100;
+        return this.putSpread.credit + this.callSpread.credit;
     }
 
     get riskRewardRatio(): number {
-        const rr = this.wingsWidth / this.credit;
-        return Math.round(rr * 100) / 100;
+        return MathUtils.round(this.wingsWidth / this.credit);
     }
 
     getOptionTickSize(price: number): number {
@@ -37,28 +59,25 @@ export class IronCondorModel implements IIronCondorViewModel {
 
     //https://www.tastylive.com/shows/options-jive/episodes/calculating-pop-for-various-strategies-08-23-2017#:~:text=For%20Various%20Strategies-,Aug%2023%2C%202017,look%20at%20calculating%20POP%20in:
     get pop(): number {
-        const putBreakEven = this.stoPut.strikePrice - this.credit;
-        const callBreakEven = this.stoCall.strikePrice + this.credit;
+        const putBreakEvenStrikePrice = this.stoPut.strikePrice - this.credit;
+        const callBreakEvenStrikePrice = this.stoCall.strikePrice + this.credit;
 
-        const breakEvenPut = this.stoPut.strike.expiration.getStrikeBelow(putBreakEven)?.put
-        const breakEvenCall = this.stoCall.strike.expiration.getStrikeAbove(callBreakEven)?.call;
+        const breakEvenPut = this.stoPut.strike.expiration.getStrikeBelow(putBreakEvenStrikePrice)?.put
+        const breakEvenCall = this.stoCall.strike.expiration.getStrikeAbove(callBreakEvenStrikePrice)?.call;
 
 
-        const putBreakEventDelta = breakEvenPut?.absoluteDeltaPercent ?? 0;
-        const callBreakEventDelta = breakEvenCall?.absoluteDeltaPercent ?? 0;
+        const putBreakEventDelta = breakEvenPut?.absoluteRawDelta ?? 0;
+        const callBreakEventDelta = breakEvenCall?.absoluteRawDelta ?? 0;
 
-        return 100 - (putBreakEventDelta + callBreakEventDelta);
+        return Math.round((1 - (putBreakEventDelta + callBreakEventDelta)) * 10000)/100;
 
 
     }
 
-    get legs(): OptionsStrategyLegModel[] {
-        return [
-            new OptionsStrategyLegModel(this.btoPut, "BTO"),
-            new OptionsStrategyLegModel(this.stoPut, "STO"),
-            new OptionsStrategyLegModel(this.stoCall, "STO"),
-            new OptionsStrategyLegModel(this.btoCall, "BTO"),
-        ]
+    readonly legs: OptionsStrategyLegModel[];
+
+    get hasLegsWithExistingPositions(): boolean {
+        return this.legs.some(l => l.hasExistingPositions);
     }
 
     async sendOrder(orderParams: IOptionsStrategySendOrderParams): Promise<void> {
@@ -106,11 +125,16 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     get delta(): number {
-        return  Math.round((this.stoPut.absoluteRawDelta + this.btoCall.absoluteRawDelta - this.btoPut.absoluteRawDelta - this.stoCall.absoluteRawDelta) * 10000) / 100;
+        return MathUtils.round(this.putSpread.delta + this.callSpread.delta);
     }
 
     get theta(): number {
-        return Math.round((this.btoPut.theta + this.btoCall.theta - this.stoPut.theta - this.stoCall.theta) * 10000) / 100;
+        return MathUtils.round(this.putSpread.theta + this.callSpread.theta);
+        //return Math.round((this.btoPut.theta + this.btoCall.theta - this.stoPut.theta - this.stoCall.theta) * 10000) / 100;
+    }
+
+    get hasLegsWithOppositePositions(): boolean {
+        return this.legs.some(l => l.hasOppositePositions);
     }
 
 }

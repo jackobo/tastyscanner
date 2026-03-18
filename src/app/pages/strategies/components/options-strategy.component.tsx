@@ -14,10 +14,10 @@ export const StrategyBox = styled(CardBox)<{$hasOppositePosition: boolean}>`
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 24px;
+    gap: var(--ion-space-8);
+    padding: var(--ion-space-24);
     overflow: hidden;
-    font-size: var(--ion-font-size-body2);
+    font-size: var(--ion-font-size-caption);
     ${props => props.$hasOppositePosition && css`
         background-color: var(--ion-color-medium-tint);
     `}

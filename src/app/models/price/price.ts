@@ -14,6 +14,16 @@ export class Price {
         }
     }
 
+    public equals(other: NullablePrice): boolean {
+        if(!other) {
+            return false;
+        }
+        return (
+            this.value === other.value &&
+            this.priceEffect === other.priceEffect
+        )
+    }
+
     public toString(): string {
         return `${this.value.toFixed(2)} ${this.priceEffectAbbr}`;
     }

@@ -1,7 +1,6 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {IonRange} from "@ionic/react";
-import {RangeBox} from "../../boxes/range.box";
+import {IonRangeBox, RangeBox} from "../../boxes/range.box";
 import {FilterValueBox} from "../../boxes/filter-value.box";
 import {FilterContainerComponent} from "../filter-container/filter-container.component";
 import {FilterLabelComponent} from "../filter-label/filter-label.component";
@@ -23,7 +22,7 @@ export const SingleValueEditorComponent: React.FC<SingleValueEditorComponentProp
                 {props.label}
             </FilterLabelComponent>
             <RangeBox>
-                <IonRange pin={true} min={props.min} max={props.max} value={props.value} onIonChange={e => {
+                <IonRangeBox pin={true} min={props.min} max={props.max} value={props.value} onIonChange={e => {
                     props.onValueChanged(e.detail.value as number)
                 }}/>
                 <FilterValueBox>

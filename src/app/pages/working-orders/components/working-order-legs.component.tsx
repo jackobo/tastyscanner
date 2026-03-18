@@ -10,7 +10,7 @@ import {useServices} from "../../../hooks/use-services.hook";
 const LegsContainerBox = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--ion-space-8);
     width: 100%;
     
 `

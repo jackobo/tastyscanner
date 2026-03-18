@@ -11,6 +11,7 @@ import {
     TooltipToggleBehaviorEnum
 } from "../../../../framework/components/tooltip/tooltip.component";
 import {ReplaceWorkingOrderComponent} from "./replace-working-order.component";
+import {Price} from "../../../models/price/price";
 
 const BodyBox = styled.div`
     display: grid;
@@ -55,9 +56,16 @@ const ReplaceButtonToolTipContentBox = styled.div`
     font-size: var(--ion-font-size-body2);
 `
 
+interface OrderPriceComponentProps {
+    workingOrder: IWorkingOrderViewModel;
+    label: string;
+    tooltipText?: string;
+    getPrice: () => Price;
+    isReadOnly: boolean;
+    isPriceInitiallyLocked: boolean;
+}
 
-export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderViewModel;isReadOnly?: boolean;}> = observer((props) => {
-    const services = useServices();
+const OrderPriceComponent: React.FC<OrderPriceComponentProps> = observer((props) => {
     const tradingPriceValueElementRef = useRef<HTMLDivElement | null>(null);
     const replaceButtonElementRef = useRef<HTMLDivElement | null>(null);
     const replaceWorkingOrderTooltipControllerRef = useRef<ITooltipController | null>(null);
@@ -73,41 +81,63 @@ export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderView
         )
     }
 
+
+
+    return (
+        <PriceContainerBox>
+            <div>{props.label}</div>
+            <TradingPriceValueBox ref={tradingPriceValueElementRef} $isReadOnly={Boolean(props.isReadOnly)}>
+                <PriceValueBox>
+                    {props.getPrice().toString()}
+                </PriceValueBox>
+
+                {renderReplaceButton()}
+            </TradingPriceValueBox>
+
+
+            <TooltipComponent targetRef={tradingPriceValueElementRef} placement={"bottom"}
+                              toggleBehavior={TooltipToggleBehaviorEnum.OnTargetClick}
+                              tooltipControllerRef={replaceWorkingOrderTooltipControllerRef}>
+                <ReplaceWorkingOrderComponent workingOrder={props.workingOrder}
+                                              initialPriceValue={props.getPrice()}
+                                              isPriceInitiallyLocked={props.isPriceInitiallyLocked}
+                                              onCloseClick={() => replaceWorkingOrderTooltipControllerRef.current?.close()}/>
+            </TooltipComponent>
+
+            <TooltipComponent targetRef={replaceButtonElementRef} placement={"bottom"}
+                              toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                <ReplaceButtonToolTipContentBox>
+                    {props.tooltipText}
+                </ReplaceButtonToolTipContentBox>
+            </TooltipComponent>
+
+
+        </PriceContainerBox>
+    );
+})
+
+export const WokingOrderBodyComponent: React.FC<{workingOrder: IWorkingOrderViewModel;isReadOnly?: boolean;}> = observer((props) => {
+    const services = useServices();
+
+
+
+
+
     return (
         <BodyBox>
-            <PriceContainerBox>
-                <div>{services.language.translate('Trading price')}</div>
-                <TradingPriceValueBox ref={tradingPriceValueElementRef} $isReadOnly={Boolean(props.isReadOnly)}>
-                    <PriceValueBox>
-                        {props.workingOrder.tradingPrice.toString()}
-                    </PriceValueBox>
+            <OrderPriceComponent workingOrder={props.workingOrder}
+                                 label={services.language.translate('Trading price')}
+                                 getPrice={() => props.workingOrder.tradingPrice}
+                                 tooltipText={services.language.translate('Replace order starting with Trading price')}
+                                 isReadOnly={Boolean(props.isReadOnly)}
+                                 isPriceInitiallyLocked={true}/>
 
-                    {renderReplaceButton()}
-                </TradingPriceValueBox>
-
-
-                <TooltipComponent targetRef={tradingPriceValueElementRef} placement={"bottom"}
-                                  toggleBehavior={TooltipToggleBehaviorEnum.OnTargetClick}
-                                  tooltipControllerRef={replaceWorkingOrderTooltipControllerRef}>
-                    <ReplaceWorkingOrderComponent workingOrder={props.workingOrder} onCloseClick={() => replaceWorkingOrderTooltipControllerRef.current?.close()}/>
-                </TooltipComponent>
-
-                <TooltipComponent targetRef={replaceButtonElementRef} placement={"bottom"}
-                                  toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                    <ReplaceButtonToolTipContentBox>
-                        {services.language.translate('Replace order')}
-                    </ReplaceButtonToolTipContentBox>
-                </TooltipComponent>
-
-
-            </PriceContainerBox>
-            <PriceContainerBox>
-                <div>{services.language.translate('Mid price')}</div>
-                <PriceValueBox>
-                    {props.workingOrder.midPrice?.toString()}
-                </PriceValueBox>
-            </PriceContainerBox>
-
+            <OrderPriceComponent workingOrder={props.workingOrder}
+                                 label={services.language.translate('Mid price')}
+                                 getPrice={() => props.workingOrder.midPrice ?? props.workingOrder.tradingPrice}
+                                 tooltipText={services.language.translate('Replace order starting with Mid price')}
+                                 isReadOnly={Boolean(props.isReadOnly)}
+                                 isPriceInitiallyLocked={false}/>
         </BodyBox>
     )
 });

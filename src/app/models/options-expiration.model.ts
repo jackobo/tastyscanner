@@ -88,19 +88,33 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     private _filterStrategies<T extends IOptionsStrategyViewModel>(strategies: T[]): T[] {
-        return strategies.filter(s => s.riskRewardRatio > 0 && s.riskRewardRatio <= this.services.strategySettings.strategyFilters.maxRiskRewardRatio);
+        return strategies.filter(s => {
+            if(!(s.riskRewardRatio > 0 && s.riskRewardRatio <= this.services.strategySettings.strategyFilters.maxRiskRewardRatio)) {
+                return false;
+            }
+
+            if(s.pop < this.services.strategySettings.strategyFilters.minPop) {
+                return false;
+            }
+
+            if(this.services.strategySettings.strategyFilters.byExistingPositions === "include") {
+                return true;
+            }
+
+            return !s.hasLegsWithExistingPositions;
+        });
     }
 
     get ironCondors(): IronCondorModel[] {
-        return this._filterStrategies(this._strategiesBuilder.buildIronCondors());
+        return this._filterStrategies(this._strategiesBuilder.ironCondors);
     }
 
     get putCreditSpreads(): PutCreditSpreadModel[] {
-        return this._filterStrategies(this._strategiesBuilder.buildPutCreditSpreads());
+        return this._filterStrategies(this._strategiesBuilder.putCreditSpreadsSortedByRiskReward);
     }
 
     get callCreditSpreads(): PutCreditSpreadModel[] {
-        return this._filterStrategies(this._strategiesBuilder.buildCallCreditSpreads());
+        return this._filterStrategies(this._strategiesBuilder.callCreditSpreadsSortedByRiskReward);
     }
 
     getStrikeBelow(strikePrice: number): OptionStrikeModel | null {

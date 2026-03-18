@@ -8,7 +8,7 @@ import {FilterContainerComponent} from "../../common/filter-container/filter-con
 import {FilterLabelComponent} from "../../common/filter-label/filter-label.component";
 
 const LabelBox = styled(FilterLabelComponent)`
-    padding-bottom: var(--ion-space-8);
+    padding-bottom: var(--ion-space-16);
 `
 
 const ByEarningDateRadioGroupBox = styled(RadioGroupBox)`

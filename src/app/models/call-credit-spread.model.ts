@@ -9,18 +9,17 @@ export class CallCreditSpreadModel extends CreditSpreadModel {
                 btoCall: OptionModel,
                 services: IAppServiceFactory) {
         super(wingsWidth, stoCall, btoCall, services);
+        this.legs = [
+            new OptionsStrategyLegModel(this.stoOption, "STO"),
+            new OptionsStrategyLegModel(this.btoOption, "BTO")
+        ];
     }
 
     get strategyName(): string {
         return "CALL credit spread";
     }
 
-    get legs(): OptionsStrategyLegModel[] {
-        return [
-            new OptionsStrategyLegModel(this.stoOption, "STO"),
-            new OptionsStrategyLegModel(this.btoOption, "BTO")
-        ];
-    }
+   readonly legs: OptionsStrategyLegModel[];
 
 
 

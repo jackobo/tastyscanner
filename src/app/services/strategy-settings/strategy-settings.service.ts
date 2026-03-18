@@ -1,4 +1,9 @@
-import {ByEarningsDate, IStrategySettingsService, IStrategyFiltersViewModel} from "./strategy-settings.service.interface";
+import {
+    ByEarningsDate,
+    IStrategySettingsService,
+    IStrategyFiltersViewModel,
+    ByExistingPositions
+} from "./strategy-settings.service.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 import {AppServiceBase} from "../app-service-base";
 import {IAppServiceFactory} from "../app-service-factory.interface";
@@ -15,33 +20,34 @@ export class StrategySettingsService extends AppServiceBase implements IStrategy
 export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     constructor(private readonly services: IAppServiceFactory) {
         this._loadFromStorage();
-        makeObservable<this, '_minDelta'
-            | '_maxDelta'
-            | '_maxRiskRewardRatio'
-            | '_minDaysToExpiration'
-            | '_maxDaysToExpiration'
-            | '_maxBidAskSpread'
-            | '_wings'
-            | '_byEarningsDate'>(this, {
+        makeObservable(this, {
+            _maxRiskRewardRatio: observable.ref,
+            _minPop: observable.ref,
             _minDelta: observable.ref,
             _maxDelta: observable.ref,
-            _maxRiskRewardRatio: observable.ref,
+            _condorsMinDelta: observable.ref,
+            _condorsMaxDelta: observable.ref,
             _minDaysToExpiration: observable.ref,
             _maxDaysToExpiration: observable.ref,
             _maxBidAskSpread: observable.ref,
             _wings: observable.ref,
             _byEarningsDate: observable.ref,
+            _byExistingPositions: observable.ref,
             lastUpdate: observable.ref
         })
     }
 
+    _maxRiskRewardRatio: number = 4;
+    _minPop: number = 50;
     _minDelta: number = 10;
     _maxDelta: number = 30;
-    _maxRiskRewardRatio: number = 4;
+    _condorsMinDelta: number = -5;
+    _condorsMaxDelta: number = 5;
     _minDaysToExpiration: number = 35;
     _maxDaysToExpiration: number = 60;
     _wings: number[] = [5, 10];
     _maxBidAskSpread: number = 5;
+    _byExistingPositions: ByExistingPositions = 'exclude';
     _byEarningsDate: ByEarningsDate = "all";
     lastUpdate: number = Date.now()
 
@@ -51,7 +57,22 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
         this._saveToStorage(propName, value);
         runInAction(() => this.lastUpdate = Date.now());
     }
-    
+
+    get maxRiskRewardRatio(): number {
+        return this._maxRiskRewardRatio;
+    }
+    set maxRiskRewardRatio(value) {
+        this._setProperty("_maxRiskRewardRatio", value);
+    }
+
+    get minPop(): number {
+        return this._minPop;
+    }
+    set minPop(value) {
+        this._setProperty("_minPop", value);
+    }
+
+
     get minDelta(): number {
         return this._minDelta;
     }
@@ -66,12 +87,20 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
         this._setProperty("_maxDelta", value);
     }
 
-    get maxRiskRewardRatio(): number {
-        return this._maxRiskRewardRatio;
+    get condorsMinDelta(): number {
+        return this._condorsMinDelta;
     }
-    set maxRiskRewardRatio(value) {
-        this._setProperty("_maxRiskRewardRatio", value);
+    set condorsMinDelta(value) {
+        this._setProperty("_condorsMinDelta", value);
     }
+
+    get condorsMaxDelta(): number {
+        return this._condorsMaxDelta;
+    }
+    set condorsMaxDelta(value) {
+        this._setProperty("_condorsMaxDelta", value);
+    }
+
 
     get minDaysToExpiration(): number {
         return this._minDaysToExpiration;
@@ -112,6 +141,13 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
 
     set byEarningsDate(value: ByEarningsDate) {
         this._setProperty("_byEarningsDate", value);
+    }
+
+    get byExistingPositions(): ByExistingPositions {
+        return this._byExistingPositions;
+    }
+    set byExistingPositions(value: ByExistingPositions) {
+        this._setProperty("_byExistingPositions", value);
     }
 
     private _storedData: any = {};

@@ -30,4 +30,8 @@ export class OptionsStrategyLegModel implements IOptionsStrategyLegViewModel {
             return this.option.countSells != 0;
         }
     }
+
+    get hasExistingPositions(): boolean {
+        return this.option.countBuys != 0 || this.option.countSells != 0;
+    }
 }

@@ -14,7 +14,6 @@ const FilterContainerBox = styled.div<{$hideBorder?: boolean}>`
 const FilterContentBox = styled.div`
     display: flex;
     flex-direction: column;
-    gap:4px;
     padding: var(--ion-space-12) var(--ion-space-12) 0 var(--ion-space-12);
 `
 

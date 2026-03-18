@@ -12,6 +12,7 @@ export interface IOptionsStrategyViewModel {
     readonly delta: number;
     readonly theta: number;
     readonly legs: IOptionsStrategyLegViewModel[];
+    readonly hasLegsWithExistingPositions: boolean;
     getOptionTickSize(price: number): number;
     sendOrder(options: IOptionsStrategySendOrderParams): Promise<void>;
 }
