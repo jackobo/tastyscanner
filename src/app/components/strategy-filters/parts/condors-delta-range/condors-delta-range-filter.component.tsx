@@ -7,8 +7,8 @@ export const CondorsDeltaRangeFilterComponent: React.FC<{filters: IStrategyFilte
     const filters = props.filters;
     return (
         <RangeEditorComponent label="Condors delta range"
-                              min={-10}
-                              max={10}
+                              min={-15}
+                              max={15}
                               lower={filters.condorsMinDelta}
                               upper={filters.condorsMaxDelta}
                               tooltip={"Condors delta range: Only the Iron Condors with total delta within this range will be considered."}

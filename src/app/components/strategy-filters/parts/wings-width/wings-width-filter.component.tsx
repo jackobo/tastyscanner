@@ -1,56 +1,35 @@
 import React from "react";
 import {observer} from "mobx-react";
-import styled from "styled-components";
-import {useServices} from "../../../../hooks/use-services.hook";
-import {IonToggle} from "@ionic/react";
+import {IonRadio} from "@ionic/react";
 import {IStrategyFiltersViewModel} from "../../../../services/strategy-settings/strategy-settings.service.interface";
 import {FilterContainerComponent} from "../../common/filter-container/filter-container.component";
 import {FilterLabelComponent} from "../../common/filter-label/filter-label.component";
+import {RadioGroupBox} from "../../boxes/radio-group.box";
+import {useServices} from "../../../../hooks/use-services.hook";
 
 
-const WingsEditorBox = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding-bottom: var(--ion-space-16);
-`
-
-const LabelBox = styled(FilterLabelComponent)`
-    padding-bottom: var(--ion-space-8);
-`
-
-const WingValueComponent: React.FC<{value: number}> = observer((props) => {
-    const services = useServices();
-    const isChecked = services.strategySettings.strategyFilters.wings.includes(props.value);
-    const onToggleHandle = (checked: boolean) => {
-        const wings = [...services.strategySettings.strategyFilters.wings];
-        if(checked) {
-            wings.push(props.value);
-            services.strategySettings.strategyFilters.wings = wings.sort((a, b) => a - b);
-        } else {
-            services.strategySettings.strategyFilters.wings = wings.filter(w => w !== props.value);
-        }
-    }
-    return (
-        <IonToggle checked={isChecked} labelPlacement={"stacked"}
-                   onIonChange={e => onToggleHandle(e.detail.checked)}>
-            {`${props.value}$`}
-        </IonToggle>
-    )
-})
 
 export const WingsWidthFilterComponent: React.FC<{filters: IStrategyFiltersViewModel}> = observer((props) => {
+    const services = useServices();
     const filters = props.filters;
     return (
         <FilterContainerComponent>
-            <LabelBox>
-                Wings size
-            </LabelBox>
-            <WingsEditorBox>
-                {filters.availableWings.map(w => <WingValueComponent key={w} value={w}/>)}
-            </WingsEditorBox>
+            <FilterLabelComponent>
+                {services.language.translate('Wings size')}
+            </FilterLabelComponent>
+
+            <RadioGroupBox value={filters.wings[0]}
+                                   onIonChange={e => filters.wings = [e.detail.value]}>
+
+                {filters.availableWings.map(wing => {
+                    return (
+                        <IonRadio value={wing} labelPlacement="stacked">
+                            {wing.toString()}
+                        </IonRadio>
+                    )
+                })}
+
+            </RadioGroupBox>
         </FilterContainerComponent>
     )
 })

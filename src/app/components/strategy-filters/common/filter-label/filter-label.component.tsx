@@ -13,6 +13,7 @@ export const FilterLabelBox = styled.div`
     flex-direction: row;
     align-items: center;
     gap: var(--ion-space-8);
+    font-weight: var(--ion-font-weight-bold);
 `
 
 const TooltipContentBox = styled.div`

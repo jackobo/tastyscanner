@@ -7,16 +7,11 @@ import {RadioGroupBox} from "../../boxes/radio-group.box";
 import {FilterContainerComponent} from "../../common/filter-container/filter-container.component";
 import {FilterLabelComponent} from "../../common/filter-label/filter-label.component";
 
-const LabelBox = styled(FilterLabelComponent)`
-    padding-bottom: var(--ion-space-16);
-`
-
 const ByEarningDateRadioGroupBox = styled(RadioGroupBox)`
     & .radio-group-wrapper {
         flex-direction: column;
         align-items: flex-start;
         justify-content: unset;
-        gap: 8px;
     }
 `
 
@@ -25,9 +20,9 @@ export const ByEarningsDateFilterComponent: React.FC<{filters: IStrategyFiltersV
     const filters = props.filters;
     return (
         <FilterContainerComponent hideBorder={true}>
-            <LabelBox>
+            <FilterLabelComponent>
                 Filter expirations by earnings date
-            </LabelBox>
+            </FilterLabelComponent>
 
             <ByEarningDateRadioGroupBox value={filters.byEarningsDate}
                                         onIonChange={e => filters.byEarningsDate = e.detail.value}>
