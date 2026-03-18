@@ -60,10 +60,10 @@ export class IronCondorModel implements IIronCondorViewModel {
         const breakEvenCall = this.stoCall.strike.expiration.getStrikeAbove(callBreakEven)?.call;
 
 
-        const putBreakEventDelta = breakEvenPut?.absoluteDeltaPercent ?? 0;
-        const callBreakEventDelta = breakEvenCall?.absoluteDeltaPercent ?? 0;
+        const putBreakEventDelta = breakEvenPut?.absoluteRawDelta ?? 0;
+        const callBreakEventDelta = breakEvenCall?.absoluteRawDelta ?? 0;
 
-        return 100 - (putBreakEventDelta + callBreakEventDelta);
+        return Math.round((1 - (putBreakEventDelta + callBreakEventDelta)) * 10000)/100;
 
 
     }

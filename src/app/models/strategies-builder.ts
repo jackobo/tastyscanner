@@ -20,7 +20,7 @@ export class StrategiesBuilder {
             ironCondors: computed,
             putCreditSpreadsSortedByRiskReward: computed,
             callCreditSpreadsSortedByRiskReward: computed,
-        })
+        });
     }
 
     get services(): IAppServiceFactory {
@@ -28,20 +28,21 @@ export class StrategiesBuilder {
     }
 
     get minDelta(): number {
-        return this.services.strategySettings.strategyFilters.minDelta;
+        return this.services.strategySettings.strategyFilters.minDelta / 100;
     }
 
     get maxDelta(): number {
-        return this.services.strategySettings.strategyFilters.maxDelta;
+        return this.services.strategySettings.strategyFilters.maxDelta / 100;
     }
+
 
     get wings(): number[] {
         return this.services.strategySettings.strategyFilters.wings;
     }
 
     private _filterByDelta(options: OptionModel[]): OptionModel[] {
-        return options.filter(o => o.absoluteDeltaPercent >= this.minDelta && o.absoluteDeltaPercent <= this.maxDelta && o.midPrice > 0)
-            .sort((a, b) => b.absoluteDeltaPercent - a.absoluteDeltaPercent);
+        return options.filter(o => o.absoluteRawDelta >= this.minDelta && o.absoluteRawDelta <= this.maxDelta && o.midPrice > 0)
+            .sort((a, b) => b.absoluteRawDelta - a.absoluteRawDelta);
     }
 
     get putsFilteredByDelta(): OptionModel[] {
