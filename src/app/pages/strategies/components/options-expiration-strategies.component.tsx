@@ -14,6 +14,7 @@ import {
 import {OptionsStrategyComponent} from "./options-strategy.component";
 import {IonAccordion, IonChip, IonItem, IonLabel} from "@ionic/react";
 import styled, {css} from "styled-components";
+import {useServices} from "../../../hooks/use-services.hook";
 
 function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
     switch (expirationType) {
@@ -38,6 +39,7 @@ function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
 
 const ExpirationHeaderItemBox = styled(IonItem)<{ $expirationType: OptionExpirationTypeEnum}>`
     cursor: pointer;
+    width: 100%;
     ${props =>computeHeaderColor(props.$expirationType)}
 `
 const ExpirationHeaderItemContentBox = styled.div`
@@ -46,6 +48,7 @@ const ExpirationHeaderItemContentBox = styled.div`
     align-items: center;
     gap: 20px;
     padding: 8px 16px;
+    width: 100%;
      
 `
 
@@ -56,6 +59,17 @@ const StrategiesCountBox = styled(IonChip)`
     text-align: center;
     justify-content: center;
     
+`
+
+const ExpirationHeaderTitleBox = styled.div`
+    flex-grow: 1;
+`
+
+const ActivePositionsCountBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
 `
 
 const StrategiesBox = styled.div`
@@ -75,7 +89,7 @@ interface OptionsExpirationStrategiesComponentProps {
     earningsDatePosition: EarningsDatePositionEnum;
 }
 export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStrategiesComponentProps> = observer((props) => {
-
+    const services = useServices();
 
     const strategies = props.strategies;
     const bestPop = Math.max(...strategies.map(strategy => strategy.pop));
@@ -85,6 +99,34 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
     let label = `${props.expiration.expirationDate} (${props.expiration.daysToExpiration} days) - ${props.expiration.expirationType}`;
     if(props.expiration.settlementType === 'AM') {
         label +=  ` [${props.expiration.settlementType}]`
+    }
+
+    const renderActivePositions = () => {
+        const activePositions = services.brokers.currentAccount?.activePositions;
+        if(!activePositions) {
+            return null;
+        }
+        const positionsCount = activePositions.positions
+                                        .filter(p => p.underlyingSymbol == props.ticker.symbol
+                                                                        && p.legs.some(l => l.daysToExpiration === props.expiration.daysToExpiration))
+                                        .length;
+
+        if(positionsCount === 0) {
+            return null;
+        }
+
+        return (
+            <ActivePositionsCountBox>
+                <span>
+                    {services.language.translate('Active positions:')}
+                </span>
+
+                <span>
+                    {positionsCount}
+                </span>
+
+            </ActivePositionsCountBox>
+        )
     }
 
     return (
@@ -98,9 +140,10 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                         <StrategiesCountBox>
                             {strategies.length}
                         </StrategiesCountBox>
-                        <IonLabel>
+                        <ExpirationHeaderTitleBox>
                             {label}
-                        </IonLabel>
+                        </ExpirationHeaderTitleBox>
+                        {renderActivePositions()}
 
                     </ExpirationHeaderItemContentBox>
                 </ExpirationHeaderItemBox>
