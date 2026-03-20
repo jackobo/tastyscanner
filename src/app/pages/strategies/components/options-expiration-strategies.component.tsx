@@ -137,7 +137,7 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                 <TooltipComponent targetRef={activePositionsCountRef} placement={"bottom"}
                                   toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
                     <InfoToolTipBox>
-                        {services.language.translate('The number of active positions that are already open for this expiration.')}
+                        {services.language.translate('The number of active positions that are already open for this expiration according to your filters.')}
                     </InfoToolTipBox>
                 </TooltipComponent>
             </>
