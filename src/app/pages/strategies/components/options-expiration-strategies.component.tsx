@@ -129,7 +129,7 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                     <span>
                         {services.language.translate('Active positions:')}
                     </span>
-                    <span>
+                    <span style={{fontWeight: "bold"}}>
                         {positionsCount}
                     </span>
                 </ActivePositionsCountBox>
