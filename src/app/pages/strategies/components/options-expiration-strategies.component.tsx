@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import {observer} from "mobx-react";
 import {
     IOptionsExpirationVewModel,
@@ -12,9 +12,10 @@ import {
     EarningsDateMarkerBeforeExpirationComponent
 } from "../../../components/ticker/earnings-date-marker.component";
 import {OptionsStrategyComponent} from "./options-strategy.component";
-import {IonAccordion, IonChip, IonItem, IonLabel} from "@ionic/react";
+import {IonAccordion, IonChip, IonItem} from "@ionic/react";
 import styled, {css} from "styled-components";
 import {useServices} from "../../../hooks/use-services.hook";
+import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
 
 function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
     switch (expirationType) {
@@ -81,6 +82,11 @@ const StrategiesBox = styled.div`
     justify-content: center;
 `
 
+const InfoToolTipBox = styled.div`
+    padding: var(--ion-space-16);
+    max-width: 250px;
+    font-size: var(--ion-font-size-body2);
+`
 
 interface OptionsExpirationStrategiesComponentProps {
     ticker: ITickerViewModel;
@@ -90,6 +96,8 @@ interface OptionsExpirationStrategiesComponentProps {
 }
 export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStrategiesComponentProps> = observer((props) => {
     const services = useServices();
+    const strategiesCountRef = useRef<HTMLIonChipElement | null>(null)
+    const activePositionsCountRef = useRef<HTMLDivElement | null>(null);
 
     const strategies = props.strategies;
     const bestPop = Math.max(...strategies.map(strategy => strategy.pop));
@@ -103,29 +111,36 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
 
     const renderActivePositions = () => {
         const activePositions = services.brokers.currentAccount?.activePositions;
-        if(!activePositions) {
+        if (!activePositions) {
             return null;
         }
         const positionsCount = activePositions.positions
-                                        .filter(p => p.underlyingSymbol == props.ticker.symbol
-                                                                        && p.legs.some(l => l.daysToExpiration === props.expiration.daysToExpiration))
-                                        .length;
+            .filter(p => p.underlyingSymbol == props.ticker.symbol
+                && p.legs.some(l => l.daysToExpiration === props.expiration.daysToExpiration))
+            .length;
 
-        if(positionsCount === 0) {
+        if (positionsCount === 0) {
             return null;
         }
 
         return (
-            <ActivePositionsCountBox>
-                <span>
-                    {services.language.translate('Active positions:')}
-                </span>
+            <>
+                <ActivePositionsCountBox ref={activePositionsCountRef}>
+                    <span>
+                        {services.language.translate('Active positions:')}
+                    </span>
+                    <span>
+                        {positionsCount}
+                    </span>
+                </ActivePositionsCountBox>
 
-                <span>
-                    {positionsCount}
-                </span>
-
-            </ActivePositionsCountBox>
+                <TooltipComponent targetRef={activePositionsCountRef} placement={"bottom"}
+                                  toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                    <InfoToolTipBox>
+                        {services.language.translate('The number of active positions that are already open for this expiration.')}
+                    </InfoToolTipBox>
+                </TooltipComponent>
+            </>
         )
     }
 
@@ -137,9 +152,14 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
 
                 <ExpirationHeaderItemBox slot="header" $expirationType={props.expiration.expirationType}>
                     <ExpirationHeaderItemContentBox>
-                        <StrategiesCountBox>
+                        <StrategiesCountBox ref={strategiesCountRef}>
                             {strategies.length}
                         </StrategiesCountBox>
+                        <TooltipComponent targetRef={strategiesCountRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                            <InfoToolTipBox>
+                                {services.language.translate('The number of strategies that are available for this expiration.')}
+                            </InfoToolTipBox>
+                        </TooltipComponent>
                         <ExpirationHeaderTitleBox>
                             {label}
                         </ExpirationHeaderTitleBox>
