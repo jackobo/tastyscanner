@@ -59,6 +59,13 @@ export class IronCondorModel implements IIronCondorViewModel {
 
     //https://www.tastylive.com/shows/options-jive/episodes/calculating-pop-for-various-strategies-08-23-2017#:~:text=For%20Various%20Strategies-,Aug%2023%2C%202017,look%20at%20calculating%20POP%20in:
     get pop(): number {
+        const stoPutAbsoluteDelta = this.stoPut.absoluteRawDelta;
+        const stoCallAbsoluteDelta = this.stoCall.absoluteRawDelta;
+
+        return MathUtils.round((1- (stoPutAbsoluteDelta + stoCallAbsoluteDelta)) * 100);
+
+
+        /*
         const putBreakEvenStrikePrice = this.stoPut.strikePrice - this.credit;
         const callBreakEvenStrikePrice = this.stoCall.strikePrice + this.credit;
 
@@ -70,6 +77,9 @@ export class IronCondorModel implements IIronCondorViewModel {
         const callBreakEventDelta = breakEvenCall?.absoluteRawDelta ?? 0;
 
         return Math.round((1 - (putBreakEventDelta + callBreakEventDelta)) * 10000)/100;
+            */
+
+
 
 
     }

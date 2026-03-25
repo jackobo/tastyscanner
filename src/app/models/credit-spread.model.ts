@@ -3,6 +3,7 @@ import {OptionModel} from "./option.model";
 import {IAppServiceFactory} from "../services/app-service-factory.interface";
 import {IOptionsStrategySendOrderParams} from "./options-strategy.view-model.interface";
 import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
+import {MathUtils} from "../../framework/utils/math-utils";
 
 export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     constructor(public readonly wingsWidth: number,
@@ -30,7 +31,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     }
 
     get pop(): number {
-        return 100 - this.stoOption.absoluteDeltaPercent;
+        return  MathUtils.round((1 - this.stoOption.absoluteRawDelta) * 100);
 
     }
 
