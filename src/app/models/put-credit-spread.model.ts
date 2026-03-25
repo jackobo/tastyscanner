@@ -10,8 +10,8 @@ export class PutCreditSpreadModel extends CreditSpreadModel {
                 services: IAppServiceFactory) {
         super(wingsWidth, stoPut, btoPut, services);
         this.legs = [
-            new OptionsStrategyLegModel(this.btoOption, "BTO"),
-            new OptionsStrategyLegModel(this.stoOption, "STO")
+            new OptionsStrategyLegModel(btoPut, "BTO"),
+            new OptionsStrategyLegModel(stoPut, "STO")
         ];
     }
 

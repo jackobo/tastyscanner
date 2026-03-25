@@ -15,10 +15,14 @@ export class IronCondorModel implements IIronCondorViewModel {
                 private readonly callSpread: CallCreditSpreadModel,
                 private readonly services: IAppServiceFactory) {
         this.legs = [
+            ...this.putSpread.legs,
+            ...this.callSpread.legs,
+            /*
             new OptionsStrategyLegModel(this.btoPut, "BTO"),
             new OptionsStrategyLegModel(this.stoPut, "STO"),
             new OptionsStrategyLegModel(this.stoCall, "STO"),
             new OptionsStrategyLegModel(this.btoCall, "BTO"),
+             */
         ];
 
         makeObservable(this, {
