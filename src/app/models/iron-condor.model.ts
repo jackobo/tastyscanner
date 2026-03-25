@@ -6,6 +6,7 @@ import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
 import {PutCreditSpreadModel} from "./put-credit-spread.model";
 import {CallCreditSpreadModel} from "./call-credit-spread.model";
 import {MathUtils} from "../../framework/utils/math-utils";
+import {computed, makeObservable} from "mobx";
 
 
 export class IronCondorModel implements IIronCondorViewModel {
@@ -19,6 +20,16 @@ export class IronCondorModel implements IIronCondorViewModel {
             new OptionsStrategyLegModel(this.stoCall, "STO"),
             new OptionsStrategyLegModel(this.btoCall, "BTO"),
         ];
+
+        makeObservable(this, {
+            credit: computed,
+            riskRewardRatio: computed,
+            pop: computed,
+            delta: computed,
+            theta: computed,
+            hasLegsWithOppositePositions: computed,
+            hasLegsWithExistingPositions: computed,
+        })
     }
 
 
@@ -42,7 +53,7 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     get key(): string {
-        return `${this.wingsWidth}${this.btoPut.strikePrice}${this.stoPut.strikePrice}${this.stoCall.strikePrice}${this.btoCall.strikePrice}`;
+        return `${this.wingsWidth}${this.legs.map(leg => leg.option.strikePrice).join('')}`;
     }
 
     get credit(): number {
@@ -78,10 +89,6 @@ export class IronCondorModel implements IIronCondorViewModel {
 
         return Math.round((1 - (putBreakEventDelta + callBreakEventDelta)) * 10000)/100;
             */
-
-
-
-
     }
 
     readonly legs: OptionsStrategyLegModel[];

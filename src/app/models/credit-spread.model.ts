@@ -4,12 +4,21 @@ import {IAppServiceFactory} from "../services/app-service-factory.interface";
 import {IOptionsStrategySendOrderParams} from "./options-strategy.view-model.interface";
 import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
 import {MathUtils} from "../../framework/utils/math-utils";
+import {computed, makeObservable} from "mobx";
 
 export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     constructor(public readonly wingsWidth: number,
                 public readonly stoOption: OptionModel,
                 public readonly btoOption: OptionModel,
                 protected readonly services: IAppServiceFactory) {
+        makeObservable(this, {
+            credit: computed,
+            riskRewardRatio: computed,
+            pop: computed,
+            delta: computed,
+            theta: computed,
+            hasLegsWithExistingPositions: computed
+        })
     }
 
     abstract get strategyName(): string;
