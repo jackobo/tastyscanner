@@ -16,12 +16,10 @@ import {TooltipStandardContentBox} from "../../../../framework/components/toolti
 const StrategyFooterBox = styled.div`
     display: grid;
     grid-template-columns: repeat(4, auto);
+    column-gap: 4px;
     row-gap: 8px;
-    column-gap: 12px;
     font-weight: bold;
-    padding: 0 var(--ion-space-8);
 `
-
 
 
 const ButtonBox = styled.div`
@@ -52,6 +50,7 @@ const InfoCircleBox = styled.span`
 const ValueBox = styled.span`
     text-align: right;
 `
+
 
 const LabelWithTooltipComponent: React.FC<{label: string, tooltipText: string | React.ReactElement }> = observer((props) => {
 

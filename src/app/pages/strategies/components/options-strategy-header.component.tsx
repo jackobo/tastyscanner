@@ -17,7 +17,7 @@ export const OptionsStrategyHeaderComponent: React.FC = observer(() => {
             <span></span>
             <span></span>
             <span>strike</span>
-            <span>price</span>
+            <span style={{textAlign: 'right'}}>price</span>
             <span>{DELTA_SYMBOL}</span>
             <span style={{textAlign: 'right', width: '100%'}}>spread</span>
         </HeaderBox>
