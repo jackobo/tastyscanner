@@ -1,15 +1,26 @@
-import React, {useRef} from "react";
+import React from "react";
 import {observer} from "mobx-react-lite";
 import {TastyScannerStandardPage} from "../tasty-scanner-standard.page";
-import {IVerticalTabViewModel} from "../../components/vertical-tabs/vertical-tab.view-model.interface";
-import {IronCondorsTabModel} from "./components/vertical-tabs/iron-condors.tab.model";
 import {useServices} from "../../hooks/use-services.hook";
-import {PutCreditSpreadsTabModel} from "./components/vertical-tabs/put-credi-spreads.tab.model";
-import {CallCreditSpreadsTabModel} from "./components/vertical-tabs/call-credi-spreads.tab.model";
-import {VerticalTabsComponent} from "../../components/vertical-tabs/vertical-tabs.component";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
 import styled from "styled-components";
+import {ITickerViewModel} from "../../models/ticker/ticker.view-model.interface";
 
+const PageContentBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: var(--ion-space-12);
+    width: 100%;
+    flex-grow: 1;
+`
+
+const StrategyTitleBox = styled.div`
+    position: sticky;
+    top: 0;
+    font-size: var(--ion-font-size-h3);
+    font-weight: var(--ion-font-weight-bold);
+    text-align: center;
+`
 
 const NoTickerSelectedBox = styled.div`
     display: flex;
@@ -21,14 +32,13 @@ const NoTickerSelectedBox = styled.div`
     height: 100%;
 `
 
+interface StrategiesPageProps {
+    renderContent: (ticker: ITickerViewModel) => React.ReactElement;
+    strategyName: string;
+}
 
-export const StrategiesPage: React.FC = observer(() => {
+export const StrategiesPage: React.FC<StrategiesPageProps> = observer((props) => {
     const services = useServices();
-    const tabsRef = useRef<IVerticalTabViewModel[]>([
-        new IronCondorsTabModel(services),
-        new PutCreditSpreadsTabModel(services),
-        new CallCreditSpreadsTabModel(services),
-    ])
 
     const ticker = services.tickers.currentTicker;
 
@@ -46,14 +56,18 @@ export const StrategiesPage: React.FC = observer(() => {
             );
         }
 
-        return (
-            <VerticalTabsComponent tabs={tabsRef.current}/>
-        );
+        return props.renderContent(ticker);
     }
 
     return (
         <TastyScannerStandardPage>
-            {renderPageContent()}
+            <PageContentBox>
+                <StrategyTitleBox>
+                    {`${ticker?.symbol} ${props.strategyName}`}
+                </StrategyTitleBox>
+                {renderPageContent()}
+            </PageContentBox>
+
         </TastyScannerStandardPage>
     )
 });

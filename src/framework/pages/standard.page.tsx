@@ -17,6 +17,11 @@ const IonContentBox = styled(IonContent)`
         flex-direction: column;
         width: 100%;
     }
+    
+    ${props => props.theme.screenMediaQuery.smallScreen} {
+        --padding-start: 0;
+        --padding-end: 0;
+    }
 `
 
 const PageContentBox = styled.div`
@@ -82,7 +87,6 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
                         <ThemeProvider theme={services.theme.applyContainerMediaQueries() as any}>
                             {props.children}
                         </ThemeProvider>
-
                     </ContainerMediaQueriesChecksContext.Provider>
                 </PageContentBox>
 

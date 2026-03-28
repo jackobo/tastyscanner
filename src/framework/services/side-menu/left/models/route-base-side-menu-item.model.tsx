@@ -32,13 +32,17 @@ export abstract class RouteBaseSideMenuItemModel extends SideMenuItemBaseModel {
         return null;
     }
 
+    protected _getLevel(): number {
+        return 0;
+    }
+
 
     render(): SideMenuRenderResult {
         return (
             <StandardSideMenuItemComponent renderContent={() => this.renderContent()}
                                            renderIcon={() => this.renderIcon()}
                                            isSelected={() => this.isSelected}
-                                           onClick={() => this.click()}/>
+                                           onClick={() => this.click()} level={() => this._getLevel()} />
         );
     }
 
