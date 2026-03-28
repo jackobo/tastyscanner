@@ -98,6 +98,8 @@ export class TickerModel implements ITickerViewModel {
         } finally {
             this.isLoading = false;
         }
+
+
     }
 
     async stop(): Promise<void> {
