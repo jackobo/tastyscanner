@@ -117,11 +117,11 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
         return this._filterStrategies(this._strategiesBuilder.callCreditSpreadsSortedByRiskReward);
     }
 
-    getStrikeBelow(strikePrice: number): OptionStrikeModel | null {
+    getClosestStrikeBelowOrAt(strikePrice: number): OptionStrikeModel | null {
         return this._findClosestStrike(strikePrice, true);
     }
 
-    getStrikeAbove(strikePrice: number): OptionStrikeModel | null {
+    getClosesStrikeAboveOrAt(strikePrice: number): OptionStrikeModel | null {
         return this._findClosestStrike(strikePrice, false);
     }
 

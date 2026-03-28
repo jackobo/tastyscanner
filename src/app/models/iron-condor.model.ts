@@ -7,6 +7,7 @@ import {PutCreditSpreadModel} from "./put-credit-spread.model";
 import {CallCreditSpreadModel} from "./call-credit-spread.model";
 import {MathUtils} from "../../framework/utils/math-utils";
 import {computed, makeObservable} from "mobx";
+import {Check} from "../../framework/utils/type-checking";
 
 
 export class IronCondorModel implements IIronCondorViewModel {
@@ -74,26 +75,34 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     //https://www.tastylive.com/shows/options-jive/episodes/calculating-pop-for-various-strategies-08-23-2017#:~:text=For%20Various%20Strategies-,Aug%2023%2C%202017,look%20at%20calculating%20POP%20in:
+
     get pop(): number {
-        const stoPutAbsoluteDelta = this.stoPut.absoluteRawDelta;
-        const stoCallAbsoluteDelta = this.stoCall.absoluteRawDelta;
 
-        return MathUtils.round((1- (stoPutAbsoluteDelta + stoCallAbsoluteDelta)) * 100);
+        //compute theoretical strike price for the sold put
+        const putBreakEvenStrikePrice = this.stoPut.strikePrice - this.putSpread.credit;
+        //compute theoretical strike price for the sold call
+        const callBreakEvenStrikePrice = this.stoCall.strikePrice + this.callSpread.credit;
 
+        //find the closest put exactly at or right below the theoretical strike price for the sold put
+        const breakEvenPut = this.stoPut.strike.expiration.getClosestStrikeBelowOrAt(putBreakEvenStrikePrice)?.put
+        //find the closest call exactly at or right above the theoretical strike price for the sold call
+        const breakEvenCall = this.stoCall.strike.expiration.getClosesStrikeAboveOrAt(callBreakEvenStrikePrice)?.call;
 
-        /*
-        const putBreakEvenStrikePrice = this.stoPut.strikePrice - this.credit;
-        const callBreakEvenStrikePrice = this.stoCall.strikePrice + this.credit;
+        //get the absolute delta of the break even strike for the put
+        const putBreakEventDelta = breakEvenPut?.absoluteRawDelta;
+        if(Check.isNullOrUndefined(putBreakEventDelta)) {
+            return 0;
+        }
 
-        const breakEvenPut = this.stoPut.strike.expiration.getStrikeBelow(putBreakEvenStrikePrice)?.put
-        const breakEvenCall = this.stoCall.strike.expiration.getStrikeAbove(callBreakEvenStrikePrice)?.call;
+        //get the absolute delta of the break even strike for the call
+        const callBreakEventDelta = breakEvenCall?.absoluteRawDelta;
+        if(Check.isNullOrUndefined(callBreakEventDelta)) {
+            return 0;
+        }
 
+        //finally, compute the POP
+        return MathUtils.round((1 - putBreakEventDelta - callBreakEventDelta) * 100);
 
-        const putBreakEventDelta = breakEvenPut?.absoluteRawDelta ?? 0;
-        const callBreakEventDelta = breakEvenCall?.absoluteRawDelta ?? 0;
-
-        return Math.round((1 - (putBreakEventDelta + callBreakEventDelta)) * 10000)/100;
-            */
     }
 
     readonly legs: OptionsStrategyLegModel[];
