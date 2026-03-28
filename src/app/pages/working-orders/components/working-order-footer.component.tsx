@@ -8,7 +8,7 @@ import {useServices} from "../../../hooks/use-services.hook";
 import {Check} from "../../../../framework/utils/type-checking";
 import {TimeSpan} from "../../../../framework/types/time-span";
 import {IonSpinnerComponent} from "../../../../framework/components/spinner/ion-spinner.component";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {TooltipComponent} from "../../../../framework/components/tooltip/tooltip.component";
 import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 const FooterBox = styled.div`
@@ -138,7 +138,7 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
                <PauseResumeButtonBox onClick={onPauseResumeClick} ref={pauseResumeButtonBoxRef}>
                    {renderPauseResumeIcon()}
                </PauseResumeButtonBox>
-               <TooltipComponent targetRef={pauseResumeButtonBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+               <TooltipComponent targetRef={pauseResumeButtonBoxRef}>
                    <TooltipStandardContentBox>
                        {renderPauseResumeButtonToolTipText()}
                    </TooltipStandardContentBox>

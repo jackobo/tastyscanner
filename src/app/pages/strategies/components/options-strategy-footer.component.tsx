@@ -9,7 +9,7 @@ import {SuccessButton} from "../../../../framework/components/buttons/success-bu
 import {ButtonTooltipProps} from "../../../../framework/components/buttons/button-base";
 import {IonIcon} from "@ionic/react";
 import {informationCircleOutline} from "ionicons/icons";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {TooltipComponent} from "../../../../framework/components/tooltip/tooltip.component";
 import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 
@@ -20,6 +20,8 @@ const StrategyFooterBox = styled.div`
     column-gap: 16px;
     font-weight: bold;
 `
+
+
 
 const ButtonBox = styled.div`
     display: flex;
@@ -55,7 +57,7 @@ const LabelWithTooltipComponent: React.FC<{label: string, tooltipText: string | 
             <InfoCircleBox ref={infoCircleBoxRef}>
                 <IonIcon icon={informationCircleOutline}/>
             </InfoCircleBox>
-            <TooltipComponent targetRef={infoCircleBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+            <TooltipComponent targetRef={infoCircleBoxRef}>
                 <TooltipStandardContentBox>
                     {props.tooltipText}
                 </TooltipStandardContentBox>

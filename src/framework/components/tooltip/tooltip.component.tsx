@@ -16,6 +16,7 @@ import {CardBox} from "../card/card.box";
 import {IonIcon} from "@ionic/react";
 import {closeOutline} from "ionicons/icons";
 import {useFrameworkServices} from "../../hooks/use-framework-services.hook";
+import {TooltipToggleBehaviorEnum} from "./tooltip-toggle-behavior.enum";
 
 
 
@@ -99,24 +100,12 @@ export interface ITooltipController {
     close(): void;
 }
 
-export enum TooltipToggleBehaviorEnum {
-    /**
-     * When the mouse enters the target element the tool tip is shown and when the mouse leaves target element
-     * On mobile mouse enter occurs when the element is clicked and the tooltip is closed when user clicks somewhere outside.
-     */
-    OnTargetMouseEnterLeave,
-    /**
-     * The tooltip is shown/closed when the target element is clicked
-     */
-    OnTargetClick
-}
-
 
 
 interface TooltipComponentProps extends PropsWithChildren {
     targetRef: React.RefObject<HTMLElement | null>;
     placement?: Placement;
-    toggleBehavior: TooltipToggleBehaviorEnum;
+    toggleBehavior?: TooltipToggleBehaviorEnum;
     showCloseButton?: boolean;
     tooltipControllerRef?: React.RefObject<ITooltipController | null>;
     className?: string;
@@ -128,6 +117,10 @@ export const TooltipComponent: React.FC<TooltipComponentProps> = observer((props
     const popperContainerRef = useRef<HTMLDivElement | null>(null);
     const popperArrowRef = useRef<HTMLDivElement | null>(null);
     const [isOpen, setIsOpen] = useState(false);
+
+    const placement = props.placement ?? 'bottom';
+    const toggleBehavior = props.toggleBehavior ?? TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave;
+
     const tooltipControllerRef = useRef<ITooltipController>({
         open: () => {
             setIsOpen(true)
@@ -141,7 +134,7 @@ export const TooltipComponent: React.FC<TooltipComponentProps> = observer((props
         props.tooltipControllerRef.current = tooltipControllerRef.current;
     }
 
-    const placement = props.placement ?? 'bottom';
+
 
     useEffect(() => {
         let popperInstance: PopperInstance | null = null;
@@ -194,7 +187,7 @@ export const TooltipComponent: React.FC<TooltipComponentProps> = observer((props
         const targetEl = props.targetRef.current;
 
         if(targetEl) {
-            if(props.toggleBehavior === TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave) {
+            if(toggleBehavior === TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave) {
                 targetEl.addEventListener('mouseenter', onTargetMouseEnter);
                 targetEl.addEventListener('mouseleave', onTargetMouseLeave);
             } else {
@@ -206,7 +199,7 @@ export const TooltipComponent: React.FC<TooltipComponentProps> = observer((props
 
         return () => {
             if(targetEl) {
-                if(props.toggleBehavior === TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave) {
+                if(toggleBehavior === TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave) {
                     targetEl.removeEventListener('mouseenter', onTargetMouseEnter);
                     targetEl.removeEventListener('mouseleave', onTargetMouseLeave);
                 } else {
@@ -217,7 +210,7 @@ export const TooltipComponent: React.FC<TooltipComponentProps> = observer((props
 
         }
 
-    }, [isOpen, props.targetRef, props.toggleBehavior]);
+    }, [isOpen, props.targetRef, toggleBehavior]);
 
     if(!isOpen) {
         return null;

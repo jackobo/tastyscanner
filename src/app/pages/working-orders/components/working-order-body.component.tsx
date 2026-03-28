@@ -7,11 +7,11 @@ import {IonIcon} from "@ionic/react";
 import {repeatOutline} from "ionicons/icons";
 import {
     ITooltipController,
-    TooltipComponent,
-    TooltipToggleBehaviorEnum
+    TooltipComponent
 } from "../../../../framework/components/tooltip/tooltip.component";
 import {ReplaceWorkingOrderComponent} from "./replace-working-order.component";
 import {Price} from "../../../models/price/price";
+import {TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip-toggle-behavior.enum";
 
 const BodyBox = styled.div`
     display: grid;
@@ -104,8 +104,7 @@ const OrderPriceComponent: React.FC<OrderPriceComponentProps> = observer((props)
                                               onCloseClick={() => replaceWorkingOrderTooltipControllerRef.current?.close()}/>
             </TooltipComponent>
 
-            <TooltipComponent targetRef={replaceButtonElementRef}
-                              toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+            <TooltipComponent targetRef={replaceButtonElementRef}>
                 <ReplaceButtonToolTipContentBox>
                     {props.tooltipText}
                 </ReplaceButtonToolTipContentBox>

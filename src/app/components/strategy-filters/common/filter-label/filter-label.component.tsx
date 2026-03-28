@@ -2,8 +2,7 @@ import React, {PropsWithChildren, useRef} from "react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
 import {
-    TooltipComponent,
-    TooltipToggleBehaviorEnum
+    TooltipComponent
 } from "../../../../../framework/components/tooltip/tooltip.component";
 import {IonIcon} from "@ionic/react";
 import {informationCircleOutline} from "ionicons/icons";
@@ -50,7 +49,7 @@ export const FilterLabelComponent: React.FC<FilterLabelComponentProps> = observe
         }
 
         return (
-            <TooltipComponent targetRef={filterIconBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+            <TooltipComponent targetRef={filterIconBoxRef}>
                 <TooltipStandardContentBox>
                     {props.tooltip}
                 </TooltipStandardContentBox>

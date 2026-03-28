@@ -4,7 +4,7 @@ import styled from "styled-components";
 import {IFormField} from "../../../models/forms/form-field.interface";
 import {IonIcon} from "@ionic/react";
 import {informationCircleOutline} from "ionicons/icons";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../tooltip/tooltip.component";
+import {TooltipComponent} from "../../tooltip/tooltip.component";
 import {TooltipStandardContentBox} from "../../tooltip/tooltip-standard-content.box";
 
 const FieldLabelContainerBox = styled.div`
@@ -32,7 +32,7 @@ export const InputFieldLabelWithTooltipComponent: React.FC<InputFieldLabelWithTo
             <FieldLabelIconBox ref={infoIconElementRef}>
                 <IonIcon icon={informationCircleOutline}/>
             </FieldLabelIconBox>
-            <TooltipComponent targetRef={infoIconElementRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+            <TooltipComponent targetRef={infoIconElementRef}>
                 <TooltipStandardContentBox>
                     {props.children}
                 </TooltipStandardContentBox>

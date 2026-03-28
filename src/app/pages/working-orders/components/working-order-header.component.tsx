@@ -6,7 +6,7 @@ import {useServices} from "../../../hooks/use-services.hook";
 import styled from "styled-components";
 import {IonIcon} from "@ionic/react";
 import {fishOutline} from "ionicons/icons";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {TooltipComponent} from "../../../../framework/components/tooltip/tooltip.component";
 import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 const WorkingOrderHeaderBox = styled.div`
@@ -60,8 +60,7 @@ export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderV
                         <IonIcon icon={fishOutline}/>
                     </GobyIndicatorBox>
 
-                    <TooltipComponent targetRef={gobyIndicatorRef}
-                                      toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                    <TooltipComponent targetRef={gobyIndicatorRef}>
                         <TooltipStandardContentBox>
                             {services.language.translate('Source: Operation Goby')}
                         </TooltipStandardContentBox>

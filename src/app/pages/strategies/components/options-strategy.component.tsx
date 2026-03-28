@@ -8,7 +8,7 @@ import styled, {css} from "styled-components";
 import {CardBox} from "../../../../framework/components/card/card.box";
 import {IonIcon} from "@ionic/react";
 import {informationOutline} from "ionicons/icons";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {TooltipComponent} from "../../../../framework/components/tooltip/tooltip.component";
 import { TooltipStandardContentBox } from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 import {useServices} from "../../../hooks/use-services.hook";
 
@@ -122,7 +122,7 @@ export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> =
         }
 
         return (
-            <TooltipComponent targetRef={infoIconBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+            <TooltipComponent targetRef={infoIconBoxRef}>
                 <TooltipStandardContentBox>
                     {tooltipText}
                 </TooltipStandardContentBox>

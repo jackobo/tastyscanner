@@ -28,8 +28,7 @@ import {
 import {PrimaryButton} from "../../../../../framework/components/buttons/primary-button";
 import {OrderType, TimeInForce} from "../../../../services/brokers/interfaces/open-order-request.interface";
 import {
-    TooltipComponent,
-    TooltipToggleBehaviorEnum
+    TooltipComponent
 } from "../../../../../framework/components/tooltip/tooltip.component";
 import {TooltipStandardContentBox} from "../../../../../framework/components/tooltip/tooltip-standard-content.box";
 
@@ -465,7 +464,7 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                             <EnableAutoReplaceInfoIconBox ref={enableAutoReplaceInfoIconBoxRef}>
                                 <IonIcon icon={informationCircleOutline} />
                             </EnableAutoReplaceInfoIconBox>
-                            <TooltipComponent targetRef={enableAutoReplaceInfoIconBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                            <TooltipComponent targetRef={enableAutoReplaceInfoIconBoxRef}>
                                 <AutoReplaceInfoTooltipContentComponent/>
                             </TooltipComponent>
                         </EnableAutoReplaceLabelBox>

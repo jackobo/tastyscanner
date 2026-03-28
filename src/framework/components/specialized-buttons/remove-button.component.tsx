@@ -4,9 +4,10 @@ import {observer} from "mobx-react";
 import {IonIcon} from "@ionic/react";
 import {trashOutline} from "ionicons/icons";
 import styled from "styled-components";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../tooltip/tooltip.component";
+import {TooltipComponent} from "../tooltip/tooltip.component";
 import {PrimaryButtonInverted} from "../buttons/primary-button-inverted";
 import {useFrameworkServices} from "../../hooks/use-framework-services.hook";
+import {TooltipToggleBehaviorEnum} from "../tooltip/tooltip-toggle-behavior.enum";
 
 const RemovePrizeToolTipConfirmationBox = styled.div`
     display: flex;

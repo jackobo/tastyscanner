@@ -3,10 +3,11 @@ import React, {MouseEvent, PropsWithChildren, useRef, useState} from "react";
 import {observer} from "mobx-react";
 import {arrowForwardOutline} from "ionicons/icons";
 import {IonIcon} from "@ionic/react";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../tooltip/tooltip.component";
+import {TooltipComponent} from "../tooltip/tooltip.component";
 import {Placement} from "@popperjs/core";
 import {Check} from "../../utils/type-checking";
 import {TooltipStandardContentBox} from "../tooltip/tooltip-standard-content.box";
+import {TooltipToggleBehaviorEnum} from "../tooltip/tooltip-toggle-behavior.enum";
 
 
 
@@ -188,7 +189,7 @@ export const ButtonBase: React.FC<ButtonBaseProps> = observer((props) => {
         return (
             <TooltipComponent targetRef={buttonRef}
                               placement={props.tooltip.placement ?? "bottom"}
-                              toggleBehavior={props.tooltip.toggleBehavior ?? TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}
+                              toggleBehavior={props.tooltip.toggleBehavior}
                               showCloseButton={props.tooltip.showCloseButton}
                               hideArrow={props.tooltip.hideArrow}>
                 {renderToolTipStringContent(toolTipContent)}

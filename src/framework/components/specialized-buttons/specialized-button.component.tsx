@@ -1,7 +1,7 @@
 import React, {useRef} from "react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../tooltip/tooltip.component";
+import {TooltipComponent} from "../tooltip/tooltip.component";
 import {SpecializeButtonColor} from "./specialize-button-color";
 import {SpecializeButtonSize} from "./specialize-button-size";
 import {TooltipStandardContentBox} from "../tooltip/tooltip-standard-content.box";
@@ -69,7 +69,6 @@ export const SpecializedButtonComponent: React.FC<SpecializedButtonComponentProp
 
         return (
             <TooltipComponent targetRef={toolTipButtonRef}
-                              toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}
                               showCloseButton={false}>
                 <TooltipStandardContentBox>{props.tooltipText}</TooltipStandardContentBox>
             </TooltipComponent>

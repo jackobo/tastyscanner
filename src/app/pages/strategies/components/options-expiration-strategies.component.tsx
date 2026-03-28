@@ -15,7 +15,7 @@ import {OptionsStrategyComponent} from "./options-strategy.component";
 import {IonAccordion, IonChip, IonItem} from "@ionic/react";
 import styled, {css} from "styled-components";
 import {useServices} from "../../../hooks/use-services.hook";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {TooltipComponent} from "../../../../framework/components/tooltip/tooltip.component";
 import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
@@ -130,8 +130,7 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                     </span>
                 </ActivePositionsCountBox>
 
-                <TooltipComponent targetRef={activePositionsCountRef}
-                                  toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                <TooltipComponent targetRef={activePositionsCountRef}>
                     <TooltipStandardContentBox>
                         {services.language.translate('The number of active positions that are already open for this expiration according to your filters.')}
                     </TooltipStandardContentBox>
@@ -151,7 +150,7 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                         <StrategiesCountBox ref={strategiesCountRef}>
                             {strategies.length}
                         </StrategiesCountBox>
-                        <TooltipComponent targetRef={strategiesCountRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                        <TooltipComponent targetRef={strategiesCountRef}>
                             <TooltipStandardContentBox>
                                 {services.language.translate('The number of strategies that are available for this expiration.')}
                             </TooltipStandardContentBox>

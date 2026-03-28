@@ -4,7 +4,7 @@ import styled, {css} from "styled-components";
 import {OptionsStrategyLegBaseBox} from "./boxes/options-strategy-leg-base.box";
 import {IOptionsStrategyLegViewModel} from "../../../models/options-strategy-leg.view-model.interface";
 import {DELTA_SYMBOL} from "../../../utils/global-constants";
-import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {TooltipComponent} from "../../../../framework/components/tooltip/tooltip.component";
 import {useServices} from "../../../hooks/use-services.hook";
 import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
@@ -80,7 +80,7 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
         }
 
         return (
-            <TooltipComponent targetRef={strategyLegBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+            <TooltipComponent targetRef={strategyLegBoxRef}>
                 <TooltipStandardContentBox>
                     {tooltipText}
                 </TooltipStandardContentBox>
@@ -122,7 +122,7 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
 
 
         return (
-            <TooltipComponent targetRef={sameDirectionPositionsCountRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+            <TooltipComponent targetRef={sameDirectionPositionsCountRef}>
                 <TooltipStandardContentBox>
                     {tooltipText}
                 </TooltipStandardContentBox>
