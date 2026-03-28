@@ -11,31 +11,51 @@ import {IonIcon} from "@ionic/react";
 import {informationCircleOutline} from "ionicons/icons";
 import {TooltipComponent} from "../../../../framework/components/tooltip/tooltip.component";
 import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
+import {MathUtils} from "../../../../framework/utils/math-utils";
 
-
-const StrategyFooterBox = styled.div`
-    display: grid;
-    grid-template-columns: repeat(4, auto);
-    column-gap: 4px;
-    row-gap: 8px;
-    font-weight: bold;
-`
-
-
-const ButtonBox = styled.div`
+const FooterContainerBox = styled.div`
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
+    flex-direction: column;
+    gap: var(--ion-space-16);
     width: 100%;
-    grid-column: 1 / -1;
-    margin-top: var(--ion-space-8);
 `
 
-const LabelWithTooltipBox = styled.div`
+
+const StrategyPropertiesContainerBox = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    border-top: 1px solid var(--ion-color-border);
+    border-left: 1px solid var(--ion-color-border);
+`
+
+const CellBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+`
+
+const LabelBox = styled(CellBox)`
+    
+`
+
+const ValueBox = styled(CellBox)`
+    text-align: right;
+    font-weight: var(--ion-font-weight-bold);
+`
+
+const PropertyBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 5px;
+    border-right: 1px solid var(--ion-color-border);
+    border-bottom: 1px solid var(--ion-color-border);
+`
+
+
+const LabelWithTooltipBox = styled(LabelBox)`
     gap: 4px;
 `
 
@@ -47,9 +67,28 @@ const InfoCircleBox = styled.span`
     cursor: pointer;
 `
 
-const ValueBox = styled.span`
-    text-align: right;
+const TradeButtonBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
 `
+
+
+
+const FooterPropertyComponent: React.FC<{label: string | React.ReactElement; value: string | React.ReactElement}> = observer((props) => {
+    return (
+        <PropertyBox>
+            <LabelBox>
+                {props.label}
+            </LabelBox>
+            <ValueBox>
+                {props.value}
+            </ValueBox>
+        </PropertyBox>
+    )
+})
 
 
 const LabelWithTooltipComponent: React.FC<{label: string, tooltipText: string | React.ReactElement }> = observer((props) => {
@@ -109,26 +148,34 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
     }
 
     return (
-        <StrategyFooterBox>
-            <span>Risk/Reward:</span>
-            <ValueBox>{props.strategy.riskRewardRatio}</ValueBox>
-            <span>POP:</span>
-            <ValueBox>{`${props.strategy.pop}%`}</ValueBox>
-            <span>Wings:</span>
-            <ValueBox>{`${props.strategy.wingsWidth}$`}</ValueBox>
-            <span>Credit:</span>
-            <ValueBox>{`${props.strategy.credit.toFixed(2)}$`}</ValueBox>
-            <LabelWithTooltipComponent label={"Delta:"}
-                                       tooltipText={services.language.translate("Total delta for the strategy.")}/>
-            <ValueBox>{props.strategy.delta}</ValueBox>
-            <LabelWithTooltipComponent label={`Short legs delta:`} tooltipText={renderShortLegsDeltaTooltip()}/>
-            <ValueBox>{props.strategy.shortLegsDelta}</ValueBox>
-            <ButtonBox>
+        <FooterContainerBox>
+            <StrategyPropertiesContainerBox>
+                <FooterPropertyComponent label={services.language.translate("Risk/Reward")}
+                                         value={props.strategy.riskRewardRatio.toString()}/>
+
+                <FooterPropertyComponent label={services.language.translate("POP")}
+                                         value={`${MathUtils.round(props.strategy.pop, 0)}%`}/>
+
+                <FooterPropertyComponent label={services.language.translate("Wings")}
+                                         value={`${props.strategy.wingsWidth}$`}/>
+
+                <FooterPropertyComponent label={services.language.translate("Credit")}
+                                         value={`${props.strategy.credit.toFixed(2)}$`}/>
+
+                <FooterPropertyComponent label={<LabelWithTooltipComponent label={"Delta"}
+                                                                           tooltipText={services.language.translate("Total delta for the strategy.")}/>}
+                                         value={props.strategy.delta.toFixed(2)}/>
+
+                <FooterPropertyComponent label={<LabelWithTooltipComponent label={"Short legs delta"}
+                                                                           tooltipText={renderShortLegsDeltaTooltip()}/>}
+                                         value={props.strategy.shortLegsDelta.toFixed(2)}/>
+            </StrategyPropertiesContainerBox>
+            <TradeButtonBox>
                 <SuccessButton onClick={onTrade} disabled={hasOppositePosition} tooltip={getButtonTooltipProps()}>
                     { services.language.translate("Trade")}
                 </SuccessButton>
-            </ButtonBox>
+            </TradeButtonBox>
+        </FooterContainerBox>
 
-        </StrategyFooterBox>
     )
 })
