@@ -34,17 +34,12 @@ import {MathUtils} from "../../../../../framework/utils/math-utils";
 import {OptionsStrategyLegComponent} from "../options-strategy-leg.component";
 import {OptionsStrategyHeaderComponent} from "../options-strategy-header.component";
 
-const SpacerBox = styled.div`
-    grid-column: 1/-1;
-    width: 100%;
-    height: 8px;
-`
 
 const FieldsGridBox = styled.div`
-    display: grid;
-    grid-template-columns: 1.5fr repeat(5, 1fr);
-    row-gap: 4px;
-    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ion-space-16);
+    padding: var(--ion-space-16);
 `
 
 const FieldLabelBox = styled.div`
@@ -69,7 +64,6 @@ const ValueEditorContainerBox = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
-    grid-column: 1/-1;
     width: 100%;
     
 `
@@ -120,20 +114,27 @@ const LockerBox = styled.div`
     font-size: 1.3rem;
 `
 
+const OrderTypeAndTimeInForceBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+`
 
 const OrderTypeBox = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 4px;
-    grid-column: 1/3;
     width: 100%;
 `
 
 const TimeInForceBox = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 4px;
-    grid-column: 4/6;
     width: 100%;
 `
 
@@ -388,7 +389,7 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                 </StrategyContainerBox>
                 <FieldsGridBox>
 
-                    <SpacerBox/>
+
 
                     <MidPriceBox>
                         <FieldLabelBox>
@@ -399,8 +400,6 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                         </MidPriceValueBox>
                     </MidPriceBox>
 
-                    <SpacerBox/>
-
                     <ValueEditorComponent  value={ limitPrice}
                                            defaultValue={props.strategy.credit.toString()}
                                            onValueChanged={setLimitPrice}
@@ -410,10 +409,6 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                                            onLockerClick={onLockerClick}/>
 
 
-
-
-                    <SpacerBox/>
-
                     <ValueEditorComponent  value={ quantity.toString()}
                                            defaultValue={"1"}
                                            onValueChanged={onQuantityChange}
@@ -422,18 +417,18 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                                            offset={1}/>
 
 
+                    <OrderTypeAndTimeInForceBox>
+                        <OrderTypeBox>
+                            <FieldLabelBox>Order Type</FieldLabelBox>
+                            <ReadonlyFieldValueBox>{orderType}</ReadonlyFieldValueBox>
+                        </OrderTypeBox>
 
-                    <SpacerBox/>
+                        <TimeInForceBox>
+                            <FieldLabelBox>Time in force</FieldLabelBox>
+                            <ReadonlyFieldValueBox>{timeInForce}</ReadonlyFieldValueBox>
+                        </TimeInForceBox>
 
-                    <OrderTypeBox>
-                        <FieldLabelBox>Order Type</FieldLabelBox>
-                        <ReadonlyFieldValueBox>{orderType}</ReadonlyFieldValueBox>
-                    </OrderTypeBox>
-
-                    <TimeInForceBox>
-                        <FieldLabelBox>Time in force</FieldLabelBox>
-                        <ReadonlyFieldValueBox>{timeInForce}</ReadonlyFieldValueBox>
-                    </TimeInForceBox>
+                    </OrderTypeAndTimeInForceBox>
 
                 </FieldsGridBox>
             </DialogContent>
