@@ -4,29 +4,15 @@ import {IonRangeBox, RangeBox} from "../../boxes/range.box";
 import {FilterValueBox} from "../../boxes/filter-value.box";
 import {FilterContainerComponent} from "../filter-container/filter-container.component";
 import {FilterLabelComponent} from "../filter-label/filter-label.component";
-import styled from "styled-components";
-import {InputBaseBox} from "../../../input-base.box";
 import {Check} from "../../../../../framework/utils/type-checking";
 import {ITooltipController, TooltipComponent} from "../../../../../framework/components/tooltip/tooltip.component";
 import {TooltipToggleBehaviorEnum} from "../../../../../framework/components/tooltip/tooltip-toggle-behavior.enum";
 import {TooltipStandardContentBox} from "../../../../../framework/components/tooltip/tooltip-standard-content.box";
-import {IonIcon} from "@ionic/react";
-import {arrowForwardOutline} from "ionicons/icons";
-import {ArrowBox} from "../boxes/arrow.box";
+import {InputBox} from "../boxes/input.box";
+import {renderError} from "../boxes/error.box";
+import {ValuesEditorContainerBox} from "../boxes/values-editor-container.box";
+import {ArrowComponent} from "../boxes/arrow.box";
 
-
-const InputBox = styled(InputBaseBox)`
-    width: 100%;
-    text-align: center;
-`
-
-const ValueEditorBox = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--ion-space-8);
-    width: 100px;
-`
 
 interface ValueEditorComponentProps {
     value: number;
@@ -37,27 +23,48 @@ interface ValueEditorComponentProps {
 
 const ValueEditorComponent: React.FC<ValueEditorComponentProps> = observer((props) => {
     const [value, setValue] = React.useState(props.value.toString());
+    const [error, setError] = React.useState("");
     const onChanged = (event: ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
+        setError("")
+    }
+
+    const parseValue = () => {
+        const valueAsNumber = parseFloat(value);
+
+        if(Check.isEmpty(value?.trim())) {
+            setError(`Value is required`);
+            return null;
+        }
+
+        if(!Check.isNumber(valueAsNumber)) {
+            setError(`${value} is not a number`);
+            return null;
+        }
+
+        if(!(props.min <= valueAsNumber && valueAsNumber <= props.max)) {
+            setError(`Values must be in ${props.min} ↔ ${props.max} range`);
+            return null;
+        }
+
+        return valueAsNumber;
+
     }
 
     const onApplyChanges = () => {
-        const valueAsNumber = parseFloat(value);
+        const valueAsNumber = parseValue();
         if(Check.isNumber(valueAsNumber)) {
-            if(props.min <= valueAsNumber && valueAsNumber <= props.max) {
-                props.onValueChanged(valueAsNumber);
-            }
-
+            props.onValueChanged(valueAsNumber);
         }
     }
 
+
     return (
-        <ValueEditorBox>
+        <ValuesEditorContainerBox>
             <InputBox value={value} onChange={onChanged}/>
-            <ArrowBox onClick={onApplyChanges}>
-                <IonIcon icon={arrowForwardOutline}/>
-            </ArrowBox>
-        </ValueEditorBox>
+            <ArrowComponent onClick={onApplyChanges}/>
+            {renderError(error)}
+        </ValuesEditorContainerBox>
     )
 })
 

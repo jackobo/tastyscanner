@@ -5,14 +5,14 @@ import {FilterValueBox} from "../../boxes/filter-value.box";
 import {FilterContainerComponent} from "../filter-container/filter-container.component";
 import {FilterLabelComponent} from "../filter-label/filter-label.component";
 import {IonRangeBox} from "../../boxes/range.box";
-import {InputBaseBox} from "../../../input-base.box";
 import {Check} from "../../../../../framework/utils/type-checking";
-import {ArrowBox} from "../boxes/arrow.box";
-import {IonIcon} from "@ionic/react";
-import {arrowForwardOutline} from "ionicons/icons";
+import {ArrowComponent} from "../boxes/arrow.box";
 import {TooltipToggleBehaviorEnum} from "../../../../../framework/components/tooltip/tooltip-toggle-behavior.enum";
 import {TooltipStandardContentBox} from "../../../../../framework/components/tooltip/tooltip-standard-content.box";
 import {ITooltipController, TooltipComponent} from "../../../../../framework/components/tooltip/tooltip.component";
+import {InputBox} from "../boxes/input.box";
+import {ValuesEditorContainerBox} from "../boxes/values-editor-container.box";
+import {renderError} from "../boxes/error.box";
 
 
 const RangeBox = styled.div`
@@ -20,30 +20,6 @@ const RangeBox = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-`
-
-const ValuesEditorContainerBox = styled.div`
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--ion-space-8);
-    width: 200px;
-`
-
-
-const InputBox = styled(InputBaseBox)`
-    width: 100%;
-    text-align: center;
-`
-
-const ErrorBox = styled.div`
-    position: absolute;
-    bottom: 0;
-    left: 4px;
-    transform: translateY(100%);
-    color: var(--ion-color-danger);
-    font-size: var(--ion-font-size-caption);
 `
 
 interface RangeValuesEditorComponentProps {
@@ -70,9 +46,17 @@ const RangeValuesEditorComponent: React.FC<RangeValuesEditorComponentProps> = ob
     }
 
     const parseValues = () => {
+        if(Check.isEmpty(lower?.trim())) {
+            setError(`First value is required`);
+            return null;
+        }
+
+        if(Check.isEmpty(upper?.trim())) {
+            setError(`Second value is required`);
+            return null;
+        }
+
         const lowerAsNumber = parseFloat(lower);
-
-
         if(!Check.isNumber(lowerAsNumber)) {
             setError(`${lower} is not a number`);
             return null;
@@ -85,7 +69,7 @@ const RangeValuesEditorComponent: React.FC<RangeValuesEditorComponentProps> = ob
         }
 
         if(lowerAsNumber >= upperAsNumber) {
-            setError(`First value must be lower than second value`);
+            setError(`First value must be less than second value`);
             return null;
         }
 
@@ -110,17 +94,7 @@ const RangeValuesEditorComponent: React.FC<RangeValuesEditorComponentProps> = ob
         }
     }
 
-    const renderError = () => {
-        if(!error) {
-            return null;
-        }
 
-        return (
-            <ErrorBox>
-                {error}
-            </ErrorBox>
-        )
-    }
 
     return (
         <ValuesEditorContainerBox>
@@ -129,10 +103,8 @@ const RangeValuesEditorComponent: React.FC<RangeValuesEditorComponentProps> = ob
                 ↔
             </span>
             <InputBox value={upper} onChange={onUpperChanged}/>
-            <ArrowBox onClick={onApplyChanges}>
-                <IonIcon icon={arrowForwardOutline}/>
-            </ArrowBox>
-            {renderError()}
+            <ArrowComponent onClick={onApplyChanges}/>
+            {renderError(error)}
         </ValuesEditorContainerBox>
     )
 })
