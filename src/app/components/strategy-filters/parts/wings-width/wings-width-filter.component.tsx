@@ -23,7 +23,7 @@ export const WingsWidthFilterComponent: React.FC<{filters: IStrategyFiltersViewM
 
                 {filters.availableWings.map(wing => {
                     return (
-                        <IonRadio key={wing} value={wing} labelPlacement="stacked">
+                        <IonRadio key={wing} value={wing} labelPlacement="stacked" mode={"md"}>
                             {wing.toString()}
                         </IonRadio>
                     )

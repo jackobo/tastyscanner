@@ -26,15 +26,15 @@ export const ByEarningsDateFilterComponent: React.FC<{filters: IStrategyFiltersV
 
             <ByEarningDateRadioGroupBox value={filters.byEarningsDate}
                                         onIonChange={e => filters.byEarningsDate = e.detail.value}>
-                <IonRadio value={"all"} labelPlacement="end">
+                <IonRadio value={"all"} labelPlacement="end" mode={"md"}>
                     No filter
                 </IonRadio>
 
-                <IonRadio value={"before"} labelPlacement="end">
+                <IonRadio value={"before"} labelPlacement="end" mode={"md"}>
                     Before earnings
                 </IonRadio>
 
-                <IonRadio value={"after"} labelPlacement="end">
+                <IonRadio value={"after"} labelPlacement="end" mode={"md"}>
                     After earnings
                 </IonRadio>
 

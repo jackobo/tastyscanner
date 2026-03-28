@@ -19,11 +19,11 @@ export const ByExistingPositionsFilterComponent: React.FC<{filters: IStrategyFil
 
             <RadioGroupBox value={filters.byExistingPositions}
                                         onIonChange={e => filters.byExistingPositions = e.detail.value}>
-                <IonRadio value={"exclude"} labelPlacement="end">
+                <IonRadio value={"exclude"} labelPlacement="end" mode={"md"}>
                     {services.language.translate('Exclude')}
                 </IonRadio>
 
-                <IonRadio value={"include"} labelPlacement="end">
+                <IonRadio value={"include"} labelPlacement="end" mode={"md"}>
                     {services.language.translate('Include')}
                 </IonRadio>
             </RadioGroupBox>
