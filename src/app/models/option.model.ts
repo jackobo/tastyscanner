@@ -103,7 +103,7 @@ export abstract class OptionModel implements IOptionViewModel {
         if(Check.isNullOrUndefined(delta)) {
             return 0;
         }
-        return Math.round(this.rawDelta * 100);
+        return MathUtils.round(this.rawDelta * 100);
     }
 
     get absoluteDeltaPercent(): number {

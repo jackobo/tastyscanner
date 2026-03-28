@@ -15,10 +15,11 @@ import {TooltipStandardContentBox} from "../../../../framework/components/toolti
 
 const StrategyFooterBox = styled.div`
     display: grid;
-    grid-template-columns: 1fr 0.5fr 1fr 1fr;
+    grid-template-columns: repeat(4, auto);
     row-gap: 8px;
-    column-gap: 16px;
+    column-gap: 12px;
     font-weight: bold;
+    padding: 0 var(--ion-space-8);
 `
 
 
@@ -46,6 +47,10 @@ const InfoCircleBox = styled.span`
     align-items: center;
     font-size: 16px;
     cursor: pointer;
+`
+
+const ValueBox = styled.span`
+    text-align: right;
 `
 
 const LabelWithTooltipComponent: React.FC<{label: string, tooltipText: string | React.ReactElement }> = observer((props) => {
@@ -107,18 +112,18 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
     return (
         <StrategyFooterBox>
             <span>Risk/Reward:</span>
-            <span>{props.strategy.riskRewardRatio}</span>
+            <ValueBox>{props.strategy.riskRewardRatio}</ValueBox>
             <span>POP:</span>
-            <span>{`${props.strategy.pop}%`}</span>
+            <ValueBox>{`${props.strategy.pop}%`}</ValueBox>
             <span>Wings:</span>
-            <span>{`${props.strategy.wingsWidth}$`}</span>
+            <ValueBox>{`${props.strategy.wingsWidth}$`}</ValueBox>
             <span>Credit:</span>
-            <span>{`${props.strategy.credit.toFixed(2)}$`}</span>
+            <ValueBox>{`${props.strategy.credit.toFixed(2)}$`}</ValueBox>
             <LabelWithTooltipComponent label={"Delta:"}
                                        tooltipText={services.language.translate("Total delta for the strategy.")}/>
-            <span>{props.strategy.delta}</span>
-            <LabelWithTooltipComponent label={"Short legs delta:"} tooltipText={renderShortLegsDeltaTooltip()}/>
-            <span>{props.strategy.shortLegsDelta}</span>
+            <ValueBox>{props.strategy.delta}</ValueBox>
+            <LabelWithTooltipComponent label={`Short legs delta:`} tooltipText={renderShortLegsDeltaTooltip()}/>
+            <ValueBox>{props.strategy.shortLegsDelta}</ValueBox>
             <ButtonBox>
                 <SuccessButton onClick={onTrade} disabled={hasOppositePosition} tooltip={getButtonTooltipProps()}>
                     { services.language.translate("Trade")}

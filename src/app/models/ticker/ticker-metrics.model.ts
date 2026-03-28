@@ -2,6 +2,7 @@ import {ITickerMetricsViewModel} from "./ticker-metrics.view-model.interface";
 import {ISymbolMetricsRawData} from "../../services/market-data-provider/market-data-provider.service.interface";
 import {NullableDate, NullableNumber} from "../../../framework/types/nullable-types";
 import {IAppServiceFactory} from "../../services/app-service-factory.interface";
+import {MathUtils} from "../../../framework/utils/math-utils";
 
 export class TickerMetricsModel implements ITickerMetricsViewModel {
     constructor(private readonly metricsRawData: ISymbolMetricsRawData, private readonly services: IAppServiceFactory) {
@@ -20,11 +21,11 @@ export class TickerMetricsModel implements ITickerMetricsViewModel {
     }
 
     public get ivRank(): number {
-        return Math.round((this.metricsRawData.impliedVolatilityIndexRank ?? 0) * 10000) / 100;
+        return MathUtils.round((this.metricsRawData.impliedVolatilityIndexRank ?? 0) * 100);
     }
 
 
     public  get beta(): number {
-        return Math.round((this.metricsRawData.beta ?? 0) * 100) / 100;
+        return MathUtils.round((this.metricsRawData.beta ?? 0));
     }
 }

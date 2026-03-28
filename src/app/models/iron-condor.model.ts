@@ -63,7 +63,7 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     get credit(): number {
-        return this.putSpread.credit + this.callSpread.credit;
+        return MathUtils.round(this.putSpread.credit + this.callSpread.credit);
     }
 
     get riskRewardRatio(): number {
@@ -160,7 +160,7 @@ export class IronCondorModel implements IIronCondorViewModel {
     }
 
     get shortLegsDelta(): number {
-        return Math.round(MathUtils.round(this.stoPut.absoluteRawDelta - this.stoCall.absoluteRawDelta) * 100);
+        return MathUtils.round((this.stoPut.absoluteRawDelta - this.stoCall.absoluteRawDelta) * 100);
     }
 
 

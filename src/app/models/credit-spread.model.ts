@@ -30,13 +30,11 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     }
 
     get credit(): number {
-        const val = this.stoOption.midPrice - this.btoOption.midPrice;
-        return Math.round(val * 100) / 100;
+        return MathUtils.round(this.stoOption.midPrice - this.btoOption.midPrice);
     }
 
     get riskRewardRatio(): number {
-        const rr = this.wingsWidth / this.credit;
-        return Math.round(rr * 100) / 100;
+        return MathUtils.round(this.wingsWidth / this.credit);
     }
 
     get pop(): number {
@@ -45,7 +43,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
     }
 
     get delta(): number {
-        return  Math.round((this.btoOption.rawDelta - this.stoOption.rawDelta) * 10000) / 100;
+        return  MathUtils.round((this.btoOption.rawDelta - this.stoOption.rawDelta) * 100);
     }
 
     get shortLegsDelta(): number {
@@ -54,7 +52,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
 
 
     get theta(): number {
-        return Math.round((this.btoOption.theta - this.stoOption.theta) * 10000)/100;
+        return MathUtils.round((this.btoOption.theta - this.stoOption.theta) * 100);
     }
 
     getOptionTickSize(price: number): number {

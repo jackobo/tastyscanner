@@ -31,6 +31,7 @@ import {
     TooltipComponent
 } from "../../../../../framework/components/tooltip/tooltip.component";
 import {TooltipStandardContentBox} from "../../../../../framework/components/tooltip/tooltip-standard-content.box";
+import {MathUtils} from "../../../../../framework/utils/math-utils";
 
 const SpacerBox = styled.div`
     grid-column: 1/-1;
@@ -299,7 +300,7 @@ const ValueEditorComponent: React.FC<ValueEditorComponentProps> = observer((prop
         }
         v = Math.round(v * 100) / 100;
         if(Check.isNumber(v)) {
-            props.onValueChanged((Math.round((v + (offsetSign * props.offset))*100)/100).toString());
+            props.onValueChanged(MathUtils.round((v + (offsetSign * props.offset))).toString());
         }
     }
 
@@ -356,7 +357,8 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
     const [timeInForce] = React.useState<TimeInForce>("Day");
     const enableAutoReplaceInfoIconBoxRef = useRef<HTMLDivElement | null>(null);
 
-    const limitPriceAsNumber = limitPrice ? parseFloat(limitPrice) : null;
+    const limitPriceAsNumber = limitPrice ? MathUtils.round(parseFloat(limitPrice)) : null;
+
 
     const optionPriceTickSize = props.strategy.getOptionTickSize(limitPriceAsNumber ?? props.strategy.credit);
 

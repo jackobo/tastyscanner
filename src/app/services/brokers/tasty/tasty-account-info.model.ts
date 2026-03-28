@@ -1,5 +1,6 @@
 import {IBrokerageAccountInfoViewModel} from "../interfaces/brokerage-account.view-model.interface";
 import {makeObservable, observable, runInAction} from "mobx";
+import {MathUtils} from "../../../../framework/utils/math-utils";
 
 export class TastyAccountInfoModel implements IBrokerageAccountInfoViewModel {
     constructor(accountInfoRawData: any) {
@@ -18,7 +19,7 @@ export class TastyAccountInfoModel implements IBrokerageAccountInfoViewModel {
     }
 
     private _parseAmount(valueAsString: any): number {
-        return Math.round(parseFloat(valueAsString) * 100) / 100;
+        return MathUtils.round(parseFloat(valueAsString));
     }
 
     get cashBalance(): number {

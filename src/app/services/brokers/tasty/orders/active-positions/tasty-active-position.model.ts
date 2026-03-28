@@ -6,6 +6,7 @@ import {
 import {NullableNumber} from "../../../../../../framework/types/nullable-types";
 import {Check} from "../../../../../../framework/utils/type-checking";
 import {TastyActivePositionLegModel} from "./tasty-active-position-leg.model";
+import {MathUtils} from "../../../../../../framework/utils/math-utils";
 
 export class TastyActivePositionModel implements IActivePositionViewModel {
     constructor(private readonly services: IAppServiceFactory,
@@ -25,7 +26,7 @@ export class TastyActivePositionModel implements IActivePositionViewModel {
     }
 
     private _sumValues(values: number[]): number {
-        return Math.round(values.sum(val => val) * 100)/100;
+        return MathUtils.round(values.sum(val => val));
     }
 
     get profitLossPercent(): number {
