@@ -12,13 +12,16 @@ export const CondorsShortLegsDeltaRangeFilterComponent: React.FC<{filters: IStra
         return (
             <>
                 <span>
-                    {services.language.translate('Condors delta range: Only the Iron Condors with delta computed only for short legs within this range will be considered.')}
+                    {services.language.translate('Condors short legs delta range: Only the Iron Condors with delta computed only for short legs within this range will be considered.')}
                 </span>
                 <span>
                     {services.language.translate('Short legs delta is calculated by this formula:')}
                 </span>
                 <span>
                     |SoldPutDelta| - |SoldCallDelta|
+                </span>
+                <span>
+                    {services.language.translate('Basically with this filter you can control how neutral/bullish/bearish you want the condors to be.')}
                 </span>
             </>
         )
