@@ -48,7 +48,8 @@ export class RightSideMenuService extends FrameworkServiceBase implements IRight
 
     async open(renderer: ISideMenuContentRenderer): Promise<void> {
         runInAction(() => {
-            if(renderer.isSticky) {
+
+            if(renderer.isSticky && !this.services.screenMediaQuery.smallScreen) {
                 this.stickyController.show(renderer);
             } else {
                 this.nonStickyController.show(renderer);

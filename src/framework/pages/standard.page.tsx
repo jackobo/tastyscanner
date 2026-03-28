@@ -6,7 +6,6 @@ import { ContainerMediaQueriesChecksContext } from "../react-contexts/container-
 import {ContainerMediaQueryChecks} from "../services/media-query/container/container-media-query-checks";
 import {useScreenMediaQueriesChecks} from "../hooks/use-screen-media-queries-checks.hook";
 import {useFrameworkServices} from "../hooks/use-framework-services.hook";
-import {FrameworkTheme} from "../services/theme/framework-theme";
 
 const IonContentBox = styled(IonContent)`
     --padding-top: var(--ion-space-20);
