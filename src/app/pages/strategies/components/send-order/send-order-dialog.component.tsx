@@ -182,7 +182,6 @@ const AutoReplaceInfoTooltipContentBox = styled(TooltipStandardContentBox)`
     display: flex;
     flex-direction: column;
     max-width: 400px;
-    
 `
 
 const AutoReplaceInfoTooltipContentComponent: React.FC = observer(() => {
@@ -195,7 +194,7 @@ const AutoReplaceInfoTooltipContentComponent: React.FC = observer(() => {
                     {services.language.translate("Order auto replace is a feature that automatically adjust an order price if it doesn't get filled in a certain amount of time.")}
                 </span>
                 <span>
-                    {services.language.translate("The price is adjusted base on the underlying asset options ticker size. The order price will be decremented with ticker size if the order price effect is Credit and it will be incremented with ticker size if the order price effect is Debit.")}
+                    {services.language.translate("The price is adjusted base on the underlying asset options ticker size. The order price will be decremented with options ticker size if the order price effect is Credit and it will be incremented with options ticker size if the order price effect is Debit.")}
                 </span>
                 <br/>
                 <span>
