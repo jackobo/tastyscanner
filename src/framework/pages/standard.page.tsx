@@ -54,7 +54,7 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
             return props.renderCustomHeader();
         }
 
-        const renderTitle = () => {
+        const renderHeaderContent = () => {
             if(props.renderHeaderContent) {
                 return props.renderHeaderContent();
             }
@@ -68,7 +68,7 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
                     <IonButtons slot="start">
                         <IonMenuButton/>
                     </IonButtons>
-                    <IonTitle>{renderTitle()}</IonTitle>
+                    <IonTitle>{renderHeaderContent()}</IonTitle>
                 </IonToolbar>
             </IonHeader>
         )
