@@ -6,10 +6,11 @@ import {
 } from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {IonIcon} from "@ionic/react";
 import React from "react";
-import {layersOutline} from "ionicons/icons";
+
 import {IronCondorsSideMenuItemModel} from "./iron-condors.side-menu-item.model";
 import {PutCreditSpreadsSideMenuItemModel} from "./put-credit-spreads.side-menu-item.model";
 import {CallCreditSpreadsSideMenuItemModel} from "./call-credit-spreads.side-menu-item.model";
+import {layersOutline} from "ionicons/icons";
 
 export class StrategiesSideMenuItemModel extends RouteBaseSideMenuItemModel {
     constructor(services: IAppServiceFactory) {

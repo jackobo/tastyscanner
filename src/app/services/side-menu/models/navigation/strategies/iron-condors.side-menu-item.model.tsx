@@ -4,7 +4,7 @@ import {
 import {IAppServiceFactory} from "../../../../app-service-factory.interface";
 import React from "react";
 import {IonIcon} from "@ionic/react";
-import {layersOutline} from "ionicons/icons";
+import {reorderFourOutline} from "ionicons/icons";
 import {
     SideMenuRenderResult
 } from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
@@ -17,7 +17,7 @@ export class IronCondorsSideMenuItemModel extends RouteBaseSideMenuItemModel {
     renderIcon(): React.ReactElement {
 
         return (
-            <IonIcon slot="start" icon={layersOutline}/>
+            <IonIcon slot="start" icon={reorderFourOutline}/>
         );
     }
 
