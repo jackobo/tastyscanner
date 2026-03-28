@@ -43,6 +43,7 @@ import {useFrameworkServices} from "../hooks/use-framework-services.hook";
 import {MAIN_CONTENT} from "../global-constants";
 import {RightSideMenuComponent} from "./side-menu/right/right-side-menu.component";
 import {LeftSideMenuComponent} from "./side-menu/left/left-side-menu.component";
+import {useScreenMediaQueriesChecks} from "../hooks/use-screen-media-queries-checks.hook";
 
 setupIonicReact();
 
@@ -78,11 +79,11 @@ interface AppProps {
 }
 export const App: React.FC<AppProps> = observer((props) => {
     const services = useFrameworkServices();
-
+    const mediaQuery = useScreenMediaQueriesChecks();
     return (
         <IonApp>
 
-                <IonSplitPaneBox contentId={MAIN_CONTENT}>
+                <IonSplitPaneBox contentId={MAIN_CONTENT} when={!mediaQuery.smallScreen}>
                     <LeftSideMenuComponent appTitle={props.appTitle} renderLogo={props.renderLogo}/>
                     <div className={"ion-page"} id={MAIN_CONTENT}>
                         {services.navigator.currentRoute.render()}
