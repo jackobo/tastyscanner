@@ -56,7 +56,6 @@ export class RightSideMenuService extends FrameworkServiceBase implements IRight
             }
         });
 
-        await this.stickyController.open()
     }
     async close(renderer: ISideMenuContentRenderer): Promise<void> {
         if(renderer === this.stickyController.currentRenderer) {
