@@ -9,8 +9,11 @@ import {CardBox} from "../../../../framework/components/card/card.box";
 import {IonIcon} from "@ionic/react";
 import {informationOutline} from "ionicons/icons";
 import {TooltipComponent} from "../../../../framework/components/tooltip/tooltip.component";
-import { TooltipStandardContentBox } from "../../../../framework/components/tooltip/tooltip-standard-content.box";
+import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 import {useServices} from "../../../hooks/use-services.hook";
+import {BestStrategyEnum} from "../../../services/strategy-settings/strategy-settings.service.interface";
+import {NullableUndefinedBoolean} from "../../../../framework/types/nullable-types";
+import {Check} from "../../../../framework/utils/type-checking";
 
 export const StrategyBox = styled(CardBox)<{$hasOppositePosition: boolean}>`
     position: relative;
@@ -87,10 +90,30 @@ export interface OptionsStrategyComponentProps {
 }
 export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> = observer(props => {
     const services = useServices();
+    const filters = services.strategySettings.strategyFilters;
     const infoIconBoxRef = useRef<HTMLDivElement | null>(null);
     const isBestRiskReward = props.strategy.riskRewardRatio === props.bestRiskReward;
     const isBestPop = props.strategy.pop === props.bestPop;
     const hasOppositePosition = props.strategy.legs.some(l => l.hasOppositePositions);
+
+    let shouldBeIncluded: NullableUndefinedBoolean = null;
+    if(filters.bestStrategy.includes(BestStrategyEnum.BestPOP)) {
+        shouldBeIncluded = isBestPop
+    }
+    if(filters.bestStrategy.includes(BestStrategyEnum.BestRiskReward)) {
+        shouldBeIncluded = shouldBeIncluded || isBestRiskReward;
+    }
+
+    if(Check.isNullOrUndefined(shouldBeIncluded)) {
+        shouldBeIncluded = true;
+    }
+
+
+    if(!shouldBeIncluded) {
+        return null;
+    }
+
+
 
     const renderCorner = () => {
         if(!(isBestPop || isBestRiskReward)) {

@@ -11,6 +11,7 @@ import {ByEarningsDateFilterComponent} from "./parts/by-earnings-date/by-earning
 import {CondorsShortLegsDeltaRangeFilterComponent} from "./parts/condors-short-legs-delta-range/condors-short-legs-delta-range-filter.component";
 import {ByExistingPositionsFilterComponent} from "./parts/by-existing-positions/by-existing-positions-filter.component";
 import {PopFilterComponent} from "./parts/pop/pop-filter.component";
+import {BestStrategyFilterComponent} from "./parts/best-strategy/best-strategy-filter.component";
 
 
 const FiltersContainerBox = styled.div`
@@ -27,6 +28,7 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
 
     return (
         <FiltersContainerBox>
+            <BestStrategyFilterComponent filters={filters}/>
             <RiskRewardFilterComponent filters={filters}/>
             <PopFilterComponent filters={filters}/>
             <StrikesDeltaRangeFilterComponent filters={filters}/>

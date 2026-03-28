@@ -1,8 +1,9 @@
 import {
+    BestStrategyEnum,
     ByEarningsDate,
-    IStrategySettingsService,
+    ByExistingPositions,
     IStrategyFiltersViewModel,
-    ByExistingPositions
+    IStrategySettingsService
 } from "./strategy-settings.service.interface";
 import {makeObservable, observable, runInAction} from "mobx";
 import {AppServiceBase} from "../app-service-base";
@@ -21,6 +22,7 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     constructor(private readonly services: IAppServiceFactory) {
         this._loadFromStorage();
         makeObservable(this, {
+            _bestStrategy: observable.ref,
             _maxRiskRewardRatio: observable.ref,
             _minPop: observable.ref,
             _minDelta: observable.ref,
@@ -37,6 +39,7 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
         })
     }
 
+    _bestStrategy: BestStrategyEnum[] = [];
     _maxRiskRewardRatio: number = 4;
     _minPop: number = 50;
     _minDelta: number = 10;
@@ -56,6 +59,13 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
         runInAction(() => this[propName] = value);
         this._saveToStorage(propName, value);
         runInAction(() => this.lastUpdate = Date.now());
+    }
+
+    get bestStrategy(): BestStrategyEnum[] {
+        return this._bestStrategy;
+    }
+    set bestStrategy(value) {
+        this._setProperty("_bestStrategy", value);
     }
 
     get maxRiskRewardRatio(): number {

@@ -6,8 +6,17 @@ export interface IStrategySettingsService {
 
 export type ByEarningsDate = 'before' | 'after' | 'all';
 export type ByExistingPositions = 'include' | 'exclude';
+export enum BestStrategyEnum {
+    BestRiskReward = 1,
+    BestPOP = 2
+}
+
+
 
 export interface IStrategyFiltersViewModel {
+    readonly availableWings: number[];
+    readonly lastUpdate: number;
+    bestStrategy: BestStrategyEnum[];
     minDelta: number;
     maxDelta: number;
     condorsMinDelta: number;
@@ -18,9 +27,9 @@ export interface IStrategyFiltersViewModel {
     maxDaysToExpiration: number;
     maxBidAskSpread: number;
     wings: number[];
-    readonly availableWings: number[];
     byEarningsDate: ByEarningsDate;
     byExistingPositions: ByExistingPositions;
-    readonly lastUpdate: number;
+
+
 }
 
