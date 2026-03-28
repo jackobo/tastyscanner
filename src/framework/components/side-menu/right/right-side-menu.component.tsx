@@ -7,7 +7,18 @@ import {useFrameworkServices} from "../../../hooks/use-framework-services.hook";
 import {ISideMenuContentRenderer} from "../../../services/side-menu/side-menu-content-renderer.interface";
 
 const IonMenuBox = styled(IonMenu)`
-    --width: 25vw;
+    --width: 30vw;
+    ${props => props.theme.screenMediaQuery.mAndBelow} {
+        --width: 50vw;
+    }
+    
+    ${props => props.theme.screenMediaQuery.sAndBelow} {
+        --width: 80vw;
+    }
+    
+    ${props => props.theme.screenMediaQuery.xsAndBelow} {
+        --width: 100vw;
+    }
 `
 
 const IonContentBox = styled(IonContent)`

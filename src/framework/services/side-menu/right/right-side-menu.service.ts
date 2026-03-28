@@ -5,6 +5,7 @@ import { runInAction} from "mobx";
 import {FrameworkServiceBase} from "../../framework-service-base";
 import {MAIN_CONTENT} from "../../../global-constants";
 import {RightSideMenuControllerModel} from "./right-side-menu-controller.model";
+import {delay} from "../../../utils/delay-function";
 
 
 export class RightSideMenuService extends FrameworkServiceBase implements IRightSideMenuService {
@@ -47,6 +48,8 @@ export class RightSideMenuService extends FrameworkServiceBase implements IRight
     }
 
     async open(renderer: ISideMenuContentRenderer): Promise<void> {
+        //TODO - I have to do something with this delay
+        await delay(Date.now(), 500);
         runInAction(() => {
 
             if(renderer.isSticky && !this.services.screenMediaQuery.smallScreen) {
