@@ -1,6 +1,5 @@
 import React, {useEffect, useRef} from 'react';
 import { IonApp, IonSplitPane, setupIonicReact } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
 
 
 
@@ -82,10 +81,10 @@ export const App: React.FC<AppProps> = observer((props) => {
 
     return (
         <IonApp>
-            <IonReactRouter>
+
                 <IonSplitPaneBox contentId={MAIN_CONTENT}>
                     <LeftSideMenuComponent appTitle={props.appTitle} renderLogo={props.renderLogo}/>
-                    <div id={MAIN_CONTENT}>
+                    <div className={"ion-page"} id={MAIN_CONTENT}>
                         {services.navigator.currentRoute.render()}
                     </div>
                     <RightSideMenuComponent key={services.rightSideMenu.stickySideMenuId}
@@ -94,7 +93,7 @@ export const App: React.FC<AppProps> = observer((props) => {
                 </IonSplitPaneBox>
 
 
-            </IonReactRouter>
+
 
             <RightSideMenuComponent key={services.rightSideMenu.nonStickySideMenuId}
                                     menuId={services.rightSideMenu.nonStickySideMenuId}
