@@ -8,7 +8,8 @@ export const RiskRewardFilterComponent: React.FC<{filters: IStrategyFiltersViewM
     return (
         <SingleValueEditorComponent label="Max risk/reward"
                                     min={1}
-                                    max={10}
+                                    max={5}
+                                    step={0.1}
                                     value={filters.maxRiskRewardRatio}
                                     formatValue={value => `${value}/1`}
                                     tooltip={"Max risk/reward: The ratio between the wings size and the credit received."}
