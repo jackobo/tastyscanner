@@ -14,7 +14,7 @@ export type OptionExpirationSettlementType = 'AM' | 'PM';
 
 export interface IOptionsExpirationVewModel {
     readonly key: string;
-    readonly expirationDate: string;
+    readonly expirationDate: Date;
     readonly daysToExpiration: number;
     readonly settlementType: OptionExpirationSettlementType;
     readonly expirationType: OptionExpirationTypeEnum;
