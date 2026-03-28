@@ -53,7 +53,9 @@ const SameDirectionExistingPositionCountBox = styled.span`
     cursor: pointer;
 `
 
-
+const RightAlignedValueBox = styled.span`
+    text-align: right;
+`
 
 export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegViewModel; strategy: IOptionsStrategyViewModel}> = observer((props) => {
     const services = useServices();
@@ -138,8 +140,8 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
                 <span>{props.leg.option.optionType}</span>
                 <StrikePriceBox>{props.leg.option.strikePrice}</StrikePriceBox>
                 <OptionPriceBox>{`${price.toFixed(2)}$`}</OptionPriceBox>
-                <span>{props.leg.option.deltaPercent.toFixed(2) + DELTA_SYMBOL}</span>
-                <span>{props.leg.option.bidAskSpread.toFixed(2) + '%'}</span>
+                <RightAlignedValueBox>{props.leg.option.deltaPercent.toFixed(2) + ' ' + DELTA_SYMBOL}</RightAlignedValueBox>
+                <RightAlignedValueBox>{props.leg.option.bidAskSpread.toFixed(2) + '%'}</RightAlignedValueBox>
             </StrategyLegBox>
             {renderOppositePositionTooltip()}
             {renderSameDirectionExistingPositionCountTooltip()}
