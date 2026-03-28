@@ -8,7 +8,6 @@ import {observer} from "mobx-react";
 import styled from "styled-components";
 import {InputBaseBox} from "../../../../components/input-base.box";
 import {chevronDown, chevronUp, informationCircleOutline, lockClosedOutline, lockOpenOutline} from "ionicons/icons";
-import {IOptionsStrategyLegViewModel} from "../../../../models/options-strategy-leg.view-model.interface";
 import {NullableString} from "../../../../../framework/types/nullable-types";
 import {Check} from "../../../../../framework/utils/type-checking";
 import {
@@ -32,6 +31,8 @@ import {
 } from "../../../../../framework/components/tooltip/tooltip.component";
 import {TooltipStandardContentBox} from "../../../../../framework/components/tooltip/tooltip-standard-content.box";
 import {MathUtils} from "../../../../../framework/utils/math-utils";
+import {OptionsStrategyLegComponent} from "../options-strategy-leg.component";
+import {OptionsStrategyHeaderComponent} from "../options-strategy-header.component";
 
 const SpacerBox = styled.div`
     grid-column: 1/-1;
@@ -119,25 +120,6 @@ const LockerBox = styled.div`
     font-size: 1.3rem;
 `
 
-const LegCellBox = styled.div`
-    border-bottom: 1px solid var(--ion-color-light-shade);
-    padding: 4px;
-    width: 100%;
-    text-align: center;
-`
-
-const LegExpirationCellBox = styled(LegCellBox)`
-    text-align: left;
-`
-
-const LegPriceCellBox = styled(LegCellBox)`
-    text-align: right;
-`
-
-const LegTypeCellBox = styled(LegCellBox)<{$isSell: boolean}>`
-    width: 120px;
-    color: ${props => props.$isSell ? "var(--ion-color-danger)" : "var(--ion-color-success)"};
-`
 
 const OrderTypeBox = styled.div`
     display: flex;
@@ -213,22 +195,6 @@ const AutoReplaceInfoTooltipContentComponent: React.FC = observer(() => {
                 </li>
             </ul>
         </AutoReplaceInfoTooltipContentBox>
-    )
-})
-
-const LegComponent: React.FC<{leg: IOptionsStrategyLegViewModel}> = observer((props) => {
-    const services = useServices();
-    return (
-        <>
-            <LegExpirationCellBox>{services.time.formatUserFriendlyMonthDay(props.leg.option.expirationDate)}</LegExpirationCellBox>
-            <LegCellBox>{`${props.leg.option.daysToExpiration}d`}</LegCellBox>
-            <LegCellBox>{props.leg.option.strikePrice}</LegCellBox>
-            <LegCellBox>{props.leg.option.optionType}</LegCellBox>
-            <LegTypeCellBox $isSell={props.leg.isSell}>
-                {props.leg.legActionType}
-            </LegTypeCellBox>
-            <LegPriceCellBox>{props.leg.isSell ? props.leg.option.midPrice : -1 * props.leg.option.midPrice}</LegPriceCellBox>
-        </>
     )
 })
 
@@ -341,6 +307,18 @@ const ValueEditorComponent: React.FC<ValueEditorComponentProps> = observer((prop
     )
 })
 
+const StrategyContainerBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: var(--ion-space-8);
+    font-size: var(--ion-font-size-caption);
+    width: 100%;
+`
+
+const DialogContent = styled(StandardDialogContentComponent)`
+    font-size: var(--ion-font-size-body2);
+`
+
 
 interface SendOrderDialogComponentProps {
     dialogHandler: IDialogHandler;
@@ -403,10 +381,12 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
     return (
         <StandardDialogPageComponent>
             <StandardDialogHeaderComponent dialogHandler={props.dialogHandler} title={services.language.translate("Place new order")}/>
-            <StandardDialogContentComponent dialogHandler={props.dialogHandler}>
+            <DialogContent dialogHandler={props.dialogHandler}>
+                <StrategyContainerBox>
+                    <OptionsStrategyHeaderComponent/>
+                    {props.strategy.legs.map(leg => (<OptionsStrategyLegComponent key={leg.key} leg={leg} strategy={props.strategy}/>))}
+                </StrategyContainerBox>
                 <FieldsGridBox>
-
-                    {props.strategy.legs.map(leg => (<LegComponent key={leg.key} leg={leg}/>))}
 
                     <SpacerBox/>
 
@@ -456,7 +436,7 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                     </TimeInForceBox>
 
                 </FieldsGridBox>
-            </StandardDialogContentComponent>
+            </DialogContent>
             <StandardDialogFooterComponent dialogHandler={props.dialogHandler}>
                 <FooterContentBox>
                     <IonToggle labelPlacement="end" checked={enableAutoReplace} onIonChange={e => setEnableAutoReplace(e.detail.checked)}>

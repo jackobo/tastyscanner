@@ -138,6 +138,7 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
                 {renderSameDirectionExistingPositionCount()}
                 <span>{props.leg.legActionType}</span>
                 <span>{props.leg.option.optionType}</span>
+                <span>{services.time.formatUserFriendlyMonthDay(props.leg.option.expirationDate)}</span>
                 <StrikePriceBox>{props.leg.option.strikePrice}</StrikePriceBox>
                 <OptionPriceBox>{`${price.toFixed(2)}$`}</OptionPriceBox>
                 <RightAlignedValueBox>{props.leg.option.deltaPercent.toFixed(2) + ' ' + DELTA_SYMBOL}</RightAlignedValueBox>
