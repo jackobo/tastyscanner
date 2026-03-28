@@ -14,6 +14,13 @@ import {useServices} from "../../../hooks/use-services.hook";
 import {BestStrategyEnum} from "../../../services/strategy-settings/strategy-settings.service.interface";
 import {NullableUndefinedBoolean} from "../../../../framework/types/nullable-types";
 import {Check} from "../../../../framework/utils/type-checking";
+import {
+    BEST_POP,
+    BEST_POP_AND_RR, BEST_POP_AND_RR_CONTRAST,
+    BEST_POP_CONTRAST,
+    BEST_RISK_REWARD,
+    BEST_RISK_REWARD_CONTRAST
+} from "./best-strategies-colors";
 
 export const StrategyBox = styled(CardBox)<{$hasOppositePosition: boolean}>`
     position: relative;
@@ -39,14 +46,14 @@ const CornerBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}>`
     transform: translateX(-25%) rotate(-45deg);
 
     ${props => props.$isBestPop && css`
-        border-bottom: 35px solid var(--ion-color-warning-tint);
+        border-bottom: 35px solid ${BEST_POP};
     `}
     ${props => props.$isBestRiskReward && css`
-        border-bottom: 35px solid var(--ion-color-primary-tint);
+        border-bottom: 35px solid ${BEST_RISK_REWARD};
     `}
 
     ${props => props.$isBestRiskReward && props.$isBestPop && css`
-        border-bottom: 35px solid var(--ion-color-success-shade);
+        border-bottom: 35px solid ${BEST_POP_AND_RR};
     `}
 `
 
@@ -67,17 +74,36 @@ const InfoIconBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}
     
 
     ${props => props.$isBestPop && css`
-        color: var(--ion-color-warning-contrast);
-        border: 1px solid var(--ion-color-warning-contrast);
+        color: ${BEST_POP_CONTRAST};
+        border: 1px solid ${BEST_POP_CONTRAST};
     `}
     ${props => props.$isBestRiskReward && css`
-        color: var(--ion-color-primary-contrast);
-        border: 1px solid var(--ion-color-primary-contrast);
+        color: ${BEST_RISK_REWARD_CONTRAST};
+        border: 1px solid ${BEST_RISK_REWARD_CONTRAST};
     `}
 
     ${props => props.$isBestRiskReward && props.$isBestPop && css`
-        color: var(--ion-color-success-contrast);
-        border: 1px solid var(--ion-color-success-contrast);
+        color: ${BEST_POP_AND_RR_CONTRAST};
+        border: 1px solid ${BEST_POP_AND_RR_CONTRAST};
+    `}
+`
+
+const BestStrategyTooltipContentBox = styled(TooltipStandardContentBox)<{$isBestPop: boolean; $isBestRiskReward: boolean}>`
+    overflow: hidden;
+    border-radius: var(--ion-border-radius);
+    ${props => props.$isBestPop && css`
+        background-color: ${BEST_POP};
+        color: ${BEST_POP_CONTRAST};
+        
+    `}
+    ${props => props.$isBestRiskReward && css`
+        background-color: ${BEST_RISK_REWARD};
+        color: ${BEST_RISK_REWARD_CONTRAST};
+    `}
+
+    ${props => props.$isBestRiskReward && props.$isBestPop && css`
+        background-color: ${BEST_POP_AND_RR};
+        color: ${BEST_POP_AND_RR_CONTRAST};
     `}
 `
 
@@ -146,9 +172,9 @@ export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> =
 
         return (
             <TooltipComponent targetRef={infoIconBoxRef}>
-                <TooltipStandardContentBox>
+                <BestStrategyTooltipContentBox $isBestPop={isBestPop} $isBestRiskReward={isBestRiskReward}>
                     {tooltipText}
-                </TooltipStandardContentBox>
+                </BestStrategyTooltipContentBox>
             </TooltipComponent>
         )
     }

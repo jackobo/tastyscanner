@@ -8,6 +8,7 @@ import {FilterContainerComponent} from "../../common/filter-container/filter-con
 import {FilterLabelComponent} from "../../common/filter-label/filter-label.component";
 import styled from "styled-components";
 import {CheckboxComponent} from "../../../../../framework/components/checkbox/checkbox.component";
+import {BEST_POP, BEST_RISK_REWARD} from "../../../../pages/strategies/components/best-strategies-colors";
 
 const ContainerBox = styled.div`
     display: flex;
@@ -22,11 +23,11 @@ const ContainerBox = styled.div`
 
 
 const BestPopBox = styled(CheckboxComponent)`
-    color: var(--ion-color-warning-shade);
+    color: ${BEST_POP};
 `
 
 const BestRiskRewardBox = styled(CheckboxComponent)`
-    color: var(--ion-color-primary-tint);
+    color: ${BEST_RISK_REWARD};
 `
 
 export const BestStrategyFilterComponent: React.FC<{filters: IStrategyFiltersViewModel}> = observer((props) => {

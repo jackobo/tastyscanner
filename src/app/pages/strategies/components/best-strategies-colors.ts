@@ -1,0 +1,6 @@
+export const BEST_RISK_REWARD = 'var(--ion-color-primary-tint)'
+export const BEST_RISK_REWARD_CONTRAST = 'var(--ion-color-primary-contrast)'
+export const BEST_POP = 'var(--ion-color-warning-tint)'
+export const BEST_POP_CONTRAST = 'var(--ion-color-warning-contrast)'
+export const BEST_POP_AND_RR = 'var(--ion-color-success-shade)'
+export const BEST_POP_AND_RR_CONTRAST = 'var(--ion-color-success-contrast)'
