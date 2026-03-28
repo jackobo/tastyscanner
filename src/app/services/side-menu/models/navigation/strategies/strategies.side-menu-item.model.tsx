@@ -28,6 +28,10 @@ export class StrategiesSideMenuItemModel extends RouteBaseSideMenuItemModel {
         return "Strategies";
     }
 
+    protected _isSelected(): boolean {
+        return false;
+    }
+
     get subItems(): ISideMenuItemViewModel[] {
         return [
             new IronCondorsSideMenuItemModel(this.services),

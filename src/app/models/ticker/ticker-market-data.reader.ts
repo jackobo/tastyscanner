@@ -41,7 +41,10 @@ export class TickerMarketDataReader {
     }
 
     async loadAll(): Promise<void> {
-        await Promise.all([this.getSymbolInfoAsync(), this.getSymbolMetricsAsync(), this.getSymbolOptionsChainAsync()])
+        await this.getSymbolInfoAsync();
+        await this.getSymbolMetricsAsync();
+        await this.getSymbolOptionsChainAsync();
+        //await Promise.all([this.getSymbolInfoAsync(), this.getSymbolMetricsAsync(), this.getSymbolOptionsChainAsync()])
     }
 
     private _symbolInfoPromise: Promise<TickerInfoModel> | null = null;
