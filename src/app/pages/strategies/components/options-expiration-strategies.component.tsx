@@ -79,7 +79,7 @@ const StrategiesBox = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
     gap: var(--ion-space-30);
-    padding: var(--ion-space-30);
+    padding: var(--ion-space-30) 0;
     justify-content: center;
 `
 
