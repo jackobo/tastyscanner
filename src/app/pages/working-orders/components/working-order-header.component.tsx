@@ -7,6 +7,7 @@ import styled from "styled-components";
 import {IonIcon} from "@ionic/react";
 import {fishOutline} from "ionicons/icons";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 const WorkingOrderHeaderBox = styled.div`
     display: flex;
@@ -38,10 +39,6 @@ const GobyIndicatorBox = styled.div`
     
 `
 
-const GobyTooltipContentBox = styled.div`
-    padding: var(--ion-space-16);
-    font-size: var(--ion-font-size-body2);
-`
 
 const OrderIdBox = styled.div<{$isReadOnly: boolean}>`
     flex-grow: 1;
@@ -63,11 +60,11 @@ export const WorkingOrderHeaderComponent: React.FC<{workingOrder: IWorkingOrderV
                         <IonIcon icon={fishOutline}/>
                     </GobyIndicatorBox>
 
-                    <TooltipComponent targetRef={gobyIndicatorRef} placement={"bottom"}
+                    <TooltipComponent targetRef={gobyIndicatorRef}
                                       toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                        <GobyTooltipContentBox>
+                        <TooltipStandardContentBox>
                             {services.language.translate('Source: Operation Goby')}
-                        </GobyTooltipContentBox>
+                        </TooltipStandardContentBox>
 
                     </TooltipComponent>
                 </>

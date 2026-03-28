@@ -8,7 +8,7 @@ import {DTEFilterComponent} from "./parts/dte-range/dte-range-filter.component";
 import {BidAskSpreadFilterComponent} from "./parts/bid-ask-spread/bid-ask-spread-filter.component";
 import {WingsWidthFilterComponent} from "./parts/wings-width/wings-width-filter.component";
 import {ByEarningsDateFilterComponent} from "./parts/by-earnings-date/by-earnings-date-filter.component";
-import {CondorsDeltaRangeFilterComponent} from "./parts/condors-delta-range/condors-delta-range-filter.component";
+import {CondorsShortLegsDeltaRangeFilterComponent} from "./parts/condors-short-legs-delta-range/condors-short-legs-delta-range-filter.component";
 import {ByExistingPositionsFilterComponent} from "./parts/by-existing-positions/by-existing-positions-filter.component";
 import {PopFilterComponent} from "./parts/pop/pop-filter.component";
 
@@ -30,7 +30,7 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
             <RiskRewardFilterComponent filters={filters}/>
             <PopFilterComponent filters={filters}/>
             <StrikesDeltaRangeFilterComponent filters={filters}/>
-            <CondorsDeltaRangeFilterComponent filters={filters}/>
+            <CondorsShortLegsDeltaRangeFilterComponent filters={filters}/>
             <DTEFilterComponent filters={filters}/>
             <BidAskSpreadFilterComponent filters={filters}/>
             <WingsWidthFilterComponent filters={filters}/>

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../tooltip/tooltip.component";
 import {SpecializeButtonColor} from "./specialize-button-color";
 import {SpecializeButtonSize} from "./specialize-button-size";
+import {TooltipStandardContentBox} from "../tooltip/tooltip-standard-content.box";
 
 const ContainerBox = styled.div<{$backColor: string; $color: string; $fontSize: string}>`
     display: flex;
@@ -19,11 +20,6 @@ const ContainerBox = styled.div<{$backColor: string; $color: string; $fontSize: 
     border-radius: 50%;
 `
 
-const ToolTipTextBox = styled.div`
-    padding: var(--ion-space-16);
-    font-size: var(--ion-font-size-body2);
-    line-height: 1.3;
-`
 
 const FONT_SIZES: Record<SpecializeButtonSize, string> = {
     small: '16px',
@@ -73,10 +69,9 @@ export const SpecializedButtonComponent: React.FC<SpecializedButtonComponentProp
 
         return (
             <TooltipComponent targetRef={toolTipButtonRef}
-                              placement={"bottom"}
                               toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}
                               showCloseButton={false}>
-                <ToolTipTextBox>{props.tooltipText}</ToolTipTextBox>
+                <TooltipStandardContentBox>{props.tooltipText}</TooltipStandardContentBox>
             </TooltipComponent>
         )
     }

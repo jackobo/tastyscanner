@@ -48,6 +48,10 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
         return  Math.round((this.btoOption.rawDelta - this.stoOption.rawDelta) * 10000) / 100;
     }
 
+    get shortLegsDelta(): number {
+        return this.stoOption.deltaPercent;
+    }
+
 
     get theta(): number {
         return Math.round((this.btoOption.theta - this.stoOption.theta) * 10000)/100;

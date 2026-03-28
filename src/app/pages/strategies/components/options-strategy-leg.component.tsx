@@ -7,6 +7,7 @@ import {DELTA_SYMBOL} from "../../../utils/global-constants";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
 import {useServices} from "../../../hooks/use-services.hook";
 import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
+import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 
 const OptionPriceBox = styled.span`
@@ -28,12 +29,6 @@ const StrategyLegBox = styled(OptionsStrategyLegBaseBox)<{$isSell: boolean; $has
         opacity: 0.3;
     `}
     
-`
-
-const TooltipContentBox = styled.div`
-    padding: var(--ion-space-16);
-    font-size: var(--ion-font-size-body2);
-    max-width: 300px;
 `
 
 
@@ -85,10 +80,10 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
         }
 
         return (
-            <TooltipComponent targetRef={strategyLegBoxRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                <TooltipContentBox>
+            <TooltipComponent targetRef={strategyLegBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                <TooltipStandardContentBox>
                     {tooltipText}
-                </TooltipContentBox>
+                </TooltipStandardContentBox>
             </TooltipComponent>
         )
     }
@@ -127,10 +122,10 @@ export const OptionsStrategyLegComponent: React.FC<{leg: IOptionsStrategyLegView
 
 
         return (
-            <TooltipComponent targetRef={sameDirectionPositionsCountRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                <TooltipContentBox>
+            <TooltipComponent targetRef={sameDirectionPositionsCountRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                <TooltipStandardContentBox>
                     {tooltipText}
-                </TooltipContentBox>
+                </TooltipStandardContentBox>
             </TooltipComponent>
         )
     }

@@ -9,6 +9,7 @@ import {Check} from "../../../../framework/utils/type-checking";
 import {TimeSpan} from "../../../../framework/types/time-span";
 import {IonSpinnerComponent} from "../../../../framework/components/spinner/ion-spinner.component";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 const FooterBox = styled.div`
     display: flex;
@@ -52,10 +53,6 @@ const PauseResumeButtonBox = styled.div`
     border-radius: 50%;
 `
 
-const PauseResumeButtonTooltipContentBox = styled.div`
-    padding: var(--ion-space-16);
-    font-size: var(--ion-font-size-body2);
-`
 
 
 export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderViewModel}> = observer((props) => {
@@ -141,10 +138,10 @@ export const WokingOrderFooterComponent: React.FC<{workingOrder: IWorkingOrderVi
                <PauseResumeButtonBox onClick={onPauseResumeClick} ref={pauseResumeButtonBoxRef}>
                    {renderPauseResumeIcon()}
                </PauseResumeButtonBox>
-               <TooltipComponent targetRef={pauseResumeButtonBoxRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                   <PauseResumeButtonTooltipContentBox>
+               <TooltipComponent targetRef={pauseResumeButtonBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                   <TooltipStandardContentBox>
                        {renderPauseResumeButtonToolTipText()}
-                   </PauseResumeButtonTooltipContentBox>
+                   </TooltipStandardContentBox>
 
                </TooltipComponent>
            </>

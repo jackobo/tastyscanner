@@ -16,6 +16,7 @@ import {IonAccordion, IonChip, IonItem} from "@ionic/react";
 import styled, {css} from "styled-components";
 import {useServices} from "../../../hooks/use-services.hook";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
     switch (expirationType) {
@@ -82,11 +83,6 @@ const StrategiesBox = styled.div`
     justify-content: center;
 `
 
-const InfoToolTipBox = styled.div`
-    padding: var(--ion-space-16);
-    max-width: 250px;
-    font-size: var(--ion-font-size-body2);
-`
 
 interface OptionsExpirationStrategiesComponentProps {
     ticker: ITickerViewModel;
@@ -134,11 +130,11 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                     </span>
                 </ActivePositionsCountBox>
 
-                <TooltipComponent targetRef={activePositionsCountRef} placement={"bottom"}
+                <TooltipComponent targetRef={activePositionsCountRef}
                                   toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                    <InfoToolTipBox>
+                    <TooltipStandardContentBox>
                         {services.language.translate('The number of active positions that are already open for this expiration according to your filters.')}
-                    </InfoToolTipBox>
+                    </TooltipStandardContentBox>
                 </TooltipComponent>
             </>
         )
@@ -155,10 +151,10 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                         <StrategiesCountBox ref={strategiesCountRef}>
                             {strategies.length}
                         </StrategiesCountBox>
-                        <TooltipComponent targetRef={strategiesCountRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                            <InfoToolTipBox>
+                        <TooltipComponent targetRef={strategiesCountRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                            <TooltipStandardContentBox>
                                 {services.language.translate('The number of strategies that are available for this expiration.')}
-                            </InfoToolTipBox>
+                            </TooltipStandardContentBox>
                         </TooltipComponent>
                         <ExpirationHeaderTitleBox>
                             {label}

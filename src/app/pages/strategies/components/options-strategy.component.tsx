@@ -9,6 +9,8 @@ import {CardBox} from "../../../../framework/components/card/card.box";
 import {IonIcon} from "@ionic/react";
 import {informationOutline} from "ionicons/icons";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import { TooltipStandardContentBox } from "../../../../framework/components/tooltip/tooltip-standard-content.box";
+import {useServices} from "../../../hooks/use-services.hook";
 
 export const StrategyBox = styled(CardBox)<{$hasOppositePosition: boolean}>`
     position: relative;
@@ -76,12 +78,6 @@ const InfoIconBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}
     `}
 `
 
-const ToolTipContentBox = styled.div`
-    padding: var(--ion-space-16);
-    font-size: var(--ion-font-size-body2);
-`
-
-
 
 export interface OptionsStrategyComponentProps {
     strategy: IOptionsStrategyViewModel;
@@ -90,6 +86,7 @@ export interface OptionsStrategyComponentProps {
     className?: string;
 }
 export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> = observer(props => {
+    const services = useServices();
     const infoIconBoxRef = useRef<HTMLDivElement | null>(null);
     const isBestRiskReward = props.strategy.riskRewardRatio === props.bestRiskReward;
     const isBestPop = props.strategy.pop === props.bestPop;
@@ -117,18 +114,18 @@ export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> =
         let tooltipText = '';
 
         if(isBestPop && isBestRiskReward) {
-            tooltipText = 'Best risk/reward and best POP';
+            tooltipText = services.language.translate('Best risk/reward and best POP');
         } else if(isBestPop) {
-            tooltipText = 'Best POP';
+            tooltipText = services.language.translate('Best POP');
         } else if(isBestRiskReward) {
-            tooltipText = 'Best risk/reward';
+            tooltipText = services.language.translate('Best risk/reward');
         }
 
         return (
-            <TooltipComponent targetRef={infoIconBoxRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                <ToolTipContentBox>
+            <TooltipComponent targetRef={infoIconBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                <TooltipStandardContentBox>
                     {tooltipText}
-                </ToolTipContentBox>
+                </TooltipStandardContentBox>
             </TooltipComponent>
         )
     }

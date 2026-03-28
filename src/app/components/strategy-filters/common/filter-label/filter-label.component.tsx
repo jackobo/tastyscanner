@@ -7,6 +7,7 @@ import {
 } from "../../../../../framework/components/tooltip/tooltip.component";
 import {IonIcon} from "@ionic/react";
 import {informationCircleOutline} from "ionicons/icons";
+import {TooltipStandardContentBox} from "../../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 export const FilterLabelBox = styled.div`
     display: flex;
@@ -14,13 +15,6 @@ export const FilterLabelBox = styled.div`
     align-items: center;
     gap: var(--ion-space-8);
     font-weight: var(--ion-font-weight-bold);
-`
-
-const TooltipContentBox = styled.div`
-    padding: var(--ion-space-12);
-    font-size: var(--ion-font-size-body2);
-    max-width: 250px;
-    line-height: 1.3;
 `
 
 const InfoIconBox = styled.div`
@@ -56,10 +50,10 @@ export const FilterLabelComponent: React.FC<FilterLabelComponentProps> = observe
         }
 
         return (
-            <TooltipComponent targetRef={filterIconBoxRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
-                <TooltipContentBox>
+            <TooltipComponent targetRef={filterIconBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                <TooltipStandardContentBox>
                     {props.tooltip}
-                </TooltipContentBox>
+                </TooltipStandardContentBox>
             </TooltipComponent>
         )
     }

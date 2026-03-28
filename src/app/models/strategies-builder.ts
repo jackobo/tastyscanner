@@ -71,7 +71,7 @@ export class StrategiesBuilder {
             for(const putSpread of putCreditSpreads) {
                 for(const callSpread of callCreditSpreads) {
                     const condor = new IronCondorModel( putSpread.wingsWidth, putSpread, callSpread, this.services);
-                    if(condorsMinDelta <= condor.delta && condor.delta <= condorsMaxDelta) {
+                    if(condorsMinDelta <= condor.shortLegsDelta && condor.shortLegsDelta <= condorsMaxDelta) {
                         condors.push(condor);
                     }
                 }

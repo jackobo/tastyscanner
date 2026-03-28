@@ -31,6 +31,7 @@ import {
     TooltipComponent,
     TooltipToggleBehaviorEnum
 } from "../../../../../framework/components/tooltip/tooltip.component";
+import {TooltipStandardContentBox} from "../../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 const SpacerBox = styled.div`
     grid-column: 1/-1;
@@ -177,29 +178,40 @@ const EnableAutoReplaceInfoIconBox = styled.div`
     justify-items: center;
 `
 
-const AutoReplaceInfoTooltipContentBox = styled.div`
+const AutoReplaceInfoTooltipContentBox = styled(TooltipStandardContentBox)`
     display: flex;
     flex-direction: column;
-    
-    padding: var(--ion-space-16);
-    font-size: var(--ion-font-size-body2);
     max-width: 400px;
     
 `
 
 const AutoReplaceInfoTooltipContentComponent: React.FC = observer(() => {
+    const services = useServices();
+
     return (
         <AutoReplaceInfoTooltipContentBox>
             <div>
-                Order auto replace is a feature that automatically adjust an order price if it doesn't get filled in a certain amount of time.
-                The price is adjusted base on the underlying asset options ticker size. The order price will be decremented with ticker size if the order price effect is Credit and it will be incremented with ticker size if the order price effect is Debit.
+                <span>
+                    {services.language.translate("Order auto replace is a feature that automatically adjust an order price if it doesn't get filled in a certain amount of time.")}
+                </span>
+                <span>
+                    {services.language.translate("The price is adjusted base on the underlying asset options ticker size. The order price will be decremented with ticker size if the order price effect is Credit and it will be incremented with ticker size if the order price effect is Debit.")}
+                </span>
                 <br/>
-                The auto replace attempts executes every 20 seconds and the following rules are applied:
+                <span>
+                    {services.language.translate("The auto replace attempts executes every 20 seconds and the following rules are applied:")}
+                </span>
             </div>
             <ul>
-                <li>If the underlying asset options ticker size is $0.01 there will be a maximum of 4 attempts.</li>
-                <li>If the underlying asset options ticker size is $0.02 there will be a maximum of 2 attempts.</li>
-                <li>For any other ticker size value there will be maximum one attempt.</li>
+                <li>
+                    {services.language.translate("If the underlying asset options ticker size is $0.01 there will be a maximum of 4 attempts.")}
+                </li>
+                <li>
+                    {services.language.translate("If the underlying asset options ticker size is $0.02 there will be a maximum of 2 attempts.")}
+                </li>
+                <li>
+                    {services.language.translate("For any other ticker size value there will be maximum one attempt.")}
+                </li>
             </ul>
         </AutoReplaceInfoTooltipContentBox>
     )
@@ -453,7 +465,7 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                             <EnableAutoReplaceInfoIconBox ref={enableAutoReplaceInfoIconBoxRef}>
                                 <IonIcon icon={informationCircleOutline} />
                             </EnableAutoReplaceInfoIconBox>
-                            <TooltipComponent targetRef={enableAutoReplaceInfoIconBoxRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                            <TooltipComponent targetRef={enableAutoReplaceInfoIconBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
                                 <AutoReplaceInfoTooltipContentComponent/>
                             </TooltipComponent>
                         </EnableAutoReplaceLabelBox>

@@ -115,7 +115,7 @@ export enum TooltipToggleBehaviorEnum {
 
 interface TooltipComponentProps extends PropsWithChildren {
     targetRef: React.RefObject<HTMLElement | null>;
-    placement: Placement;
+    placement?: Placement;
     toggleBehavior: TooltipToggleBehaviorEnum;
     showCloseButton?: boolean;
     tooltipControllerRef?: React.RefObject<ITooltipController | null>;
@@ -141,11 +141,13 @@ export const TooltipComponent: React.FC<TooltipComponentProps> = observer((props
         props.tooltipControllerRef.current = tooltipControllerRef.current;
     }
 
+    const placement = props.placement ?? 'bottom';
+
     useEffect(() => {
         let popperInstance: PopperInstance | null = null;
         if(isOpen) {
             popperInstance = createTooltipPopper({
-                placement: props.placement,
+                placement: placement,
                 targetEl: props.targetRef.current,
                 popperEl: popperContainerRef.current,
                 arrowEl: props.hideArrow ? null : popperArrowRef.current,
@@ -157,7 +159,7 @@ export const TooltipComponent: React.FC<TooltipComponentProps> = observer((props
                 popperInstance.destroy();
             }
         };
-    }, [isOpen, props.targetRef, props.placement, props.hideArrow]);
+    }, [isOpen, props.targetRef, placement, props.hideArrow]);
 
     useEffect(() => {
         const onDocumentClick = (event: MouseEvent) => {
@@ -245,7 +247,7 @@ export const TooltipComponent: React.FC<TooltipComponentProps> = observer((props
             return null;
         }
 
-        switch (props.placement) {
+        switch (placement) {
             case 'top':
             case 'top-start':
             case 'top-end':

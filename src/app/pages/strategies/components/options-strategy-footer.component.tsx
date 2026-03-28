@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components";
 import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
@@ -7,6 +7,10 @@ import {SendOrderDialogComponent} from "./send-order/send-order-dialog.component
 import {DialogCloseButtonBehavior} from "../../../../framework/services/dialog/dialog-enums";
 import {SuccessButton} from "../../../../framework/components/buttons/success-button";
 import {ButtonTooltipProps} from "../../../../framework/components/buttons/button-base";
+import {IonIcon} from "@ionic/react";
+import {informationCircleOutline} from "ionicons/icons";
+import {TooltipComponent, TooltipToggleBehaviorEnum} from "../../../../framework/components/tooltip/tooltip.component";
+import {TooltipStandardContentBox} from "../../../../framework/components/tooltip/tooltip-standard-content.box";
 
 
 const StrategyFooterBox = styled.div`
@@ -27,6 +31,39 @@ const ButtonBox = styled.div`
     margin-top: var(--ion-space-8);
 `
 
+const LabelWithTooltipBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+`
+
+const InfoCircleBox = styled.span`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+`
+
+const LabelWithTooltipComponent: React.FC<{label: string, tooltipText: string | React.ReactElement }> = observer((props) => {
+
+    const infoCircleBoxRef = useRef<HTMLSpanElement>(null);
+    return (
+        <LabelWithTooltipBox>
+            <span>{props.label}</span>
+            <InfoCircleBox ref={infoCircleBoxRef}>
+                <IonIcon icon={informationCircleOutline}/>
+            </InfoCircleBox>
+            <TooltipComponent targetRef={infoCircleBoxRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
+                <TooltipStandardContentBox>
+                    {props.tooltipText}
+                </TooltipStandardContentBox>
+
+            </TooltipComponent>
+        </LabelWithTooltipBox>
+    )
+})
 
 export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrategyViewModel}> = observer((props) => {
     const services = useServices();
@@ -49,6 +86,22 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
         }
     }
 
+    const renderShortLegsDeltaTooltip = () => {
+        return (
+            <>
+                <div>
+                    {services.language.translate("Is the delta computed only for the short legs.")}
+                </div>
+                <div>
+                    {services.language.translate("For an Iron Condor this is:")}
+                </div>
+                <div>
+                    |SoldPutDelta| - |SoldCallDelta|
+                </div>
+            </>
+        )
+    }
+
     return (
         <StrategyFooterBox>
             <span>Risk/Reward:</span>
@@ -59,10 +112,11 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
             <span>{`${props.strategy.wingsWidth}$`}</span>
             <span>Credit:</span>
             <span>{`${props.strategy.credit.toFixed(2)}$`}</span>
-            <span>Delta:</span>
+            <LabelWithTooltipComponent label={"Delta:"}
+                                       tooltipText={services.language.translate("Total delta for the strategy.")}/>
             <span>{props.strategy.delta}</span>
-            <span>Theta:</span>
-            <span>{props.strategy.theta}</span>
+            <LabelWithTooltipComponent label={"Short legs delta:"} tooltipText={renderShortLegsDeltaTooltip()}/>
+            <span>{props.strategy.shortLegsDelta}</span>
             <ButtonBox>
                 <SuccessButton onClick={onTrade} disabled={hasOppositePosition} tooltip={getButtonTooltipProps()}>
                     { services.language.translate("Trade")}

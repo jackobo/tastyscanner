@@ -10,6 +10,7 @@ export interface IOptionsStrategyViewModel {
     readonly riskRewardRatio: number;
     readonly pop: number;
     readonly delta: number;
+    readonly shortLegsDelta: number;
     readonly theta: number;
     readonly legs: IOptionsStrategyLegViewModel[];
     readonly hasLegsWithExistingPositions: boolean;

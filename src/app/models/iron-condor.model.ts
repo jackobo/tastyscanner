@@ -33,6 +33,7 @@ export class IronCondorModel implements IIronCondorViewModel {
             theta: computed,
             hasLegsWithOppositePositions: computed,
             hasLegsWithExistingPositions: computed,
+            shortLegsDelta: computed,
         })
     }
 
@@ -148,6 +149,11 @@ export class IronCondorModel implements IIronCondorViewModel {
     get delta(): number {
         return MathUtils.round(this.putSpread.delta + this.callSpread.delta);
     }
+
+    get shortLegsDelta(): number {
+        return Math.round(MathUtils.round(this.stoPut.absoluteRawDelta - this.stoCall.absoluteRawDelta) * 100);
+    }
+
 
     get theta(): number {
         return MathUtils.round(this.putSpread.theta + this.callSpread.theta);

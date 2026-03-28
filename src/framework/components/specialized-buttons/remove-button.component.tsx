@@ -49,7 +49,7 @@ export const RemoveButtonComponent: React.FC<RemoveButtonComponentProps> = obser
             return null;
         }
         return (
-            <TooltipComponent targetRef={elementRef} placement={"bottom"} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetClick} showCloseButton={true} hideArrow={true}>
+            <TooltipComponent targetRef={elementRef} toggleBehavior={TooltipToggleBehaviorEnum.OnTargetClick} showCloseButton={true} hideArrow={true}>
                 <RemovePrizeToolTipConfirmationBox>
                     <div>
                         {services.language.translate('Are you sure?')}

@@ -6,6 +6,7 @@ import {IonIcon} from "@ionic/react";
 import {TooltipComponent, TooltipToggleBehaviorEnum} from "../tooltip/tooltip.component";
 import {Placement} from "@popperjs/core";
 import {Check} from "../../utils/type-checking";
+import {TooltipStandardContentBox} from "../tooltip/tooltip-standard-content.box";
 
 
 
@@ -124,13 +125,6 @@ export interface ButtonBaseProps extends PropsWithChildren {
     tooltip?: ButtonTooltipProps;
 }
 
-const ToolTipStringContentBox = styled.div`
-    padding: var(--ion-space-16);
-    font-size: var(--ion-font-size-body2);
-    max-width: 350px;
-    line-height: 1.3;
-`
-
 
 export interface ConcreteButtonProps extends Omit<ButtonBaseProps, 'colors'> {
 
@@ -174,7 +168,7 @@ export const ButtonBase: React.FC<ButtonBaseProps> = observer((props) => {
     const renderToolTipStringContent = (toolTipContent: any) => {
         if(Check.isString(toolTipContent)) {
             return (
-                <ToolTipStringContentBox>{toolTipContent}</ToolTipStringContentBox>
+                <TooltipStandardContentBox>{toolTipContent}</TooltipStandardContentBox>
             )
         }
 

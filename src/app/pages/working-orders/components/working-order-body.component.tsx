@@ -95,7 +95,7 @@ const OrderPriceComponent: React.FC<OrderPriceComponentProps> = observer((props)
             </TradingPriceValueBox>
 
 
-            <TooltipComponent targetRef={tradingPriceValueElementRef} placement={"bottom"}
+            <TooltipComponent targetRef={tradingPriceValueElementRef}
                               toggleBehavior={TooltipToggleBehaviorEnum.OnTargetClick}
                               tooltipControllerRef={replaceWorkingOrderTooltipControllerRef}>
                 <ReplaceWorkingOrderComponent workingOrder={props.workingOrder}
@@ -104,7 +104,7 @@ const OrderPriceComponent: React.FC<OrderPriceComponentProps> = observer((props)
                                               onCloseClick={() => replaceWorkingOrderTooltipControllerRef.current?.close()}/>
             </TooltipComponent>
 
-            <TooltipComponent targetRef={replaceButtonElementRef} placement={"bottom"}
+            <TooltipComponent targetRef={replaceButtonElementRef}
                               toggleBehavior={TooltipToggleBehaviorEnum.OnTargetMouseEnterLeave}>
                 <ReplaceButtonToolTipContentBox>
                     {props.tooltipText}
