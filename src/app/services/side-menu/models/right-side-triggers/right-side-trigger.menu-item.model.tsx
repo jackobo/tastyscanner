@@ -19,13 +19,14 @@ export abstract class RightSideTriggerMenuItemModel<TRightSideMenuRenderer exten
 
     abstract get key(): string;
     abstract createRightSideMenuRenderer(): TRightSideMenuRenderer;
-    abstract renderIcon(): React.ReactElement | null;
-    abstract renderMenuItemContent(): SideMenuRenderResult;
+    abstract renderTitle(): string | React.ReactElement;
 
-    render(): SideMenuRenderResult {
-        return (
-            <RightSideTriggerMenuItemComponent menuItem={this}/>
-        )
+    get isSelected(): boolean {
+        return false;
+    }
+
+    renderStandardContent(): SideMenuRenderResult {
+        return (<RightSideTriggerMenuItemComponent menuItem={this}/>);
     }
 
     private _rightSideMenuRenderer: Lazy<TRightSideMenuRenderer> = new Lazy<TRightSideMenuRenderer>(() => {
@@ -40,7 +41,7 @@ export abstract class RightSideTriggerMenuItemModel<TRightSideMenuRenderer exten
         return this.services.rightSideMenu.isOpen(this.rightSideMenuRenderer);
     }
 
-    async onClick(): Promise<void>{
+    async execute(): Promise<void>{
         if(this.isOpen) {
             await this.services.rightSideMenu.close(this.rightSideMenuRenderer);
         } else {

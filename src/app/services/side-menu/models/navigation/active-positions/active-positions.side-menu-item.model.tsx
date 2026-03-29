@@ -17,7 +17,7 @@ export class ActivePositionsSideMenuItemModel extends RouteBaseSideMenuItemModel
         )
     }
 
-    renderContent(): SideMenuRenderResult {
+    renderStandardContent(): SideMenuRenderResult {
         return "Active Positions";
     }
 }

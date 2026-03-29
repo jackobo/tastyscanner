@@ -10,40 +10,21 @@ export abstract class RouteBaseSideMenuItemModel extends SideMenuItemBaseModel {
         super(services);
     }
 
-    abstract renderContent(): SideMenuRenderResult;
-
     get key(): string {
         return this.route.path;
     }
 
-    async click(): Promise<void> {
+    async execute(): Promise<void> {
         this.route.activate();
     }
 
-    protected _isSelected(): boolean {
-        return this.route.isActive;
-    }
-
     get isSelected(): boolean {
-        return this._isSelected();
+        return this.route.isActive;
     }
 
     renderIcon(): React.ReactElement | null {
         return null;
     }
 
-    protected _getLevel(): number {
-        return 0;
-    }
-
-
-    render(): SideMenuRenderResult {
-        return (
-            <StandardSideMenuItemComponent renderContent={() => this.renderContent()}
-                                           renderIcon={() => this.renderIcon()}
-                                           isSelected={() => this.isSelected}
-                                           onClick={() => this.click()} level={() => this._getLevel()} />
-        );
-    }
 
 }

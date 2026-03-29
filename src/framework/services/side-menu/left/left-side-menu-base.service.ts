@@ -17,6 +17,7 @@ export abstract class LeftSideMenuBaseService<TServiceFactory extends IFramework
     private _leftSideMenuController: Lazy<RightSideMenuControllerModel> = new Lazy<RightSideMenuControllerModel>(() => {
         return new RightSideMenuControllerModel(LEFT_SIDE_MENU, MAIN_CONTENT);
     });
+
     open(): Promise<void> {
         return this._leftSideMenuController.value.open();
     }

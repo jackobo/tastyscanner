@@ -21,7 +21,7 @@ export class WorkingOrdersSideMenuItemModel extends RouteBaseSideMenuItemModel {
         )
     }
 
-    renderContent(): SideMenuRenderResult {
+    renderStandardContent(): SideMenuRenderResult {
         return "Working Orders";
     }
 }

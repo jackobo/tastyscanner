@@ -20,7 +20,7 @@ const MenuTitleBox = styled.span`
 `
 
 const ChevronBox = styled.span`
-    
+    cursor: pointer;
 `
 
 interface RecentTickersMenuItemComponentProps {

@@ -1,6 +1,5 @@
 import {ILeftSideMenuService} from "../../../framework/services/side-menu/left/left-side-menu.service.interface";
 import {ISideMenuItemViewModel} from "../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
-import {AppServiceBase} from "../app-service-base";
 import {StrategiesSideMenuItemModel} from "./models/navigation/strategies/strategies.side-menu-item.model";
 import {FiltersSideMenuItemModel} from "./models/right-side-triggers/filters/filters.side-menu-item.model";
 import {WatchListsSideMenuItem} from "./models/right-side-triggers/watch-lists/watch-lists.side-menu-item.model";
@@ -20,8 +19,10 @@ import {
     BrokerageAccountInfoSideMenuItemModel
 } from "./models/right-side-triggers/brokerage-account-info/brokerage-account-info.side-menu-item.model";
 import {WorkingOrdersSideMenuItemModel} from "./models/navigation/working-orders/working-orders.side-menu-item.model";
+import {LeftSideMenuBaseService} from "../../../framework/services/side-menu/left/left-side-menu-base.service";
+import {IAppServiceFactory} from "../app-service-factory.interface";
 
-export class LeftSideMenuService extends AppServiceBase implements ILeftSideMenuService {
+export class LeftSideMenuService extends LeftSideMenuBaseService<IAppServiceFactory> implements ILeftSideMenuService {
     
     get rootMenuItems(): ISideMenuItemViewModel[] {
         return [

@@ -2,9 +2,6 @@ import {SideMenuItemBaseModel} from "../../../../../framework/services/side-menu
 import {IAppServiceFactory} from "../../../app-service-factory.interface";
 import {ITickerViewModel} from "../../../../models/ticker/ticker.view-model.interface";
 import { SideMenuRenderResult } from "../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
-import {
-    StandardSideMenuItemComponent
-} from "../../../../../framework/components/side-menu/left/standard-side-menu-item.component";
 import React from "react";
 import {IRecentTickerMenuItemViewModel} from "./recent-ticker-menu-item.view-model.interface";
 import {RecentTickerMenuItemComponent} from "../../../../components/side-menu/recent-ticker.menu-item.component";
@@ -20,6 +17,10 @@ export class RecentTickerMenuItem extends SideMenuItemBaseModel implements IRece
 
     get key(): string {
         return `RecentTicker_${this.ticker.symbol}`
+    }
+
+    get isSelected(): boolean {
+        return false;
     }
 
     get isCurrentTicker(): boolean {
@@ -38,15 +39,16 @@ export class RecentTickerMenuItem extends SideMenuItemBaseModel implements IRece
         }
     }
 
-
-
-    render(): SideMenuRenderResult {
-        return (
-            <StandardSideMenuItemComponent renderContent={() => (<RecentTickerMenuItemComponent menuItem={this}/>)}
-                                           isSelected={() => false}
-                                           level={() => 1}/>
-        );
+    renderIcon(): React.ReactElement | null {
+        return null;
     }
 
+    renderStandardContent(): SideMenuRenderResult {
+        return (<RecentTickerMenuItemComponent menuItem={this}/>);
+    }
+
+    async execute(): Promise<void> {
+
+    }
 
 }

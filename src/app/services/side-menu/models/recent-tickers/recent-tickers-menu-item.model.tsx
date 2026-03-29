@@ -6,9 +6,6 @@ import {
 import {IRecentTickersMenuItemViewModel} from "./recent-tickers-menu-item.view-model.interface";
 import {IAppServiceFactory} from "../../../app-service-factory.interface";
 import {computed, makeObservable, observable, runInAction} from "mobx";
-import {
-    StandardSideMenuItemComponent
-} from "../../../../../framework/components/side-menu/left/standard-side-menu-item.component";
 import React from "react";
 import {RecentTickersMenuItemComponent} from "../../../../components/side-menu/recent-tickers.menu-item.component";
 import {timerOutline} from "ionicons/icons";
@@ -16,6 +13,7 @@ import {IonIcon} from "@ionic/react";
 import {RecentTickerMenuItem} from "./recent-ticker-menu-item.model";
 import {AppLocalStorageKeys} from "../../../storage/app-local-storage-keys";
 import {ITickerViewModel} from "../../../../models/ticker/ticker.view-model.interface";
+
 
 export class RecentTickersMenuItemModel extends SideMenuItemBaseModel implements IRecentTickersMenuItemViewModel {
     constructor(services: IAppServiceFactory) {
@@ -31,6 +29,10 @@ export class RecentTickersMenuItemModel extends SideMenuItemBaseModel implements
 
     get isExpanded(): boolean {
         return this._isExpanded;
+    }
+
+    get shouldCloseMenuOnClick(): boolean {
+        return false;
     }
 
     set isExpanded(value: boolean) {
@@ -67,15 +69,21 @@ export class RecentTickersMenuItemModel extends SideMenuItemBaseModel implements
         return "RecentTickers";
     }
 
-    render(): SideMenuRenderResult {
-        return (
-            <StandardSideMenuItemComponent renderContent={() => (<RecentTickersMenuItemComponent menuItem={this}/>)}
-                                           renderIcon={() => <IonIcon slot="start" icon={timerOutline}/>}
-                                           isSelected={() => false}
-                                           onClick={async () => {
-                                               this.isExpanded = !this.isExpanded;
-                                           }}/>
-        );
+    get isSelected(): boolean {
+        return false;
     }
+
+    renderIcon(): React.ReactElement | null {
+        return (<IonIcon slot="start" icon={timerOutline}/>);
+    }
+
+    renderStandardContent(): SideMenuRenderResult {
+        return (<RecentTickersMenuItemComponent menuItem={this}/>);
+    }
+
+    async execute(): Promise<void> {
+        this.isExpanded = !this.isExpanded;
+    }
+
 
 }

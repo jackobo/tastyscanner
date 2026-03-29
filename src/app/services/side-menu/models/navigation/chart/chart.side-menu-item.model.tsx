@@ -17,7 +17,7 @@ export class ChartSideMenuItemModel extends RouteBaseSideMenuItemModel {
         )
     }
 
-    renderContent(): SideMenuRenderResult {
+    renderStandardContent(): SideMenuRenderResult {
         return "Chart";
     }
 

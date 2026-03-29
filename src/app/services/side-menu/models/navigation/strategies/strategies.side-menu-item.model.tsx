@@ -24,11 +24,11 @@ export class StrategiesSideMenuItemModel extends RouteBaseSideMenuItemModel {
         )
     }
 
-    renderContent(): SideMenuRenderResult {
+    renderStandardContent(): SideMenuRenderResult {
         return "Strategies";
     }
 
-    protected _isSelected(): boolean {
+    get isSelected(): boolean {
         return false;
     }
 

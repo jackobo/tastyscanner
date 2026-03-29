@@ -49,7 +49,7 @@ export class RightSideMenuService extends FrameworkServiceBase implements IRight
 
     async open(renderer: ISideMenuContentRenderer): Promise<void> {
         //TODO - I have to do something with this delay
-        await delay(Date.now(), 500);
+        //await delay(Date.now(), 500);
         runInAction(() => {
 
             if(renderer.isSticky && !this.services.screenMediaQuery.smallScreen) {

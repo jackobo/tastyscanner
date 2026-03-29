@@ -1,9 +1,6 @@
 import React from "react";
 import {observer} from "mobx-react";
 import {
-    StandardSideMenuItemComponent
-} from "../../../framework/components/side-menu/left/standard-side-menu-item.component";
-import {
     IRightSideTriggerMenuItemViewModel
 } from "../../services/side-menu/models/right-side-triggers/right-side-trigger.menu-item.view-model.interface";
 import styled from "styled-components";
@@ -40,21 +37,13 @@ export const RightSideTriggerMenuItemComponent: React.FC<{menuItem: IRightSideTr
         )
     }
 
-    const renderContent = () => {
-        return (
-            <MenuItemContentContainerBox>
-                <MenuItemMainContentBox>
-                    {props.menuItem.renderMenuItemContent()}
-                </MenuItemMainContentBox>
-                {renderCheckIcon()}
-            </MenuItemContentContainerBox>
-        )
-    }
 
     return (
-        <StandardSideMenuItemComponent renderIcon={() => props.menuItem.renderIcon()}
-                                       renderContent={renderContent}
-                                       isSelected={() => false}
-                                       onClick={() => props.menuItem.onClick()}/>
+        <MenuItemContentContainerBox>
+            <MenuItemMainContentBox>
+                {props.menuItem.renderTitle()}
+            </MenuItemMainContentBox>
+            {renderCheckIcon()}
+        </MenuItemContentContainerBox>
     )
 })

@@ -21,11 +21,8 @@ export class CallCreditSpreadsSideMenuItemModel extends RouteBaseSideMenuItemMod
         );
     }
 
-    renderContent(): SideMenuRenderResult {
+    renderStandardContent(): SideMenuRenderResult {
         return "Call Credit Spreads";
     }
 
-    protected _getLevel(): number {
-        return 1;
-    }
 }

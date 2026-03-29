@@ -1,4 +1,3 @@
-import { SideMenuRenderResult } from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {RightSideTriggerMenuItemModel} from "../right-side-trigger.menu-item.model";
 import {IonIcon} from "@ionic/react";
 import {settingsOutline} from "ionicons/icons";
@@ -17,7 +16,7 @@ export class AppSettingsSideMenuItemModel extends RightSideTriggerMenuItemModel<
             <IonIcon icon={settingsOutline}/>
         )
     }
-    renderMenuItemContent(): SideMenuRenderResult {
+    renderTitle(): string | React.ReactElement {
         return this.services.language.translate('App settings');
     }
 

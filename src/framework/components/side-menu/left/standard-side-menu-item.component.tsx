@@ -1,9 +1,11 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {IonItem, IonMenuToggle} from "@ionic/react";
+import {IonItem} from "@ionic/react";
 import styled, {css} from "styled-components";
+import {useFrameworkServices} from "../../../hooks/use-framework-services.hook";
+import {ISideMenuItemViewModel} from "../../../services/side-menu/left/models/side-menu-item.view-model.interface";
 
-const IonMenuToggleBox = styled(IonMenuToggle)<{$showCursor: boolean}>`
+const IonMenuToggleBox = styled.div<{$showCursor: boolean}>`
     padding: 0;
     ${props => props.$showCursor && css`
         cursor: pointer;
@@ -33,32 +35,33 @@ const MenuItemContentBox = styled.div`
 
 
 interface StandardSideMenuItemComponentProps {
-   renderContent: () => React.ReactElement | string;
-   renderIcon?: () => React.ReactElement | null;
-   isSelected: () => boolean;
-   onClick?: () => Promise<void>;
+   menuItem: ISideMenuItemViewModel;
    className?: string;
-   level?: () => number;
+   level: number;
 }
 export const StandardSideMenuItemComponent: React.FC<StandardSideMenuItemComponentProps> = observer((props) => {
+    const services = useFrameworkServices();
 
-    let level = 0;
-    if(props.level) {
-        level = props.level();
+
+    const customMenu = props.menuItem.renderCustomMenu();
+    if(customMenu) {
+        return customMenu;
     }
 
+    const level = props.level;
+
     const onClick = async () => {
-        if(props.onClick) {
-            await props.onClick();
+        if(props.menuItem.shouldCloseMenuOnClick) {
+            await services.leftSideMenu.close();
         }
+
+        await props.menuItem.execute();
 
     }
 
     const renderIcon = () => {
-        if(!props.renderIcon) {
-            return null;
-        }
-        const icon = props.renderIcon();
+
+        const icon = props.menuItem.renderIcon();
         if(!icon) {
             return null;
         }
@@ -70,15 +73,15 @@ export const StandardSideMenuItemComponent: React.FC<StandardSideMenuItemCompone
     }
 
     return (
-        <IonMenuToggleBox autoHide={false} className={props.className} $showCursor={!!props.onClick}>
-            <IonItemBox $isSelected={props.isSelected()}
+        <IonMenuToggleBox className={props.className} $showCursor={props.menuItem.shouldCloseMenuOnClick}>
+            <IonItemBox $isSelected={props.menuItem.isSelected}
                         $level={level}
                         lines="none"
                         detail={false}
                         onClick={onClick}>
                 {renderIcon()}
                 <MenuItemContentBox>
-                    {props.renderContent()}
+                    {props.menuItem.renderStandardContent()}
                 </MenuItemContentBox>
             </IonItemBox>
         </IonMenuToggleBox>

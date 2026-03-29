@@ -21,11 +21,8 @@ export class PutCreditSpreadsSideMenuItemModel extends RouteBaseSideMenuItemMode
         );
     }
 
-    renderContent(): SideMenuRenderResult {
+    renderStandardContent(): SideMenuRenderResult {
         return "Put Credit Spreads";
-    }
-    protected _getLevel(): number {
-        return 1;
     }
 
 }

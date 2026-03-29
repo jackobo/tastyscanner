@@ -1,4 +1,3 @@
-import { SideMenuRenderResult } from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {FiltersRightSideMenuRendererModel} from "./filters-right-side-menu-renderer.model";
 import {RightSideTriggerMenuItemModel} from "../right-side-trigger.menu-item.model";
 import {IonIcon} from "@ionic/react";
@@ -17,7 +16,7 @@ export class FiltersSideMenuItemModel extends RightSideTriggerMenuItemModel<Filt
             <IonIcon icon={funnelOutline}/>
         )
     }
-    renderMenuItemContent(): SideMenuRenderResult {
+    renderTitle(): string | React.ReactElement {
         return this.services.language.translate('Filters');
     }
 

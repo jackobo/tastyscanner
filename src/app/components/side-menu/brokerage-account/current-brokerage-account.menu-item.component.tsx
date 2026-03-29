@@ -1,19 +1,10 @@
 import React from "react";
 import {observer} from "mobx-react";
 import {useServices} from "../../../hooks/use-services.hook";
-import {
-    StandardSideMenuItemComponent
-} from "../../../../framework/components/side-menu/left/standard-side-menu-item.component";
 import {BrokerageAccountDropDownComponent} from "../../brokerage-account/brokerage-account-drop-down.component";
 import styled from "styled-components";
 import {IonSpinnerComponent} from "../../../../framework/components/spinner/ion-spinner.component";
 
-const ContainerBox = styled.div`
-  
-    padding-bottom: var(--ion-space-8);
-    border-bottom: 1px solid var(--ion-color-border);
-    
-`
 
 const SpinnerContainerBox = styled.div`
     display: flex;
@@ -45,18 +36,10 @@ export const CurrentBrokerageAccountMenuItemComponent: React.FC = observer(() =>
         )
     }
 
-    const renderContent = () => {
-        if(brokersService.accountsLoadingInProgress) {
-            return renderSpinner();
-        } else {
-            return renderDropDown();
-        }
+
+    if(brokersService.accountsLoadingInProgress) {
+        return renderSpinner();
+    } else {
+        return renderDropDown();
     }
-
-    return (
-        <ContainerBox>
-            <StandardSideMenuItemComponent renderContent={renderContent} isSelected={() => false} />
-        </ContainerBox>
-
-    )
 })

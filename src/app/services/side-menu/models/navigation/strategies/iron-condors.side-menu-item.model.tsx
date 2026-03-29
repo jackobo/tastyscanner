@@ -21,11 +21,7 @@ export class IronCondorsSideMenuItemModel extends RouteBaseSideMenuItemModel {
         );
     }
 
-    renderContent(): SideMenuRenderResult {
+    renderStandardContent(): SideMenuRenderResult {
         return "Iron Condors";
-    }
-
-    protected _getLevel(): number {
-        return 1;
     }
 }

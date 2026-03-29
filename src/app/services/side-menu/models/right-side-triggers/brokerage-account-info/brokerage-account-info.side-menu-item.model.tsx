@@ -2,9 +2,6 @@ import {RightSideTriggerMenuItemModel} from "../right-side-trigger.menu-item.mod
 import React from "react";
 import {IonIcon} from "@ionic/react";
 import {walletOutline} from "ionicons/icons";
-import {
-    SideMenuRenderResult
-} from "../../../../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {BrokerageAccountInfoRightSideMenuRendererModel} from "./brokerage-account-info-right-side-menu-renderer.model";
 
 
@@ -15,19 +12,13 @@ export class BrokerageAccountInfoSideMenuItemModel extends RightSideTriggerMenuI
         return "AccountInfo";
     }
 
-    /*
-    get isVisible(): boolean {
-        return Boolean(this.services.brokers.currentAccount?.accountInfo);
-    }
-     */
-
     renderIcon(): React.ReactElement | null {
         return (
             <IonIcon icon={walletOutline}/>
         )
     }
 
-    renderMenuItemContent(): SideMenuRenderResult {
+    renderTitle(): string | React.ReactElement {
         return this.services.language.translate('Account info');
     }
 

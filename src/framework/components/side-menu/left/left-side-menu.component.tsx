@@ -16,6 +16,7 @@ import {ISideMenuItemViewModel} from "../../../services/side-menu/left/models/si
 import {
   ISideMenuItemsGroupViewModel
 } from "../../../services/side-menu/left/models/side-menu-items-group.view-model.interface";
+import {StandardSideMenuItemComponent} from "./standard-side-menu-item.component";
 
 
 const IonMenuBox = styled(IonMenu)`
@@ -66,20 +67,30 @@ export const LeftSideMenuComponent: React.FC<{appTitle: string; renderLogo?: () 
     const menuItems = services.leftSideMenu.rootMenuItems.filter(item => item.isVisible);
     const menuItemsGroups = services.leftSideMenu.menuItemsGroups.filter(g => g.menuItems.some(item => item.isVisible));
 
-    const renderMenuItem = (item: ISideMenuItemViewModel) => {
+    const renderMenuItem = (item: ISideMenuItemViewModel, level: number) => {
 
-        return (
-            <React.Fragment key={item.key}>
-                {item.render()}
-                {item.subItems.filter(item => item.isVisible).map(renderMenuItem)}
-            </React.Fragment>
-        );
+        const subItems = item.subItems.filter(item => item.isVisible);
+
+        if(subItems.length === 0) {
+            return (
+                <StandardSideMenuItemComponent key={item.key} menuItem={item} level={level}/>
+            );
+        } else {
+            return (
+                <React.Fragment key={item.key}>
+                    <StandardSideMenuItemComponent menuItem={item} level={level}/>
+                    {subItems.map(subItem => renderMenuItem(subItem, level + 1))}
+                </React.Fragment>
+            );
+        }
+
+
     }
 
 
     const renderGroup = (group: ISideMenuItemsGroupViewModel) => {
         return (
-            <MenuItemGroupComponent key={group.key} group={group} renderMenuItem={renderMenuItem}/>
+            <MenuItemGroupComponent key={group.key} group={group} renderMenuItem={(item) => renderMenuItem(item, 0)}/>
         );
     }
 
@@ -108,7 +119,7 @@ export const LeftSideMenuComponent: React.FC<{appTitle: string; renderLogo?: () 
 
             <ContentBox>
                 <MainMenusListBox>
-                    {menuItems.map(renderMenuItem)}
+                    {menuItems.map(item => renderMenuItem(item, 0))}
                 </MainMenusListBox>
 
                 {menuItemsGroups.map(renderGroup)}
