@@ -1,5 +1,5 @@
 
-export const LEG_INFO_WIDTH = '200px';
+export const LEG_INFO_WIDTH = '220px';
 
 
 // DTE / PL% / PL / Mrk / TrdPrc / Bid /Ask / chevron

@@ -50,7 +50,7 @@ const OrderLegComponent: React.FC<{leg: IActivePositionLegViewModel}> = observer
     return (
         <>
             <LegInfoBodyGridCellBox $isSell={props.leg.isSell}>
-                <LegInfoGridCellBox>-10</LegInfoGridCellBox>
+                <LegInfoGridCellBox>{props.leg.quantity}</LegInfoGridCellBox>
                 <LegInfoSeparatorBox $isSell={props.leg.isSell}/>
                 <LegInfoGridCellBox>{props.leg.optionType}</LegInfoGridCellBox>
                 <LegInfoSeparatorBox $isSell={props.leg.isSell}/>

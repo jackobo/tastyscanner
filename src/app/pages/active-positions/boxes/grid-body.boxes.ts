@@ -31,7 +31,7 @@ export const LegInfoGridCellBox = styled.div`
 
 export const LegInfoBodyGridCellBox = styled(GridBodyCellBox)<{$isSell: boolean}>`
     display: grid;
-    grid-template-columns: 18px auto 6px auto 40px auto 35px;
+    grid-template-columns: 15px auto 10px auto 45px auto 38px;
     flex-direction: row;
     align-items: center;
     justify-items: center;
