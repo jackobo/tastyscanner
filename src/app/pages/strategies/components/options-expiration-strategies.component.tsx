@@ -45,15 +45,21 @@ function computeHeaderColor(expirationType: OptionExpirationTypeEnum) {
 const ExpirationHeaderItemBox = styled(IonItem)<{ $expirationType: OptionExpirationTypeEnum}>`
     cursor: pointer;
     width: 100%;
-    ${props =>computeHeaderColor(props.$expirationType)}
+    ${props => props.theme.containerMediaQuery.smallScreen} {
+        --padding-start: 0;
+        --padding-end: 0;
+    }
+    ${props => computeHeaderColor(props.$expirationType)}
 `
 const ExpirationHeaderItemContentBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 20px;
-    padding: 8px 16px;
+    gap: var(--ion-space-20);
     width: 100%;
+    ${props => props.theme.containerMediaQuery.smallScreen} {
+        gap: var(--ion-space-8);
+    }
      
 `
 
@@ -75,6 +81,7 @@ const ActivePositionsCountBox = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 4px;
+   
 `
 
 const StrategiesBox = styled.div`
@@ -84,8 +91,27 @@ const StrategiesBox = styled.div`
     gap: var(--ion-space-30);
     padding: var(--ion-space-30) 0;
     justify-content: center;
+    ${props => props.theme.containerMediaQuery.smallScreen} {
+        padding: var(--ion-space-16) var(--ion-space-8);
+    }
+
+    ${props => props.theme.containerMediaQuery.xsAndBelow} {
+        padding: var(--ion-space-16) 0;
+    }
 `
 
+const ExpirationDetailsBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--ion-space-8);
+    ${props => props.theme.containerMediaQuery.smallScreen} {
+        flex-direction: column;
+        align-items: start;
+        gap: 4px;
+    }
+    
+`
 
 interface OptionsExpirationStrategiesComponentProps {
     ticker: ITickerViewModel;
@@ -100,9 +126,18 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
 
     const strategies = props.strategies;
 
-    let label = `${services.time.formatUserFriendlyMonthDay(props.expiration.expirationDate)} (${props.expiration.daysToExpiration}d) - ${props.expiration.expirationType}`;
-    if(props.expiration.settlementType === 'AM') {
-        label +=  ` [${props.expiration.settlementType}]`
+
+    const renderExpirationDetails = () => {
+        return (
+            <ExpirationDetailsBox>
+                <span>
+                    {`${services.time.formatUserFriendlyMonthDay(props.expiration.expirationDate)} (${props.expiration.daysToExpiration}d)`}
+                </span>
+                <span>
+                    {props.expiration.expirationType + (props.expiration.settlementType === 'AM' ? ' [AM]' : '')}
+                </span>
+            </ExpirationDetailsBox>
+        )
     }
 
     const renderActivePositions = () => {
@@ -150,7 +185,7 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                             </TooltipStandardContentBox>
                         </TooltipComponent>
                         <ExpirationHeaderTitleBox>
-                            {label}
+                            {renderExpirationDetails()}
                         </ExpirationHeaderTitleBox>
                         {renderActivePositions()}
 
