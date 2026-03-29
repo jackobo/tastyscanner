@@ -1,11 +1,14 @@
 import styled, {css} from "styled-components";
-import {COMMON_COLUMNS_TEMPLATE, LEG_INFO_WIDTH} from "./constants";
+import {getCommonColumnsTemplate, LEG_INFO_WIDTH} from "./constants";
 import {GridCellBox} from "./common.boxes";
 
 export const BodyGridBox = styled.div`
     display: grid;
-    grid-template-columns: ${LEG_INFO_WIDTH} ${COMMON_COLUMNS_TEMPLATE};
+    grid-template-columns: ${LEG_INFO_WIDTH} ${props => getCommonColumnsTemplate(false)};
     align-items: center;
+    ${props => props.theme.screenMediaQuery.smallScreen} {
+        grid-template-columns: ${LEG_INFO_WIDTH} ${props => getCommonColumnsTemplate(true)};
+    }
 `
 
 export const GridBodyCellBox = styled(GridCellBox)`

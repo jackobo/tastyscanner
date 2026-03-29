@@ -67,7 +67,7 @@ const OrderLegComponent: React.FC<{leg: IActivePositionLegViewModel}> = observer
             <RightAlignedBodyGridCellBox>{props.leg.tradingPrice.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.bidPrice?.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.askPrice?.toFixed(2)}</RightAlignedBodyGridCellBox>
-            <RightAlignedBodyGridCellBox></RightAlignedBodyGridCellBox>
+            <RightAlignedBodyGridCellBox/>
         </>
     )
 })
