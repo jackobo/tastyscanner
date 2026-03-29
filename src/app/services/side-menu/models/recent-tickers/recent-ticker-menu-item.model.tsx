@@ -48,7 +48,11 @@ export class RecentTickerMenuItem extends SideMenuItemBaseModel implements IRece
     }
 
     async execute(): Promise<void> {
+        await this.services.tickers.setCurrentTicker(this.ticker.symbol);
+    }
 
+    removeFromRecentTickers(): void {
+        this.services.tickers.removeFromRecentTickers(this.ticker.symbol);
     }
 
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {MouseEvent} from "react";
 import {observer} from "mobx-react";
 import {
     IRecentTickerMenuItemViewModel
@@ -47,14 +47,14 @@ interface RecentTickerMenuItemComponentProps {
 export const RecentTickerMenuItemComponent: React.FC<RecentTickerMenuItemComponentProps> = observer((props) => {
     const services = useServices();
 
-
-    const onSelectTicker = async () => {
-        await services.tickers.setCurrentTicker(props.menuItem.ticker.symbol);
-    }
-
     const onRemoveTicker = () => {
-        services.tickers.removeFromRecentTickers(props.menuItem.ticker.symbol);
+        props.menuItem.removeFromRecentTickers();
     }
+
+    const onRemoveButtonClick = (event: MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+    }
+
     const renderRemoveButton = () => {
         if(!props.menuItem.isHovered) {
             return null;
@@ -65,7 +65,7 @@ export const RecentTickerMenuItemComponent: React.FC<RecentTickerMenuItemCompone
         }
 
         return (
-            <RemoveButtonBox>
+            <RemoveButtonBox onClick={onRemoveButtonClick}>
                 <RemoveButtonComponent onClick={onRemoveTicker}
                                        tooltipText={services.language.translate('Remove from recent tickers')}/>
             </RemoveButtonBox>
@@ -76,11 +76,11 @@ export const RecentTickerMenuItemComponent: React.FC<RecentTickerMenuItemCompone
         <ContainerBox onMouseEnter={() => props.menuItem.isHovered = true}
                       onMouseLeave={() => props.menuItem.isHovered = false}
                       >
-            <IconBox onClick={onSelectTicker}>
+            <IconBox>
                 <IonIcon slot="start" icon={props.menuItem.isCurrentTicker ? radioButtonOnOutline : radioButtonOffOutline}/>
             </IconBox>
 
-            <SymbolBox onClick={onSelectTicker}>
+            <SymbolBox>
                 {props.menuItem.ticker.symbol}
             </SymbolBox>
             {renderRemoveButton()}

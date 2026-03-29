@@ -4,4 +4,5 @@ export interface IRecentTickerMenuItemViewModel {
     readonly ticker: ITickerViewModel;
     readonly isCurrentTicker: boolean;
     isHovered: boolean;
+    removeFromRecentTickers(): void;
 }
