@@ -1,5 +1,5 @@
 import React, {PropsWithChildren, useEffect, useRef} from "react";
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import {IonButtons, IonContent, IonFooter, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar} from '@ionic/react';
 import {observer} from "mobx-react";
 import styled, {ThemeProvider} from "styled-components";
 import { ContainerMediaQueriesChecksContext } from "../react-contexts/container-media-queries-checks.context";
@@ -32,6 +32,7 @@ const PageContentBox = styled.div`
 export interface StandardPageProps extends PropsWithChildren {
     renderHeaderContent?: () => string | React.ReactElement;
     renderCustomHeader?: () => React.ReactElement;
+    renderFooterContent?: () => string | React.ReactElement | null;
     className?: string;
     pageContentCssClass?: string;
 }
@@ -78,6 +79,25 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
         )
     }
 
+    const renderFooter = () => {
+        if(!props.renderFooterContent) {
+            return null;
+        }
+
+        const footerContent = props.renderFooterContent();
+        if(!footerContent) {
+            return null;
+        }
+
+        return (
+            <IonFooter>
+                <IonToolbar>
+                    {footerContent}
+                </IonToolbar>
+            </IonFooter>
+        );
+    }
+
     return (
         <IonPage className={props.className}>
             {renderHeader()}
@@ -89,9 +109,8 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
                         </ThemeProvider>
                     </ContainerMediaQueriesChecksContext.Provider>
                 </PageContentBox>
-
-
             </IonContentBox>
+            {renderFooter()}
         </IonPage>
     );
 });
