@@ -18,7 +18,7 @@ export class BrokerageAccountInfoSideMenuItemModel extends RightSideTriggerMenuI
         )
     }
 
-    renderTitle(): string | React.ReactElement {
+    renderLeftSideTitle(): string | React.ReactElement {
         return this.services.language.translate('Account info');
     }
 

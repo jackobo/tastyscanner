@@ -19,7 +19,11 @@ export abstract class RightSideTriggerMenuItemModel<TRightSideMenuRenderer exten
 
     abstract get key(): string;
     abstract createRightSideMenuRenderer(): TRightSideMenuRenderer;
-    abstract renderTitle(): string | React.ReactElement;
+    abstract renderLeftSideTitle(): string | React.ReactElement;
+
+    renderRightSideTitle(): string | React.ReactElement {
+        return this.renderLeftSideTitle();
+    }
 
     get isSelected(): boolean {
         return false;

@@ -18,7 +18,7 @@ export class WatchListsSideMenuItem extends RightSideTriggerMenuItemModel<WatchL
         )
     }
 
-    renderTitle(): string | React.ReactElement {
+    renderLeftSideTitle(): string | React.ReactElement {
         return this.services.language.translate('Watch lists')
     }
 

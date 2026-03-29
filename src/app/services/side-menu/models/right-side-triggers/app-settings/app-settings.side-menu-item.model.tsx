@@ -16,7 +16,7 @@ export class AppSettingsSideMenuItemModel extends RightSideTriggerMenuItemModel<
             <IonIcon icon={settingsOutline}/>
         )
     }
-    renderTitle(): string | React.ReactElement {
+    renderLeftSideTitle(): string | React.ReactElement {
         return this.services.language.translate('App settings');
     }
 

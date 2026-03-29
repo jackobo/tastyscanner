@@ -17,7 +17,11 @@ export class StrategiesFiltersSideMenuItemModel extends RightSideTriggerMenuItem
         )
     }
 
-    renderTitle(): string | React.ReactElement {
+    renderLeftSideTitle(): string | React.ReactElement {
+        return this.services.language.translate('Filters');
+    }
+
+    renderRightSideTitle(): string | React.ReactElement {
         return this.services.language.translate('Strategies filters');
     }
 

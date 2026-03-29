@@ -21,7 +21,7 @@ export abstract class TriggerRightSideMenuRendererBase implements ISideMenuConte
     renderHeader(): string | React.ReactElement {
         return (
             <StandardRightSideMenuHeaderComponent renderIcon={() => this.rightSideMenuItemTrigger.renderIcon()}>
-                {this.rightSideMenuItemTrigger.renderTitle()}
+                {this.rightSideMenuItemTrigger.renderRightSideTitle()}
             </StandardRightSideMenuHeaderComponent>
         )
 

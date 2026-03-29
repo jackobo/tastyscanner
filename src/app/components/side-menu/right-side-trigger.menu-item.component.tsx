@@ -40,7 +40,7 @@ export const RightSideTriggerMenuItemComponent: React.FC<{menuItem: IRightSideTr
     return (
         <MenuItemContentContainerBox>
             <MenuItemMainContentBox>
-                {props.menuItem.renderTitle()}
+                {props.menuItem.renderLeftSideTitle()}
             </MenuItemMainContentBox>
             {renderCheckIcon()}
         </MenuItemContentContainerBox>
