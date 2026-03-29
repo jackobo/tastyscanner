@@ -9,18 +9,28 @@ import {getCommonColumnsTemplate} from "../constants";
 import {CenterAlignedBodyGridCellBox, RightAlignedBodyGridCellBox} from "../boxes/grid-body.boxes";
 
 const ContainerBox = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
+const RowBox = styled.div`
     display: grid;
     grid-template-columns: ${getCommonColumnsTemplate(false)};
     align-items: center;
     ${props => props.theme.screenMediaQuery.smallScreen} {
         grid-template-columns: ${getCommonColumnsTemplate(true)};
     }
+    
+    &:hover {
+        background-color: var(--ion-color-light);
+        color: var(--ion-color-light-contrast);
+    }
 `
 
 const LegLevelValuesComponent: React.FC<{leg: IActivePositionLegViewModel}> = observer((props) => {
 
     return (
-        <>
+        <RowBox>
             <CenterAlignedBodyGridCellBox>{props.leg.daysToExpiration}</CenterAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{`${props.leg.profitLossPercent.toFixed(2)}%`}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.profitLoss.toFixed(2)}</RightAlignedBodyGridCellBox>
@@ -28,14 +38,13 @@ const LegLevelValuesComponent: React.FC<{leg: IActivePositionLegViewModel}> = ob
             <RightAlignedBodyGridCellBox>{props.leg.tradingPrice.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.bidPrice?.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.leg.askPrice?.toFixed(2)}</RightAlignedBodyGridCellBox>
-            <RightAlignedBodyGridCellBox/>
-        </>
+        </RowBox>
     )
 })
 
 const OrderLevelValuesComponent: React.FC<{order: IActivePositionViewModel}> = observer(props => {
     return (
-        <>
+        <RowBox>
             <CenterAlignedBodyGridCellBox>
                 {props.order.daysToExpiration}
             </CenterAlignedBodyGridCellBox>
@@ -57,14 +66,10 @@ const OrderLevelValuesComponent: React.FC<{order: IActivePositionViewModel}> = o
                 {props.order.tradingPrice.toFixed(2)}
             </RightAlignedBodyGridCellBox>
 
-            <RightAlignedBodyGridCellBox>
+            <RightAlignedBodyGridCellBox/>
 
-            </RightAlignedBodyGridCellBox>
-            <RightAlignedBodyGridCellBox>
-            </RightAlignedBodyGridCellBox>
-            <RightAlignedBodyGridCellBox>
-            </RightAlignedBodyGridCellBox>
-        </>
+            <RightAlignedBodyGridCellBox/>
+        </RowBox>
     )
 })
 

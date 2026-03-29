@@ -46,7 +46,6 @@ export const ActivePositionsRootHeaderComponent: React.FC = observer(() => {
             <RightAlignedHeaderGridCellBox>Trd Prc</RightAlignedHeaderGridCellBox>
             <RightAlignedHeaderGridCellBox>Bid</RightAlignedHeaderGridCellBox>
             <RightAlignedHeaderGridCellBox>Ask</RightAlignedHeaderGridCellBox>
-            <RightAlignedHeaderGridCellBox></RightAlignedHeaderGridCellBox>
         </HeaderGridBox>
     )
 })
