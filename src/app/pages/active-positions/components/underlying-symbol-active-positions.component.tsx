@@ -12,7 +12,7 @@ import {
     RightAlignedBodyGridCellBox
 } from "../boxes/grid-body.boxes";
 import {useServices} from "../../../hooks/use-services.hook";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import {ORDERS_PADDING_LEFT} from "../boxes/constants";
 
 
@@ -35,26 +35,32 @@ const OrdersBox = styled.div`
 `
 
 
-const LegInfoSeparatorBox = styled.span`
+const LegInfoSeparatorBox = styled.span<{$isSell: boolean}>`
     display: flex;
     height: 70%;
     border-right: 1px solid var(--ion-color-dark);
+    ${props => props.$isSell
+            ? css`
+                border-right: 1px solid var(--ion-color-danger-contrast);
+            `
+            : css`
+                border-right: 1px solid var(--ion-color-success-contrast);
+            `
+    }
+    
 `
-
-
-
 
 const OrderLegComponent: React.FC<{leg: IActivePositionLegViewModel}> = observer((props) => {
     const services = useServices();
     return (
         <>
-            <LegInfoBodyGridCellBox>
+            <LegInfoBodyGridCellBox $isSell={props.leg.isSell}>
                 <LegInfoGridCellBox>{props.leg.quantity}</LegInfoGridCellBox>
-                <LegInfoSeparatorBox/>
+                <LegInfoSeparatorBox $isSell={props.leg.isSell}/>
                 <LegInfoGridCellBox>{props.leg.optionType}</LegInfoGridCellBox>
-                <LegInfoSeparatorBox/>
+                <LegInfoSeparatorBox $isSell={props.leg.isSell}/>
                 <LegInfoGridCellBox>{services.time.formatUserFriendlyMonthDay(props.leg.expirationDate)}</LegInfoGridCellBox>
-                <LegInfoSeparatorBox/>
+                <LegInfoSeparatorBox $isSell={props.leg.isSell}/>
                 <LegInfoGridCellBox>{props.leg.strikePrice}</LegInfoGridCellBox>
             </LegInfoBodyGridCellBox>
 

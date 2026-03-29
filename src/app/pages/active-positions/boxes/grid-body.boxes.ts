@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import {COMMON_COLUMNS_TEMPLATE, LEG_INFO_WIDTH} from "./constants";
 import {GridCellBox} from "./common.boxes";
 
@@ -26,7 +26,7 @@ export const LegInfoGridCellBox = styled.div`
 `
 
 
-export const LegInfoBodyGridCellBox = styled(GridBodyCellBox)`
+export const LegInfoBodyGridCellBox = styled(GridBodyCellBox)<{$isSell: boolean}>`
     display: grid;
     grid-template-columns: 15px auto 10px auto 45px auto 38px;
     flex-direction: row;
@@ -34,7 +34,16 @@ export const LegInfoBodyGridCellBox = styled(GridBodyCellBox)`
     justify-items: center;
     justify-content: space-evenly;
     gap: var(--ion-space-8);
-    background-color: var(--ion-color-light);
-    color: var(--ion-color-light-contrast);
+    ${props => props.$isSell 
+            ? css`
+                background-color: var(--ion-color-danger-shade);
+                color: var(--ion-color-danger-contrast);
+            `
+            : css`
+                background-color: var(--ion-color-success-shade);
+                color: var(--ion-color-success-contrast);
+            `
+    }
+  
     
 `
