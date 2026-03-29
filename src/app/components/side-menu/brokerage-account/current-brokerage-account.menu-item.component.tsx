@@ -6,6 +6,12 @@ import styled from "styled-components";
 import {IonSpinnerComponent} from "../../../../framework/components/spinner/ion-spinner.component";
 
 
+const ContainerBox = styled.div`
+  
+    padding: var(--ion-space-8) var(--ion-space-12);
+    
+`
+
 const SpinnerContainerBox = styled.div`
     display: flex;
     flex-direction: row;
@@ -36,10 +42,18 @@ export const CurrentBrokerageAccountMenuItemComponent: React.FC = observer(() =>
         )
     }
 
-
-    if(brokersService.accountsLoadingInProgress) {
-        return renderSpinner();
-    } else {
-        return renderDropDown();
+    const renderContent = () => {
+        if(brokersService.accountsLoadingInProgress) {
+            return renderSpinner();
+        } else {
+            return renderDropDown();
+        }
     }
+
+    return (
+        <ContainerBox>
+            {renderContent()}
+        </ContainerBox>
+    )
+
 })

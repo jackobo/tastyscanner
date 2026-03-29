@@ -5,7 +5,7 @@ import styled, {css} from "styled-components";
 import {useFrameworkServices} from "../../../hooks/use-framework-services.hook";
 import {ISideMenuItemViewModel} from "../../../services/side-menu/left/models/side-menu-item.view-model.interface";
 
-const IonMenuToggleBox = styled.div<{$showCursor: boolean}>`
+const MenuItemContainerBox = styled.div<{$showCursor: boolean}>`
     padding: 0;
     ${props => props.$showCursor && css`
         cursor: pointer;
@@ -15,6 +15,8 @@ const IonMenuToggleBox = styled.div<{$showCursor: boolean}>`
 
 const IonItemBox = styled(IonItem)<{$isSelected: boolean; $level: number}>`
     --padding-start: ${props => 16 + props.$level * 32}px;
+    --padding-top: 0;
+    --padding-bottom: 0;
     ${props => props.$isSelected && css`
         --background: rgba(var(--ion-color-primary-rgb), 0.14);
         --color: var(--ion-color-primary);
@@ -73,7 +75,7 @@ export const StandardSideMenuItemComponent: React.FC<StandardSideMenuItemCompone
     }
 
     return (
-        <IonMenuToggleBox className={props.className} $showCursor={props.menuItem.shouldCloseMenuOnClick}>
+        <MenuItemContainerBox className={props.className} $showCursor={props.menuItem.shouldCloseMenuOnClick}>
             <IonItemBox $isSelected={props.menuItem.isSelected}
                         $level={level}
                         lines="none"
@@ -84,6 +86,6 @@ export const StandardSideMenuItemComponent: React.FC<StandardSideMenuItemCompone
                     {props.menuItem.renderStandardContent()}
                 </MenuItemContentBox>
             </IonItemBox>
-        </IonMenuToggleBox>
+        </MenuItemContainerBox>
     )
 })
