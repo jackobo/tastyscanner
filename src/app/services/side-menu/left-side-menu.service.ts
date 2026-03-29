@@ -46,9 +46,9 @@ export class LeftSideMenuService extends LeftSideMenuBaseService<IAppServiceFact
             {
                 key: "utils-side-menu-group",
                 menuItems: [
-                    new BrokerageAccountInfoSideMenuItemModel(this.services),
                     new FiltersSideMenuItemModel(this.services),
                     new WatchListsSideMenuItem(this.services),
+                    new BrokerageAccountInfoSideMenuItemModel(this.services),
                     new AppSettingsSideMenuItemModel(this.services)
                 ]
             }
