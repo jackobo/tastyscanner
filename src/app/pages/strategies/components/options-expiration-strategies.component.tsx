@@ -88,16 +88,9 @@ const StrategiesBox = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: var(--ion-space-30);
-    padding: var(--ion-space-30) 0;
+    gap: var(--ion-space-16);
+    padding: var(--ion-space-16) 0;
     justify-content: center;
-    ${props => props.theme.screenMediaQuery.smallScreen} {
-        padding: var(--ion-space-16) var(--ion-space-8);
-    }
-
-    ${props => props.theme.screenMediaQuery.xsAndBelow} {
-        padding: var(--ion-space-16) 0;
-    }
 `
 
 const ExpirationDetailsBox = styled.div`

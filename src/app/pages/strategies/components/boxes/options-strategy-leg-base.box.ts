@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const OptionsStrategyLegBaseBox = styled.div`
     display: grid;
-    grid-template-columns: 25px 12px 45px 45px 40px 45px 45px;
+    grid-template-columns: 25px 10px 40px 40px 45px 45px 40px;
     align-items: center;
     justify-content: center;
     gap: 8px;

@@ -33,31 +33,40 @@ export const StrategyBox = styled(CardBox)<{$hasOppositePosition: boolean}>`
     padding: var(--ion-space-24);
     overflow: hidden;
     font-size: var(--ion-font-size-caption);
+    ${props => props.theme.containerMediaQuery.smallScreen} {
+        padding: var(--ion-space-20) var(--ion-space-16) var(--ion-space-16) var(--ion-space-20);
+    }
     ${props => props.$hasOppositePosition && css`
         background-color: var(--ion-color-medium-tint);
     `}
 `
 
 const CornerBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}>`
+    --corner-size: 35px;
+    ${props => props.theme.containerMediaQuery.smallScreen} {
+        --corner-size: 30px;
+    }
     position: absolute;
     width: 0;
     height: 0;
     top: -5px;
     left: -5px;
-    border-left: 35px solid transparent;
-    border-right: 35px solid transparent;
+    border-left: var(--corner-size) solid transparent;
+    border-right: var(--corner-size) solid transparent;
     transform: translateX(-25%) rotate(-45deg);
 
     ${props => props.$isBestPop && css`
-        border-bottom: 35px solid ${BEST_POP};
+        border-bottom: var(--corner-size) solid ${BEST_POP};
     `}
     ${props => props.$isBestRiskReward && css`
-        border-bottom: 35px solid ${BEST_RISK_REWARD};
+        border-bottom: var(--corner-size) solid ${BEST_RISK_REWARD};
     `}
 
     ${props => props.$isBestRiskReward && props.$isBestPop && css`
-        border-bottom: 35px solid ${BEST_POP_AND_RR};
+        border-bottom: var(--corner-size) solid ${BEST_POP_AND_RR};
     `}
+
+   
 `
 
 const InfoIconBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}>`
@@ -70,7 +79,7 @@ const InfoIconBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}
     align-items: center;
     justify-content: center;
     justify-items: center;
-    font-size: 14px;
+    font-size: 0.85rem;
     z-index: 100;
     border-radius: 50%;
     cursor: pointer;
