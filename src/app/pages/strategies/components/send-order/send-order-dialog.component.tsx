@@ -368,7 +368,12 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
         }
 
         try {
-            await props.strategy.sendOrder(orderParams);
+            await services.loadingIndicator.execute({
+                action: async () => {
+                    await props.strategy.sendOrder(orderParams);
+                }
+            });
+            
             props.dialogHandler.accept();
         } catch (err) {
             await services.toaster.showErrorToast({
