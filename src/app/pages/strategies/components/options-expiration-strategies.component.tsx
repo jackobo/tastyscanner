@@ -100,21 +100,14 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
 
     const strategies = props.strategies;
 
-
     let label = `${services.time.formatUserFriendlyMonthDay(props.expiration.expirationDate)} (${props.expiration.daysToExpiration}d) - ${props.expiration.expirationType}`;
     if(props.expiration.settlementType === 'AM') {
         label +=  ` [${props.expiration.settlementType}]`
     }
 
     const renderActivePositions = () => {
-        const activePositions = services.brokers.currentAccount?.activePositions;
-        if (!activePositions) {
-            return null;
-        }
-        const positionsCount = activePositions.positions
-            .filter(p => p.underlyingSymbol == props.ticker.symbol
-                && p.legs.some(l => l.daysToExpiration === props.expiration.daysToExpiration))
-            .length;
+        const activePositions = services.brokers.currentAccount?.getActivePositionForSymbolAndExpiration(props.ticker.symbol, props.expiration.daysToExpiration);
+        const positionsCount = (activePositions ?? []).length;
 
         if (positionsCount === 0) {
             return null;

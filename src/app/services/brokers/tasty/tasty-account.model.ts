@@ -20,6 +20,7 @@ import {
 } from "../../../pages/working-orders/show-working-order-update-confirmation-toast";
 import {OrderUpdateType} from "../../../pages/working-orders/components/working-order-confirmation-toast.component";
 import {TastyWorkingOrderLegModel} from "./orders/working-order/tasty-working-order-leg.model";
+import {IActivePositionViewModel} from "../interfaces/active-position.interfaces";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -84,6 +85,12 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     get activePositionsLegsMap(): Record<string, TastyActivePositionLegModel> {
         return this._activePositions.positions.selectMany(o => o.legs)
                                       .toDictionaryOfType(leg => leg.symbol, leg => leg);
+    }
+
+    getActivePositionForSymbolAndExpiration(symbol: string, daysToExpiration: number): IActivePositionViewModel[] {
+        return this.activePositions.positions
+            .filter(p => p.underlyingSymbol == symbol
+                && p.legs.some(l => l.daysToExpiration === daysToExpiration))
     }
 
     get workingOrdersLegsMap(): Record<string, TastyWorkingOrderLegModel[]> {

@@ -8,6 +8,7 @@ export interface IBrokerageAccountViewModel {
     readonly brokerName: string;
     readonly accountNumber: string;
     readonly activePositions: IActivePositionsResult;
+    getActivePositionForSymbolAndExpiration(symbol: string, daysToExpiration: number): IActivePositionViewModel[];
     readonly workingOrders: IWorkingOrderViewModel[];
     readonly accountInfo: IBrokerageAccountInfoViewModel | null;
     sendOrder(order: IOpenOrderRequest): Promise<void>;
