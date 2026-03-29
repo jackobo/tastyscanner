@@ -1,6 +1,6 @@
 import React from "react";
 import {observer} from "mobx-react-lite";
-import {TastyScannerStandardPage} from "../tasty-scanner-standard.page";
+import {TastyGobyStandardPage} from "../tasty-goby-standard.page";
 import {useServices} from "../../hooks/use-services.hook";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
 import styled from "styled-components";
@@ -60,7 +60,7 @@ export const StrategiesPage: React.FC<StrategiesPageProps> = observer((props) =>
     }
 
     return (
-        <TastyScannerStandardPage>
+        <TastyGobyStandardPage>
             <PageContentBox>
                 <StrategyTitleBox>
                     {`${ticker?.symbol} ${props.strategyName}`}
@@ -68,7 +68,7 @@ export const StrategiesPage: React.FC<StrategiesPageProps> = observer((props) =>
                 {renderPageContent()}
             </PageContentBox>
 
-        </TastyScannerStandardPage>
+        </TastyGobyStandardPage>
     )
 });
 

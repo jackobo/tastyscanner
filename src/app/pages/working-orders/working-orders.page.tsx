@@ -1,6 +1,6 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {TastyScannerStandardPage} from "../tasty-scanner-standard.page";
+import {TastyGobyStandardPage} from "../tasty-goby-standard.page";
 import {useServices} from "../../hooks/use-services.hook";
 import {IWorkingOrderViewModel} from "../../services/brokers/interfaces/working-order.interfaces";
 import styled from "styled-components";
@@ -72,10 +72,10 @@ export const WorkingOrdersPage: React.FC = observer(() => {
     }
 
     return (
-        <TastyScannerStandardPage>
+        <TastyGobyStandardPage>
             <PageContentBox>
                 {renderPageContent()}
             </PageContentBox>
-        </TastyScannerStandardPage>
+        </TastyGobyStandardPage>
     )
 })

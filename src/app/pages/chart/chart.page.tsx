@@ -1,14 +1,14 @@
 import React from 'react';
 import {observer} from "mobx-react";
 import {useServices} from "../../hooks/use-services.hook";
-import {TastyScannerStandardPage} from "../tasty-scanner-standard.page";
+import {TastyGobyStandardPage} from "../tasty-goby-standard.page";
 import {TickerChartComponent} from "../../components/ticker/ticker-chart.component";
 
 export const ChartPage: React.FC = observer(() => {
     const services = useServices();
     return (
-        <TastyScannerStandardPage>
+        <TastyGobyStandardPage>
             <TickerChartComponent ticker={services.tickers.currentTicker}/>
-        </TastyScannerStandardPage>
+        </TastyGobyStandardPage>
     )
 })

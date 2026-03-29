@@ -1,6 +1,6 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {TastyScannerStandardPage} from "../tasty-scanner-standard.page";
+import {TastyGobyStandardPage} from "../tasty-goby-standard.page";
 import {useServices} from "../../hooks/use-services.hook";
 import styled from "styled-components";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
@@ -11,7 +11,7 @@ import {UnderlyingSymbolActivePositionsComponent} from "./components/underlying-
 
 const PAGE_CONTENT_CSS_CLASS = 'active-positions-page-content'
 
-const PageBox = styled(TastyScannerStandardPage)`
+const PageBox = styled(TastyGobyStandardPage)`
     font-size: var(--ion-font-size-body2);
     & .${PAGE_CONTENT_CSS_CLASS} {
         overflow: hidden;

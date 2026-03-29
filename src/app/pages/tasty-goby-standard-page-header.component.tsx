@@ -42,7 +42,7 @@ const TickerDescriptionBox = styled.span`
 
 
 
-export const TastyScannerStandardPageHeaderComponent: React.FC = observer(() => {
+export const TastyGobyStandardPageHeaderComponent: React.FC = observer(() => {
     const services = useServices();
     const ticker = services.tickers.currentTicker;
     const metrics = ticker?.metrics;
