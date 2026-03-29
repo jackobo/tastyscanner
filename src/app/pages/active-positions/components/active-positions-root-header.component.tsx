@@ -20,13 +20,13 @@ export const CenterAlignedHeaderGridCellBox = styled(GridHeaderCellBox)`
 
 export const HeaderGridBox = styled.div`
     display: grid;
-    grid-template-columns: ${UNDERLYING_SYMBOL_WIDTH} ${props => getCommonColumnsTemplate(false)};
+    grid-template-columns: ${UNDERLYING_SYMBOL_WIDTH} ${getCommonColumnsTemplate(false)};
     align-items: center;
     width: 100%;
     font-size: var(--ion-font-size-h6);
     ${props => props.theme.screenMediaQuery.smallScreen} {
         width: fit-content;
-        grid-template-columns: ${UNDERLYING_SYMBOL_WIDTH} ${props => getCommonColumnsTemplate(true)};
+        grid-template-columns: ${UNDERLYING_SYMBOL_WIDTH} ${getCommonColumnsTemplate(true)};
     }
 `
 
