@@ -91,11 +91,11 @@ const StrategiesBox = styled.div`
     gap: var(--ion-space-30);
     padding: var(--ion-space-30) 0;
     justify-content: center;
-    ${props => props.theme.containerMediaQuery.smallScreen} {
+    ${props => props.theme.screenMediaQuery.smallScreen} {
         padding: var(--ion-space-16) var(--ion-space-8);
     }
 
-    ${props => props.theme.containerMediaQuery.xsAndBelow} {
+    ${props => props.theme.screenMediaQuery.xsAndBelow} {
         padding: var(--ion-space-16) 0;
     }
 `
