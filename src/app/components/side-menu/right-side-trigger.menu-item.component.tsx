@@ -24,7 +24,6 @@ const CheckIconBox = styled.div`
 
 
 export const RightSideTriggerMenuItemComponent: React.FC<{menuItem: IRightSideTriggerMenuItemViewModel}> = observer((props) => {
-
     const renderCheckIcon = () => {
         if(!props.menuItem.isOpen) {
             return null;

@@ -11,6 +11,7 @@ import {IronCondorsSideMenuItemModel} from "./iron-condors.side-menu-item.model"
 import {PutCreditSpreadsSideMenuItemModel} from "./put-credit-spreads.side-menu-item.model";
 import {CallCreditSpreadsSideMenuItemModel} from "./call-credit-spreads.side-menu-item.model";
 import {layersOutline} from "ionicons/icons";
+import {StrategiesFiltersSideMenuItemModel} from "../../right-side-triggers/strategies-filters/strategies-filters.side-menu-item.model";
 
 export class StrategiesSideMenuItemModel extends RouteBaseSideMenuItemModel {
     constructor(services: IAppServiceFactory) {
@@ -37,6 +38,7 @@ export class StrategiesSideMenuItemModel extends RouteBaseSideMenuItemModel {
             new IronCondorsSideMenuItemModel(this.services),
             new PutCreditSpreadsSideMenuItemModel(this.services),
             new CallCreditSpreadsSideMenuItemModel(this.services),
+            new StrategiesFiltersSideMenuItemModel(this.services),
         ]
     }
 }

@@ -155,7 +155,7 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
 
                 <TooltipComponent targetRef={activePositionsCountRef}>
                     <TooltipStandardContentBox>
-                        {services.language.translate('The number of active positions that are already open for this expiration according to your filters.')}
+                        {services.language.translate('The number of active positions that are already open for this expiration according to your strategies-filters.')}
                     </TooltipStandardContentBox>
                 </TooltipComponent>
             </>

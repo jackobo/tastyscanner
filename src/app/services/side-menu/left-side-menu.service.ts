@@ -1,7 +1,6 @@
 import {ILeftSideMenuService} from "../../../framework/services/side-menu/left/left-side-menu.service.interface";
 import {ISideMenuItemViewModel} from "../../../framework/services/side-menu/left/models/side-menu-item.view-model.interface";
 import {StrategiesSideMenuItemModel} from "./models/navigation/strategies/strategies.side-menu-item.model";
-import {FiltersSideMenuItemModel} from "./models/right-side-triggers/filters/filters.side-menu-item.model";
 import {WatchListsSideMenuItem} from "./models/right-side-triggers/watch-lists/watch-lists.side-menu-item.model";
 import {ActivePositionsSideMenuItemModel} from "./models/navigation/active-positions/active-positions.side-menu-item.model";
 import {ChartSideMenuItemModel} from "./models/navigation/chart/chart.side-menu-item.model";
@@ -46,7 +45,6 @@ export class LeftSideMenuService extends LeftSideMenuBaseService<IAppServiceFact
             {
                 key: "utils-side-menu-group",
                 menuItems: [
-                    new FiltersSideMenuItemModel(this.services),
                     new WatchListsSideMenuItem(this.services),
                     new BrokerageAccountInfoSideMenuItemModel(this.services),
                     new AppSettingsSideMenuItemModel(this.services)
