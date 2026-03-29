@@ -33,7 +33,7 @@ export const StrategyBox = styled(CardBox)<{$hasOppositePosition: boolean}>`
     padding: var(--ion-space-24);
     overflow: hidden;
     font-size: var(--ion-font-size-caption);
-    ${props => props.theme.containerMediaQuery.smallScreen} {
+    ${props => props.theme.containerMediaQuery.xsAndBelow} {
         padding: var(--ion-space-20) var(--ion-space-16) var(--ion-space-16) var(--ion-space-20);
     }
     ${props => props.$hasOppositePosition && css`
@@ -43,7 +43,7 @@ export const StrategyBox = styled(CardBox)<{$hasOppositePosition: boolean}>`
 
 const CornerBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}>`
     --corner-size: 35px;
-    ${props => props.theme.containerMediaQuery.smallScreen} {
+    ${props => props.theme.containerMediaQuery.xsAndBelow} {
         --corner-size: 30px;
     }
     position: absolute;
@@ -79,11 +79,14 @@ const InfoIconBox = styled.div<{$isBestPop: boolean; $isBestRiskReward: boolean}
     align-items: center;
     justify-content: center;
     justify-items: center;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     z-index: 100;
     border-radius: 50%;
     cursor: pointer;
-    
+
+    ${props => props.theme.containerMediaQuery.xsAndBelow} {
+        font-size: 0.8rem;
+    }
 
     ${props => props.$isBestPop && css`
         color: ${BEST_POP_CONTRAST};
