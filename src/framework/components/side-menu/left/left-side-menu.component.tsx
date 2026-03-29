@@ -25,6 +25,7 @@ const IonMenuBox = styled(IonMenu)`
   --padding-end: 8px;
   --padding-top: 20px;
   --padding-bottom: 20px;
+  --side-max-width: 300px;
 `
 
 const HeaderBox = styled(IonHeader)`

@@ -52,7 +52,7 @@ const ToastContainerBox = styled(ToastContainer)`
 `
 
 const IonSplitPaneBox = styled(IonSplitPane)`
-    --side-max-width: 300px;
+    
 `
 
 const ToastContainerComponent: React.FC  = observer(() => {
