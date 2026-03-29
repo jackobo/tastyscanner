@@ -24,6 +24,7 @@ export const HeaderGridBox = styled.div`
     align-items: center;
     width: 100%;
     font-size: var(--ion-font-size-h6);
+    padding-right: var(--ion-space-12);
     ${props => props.theme.screenMediaQuery.smallScreen} {
         width: fit-content;
         grid-template-columns: ${UNDERLYING_SYMBOL_WIDTH} ${getCommonColumnsTemplate(true)};
