@@ -36,7 +36,7 @@ export const UnderlyingSymbolBox = styled(GridHeaderCellBox)`
     width: ${UNDERLYING_SYMBOL_WIDTH};
 `
 
-export const ActivePositionsRootHeaderComponent: React.FC = observer(() => {
+export const ActivePositionsTopHeaderComponent: React.FC = observer(() => {
     return (
         <HeaderGridBox>
             <UnderlyingSymbolBox>Symbol</UnderlyingSymbolBox>

@@ -6,7 +6,7 @@ import styled from "styled-components";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
 import {IonAccordionGroup} from "@ionic/react";
 
-import {ActivePositionsRootHeaderComponent} from "./components/active-positions-root-header.component";
+import {ActivePositionsTopHeaderComponent} from "./components/active-positions-top-header.component";
 import {UnderlyingSymbolActivePositionsComponent} from "./components/underlying-symbol-active-positions.component";
 
 const PAGE_CONTENT_CSS_CLASS = 'active-positions-page-content'
@@ -50,7 +50,7 @@ export const ActivePositionsPage: React.FC = observer(() => {
     return (
         <PageBox pageContentCssClass={PAGE_CONTENT_CSS_CLASS}>
 
-            <ActivePositionsRootHeaderComponent/>
+            <ActivePositionsTopHeaderComponent/>
 
             <PageContentBox $isExpanded={isExpanded}>
 
