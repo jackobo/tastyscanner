@@ -81,6 +81,7 @@ const ActivePositionsCountBox = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 4px;
+    padding-right: var(--ion-space-8);
    
 `
 
