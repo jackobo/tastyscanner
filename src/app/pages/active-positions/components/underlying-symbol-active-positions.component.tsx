@@ -13,10 +13,6 @@ import {
 } from "../boxes/grid-body.boxes";
 import {useServices} from "../../../hooks/use-services.hook";
 import styled, {css} from "styled-components";
-import {ORDERS_PADDING_LEFT} from "../boxes/constants";
-
-
-
 
 const SymbolBox = styled(IonItem)`
     cursor: pointer;
@@ -30,7 +26,6 @@ const OrdersBox = styled.div`
     display: flex;
     flex-direction: column;
     gap: var(--ion-space-8);
-    padding-left: ${ORDERS_PADDING_LEFT};
     padding-bottom: var(--ion-space-20);
 `
 
