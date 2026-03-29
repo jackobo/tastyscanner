@@ -26,13 +26,13 @@ import {
 } from "../../../../../framework/components/modal/footer/standard-dialog-footer.component";
 import {PrimaryButton} from "../../../../../framework/components/buttons/primary-button";
 import {OrderType, TimeInForce} from "../../../../services/brokers/interfaces/open-order-request.interface";
-import {
-    TooltipComponent
-} from "../../../../../framework/components/tooltip/tooltip.component";
+import {TooltipComponent} from "../../../../../framework/components/tooltip/tooltip.component";
 import {TooltipStandardContentBox} from "../../../../../framework/components/tooltip/tooltip-standard-content.box";
 import {MathUtils} from "../../../../../framework/utils/math-utils";
 import {OptionsStrategyLegComponent} from "../options-strategy-leg.component";
 import {OptionsStrategyHeaderComponent} from "../options-strategy-header.component";
+import {TooltipToggleBehaviorEnum} from "../../../../../framework/components/tooltip/tooltip-toggle-behavior.enum";
+import {useScreenMediaQueriesChecks} from "../../../../../framework/hooks/use-screen-media-queries-checks.hook";
 
 
 const FieldsGridBox = styled.div`
@@ -144,6 +144,13 @@ const FooterContentBox = styled.div`
     align-items: center;
     gap: var(--ion-space-16);
     width: 100%;
+`
+
+const EnableAutoReplaceToggleContainerBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--ion-space-12);
 `
 
 const EnableAutoReplaceLabelBox = styled.div`
@@ -333,8 +340,8 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
     const [enableAutoReplace, setEnableAutoReplace] = React.useState<boolean>(true);
     const [orderType] = React.useState<OrderType>("Limit");
     const [timeInForce] = React.useState<TimeInForce>("Day");
+    const mediaQuery = useScreenMediaQueriesChecks()
     const enableAutoReplaceInfoIconBoxRef = useRef<HTMLDivElement | null>(null);
-
     const limitPriceAsNumber = limitPrice ? MathUtils.round(parseFloat(limitPrice)) : null;
 
 
@@ -434,18 +441,24 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
             </DialogContent>
             <StandardDialogFooterComponent dialogHandler={props.dialogHandler}>
                 <FooterContentBox>
-                    <IonToggle labelPlacement="end" checked={enableAutoReplace} onIonChange={e => setEnableAutoReplace(e.detail.checked)}>
-                        <EnableAutoReplaceLabelBox>
-                            <span>{services.language.translate("Enable auto replace")}</span>
-                            <EnableAutoReplaceInfoIconBox ref={enableAutoReplaceInfoIconBoxRef}>
-                                <IonIcon icon={informationCircleOutline} />
-                            </EnableAutoReplaceInfoIconBox>
-                            <TooltipComponent targetRef={enableAutoReplaceInfoIconBoxRef}>
-                                <AutoReplaceInfoTooltipContentComponent/>
-                            </TooltipComponent>
-                        </EnableAutoReplaceLabelBox>
+                    <EnableAutoReplaceToggleContainerBox>
+                        <IonToggle labelPlacement="end" checked={enableAutoReplace} onIonChange={e => setEnableAutoReplace(e.detail.checked)}>
+                            <EnableAutoReplaceLabelBox>
+                                {services.language.translate("Enable auto replace")}
+                            </EnableAutoReplaceLabelBox>
+                        </IonToggle>
 
-                    </IonToggle>
+                        <EnableAutoReplaceInfoIconBox ref={enableAutoReplaceInfoIconBoxRef}>
+                            <IonIcon icon={informationCircleOutline} />
+                        </EnableAutoReplaceInfoIconBox>
+                        <TooltipComponent targetRef={enableAutoReplaceInfoIconBoxRef}
+                                          toggleBehavior={TooltipToggleBehaviorEnum.OnTargetClick}
+                                          showCloseButton={true}
+                                          hideArrow={mediaQuery.smallScreen}>
+                            <AutoReplaceInfoTooltipContentComponent/>
+                        </TooltipComponent>
+                    </EnableAutoReplaceToggleContainerBox>
+
 
                     <PrimaryButton onClick={sendOrder} fullWidth={true} showArrow={true}>
                         {services.language.translate("Send order")}
