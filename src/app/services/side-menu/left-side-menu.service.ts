@@ -38,6 +38,12 @@ export class LeftSideMenuService extends LeftSideMenuBaseService<IAppServiceFact
     get menuItemsGroups(): ISideMenuItemsGroupViewModel[] {
         return [
             {
+                key: "recent-tickers-menu-group",
+                menuItems: [
+                    new RecentTickersMenuItemModel(this.services)
+                ]
+            },
+            {
                 key: "utils-side-menu-group",
                 menuItems: [
                     new BrokerageAccountInfoSideMenuItemModel(this.services),
@@ -45,13 +51,8 @@ export class LeftSideMenuService extends LeftSideMenuBaseService<IAppServiceFact
                     new WatchListsSideMenuItem(this.services),
                     new AppSettingsSideMenuItemModel(this.services)
                 ]
-            },
-            {
-                key: "recent-tickers-menu-group",
-                menuItems: [
-                    new RecentTickersMenuItemModel(this.services)
-                ]
             }
+
         ];
     }
 
