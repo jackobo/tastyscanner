@@ -13,6 +13,7 @@ const ContainerBox = styled.div`
     flex-direction: row;
     align-items: center;
     width: 100%;
+    cursor: pointer;
 `
 
 const MenuTitleBox = styled.span`
@@ -20,7 +21,7 @@ const MenuTitleBox = styled.span`
 `
 
 const ChevronBox = styled.span`
-    cursor: pointer;
+    
 `
 
 interface RecentTickersMenuItemComponentProps {
