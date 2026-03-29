@@ -34,7 +34,9 @@ export interface StandardPageProps extends PropsWithChildren {
     renderCustomHeader?: () => React.ReactElement;
     renderFooterContent?: () => string | React.ReactElement | null;
     className?: string;
+    pageContentWrapperCssClass?: string;
     pageContentCssClass?: string;
+
 }
 
 export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
@@ -101,7 +103,7 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
     return (
         <IonPage className={props.className}>
             {renderHeader()}
-            <IonContentBox>
+            <IonContentBox className={props.pageContentWrapperCssClass}>
                 <PageContentBox ref={contentRef} className={props.pageContentCssClass}>
                     <ContainerMediaQueriesChecksContext.Provider value={containerMediaChecks.current}>
                         <ThemeProvider theme={services.theme.applyContainerMediaQueries() as any}>

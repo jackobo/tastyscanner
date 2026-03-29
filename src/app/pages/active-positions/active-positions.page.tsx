@@ -10,14 +10,21 @@ import {ActivePositionsTopHeaderComponent} from "./components/active-positions-t
 import {UnderlyingSymbolActivePositionsComponent} from "./components/underlying-symbol-active-positions.component";
 
 const PAGE_CONTENT_CSS_CLASS = 'active-positions-page-content'
+const PAGE_CONTENT_WRAPPER_CSS_CLASS = 'active-positions-page-content-wrapper'
 
 const PageBox = styled(TastyGobyStandardPage)`
     font-size: var(--ion-font-size-body2);
+    
     & .${PAGE_CONTENT_CSS_CLASS} {
         overflow: hidden;
+        
         ${props => props.theme.screenMediaQuery.smallScreen} {
             overflow-x: auto;
         }
+    }
+    
+    & .${PAGE_CONTENT_WRAPPER_CSS_CLASS} {
+        --padding-end: 0;
     }
 `
 
@@ -48,7 +55,7 @@ export const ActivePositionsPage: React.FC = observer(() => {
     const ordersByUnderlying = activePositions.positions.groupByKey(o => o.underlyingSymbol);
 
     return (
-        <PageBox pageContentCssClass={PAGE_CONTENT_CSS_CLASS}>
+        <PageBox pageContentCssClass={PAGE_CONTENT_CSS_CLASS} pageContentWrapperCssClass={PAGE_CONTENT_WRAPPER_CSS_CLASS}>
 
             <ActivePositionsTopHeaderComponent/>
 

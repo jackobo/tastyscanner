@@ -7,6 +7,7 @@ import {useScreenMediaQueriesChecks} from "../../framework/hooks/use-screen-medi
 interface TastyGobyStandardPageProps extends PropsWithChildren {
     className?: string;
     pageContentCssClass?: string;
+    pageContentWrapperCssClass?: string;
 }
 
 export const TastyGobyStandardPage: React.FC<TastyGobyStandardPageProps> = observer((props) => {
@@ -30,7 +31,8 @@ export const TastyGobyStandardPage: React.FC<TastyGobyStandardPageProps> = obser
         <StandardPage renderHeaderContent={renderHeader}
                       renderFooterContent={renderFooter}
                       className={props.className}
-                      pageContentCssClass={props.pageContentCssClass}>
+                      pageContentCssClass={props.pageContentCssClass}
+                      pageContentWrapperCssClass={props.pageContentWrapperCssClass}>
             {props.children}
         </StandardPage>
     )
