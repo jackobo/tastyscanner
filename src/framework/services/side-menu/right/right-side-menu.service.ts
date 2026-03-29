@@ -5,8 +5,6 @@ import { runInAction} from "mobx";
 import {FrameworkServiceBase} from "../../framework-service-base";
 import {MAIN_CONTENT} from "../../../global-constants";
 import {RightSideMenuControllerModel} from "./right-side-menu-controller.model";
-import {delay} from "../../../utils/delay-function";
-
 
 export class RightSideMenuService extends FrameworkServiceBase implements IRightSideMenuService {
 
