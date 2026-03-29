@@ -1,4 +1,7 @@
-import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
+import {
+    IOptionsStrategyViewModel,
+    IOptionsStrategyWithAnnotationsViewModel
+} from "../../../models/options-strategy.view-model.interface";
 import React, {useRef} from "react";
 import {observer} from "mobx-react";
 import {OptionsStrategyHeaderComponent} from "./options-strategy-header.component";
@@ -109,18 +112,16 @@ const BestStrategyTooltipContentBox = styled(TooltipStandardContentBox)<{$isBest
 
 
 export interface OptionsStrategyComponentProps {
-    strategy: IOptionsStrategyViewModel;
-    bestPop: number;
-    bestRiskReward: number;
+    strategy: IOptionsStrategyWithAnnotationsViewModel<IOptionsStrategyViewModel>;
     className?: string;
 }
 export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> = observer(props => {
     const services = useServices();
     const filters = services.strategySettings.strategyFilters;
     const infoIconBoxRef = useRef<HTMLDivElement | null>(null);
-    const isBestRiskReward = props.strategy.riskRewardRatio === props.bestRiskReward;
-    const isBestPop = props.strategy.pop === props.bestPop;
-    const hasOppositePosition = props.strategy.legs.some(l => l.hasOppositePositions);
+    const isBestRiskReward = props.strategy.isBestRiskReward;
+    const isBestPop = props.strategy.isBestPOP;
+    const hasOppositePosition = props.strategy.strategy.legs.some(l => l.hasOppositePositions);
 
     let shouldBeIncluded: NullableUndefinedBoolean = null;
     if(filters.bestStrategy.includes(BestStrategyEnum.BestPOP)) {
@@ -186,8 +187,8 @@ export const OptionsStrategyComponent: React.FC<OptionsStrategyComponentProps> =
                 {renderCorner()}
 
                 <OptionsStrategyHeaderComponent/>
-                {props.strategy.legs.map(leg => (<OptionsStrategyLegComponent key={leg.key} leg={leg} strategy={props.strategy}/>))}
-                <OptionsStrategyFooterComponent strategy={props.strategy}/>
+                {props.strategy.strategy.legs.map(leg => (<OptionsStrategyLegComponent key={leg.key} leg={leg} strategy={props.strategy.strategy}/>))}
+                <OptionsStrategyFooterComponent strategy={props.strategy.strategy}/>
             </StrategyBox>
             {renderToolTip()}
         </>

@@ -6,7 +6,10 @@ import {
 } from "../../../models/options-expiration.view-model.interface";
 import {ITickerViewModel} from "../../../models/ticker/ticker.view-model.interface";
 import {EarningsDatePositionEnum} from "./helper-functions";
-import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
+import {
+    IOptionsStrategyViewModel,
+    IOptionsStrategyWithAnnotationsViewModel
+} from "../../../models/options-strategy.view-model.interface";
 import {
     EarningsDateMarkerAfterExpirationComponent,
     EarningsDateMarkerBeforeExpirationComponent
@@ -87,7 +90,7 @@ const StrategiesBox = styled.div`
 interface OptionsExpirationStrategiesComponentProps {
     ticker: ITickerViewModel;
     expiration: IOptionsExpirationVewModel;
-    strategies: IOptionsStrategyViewModel[];
+    strategies: IOptionsStrategyWithAnnotationsViewModel<IOptionsStrategyViewModel>[];
     earningsDatePosition: EarningsDatePositionEnum;
 }
 export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStrategiesComponentProps> = observer((props) => {
@@ -96,8 +99,6 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
     const activePositionsCountRef = useRef<HTMLDivElement | null>(null);
 
     const strategies = props.strategies;
-    const bestPop = Math.max(...strategies.map(strategy => strategy.pop));
-    const bestRiskReward = Math.min(...strategies.map(strategy => strategy.riskRewardRatio));
 
 
     let label = `${services.time.formatUserFriendlyMonthDay(props.expiration.expirationDate)} (${props.expiration.daysToExpiration}d) - ${props.expiration.expirationType}`;
@@ -164,9 +165,8 @@ export const OptionsExpirationStrategiesComponent: React.FC<OptionsExpirationStr
                 </ExpirationHeaderItemBox>
 
                 <StrategiesBox slot="content">
-                    {strategies.map(condor => (<OptionsStrategyComponent key={condor.key}
-                                                                         strategy={condor} bestPop={bestPop}
-                                                                         bestRiskReward={bestRiskReward}/>))}
+                    {strategies.map(condor => (<OptionsStrategyComponent key={condor.strategy.key}
+                                                                         strategy={condor}/>))}
                 </StrategiesBox>
 
 

@@ -1,6 +1,11 @@
 import {IOptionsStrategyLegViewModel} from "./options-strategy-leg.view-model.interface";
 import {OrderType, TimeInForce} from "../services/brokers/interfaces/open-order-request.interface";
 
+export interface IOptionsStrategyWithAnnotationsViewModel<TStrategy extends IOptionsStrategyViewModel> {
+    strategy: TStrategy;
+    isBestPOP: boolean;
+    isBestRiskReward: boolean;
+}
 
 export interface IOptionsStrategyViewModel {
     readonly strategyName: string;

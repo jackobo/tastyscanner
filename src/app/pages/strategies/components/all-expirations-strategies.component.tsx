@@ -6,7 +6,10 @@ import {IonAccordionGroup} from "@ionic/react";
 import {OptionsExpirationStrategiesComponent} from "./options-expiration-strategies.component";
 import {getEarningsDateRenderPosition} from "./helper-functions";
 import {ITickerViewModel} from "../../../models/ticker/ticker.view-model.interface";
-import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
+import {
+    IOptionsStrategyViewModel,
+    IOptionsStrategyWithAnnotationsViewModel
+} from "../../../models/options-strategy.view-model.interface";
 import {reaction} from "mobx";
 import {useServices} from "../../../hooks/use-services.hook";
 import {NullableString} from "../../../../framework/types/nullable-types";
@@ -14,13 +17,13 @@ import {NullableString} from "../../../../framework/types/nullable-types";
 interface AllExpirationsStrategiesComponentProps {
     ticker: ITickerViewModel;
     getExpirations: () => IOptionsExpirationVewModel[];
-    getExpirationStrategies: (expiration: IOptionsExpirationVewModel) => IOptionsStrategyViewModel[];
+    getExpirationStrategies: (expiration: IOptionsExpirationVewModel) => IOptionsStrategyWithAnnotationsViewModel<IOptionsStrategyViewModel>[];
     noStrategiesAvailableMessage: string;
 }
 export const AllExpirationsStrategiesComponent: React.FC<AllExpirationsStrategiesComponentProps> = observer((props) => {
     const services = useServices();
     const [expandedExpirationKey, setExpandedExpirationKey] = useState<NullableString>(null);
-    const [expandedExpirationStrategies, setExpandedExpirationStrategies] = useState<IOptionsStrategyViewModel[]>([]);
+    const [expandedExpirationStrategies, setExpandedExpirationStrategies] = useState<IOptionsStrategyWithAnnotationsViewModel<IOptionsStrategyViewModel>[]>([]);
 
     const expirations = props.getExpirations();
 

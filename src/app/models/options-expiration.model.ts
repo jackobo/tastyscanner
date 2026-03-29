@@ -12,7 +12,10 @@ import {StrategiesBuilder} from "./strategies-builder";
 import {IAppServiceFactory} from "../services/app-service-factory.interface";
 import {IOptionsExpirationRawData} from "../services/market-data-provider/market-data-provider.service.interface";
 import {PutCreditSpreadModel} from "./put-credit-spread.model";
-import {IOptionsStrategyViewModel} from "./options-strategy.view-model.interface";
+import {
+    IOptionsStrategyViewModel,
+    IOptionsStrategyWithAnnotationsViewModel
+} from "./options-strategy.view-model.interface";
 import {BestStrategyEnum} from "../services/strategy-settings/strategy-settings.service.interface";
 
 export class OptionsExpirationModel implements IOptionsExpirationVewModel {
@@ -88,7 +91,7 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
         return this._strikesMap[strikePrice];
     }
 
-    private _filterStrategies<T extends IOptionsStrategyViewModel>(strategies: T[]): T[] {
+    private _filterStrategies<T extends IOptionsStrategyViewModel>(strategies: T[]): IOptionsStrategyWithAnnotationsViewModel<T>[] {
         const filters = this.services.strategySettings.strategyFilters;
         const filteredStrategies = strategies.filter(s => {
             if(!(s.riskRewardRatio > 0 && s.riskRewardRatio <= filters.maxRiskRewardRatio)) {
@@ -106,37 +109,49 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
             return !s.hasLegsWithExistingPositions;
         });
 
-        let filteredByBestStrategy: T[] | null = null;
+        const bestPop = Math.max(...filteredStrategies.map(s => s.pop));
+        const bestRiskReward = Math.min(...filteredStrategies.map(s => s.riskRewardRatio));
+
+        const annotated = filteredStrategies.map(strategy => {
+            return {
+                strategy: strategy,
+                isBestPOP: bestPop === strategy.pop,
+                isBestRiskReward: bestRiskReward === strategy.riskRewardRatio,
+            }
+        })
+
+
+        let filteredByBestStrategy: IOptionsStrategyWithAnnotationsViewModel<T>[] | null = null;
         if(filters.bestStrategy.includes(BestStrategyEnum.BestPOP)) {
-            const bestPop = Math.max(...filteredStrategies.map(s => s.pop));
-            filteredByBestStrategy = filteredStrategies.filter(s => s.pop === bestPop);
+            filteredByBestStrategy = annotated.filter(s => s.isBestPOP);
         }
 
         if(filters.bestStrategy.includes(BestStrategyEnum.BestRiskReward)) {
-            const bestRiskReward = Math.min(...filteredStrategies.map(s => s.riskRewardRatio));
             filteredByBestStrategy = [
                 ...(filteredByBestStrategy ?? []),
-                ...filteredStrategies.filter(s => s.riskRewardRatio === bestRiskReward)
+                ...annotated.filter(s => s.isBestRiskReward)
             ];
         }
 
         if(filteredByBestStrategy) {
-            return filteredByBestStrategy.distinct(s => s.key);
+            return filteredByBestStrategy.distinct(s => s.strategy.key);
         }
 
-        return filteredStrategies;
+        return annotated;
 
     }
 
-    get ironCondors(): IronCondorModel[] {
+
+
+    get ironCondors(): IOptionsStrategyWithAnnotationsViewModel<IronCondorModel>[] {
         return this._filterStrategies(this._strategiesBuilder.ironCondors);
     }
 
-    get putCreditSpreads(): PutCreditSpreadModel[] {
+    get putCreditSpreads(): IOptionsStrategyWithAnnotationsViewModel<PutCreditSpreadModel>[] {
         return this._filterStrategies(this._strategiesBuilder.putCreditSpreadsSortedByRiskReward);
     }
 
-    get callCreditSpreads(): PutCreditSpreadModel[] {
+    get callCreditSpreads(): IOptionsStrategyWithAnnotationsViewModel<PutCreditSpreadModel>[] {
         return this._filterStrategies(this._strategiesBuilder.callCreditSpreadsSortedByRiskReward);
     }
 
