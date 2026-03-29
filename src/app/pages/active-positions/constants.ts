@@ -1,5 +1,5 @@
 
-export const LEG_INFO_WIDTH = '220px';
+export const UNDERLYING_SYMBOL_WIDTH = '200px';
 
 
 // DTE / PL% / PL / Mrk / TrdPrc / Bid /Ask / chevron
