@@ -28,7 +28,7 @@ export const LegInfoGridCellBox = styled.div`
 
 export const LegInfoBodyGridCellBox = styled(GridBodyCellBox)`
     display: grid;
-    grid-template-columns: 25px auto 10px auto auto auto auto;
+    grid-template-columns: 15px auto 10px auto 45px auto 38px;
     flex-direction: row;
     align-items: center;
     justify-items: center;
