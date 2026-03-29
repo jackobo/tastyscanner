@@ -7,12 +7,13 @@ import {
     OptionExpirationTypeEnum
 } from "./options-expiration.view-model.interface";
 import {IronCondorModel} from "./iron-condor.model";
-import {computed, makeObservable } from "mobx";
+import {computed, makeObservable} from "mobx";
 import {StrategiesBuilder} from "./strategies-builder";
 import {IAppServiceFactory} from "../services/app-service-factory.interface";
 import {IOptionsExpirationRawData} from "../services/market-data-provider/market-data-provider.service.interface";
 import {PutCreditSpreadModel} from "./put-credit-spread.model";
 import {IOptionsStrategyViewModel} from "./options-strategy.view-model.interface";
+import {BestStrategyEnum} from "../services/strategy-settings/strategy-settings.service.interface";
 
 export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     constructor(private readonly rawData: IOptionsExpirationRawData,
@@ -88,21 +89,43 @@ export class OptionsExpirationModel implements IOptionsExpirationVewModel {
     }
 
     private _filterStrategies<T extends IOptionsStrategyViewModel>(strategies: T[]): T[] {
-        return strategies.filter(s => {
-            if(!(s.riskRewardRatio > 0 && s.riskRewardRatio <= this.services.strategySettings.strategyFilters.maxRiskRewardRatio)) {
+        const filters = this.services.strategySettings.strategyFilters;
+        const filteredStrategies = strategies.filter(s => {
+            if(!(s.riskRewardRatio > 0 && s.riskRewardRatio <= filters.maxRiskRewardRatio)) {
                 return false;
             }
 
-            if(s.pop < this.services.strategySettings.strategyFilters.minPop) {
+            if(s.pop < filters.minPop) {
                 return false;
             }
 
-            if(this.services.strategySettings.strategyFilters.byExistingPositions === "include") {
+            if(filters.byExistingPositions === "include") {
                 return true;
             }
 
             return !s.hasLegsWithExistingPositions;
         });
+
+        let filteredByBestStrategy: T[] | null = null;
+        if(filters.bestStrategy.includes(BestStrategyEnum.BestPOP)) {
+            const bestPop = Math.max(...filteredStrategies.map(s => s.pop));
+            filteredByBestStrategy = filteredStrategies.filter(s => s.pop === bestPop);
+        }
+
+        if(filters.bestStrategy.includes(BestStrategyEnum.BestRiskReward)) {
+            const bestRiskReward = Math.min(...filteredStrategies.map(s => s.riskRewardRatio));
+            filteredByBestStrategy = [
+                ...(filteredByBestStrategy ?? []),
+                ...filteredStrategies.filter(s => s.riskRewardRatio === bestRiskReward)
+            ];
+        }
+
+        if(filteredByBestStrategy) {
+            return filteredByBestStrategy.distinct(s => s.key);
+        }
+
+        return filteredStrategies;
+
     }
 
     get ironCondors(): IronCondorModel[] {
