@@ -1,8 +1,8 @@
 import {NullableString} from "../../../../../framework/types/nullable-types";
-import {UnderlyingActivePositionsModel} from "../../underlying-active-positions.model";
+import {IUnderlyingActivePositionsViewModel} from "../../../../services/brokers/interfaces/active-position.interfaces";
 
 export interface PanelComponentCommonProps {
     expandedUnderlyingSymbol: NullableString;
-    underlyingWithOpenPositions: UnderlyingActivePositionsModel[];
+    underlyingWithOpenPositions: IUnderlyingActivePositionsViewModel[];
     onUnderlyingHeaderClick: (underlyingSymbol: string) => void;
 }

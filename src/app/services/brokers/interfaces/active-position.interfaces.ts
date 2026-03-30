@@ -1,6 +1,16 @@
 import {NullableDate, NullableNumber} from "../../../../framework/types/nullable-types";
 import {OptionType} from "../../../models/option.view-model.interface";
 
+export interface IUnderlyingActivePositionsViewModel {
+    readonly symbol: string;
+    readonly daysToExpiration: NullableNumber;
+    readonly profitLossPercent: number;
+    readonly profitLoss: number;
+    readonly delta: NullableNumber;
+    readonly theta: NullableNumber;
+    readonly activePositions: IActivePositionViewModel[];
+}
+
 export interface IActivePositionViewModel {
     readonly id: string;
     readonly underlyingSymbol: string;

@@ -4,7 +4,6 @@ import {TastyGobyStandardPage} from "../tasty-goby-standard.page";
 import {useServices} from "../../hooks/use-services.hook";
 import styled from "styled-components";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
-import {UnderlyingActivePositionsModel} from "./underlying-active-positions.model";
 import {LeftPanelComponent} from "./components/panels/left-panel.component";
 import {RightPanelComponent} from "./components/panels/right-panel.component";
 import {NullableString} from "../../../framework/types/nullable-types";
@@ -48,7 +47,7 @@ export const ActivePositionsPage: React.FC = observer(() => {
 
     }
 
-    const underlyingWithActivePositions = UnderlyingActivePositionsModel.fromPositions(activePositions.positions);
+    const underlyingWithActivePositions = services.brokers.currentAccount?.activePositionsByUnderlying ?? [];
 
 
     return (

@@ -1,11 +1,11 @@
 import React from "react";
-import {UnderlyingActivePositionsModel} from "../underlying-active-positions.model";
 import {observer} from "mobx-react";
 import styled from "styled-components";
-import {GridCellBox} from "../boxes/common.boxes";
+import {GridCellBox} from "../../boxes/common.boxes";
+import {IUnderlyingActivePositionsViewModel} from "../../../../services/brokers/interfaces/active-position.interfaces";
 
 
-const UnderlyingHeaderBox = styled(GridCellBox)`
+const UnderlyingHeaderBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -19,7 +19,7 @@ const UnderlyingHeaderBox = styled(GridCellBox)`
 `
 
 interface UnderlyingComponentProps {
-    underlying: UnderlyingActivePositionsModel;
+    underlying: IUnderlyingActivePositionsViewModel;
     isExpanded: boolean;
     onHeaderClick: (symbol: string) => void;
     renderHeaderContent: () => React.ReactElement | string;

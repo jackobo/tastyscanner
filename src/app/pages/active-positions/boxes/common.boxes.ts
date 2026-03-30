@@ -10,6 +10,7 @@ export const RowBox = styled.div`
     display: grid;
     grid-template-columns: ${getCommonColumnsTemplate(false)};
     align-items: center;
+    min-width: 100%;
     ${props => props.theme.screenMediaQuery.smallScreen} {
         grid-template-columns: ${getCommonColumnsTemplate(true)};
     }

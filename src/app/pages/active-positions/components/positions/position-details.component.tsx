@@ -35,6 +35,7 @@ interface ValuesComponentProps {
     streamerSymbol: string;
 }
 
+
 const ValuesComponent: React.FC<ValuesComponentProps> = observer((props) => {
     return (
         <ValuesRowBox>

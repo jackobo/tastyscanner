@@ -21,6 +21,7 @@ import {
 import {OrderUpdateType} from "../../../pages/working-orders/components/working-order-confirmation-toast.component";
 import {TastyWorkingOrderLegModel} from "./orders/working-order/tasty-working-order-leg.model";
 import {IActivePositionViewModel} from "../interfaces/active-position.interfaces";
+import {TastyUnderlyingActivePositionsModel} from "./orders/active-positions/tasty-underlying-active-positions.model";
 
 class TastyActivePositionsResult implements IActivePositionsResult {
     constructor(public readonly isLoading: boolean, public readonly positions: TastyActivePositionModel[]) {
@@ -106,6 +107,10 @@ export class TastyAccountModel implements IBrokerageAccountModel {
 
     get activePositions(): TastyActivePositionsResult {
         return this._activePositions;
+    }
+
+    get activePositionsByUnderlying(): TastyUnderlyingActivePositionsModel[] {
+        return TastyUnderlyingActivePositionsModel.fromPositions(this._activePositions.positions);
     }
 
     private _workingOrders: TastyWorkingOrderModel[] = [];

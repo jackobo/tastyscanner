@@ -4,24 +4,18 @@ import styled from "styled-components";
 import {GridCellBox, RowBox} from "../boxes/common.boxes";
 import {DELTA_SYMBOL, THETA_SYMBOL} from "../../../utils/global-constants";
 
-const HeaderCellBox = styled(GridCellBox)`
+export const HeaderCellBox = styled(GridCellBox)`
     font-weight: var(--ion-font-weight-bold);
 `
 
-const RightAlignedHeaderCellBox = styled(HeaderCellBox)`
+export const RightAlignedHeaderCellBox = styled(HeaderCellBox)`
     text-align: right;
 `
 
-const CenterAlignedHeaderCellBox = styled(HeaderCellBox)`
+export const CenterAlignedHeaderCellBox = styled(HeaderCellBox)`
     text-align: center;
 `
 
-export const UnderlyingSymbolHeaderCellBox = styled(HeaderCellBox)`
-    position: sticky;
-    top: -1px;
-    background-color: var(--ion-color-primary-contrast);
-    font-size: var(--ion-font-size-body2);
-`
 
 
 const ColumnHeadersContainerBox = styled(RowBox)`
