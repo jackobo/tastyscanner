@@ -11,6 +11,8 @@ import {IAppServiceFactory} from "../../../../app-service-factory.interface";
 import {
     ITastyLegConsolidatedWithPosition
 } from "../../raw-data/tasty-order-consoliddate-with-positions.raw-data.interface";
+import {Check} from "../../../../../../framework/utils/type-checking";
+import {MathUtils} from "../../../../../../framework/utils/math-utils";
 
 export class TastyActivePositionLegModel implements IActivePositionLegViewModel {
     constructor(private readonly services: IAppServiceFactory,
@@ -142,12 +144,40 @@ export class TastyActivePositionLegModel implements IActivePositionLegViewModel 
         return this.services.marketDataProvider.getSymbolGreeks(this.streamerSymbol);
     }
 
-
     get bidPrice(): NullableNumber {
         return this.quote?.bidPrice ?? null;
     }
     get askPrice(): NullableNumber {
         return this.quote?.askPrice ?? null;
+    }
+
+    get delta(): NullableNumber {
+        let rawDelta = this.greeks?.delta;
+        if(Check.isNullOrUndefined(rawDelta)) {
+            return null;
+        }
+
+        rawDelta = MathUtils.round(rawDelta * 100)
+
+        if(this.isSell) {
+            return -1 * rawDelta;
+        }
+        return rawDelta;
+
+    }
+
+    get theta(): NullableNumber {
+        let rawTheta = this.greeks?.theta;
+        if(Check.isNullOrUndefined(rawTheta)) {
+            return null;
+        }
+
+        rawTheta = MathUtils.round(rawTheta * 100)
+
+        if(this.isSell) {
+            return -1 * rawTheta;
+        }
+        return rawTheta;
     }
 }
 

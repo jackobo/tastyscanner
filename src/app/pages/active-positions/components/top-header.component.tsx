@@ -2,6 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
 import {GridCellBox, RowBox} from "../boxes/common.boxes";
+import {DELTA_SYMBOL, THETA_SYMBOL} from "../../../utils/global-constants";
 
 const HeaderCellBox = styled(GridCellBox)`
     font-weight: var(--ion-font-weight-bold);
@@ -38,6 +39,8 @@ export const TopHeaderComponent: React.FC = observer(() => {
             <RightAlignedHeaderCellBox>P/L</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>Mrk</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>Trd Prc</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>{DELTA_SYMBOL}</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>{THETA_SYMBOL}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>Bid</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>Ask</RightAlignedHeaderCellBox>
         </ColumnHeadersContainerBox>

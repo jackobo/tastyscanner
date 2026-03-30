@@ -7,12 +7,24 @@ import {NullableNumber} from "../../../../../../framework/types/nullable-types";
 import {Check} from "../../../../../../framework/utils/type-checking";
 import {TastyActivePositionLegModel} from "./tasty-active-position-leg.model";
 import {MathUtils} from "../../../../../../framework/utils/math-utils";
+import {computed, makeObservable} from "mobx";
 
 export class TastyActivePositionModel implements IActivePositionViewModel {
     constructor(private readonly services: IAppServiceFactory,
                 private readonly orderRawData: ITastyOrderConsolidatedWithPositions) {
         this.legs = orderRawData.legs.map(leg => new TastyActivePositionLegModel(services, leg))
                                      .sort((l1, l2) => (l1.strikePrice ?? 0) - (l2.strikePrice ?? 0));
+
+        makeObservable(this, {
+            daysToExpiration: computed,
+            profitLossPercent: computed,
+            profitLoss: computed,
+            marketPrice: computed,
+            tradingPrice: computed,
+            tradingCost: computed,
+            delta: computed,
+            theta: computed,
+        })
     }
 
     get id(): string {
@@ -59,6 +71,21 @@ export class TastyActivePositionModel implements IActivePositionViewModel {
     }
 
 
+    get delta(): NullableNumber {
+        if(this.legs.some(l => Check.isNullOrUndefined(l.delta))) {
+            return null;
+        }
+
+        return this._sumValues(this.legs.map(leg => leg.delta ?? 0));
+    }
+
+    get theta(): NullableNumber {
+        if(this.legs.some(l => Check.isNullOrUndefined(l.theta))) {
+            return null;
+        }
+
+        return this._sumValues(this.legs.map(leg => leg.theta ?? 0));
+    }
 
     public readonly legs: TastyActivePositionLegModel[];
 
