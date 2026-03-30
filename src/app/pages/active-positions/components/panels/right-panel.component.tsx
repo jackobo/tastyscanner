@@ -30,7 +30,6 @@ const UnderlyingValuesComponent: React.FC<{underlying: IUnderlyingActivePosition
             <RightAlignedHeaderCellBox>{props.underlying.theta}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.bidPrice?.toFixed(2)}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.askPrice?.toFixed(2)}</RightAlignedHeaderCellBox>
-            <RightAlignedHeaderCellBox></RightAlignedHeaderCellBox>
         </UnderlyingHeaderValuesBox>
     )
 })
