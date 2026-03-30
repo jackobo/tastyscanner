@@ -37,7 +37,6 @@ export const TopHeaderComponent: React.FC = observer(() => {
             <RightAlignedHeaderCellBox>{THETA_SYMBOL}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>Bid</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>Ask</RightAlignedHeaderCellBox>
-            <RightAlignedHeaderCellBox>str smb</RightAlignedHeaderCellBox>
         </ColumnHeadersContainerBox>
     )
 })

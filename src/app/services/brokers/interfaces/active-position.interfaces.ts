@@ -49,7 +49,7 @@ export interface IActivePositionLegViewModel {
     readonly theta: NullableNumber;
     readonly bidPrice: NullableNumber;
     readonly askPrice: NullableNumber;
-    readonly streamerSymbol: string;
+
 
     //readonly action: string;
     //readonly tradePrice: string;

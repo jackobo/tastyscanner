@@ -32,7 +32,6 @@ interface ValuesComponentProps {
     askPrice: NullableNumber;
     delta: NullableNumber;
     theta: NullableNumber;
-    streamerSymbol: string;
 }
 
 
@@ -48,7 +47,6 @@ const ValuesComponent: React.FC<ValuesComponentProps> = observer((props) => {
             <RightAlignedBodyGridCellBox>{`${props.theta?.toFixed(2) ?? ""} ${THETA_SYMBOL}`}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.bidPrice?.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.askPrice?.toFixed(2)}</RightAlignedBodyGridCellBox>
-            <RightAlignedBodyGridCellBox>{props.streamerSymbol}</RightAlignedBodyGridCellBox>
         </ValuesRowBox>
     )
 })
@@ -64,8 +62,7 @@ const LegValuesComponent: React.FC<{leg: IActivePositionLegViewModel}> = observe
                          delta={props.leg.delta}
                          theta={props.leg.theta}
                          bidPrice={props.leg.bidPrice}
-                         askPrice={props.leg.askPrice}
-                         streamerSymbol={props.leg.streamerSymbol}/>
+                         askPrice={props.leg.askPrice}/>
     )
 })
 
@@ -79,8 +76,7 @@ const PositionValuesComponent: React.FC<{position: IActivePositionViewModel}> = 
                          delta={props.position.delta}
                          theta={props.position.theta}
                          bidPrice={null}
-                         askPrice={null}
-                         streamerSymbol={""}/>
+                         askPrice={null}/>
     );
 })
 
