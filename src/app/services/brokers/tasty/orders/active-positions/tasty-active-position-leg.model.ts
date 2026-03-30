@@ -55,7 +55,7 @@ export class TastyActivePositionLegModel implements IActivePositionLegViewModel 
     }
 
     get rawMarketPrice(): number {
-        return  this.trade?.price ?? 0
+        return ((this.bidPrice ?? 0) + (this.askPrice ?? 0)) / 2;
     }
 
     get marketPrice(): number {
