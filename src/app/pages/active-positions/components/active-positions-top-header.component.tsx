@@ -4,19 +4,19 @@ import styled from "styled-components";
 import {getCommonColumnsTemplate} from "../constants";
 import {GridCellBox} from "../boxes/common.boxes";
 
-const GridHeaderCellBox = styled(GridCellBox)`
+const HeaderCellBox = styled(GridCellBox)`
     font-weight: var(--ion-font-weight-bold);
 `
 
-const RightAlignedHeaderGridCellBox = styled(GridHeaderCellBox)`
+const RightAlignedHeaderCellBox = styled(HeaderCellBox)`
     text-align: right;
 `
 
-const CenterAlignedHeaderGridCellBox = styled(GridHeaderCellBox)`
+const CenterAlignedHeaderCellBox = styled(HeaderCellBox)`
     text-align: center;
 `
 
-export const UnderlyingSymbolTopHeaderBox = styled(GridHeaderCellBox)`
+export const UnderlyingSymbolHeaderCellBox = styled(HeaderCellBox)`
     position: sticky;
     top: -1px;
     background-color: var(--ion-color-primary-contrast);
@@ -24,7 +24,7 @@ export const UnderlyingSymbolTopHeaderBox = styled(GridHeaderCellBox)`
 `
 
 
-const HeaderGridBox = styled.div`
+const ColumnHeadersContainerBox = styled.div`
     position: sticky;
     top: -1px;
     display: grid;
@@ -40,14 +40,14 @@ const HeaderGridBox = styled.div`
 
 export const ActivePositionsTopHeaderComponent: React.FC = observer(() => {
     return (
-        <HeaderGridBox>
-            <CenterAlignedHeaderGridCellBox>DTE</CenterAlignedHeaderGridCellBox>
-            <RightAlignedHeaderGridCellBox>P/L %</RightAlignedHeaderGridCellBox>
-            <RightAlignedHeaderGridCellBox>P/L</RightAlignedHeaderGridCellBox>
-            <RightAlignedHeaderGridCellBox>Mrk</RightAlignedHeaderGridCellBox>
-            <RightAlignedHeaderGridCellBox>Trd Prc</RightAlignedHeaderGridCellBox>
-            <RightAlignedHeaderGridCellBox>Bid</RightAlignedHeaderGridCellBox>
-            <RightAlignedHeaderGridCellBox>Ask</RightAlignedHeaderGridCellBox>
-        </HeaderGridBox>
+        <ColumnHeadersContainerBox>
+            <CenterAlignedHeaderCellBox>DTE</CenterAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>P/L %</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>P/L</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>Mrk</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>Trd Prc</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>Bid</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>Ask</RightAlignedHeaderCellBox>
+        </ColumnHeadersContainerBox>
     )
 })

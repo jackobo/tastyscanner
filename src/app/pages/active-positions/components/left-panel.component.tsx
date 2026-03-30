@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {UnderlyingActivePositionsModel} from "../underlying-active-positions.model";
 import styled from "styled-components";
-import {UnderlyingSymbolTopHeaderBox} from "./active-positions-top-header.component";
+import {UnderlyingSymbolHeaderCellBox} from "./active-positions-top-header.component";
 import {ActiveOrderHeaderComponent} from "./active-order-header.component";
 import {NullableString} from "../../../../framework/types/nullable-types";
 import {UnderlyingComponent} from "./underlying.component";
@@ -37,9 +37,9 @@ export const LeftPanelComponent: React.FC<LeftPanelComponentProps> = observer((p
 
     return (
         <LeftPanelBox>
-            <UnderlyingSymbolTopHeaderBox>
+            <UnderlyingSymbolHeaderCellBox>
                 Symbol
-            </UnderlyingSymbolTopHeaderBox>
+            </UnderlyingSymbolHeaderCellBox>
             {props.underlyingWithOpenPositions.map(renderOneUnderlying)}
         </LeftPanelBox>
     )
