@@ -7,12 +7,11 @@ import {
     IActivePositionViewModel
 } from "../../../../services/brokers/interfaces/active-position.interfaces";
 import {useServices} from "../../../../hooks/use-services.hook";
-import {UNDERLYING_SYMBOL_WIDTH} from "../../constants";
 
 const ContainerBox = styled.div`
     display: flex;
     flex-direction: column;
-    width: ${UNDERLYING_SYMBOL_WIDTH};
+    width: 100%;
 `
 
 const LegContainerBox = styled(GridBodyCellBox)<{$isSell: boolean}>`
