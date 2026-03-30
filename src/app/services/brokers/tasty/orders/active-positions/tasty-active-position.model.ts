@@ -90,7 +90,7 @@ export class TastyActivePositionModel implements IActivePositionViewModel {
     public readonly legs: TastyActivePositionLegModel[];
 
     getAllStreamerSymbols(): string[] {
-        return this.legs.map(leg => leg.streamerSymbol);
+        return [this.underlyingSymbol, ...this.legs.map(leg => leg.streamerSymbol)];
     }
 
 

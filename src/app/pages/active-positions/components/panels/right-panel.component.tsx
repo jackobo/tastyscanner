@@ -23,12 +23,12 @@ const UnderlyingValuesComponent: React.FC<{underlying: IUnderlyingActivePosition
             <CenterAlignedHeaderCellBox>{props.underlying.daysToExpiration}</CenterAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{`${props.underlying.profitLossPercent.toFixed(2)}%`}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.profitLoss.toFixed(2)}</RightAlignedHeaderCellBox>
-            <RightAlignedHeaderCellBox></RightAlignedHeaderCellBox>
-            <RightAlignedHeaderCellBox></RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>{props.underlying.marketPrice.toFixed(2)}</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>{props.underlying.tradingPrice.toFixed(2)}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.delta}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.theta}</RightAlignedHeaderCellBox>
-            <RightAlignedHeaderCellBox></RightAlignedHeaderCellBox>
-            <RightAlignedHeaderCellBox></RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>{props.underlying.bidPrice?.toFixed(2)}</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>{props.underlying.askPrice?.toFixed(2)}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox></RightAlignedHeaderCellBox>
         </UnderlyingHeaderValuesBox>
     )

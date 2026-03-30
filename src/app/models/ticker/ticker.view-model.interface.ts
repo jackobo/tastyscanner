@@ -2,6 +2,7 @@ import {IOptionsExpirationVewModel} from "../options-expiration.view-model.inter
 import {ITickerInfoViewModel} from "./ticker-info.view-model.interface";
 import {ITickerMetricsViewModel} from "./ticker-metrics.view-model.interface";
 import {IOptionViewModel} from "../option.view-model.interface";
+import {IQuoteRawData, ITradeRawData} from "../../services/market-data-provider/market-data-provider.service.interface";
 
 export interface ITickerViewModel {
     readonly isLoading: boolean;
@@ -10,6 +11,8 @@ export interface ITickerViewModel {
 
     readonly info: ITickerInfoViewModel | null;
     readonly metrics: ITickerMetricsViewModel | null;
+    readonly trade: ITradeRawData | undefined;
+    readonly quote: IQuoteRawData | undefined;
     readonly optionsChain: IOptionsExpirationVewModel[];
 
     getInfoAsync(): Promise<ITickerInfoViewModel>;

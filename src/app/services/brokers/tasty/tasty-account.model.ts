@@ -111,7 +111,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     }
 
     get activePositionsByUnderlying(): TastyUnderlyingActivePositionsModel[] {
-        return TastyUnderlyingActivePositionsModel.fromPositions(this._activePositions.positions).sort((a, b) => (a.daysToExpiration ?? 0) - (b.daysToExpiration ?? 0));
+        return TastyUnderlyingActivePositionsModel.fromPositions(this._activePositions.positions, this.services).sort((a, b) => (a.daysToExpiration ?? 0) - (b.daysToExpiration ?? 0));
     }
 
     private _workingOrders: TastyWorkingOrderModel[] = [];
@@ -207,6 +207,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
             const openPositionsModels = rawActivePositions.map(position => new TastyActivePositionModel(this.services, position));
 
             const streamerSymbols = openPositionsModels.selectMany(position => position.getAllStreamerSymbols());
+
             this.services.marketDataProvider.subscribeToStreamer(streamerSymbols);
 
             this._setActivePositions(openPositionsModels);

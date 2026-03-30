@@ -6,8 +6,12 @@ export interface IUnderlyingActivePositionsViewModel {
     readonly daysToExpiration: NullableNumber;
     readonly profitLossPercent: number;
     readonly profitLoss: number;
+    readonly marketPrice: number;
+    readonly tradingPrice: number;
     readonly delta: NullableNumber;
     readonly theta: NullableNumber;
+    readonly bidPrice: NullableNumber;
+    readonly askPrice: NullableNumber;
     readonly activePositions: IActivePositionViewModel[];
 }
 

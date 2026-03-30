@@ -103,6 +103,8 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
 
     subscribeToStreamer(symbols: string[]): void {
 
+        symbols = symbols.distinct(s => s);
+
         const symbolsToSubscribe: string[] = [];
 
         for(const symbol of symbols) {

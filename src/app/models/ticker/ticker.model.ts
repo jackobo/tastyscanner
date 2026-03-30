@@ -24,7 +24,9 @@ export class TickerModel implements ITickerViewModel {
 
         makeObservable<this, '_isLoading'>(this, {
             _isLoading: observable.ref,
-            optionsBySymbolDictionary: computed
+            optionsBySymbolDictionary: computed,
+            trade: computed,
+            quote: computed,
         });
     }
 
@@ -35,6 +37,15 @@ export class TickerModel implements ITickerViewModel {
     get metrics(): TickerMetricsModel | null {
         return this._tickerMarketDataReader.metrics;
     }
+
+    get trade(): ITradeRawData | undefined {
+        return this.getSymbolTrade(this.symbol);
+    }
+
+    public get quote(): IQuoteRawData | undefined {
+        return this.getSymbolQuote(this.symbol);
+    }
+
 
     get info(): TickerInfoModel | null {
         return this._tickerMarketDataReader.info;
@@ -63,9 +74,12 @@ export class TickerModel implements ITickerViewModel {
         return this.optionsBySymbolDictionary[optionSymbol] ?? null;
     }
 
+
+
     public get currentPrice(): number {
-        return this.getSymbolTrade(this.symbol)?.price ?? 0;
+        return this.trade?.price ?? 0;
     }
+
 
     private _isLoading: boolean = true;
 
