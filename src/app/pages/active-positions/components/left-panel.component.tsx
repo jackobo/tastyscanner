@@ -4,8 +4,9 @@ import {UnderlyingActivePositionsModel} from "../underlying-active-positions.mod
 import styled from "styled-components";
 import {UnderlyingSymbolTopHeaderBox} from "./active-positions-top-header.component";
 import {ActiveOrderHeaderComponent} from "./active-order-header.component";
-import {UnderlyingHeaderBox} from "../boxes/common.boxes";
 import {NullableString} from "../../../../framework/types/nullable-types";
+import {UnderlyingComponent} from "./underlying.component";
+
 
 const LeftPanelBox = styled.div`
     position: sticky;
@@ -15,41 +16,6 @@ const LeftPanelBox = styled.div`
     flex-direction: column;
     background-color: var(--ion-color-primary-contrast);
 `
-
-const LeftPanelUnderlyingHeaderBox = styled(UnderlyingHeaderBox)`
-    
-`
-
-interface UnderlyingComponentProps {
-    underlying: UnderlyingActivePositionsModel;
-    isSelected: boolean;
-    onHeaderClick: (symbol: string) => void;
-}
-
-const UnderlyingComponent: React.FC<UnderlyingComponentProps> = observer((props) => {
-    const activePositions = props.underlying.activePositions;
-
-    const renderPositions = () => {
-        if(!props.isSelected) {
-            return null;
-        }
-        
-        return (
-            <>
-                {activePositions.map(o => <ActiveOrderHeaderComponent key={o.id} order={o}/>)}
-            </>
-        )
-    }
-
-    return (
-        <>
-            <LeftPanelUnderlyingHeaderBox onClick={() => props.onHeaderClick(props.underlying.symbol)}>
-                {props.underlying.symbol}
-            </LeftPanelUnderlyingHeaderBox>
-            {renderPositions()}
-        </>
-    )
-})
 
 interface LeftPanelComponentProps {
     selectedUnderlyingSymbol: NullableString;
@@ -63,7 +29,9 @@ export const LeftPanelComponent: React.FC<LeftPanelComponentProps> = observer((p
        return (<UnderlyingComponent key={underlying.symbol}
                                     underlying={underlying}
                                     isSelected={underlying.symbol === props.selectedUnderlyingSymbol}
-                                    onHeaderClick={props.onUnderlyingSelected}/>)
+                                    onHeaderClick={props.onUnderlyingSelected}
+                                    renderHeaderContent={() => underlying.symbol}
+                                    renderPositions={() => <>{underlying.activePositions.map(o => <ActiveOrderHeaderComponent key={o.id} order={o}/>)}</>}/>)
     }
 
 
