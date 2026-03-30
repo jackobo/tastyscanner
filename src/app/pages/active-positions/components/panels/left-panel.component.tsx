@@ -4,8 +4,8 @@ import {UnderlyingActivePositionsModel} from "../../underlying-active-positions.
 import styled from "styled-components";
 import {UnderlyingSymbolHeaderCellBox} from "../top-header.component";
 import {PositionHeaderComponent} from "../positions/position-header.component";
-import {NullableString} from "../../../../../framework/types/nullable-types";
 import {UnderlyingComponent} from "../underlying.component";
+import {PanelComponentCommonProps} from "./panel-component-common.props";
 
 
 const LeftPanelBox = styled.div`
@@ -17,10 +17,8 @@ const LeftPanelBox = styled.div`
     background-color: var(--ion-color-primary-contrast);
 `
 
-interface LeftPanelComponentProps {
-    selectedUnderlyingSymbol: NullableString;
-    underlyingWithOpenPositions: UnderlyingActivePositionsModel[];
-    onUnderlyingSelected: (underlyingSymbol: string) => void;
+interface LeftPanelComponentProps extends PanelComponentCommonProps {
+
 }
 
 export const LeftPanelComponent: React.FC<LeftPanelComponentProps> = observer((props) => {
@@ -28,8 +26,8 @@ export const LeftPanelComponent: React.FC<LeftPanelComponentProps> = observer((p
     const renderOneUnderlying = (underlying: UnderlyingActivePositionsModel) => {
        return (<UnderlyingComponent key={underlying.symbol}
                                     underlying={underlying}
-                                    isSelected={underlying.symbol === props.selectedUnderlyingSymbol}
-                                    onHeaderClick={props.onUnderlyingSelected}
+                                    isExpanded={underlying.symbol === props.expandedUnderlyingSymbol}
+                                    onHeaderClick={props.onUnderlyingHeaderClick}
                                     renderHeaderContent={() => underlying.symbol}
                                     renderPositions={() => <>{underlying.activePositions.map(o => <PositionHeaderComponent key={o.id} position={o}/>)}</>}/>)
     }

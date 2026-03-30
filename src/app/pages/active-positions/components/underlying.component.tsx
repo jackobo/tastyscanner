@@ -20,14 +20,14 @@ const UnderlyingHeaderBox = styled(GridCellBox)`
 
 interface UnderlyingComponentProps {
     underlying: UnderlyingActivePositionsModel;
-    isSelected: boolean;
+    isExpanded: boolean;
     onHeaderClick: (symbol: string) => void;
     renderHeaderContent: () => React.ReactElement | string;
     renderPositions: () => React.ReactElement;
 }
 export const UnderlyingComponent: React.FC<UnderlyingComponentProps> = observer((props) => {
     const renderPositions = () => {
-        if(props.isSelected) {
+        if(props.isExpanded) {
             return props.renderPositions();
         }
 

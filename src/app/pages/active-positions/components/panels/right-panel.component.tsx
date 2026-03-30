@@ -4,8 +4,8 @@ import styled from "styled-components";
 import {UnderlyingActivePositionsModel} from "../../underlying-active-positions.model";
 import {TopHeaderComponent} from "../top-header.component";
 import {PositionDetailsComponent} from "../positions/position-details.component";
-import {NullableString} from "../../../../../framework/types/nullable-types";
 import {UnderlyingComponent} from "../underlying.component";
+import {PanelComponentCommonProps} from "./panel-component-common.props";
 
 const RightPanelBox = styled.div`
     display: flex;
@@ -13,10 +13,8 @@ const RightPanelBox = styled.div`
 `
 
 
-interface RightPanelComponentProps {
-    selectedUnderlyingSymbol: NullableString;
-    underlyingWithOpenPositions: UnderlyingActivePositionsModel[];
-    onUnderlyingSelected: (underlyingSymbol: string) => void;
+interface RightPanelComponentProps extends PanelComponentCommonProps{
+
 }
 
 export const RightPanelComponent: React.FC<RightPanelComponentProps> = observer((props) => {
@@ -24,8 +22,8 @@ export const RightPanelComponent: React.FC<RightPanelComponentProps> = observer(
     const renderOneUnderlying = (underlying: UnderlyingActivePositionsModel) => {
         return (<UnderlyingComponent key={underlying.symbol}
                                      underlying={underlying}
-                                     isSelected={underlying.symbol === props.selectedUnderlyingSymbol}
-                                     onHeaderClick={props.onUnderlyingSelected}
+                                     isExpanded={underlying.symbol === props.expandedUnderlyingSymbol}
+                                     onHeaderClick={props.onUnderlyingHeaderClick}
                                      renderHeaderContent={() => ""}
                                      renderPositions={() => <>{underlying.activePositions.map(position => <PositionDetailsComponent key={position.id} position={position}/>)}</>}/>)
     }

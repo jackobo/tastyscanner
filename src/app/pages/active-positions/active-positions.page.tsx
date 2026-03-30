@@ -29,7 +29,7 @@ const PageBox = styled(TastyGobyStandardPage)`
 
 export const ActivePositionsPage: React.FC = observer(() => {
     const services = useServices();
-    const [selectedUnderlying, setSelectedUnderlying] = React.useState<NullableString>(null);
+    const [expandedUnderlying, setExpandedUnderlying] = React.useState<NullableString>(null);
 
     const activePositions = services.brokers.currentAccount?.activePositions;
 
@@ -39,22 +39,26 @@ export const ActivePositionsPage: React.FC = observer(() => {
         )
     }
 
-    const onSelected = (underlying: NullableString) => {
-        if(selectedUnderlying === underlying) {
-            setSelectedUnderlying(null);
+    const onUnderlyingHeaderClick = (underlying: NullableString) => {
+        if(expandedUnderlying === underlying) {
+            setExpandedUnderlying(null);
         } else {
-            setSelectedUnderlying(underlying);
+            setExpandedUnderlying(underlying);
         }
 
     }
 
-    const underlyingWithOpenPositions = UnderlyingActivePositionsModel.fromPositions(activePositions.positions);
+    const underlyingWithActivePositions = UnderlyingActivePositionsModel.fromPositions(activePositions.positions);
 
 
     return (
         <PageBox pageContentCssClass={PAGE_CONTENT_CSS_CLASS} pageContentWrapperCssClass={PAGE_CONTENT_WRAPPER_CSS_CLASS}>
-            <LeftPanelComponent underlyingWithOpenPositions={underlyingWithOpenPositions} selectedUnderlyingSymbol={selectedUnderlying} onUnderlyingSelected={onSelected}/>
-            <RightPanelComponent underlyingWithOpenPositions={underlyingWithOpenPositions} selectedUnderlyingSymbol={selectedUnderlying} onUnderlyingSelected={onSelected}/>
+            <LeftPanelComponent underlyingWithOpenPositions={underlyingWithActivePositions}
+                                expandedUnderlyingSymbol={expandedUnderlying}
+                                onUnderlyingHeaderClick={onUnderlyingHeaderClick}/>
+            <RightPanelComponent underlyingWithOpenPositions={underlyingWithActivePositions}
+                                 expandedUnderlyingSymbol={expandedUnderlying}
+                                 onUnderlyingHeaderClick={onUnderlyingHeaderClick}/>
         </PageBox>
     )
 })
