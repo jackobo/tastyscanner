@@ -1,13 +1,13 @@
 import React from "react";
 import {observer} from "mobx-react";
 import styled, {css} from "styled-components";
-import {GridBodyCellBox} from "../boxes/grid-body.boxes";
+import {GridBodyCellBox} from "../../boxes/grid-body.boxes";
 import {
     IActivePositionLegViewModel,
     IActivePositionViewModel
-} from "../../../services/brokers/interfaces/active-position.interfaces";
-import {useServices} from "../../../hooks/use-services.hook";
-import {UNDERLYING_SYMBOL_WIDTH} from "../constants";
+} from "../../../../services/brokers/interfaces/active-position.interfaces";
+import {useServices} from "../../../../hooks/use-services.hook";
+import {UNDERLYING_SYMBOL_WIDTH} from "../../constants";
 
 const ContainerBox = styled.div`
     display: flex;
@@ -70,14 +70,14 @@ const LegComponent: React.FC<{leg: IActivePositionLegViewModel}> = observer((pro
 })
 
 
-export const ActiveOrderHeaderComponent: React.FC<{order: IActivePositionViewModel}> = observer((props) => {
-    const legs = props.order.legs;
+export const PositionHeaderComponent: React.FC<{position: IActivePositionViewModel}> = observer((props) => {
+    const legs = props.position.legs;
     return (
         <ContainerBox>
             <GridBodyCellBox>
-                {`Order id: ${props.order.id}`}
+                {`Order ID: ${props.position.id}`}
             </GridBodyCellBox>
             {legs.map((leg) => (<LegComponent key={leg.symbol} leg={leg}/>))}
         </ContainerBox>
-    )
+    );
 })

@@ -1,11 +1,11 @@
 import React from "react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
-import {UnderlyingActivePositionsModel} from "../underlying-active-positions.model";
-import {ActivePositionsTopHeaderComponent} from "./active-positions-top-header.component";
-import {ActiveOrderDetailsComponent} from "./active-order-details.component";
-import {NullableString} from "../../../../framework/types/nullable-types";
-import {UnderlyingComponent} from "./underlying.component";
+import {UnderlyingActivePositionsModel} from "../../underlying-active-positions.model";
+import {TopHeaderComponent} from "../top-header.component";
+import {PositionDetailsComponent} from "../positions/position-details.component";
+import {NullableString} from "../../../../../framework/types/nullable-types";
+import {UnderlyingComponent} from "../underlying.component";
 
 const RightPanelBox = styled.div`
     display: flex;
@@ -27,12 +27,12 @@ export const RightPanelComponent: React.FC<RightPanelComponentProps> = observer(
                                      isSelected={underlying.symbol === props.selectedUnderlyingSymbol}
                                      onHeaderClick={props.onUnderlyingSelected}
                                      renderHeaderContent={() => ""}
-                                     renderPositions={() => <>{underlying.activePositions.map(o => <ActiveOrderDetailsComponent key={o.id} order={o}/>)}</>}/>)
+                                     renderPositions={() => <>{underlying.activePositions.map(position => <PositionDetailsComponent key={position.id} position={position}/>)}</>}/>)
     }
 
     return (
         <RightPanelBox>
-            <ActivePositionsTopHeaderComponent/>
+            <TopHeaderComponent/>
             {props.underlyingWithOpenPositions.map(renderOneUnderlying)}
         </RightPanelBox>
     )

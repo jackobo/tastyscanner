@@ -6,8 +6,8 @@ import styled from "styled-components";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
 import {UNDERLYING_SYMBOL_WIDTH} from "./constants";
 import {UnderlyingActivePositionsModel} from "./underlying-active-positions.model";
-import {LeftPanelComponent} from "./components/left-panel.component";
-import {RightPanelComponent} from "./components/right-panel.component";
+import {LeftPanelComponent} from "./components/panels/left-panel.component";
+import {RightPanelComponent} from "./components/panels/right-panel.component";
 import {NullableString} from "../../../framework/types/nullable-types";
 
 const PAGE_CONTENT_CSS_CLASS = 'active-positions-page-content'

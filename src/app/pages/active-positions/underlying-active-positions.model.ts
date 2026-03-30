@@ -8,10 +8,10 @@ export class UnderlyingActivePositionsModel {
     public readonly activePositions: IActivePositionViewModel[];
 
     public static fromPositions(activePositions: IActivePositionViewModel[]) {
-        const ordersByUnderlying = activePositions.groupByKey(o => o.underlyingSymbol);
+        const positionsByUnderlying = activePositions.groupByKey(o => o.underlyingSymbol);
 
-        const underlyingSymbols = Object.keys(ordersByUnderlying).sort((s1, s2) => s1.localeCompare(s2));
-        return underlyingSymbols.map(key => new UnderlyingActivePositionsModel(key, ordersByUnderlying[key]));
+        const underlyingSymbols = Object.keys(positionsByUnderlying).sort((s1, s2) => s1.localeCompare(s2));
+        return underlyingSymbols.map(key => new UnderlyingActivePositionsModel(key, positionsByUnderlying[key]));
 
     }
 

@@ -27,11 +27,12 @@ interface UnderlyingComponentProps {
 }
 export const UnderlyingComponent: React.FC<UnderlyingComponentProps> = observer((props) => {
     const renderPositions = () => {
-        if(!props.isSelected) {
-            return null;
+        if(props.isSelected) {
+            return props.renderPositions();
         }
 
-        return props.renderPositions();
+        return null;
+
     }
     return (
         <>

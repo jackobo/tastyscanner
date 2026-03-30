@@ -1,11 +1,11 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {UnderlyingActivePositionsModel} from "../underlying-active-positions.model";
+import {UnderlyingActivePositionsModel} from "../../underlying-active-positions.model";
 import styled from "styled-components";
-import {UnderlyingSymbolHeaderCellBox} from "./active-positions-top-header.component";
-import {ActiveOrderHeaderComponent} from "./active-order-header.component";
-import {NullableString} from "../../../../framework/types/nullable-types";
-import {UnderlyingComponent} from "./underlying.component";
+import {UnderlyingSymbolHeaderCellBox} from "../top-header.component";
+import {PositionHeaderComponent} from "../positions/position-header.component";
+import {NullableString} from "../../../../../framework/types/nullable-types";
+import {UnderlyingComponent} from "../underlying.component";
 
 
 const LeftPanelBox = styled.div`
@@ -31,7 +31,7 @@ export const LeftPanelComponent: React.FC<LeftPanelComponentProps> = observer((p
                                     isSelected={underlying.symbol === props.selectedUnderlyingSymbol}
                                     onHeaderClick={props.onUnderlyingSelected}
                                     renderHeaderContent={() => underlying.symbol}
-                                    renderPositions={() => <>{underlying.activePositions.map(o => <ActiveOrderHeaderComponent key={o.id} order={o}/>)}</>}/>)
+                                    renderPositions={() => <>{underlying.activePositions.map(o => <PositionHeaderComponent key={o.id} position={o}/>)}</>}/>)
     }
 
 
