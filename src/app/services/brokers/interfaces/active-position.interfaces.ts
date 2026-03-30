@@ -10,8 +10,6 @@ export interface IActivePositionViewModel {
     readonly profitLoss: number;
     readonly marketPrice: number;
     readonly tradingPrice: number;
-    readonly bidPrice: NullableNumber;
-    readonly askPrice: NullableNumber;
     readonly legs: IActivePositionLegViewModel[];
 
 

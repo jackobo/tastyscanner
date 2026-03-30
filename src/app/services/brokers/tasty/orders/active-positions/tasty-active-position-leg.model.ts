@@ -1,7 +1,11 @@
 import {IActivePositionLegViewModel} from "../../../interfaces/active-position.interfaces";
 import {OptionType} from "../../../../../models/option.view-model.interface";
 import {NullableDate, NullableNumber} from "../../../../../../framework/types/nullable-types";
-import {IQuoteRawData, ITradeRawData} from "../../../../market-data-provider/market-data-provider.service.interface";
+import {
+    IGreeksRawData,
+    IQuoteRawData,
+    ITradeRawData
+} from "../../../../market-data-provider/market-data-provider.service.interface";
 import {isBuyToOpenAction, isSellToOpenAction} from "../../../interfaces/open-order-request.interface";
 import {IAppServiceFactory} from "../../../../app-service-factory.interface";
 import {
@@ -94,7 +98,6 @@ export class TastyActivePositionLegModel implements IActivePositionLegViewModel 
         } else {
             return this.rawMarketCost - this.rawTradingCost;
         }
-
     }
 
     get profitLossPercent(): number {
@@ -133,6 +136,10 @@ export class TastyActivePositionLegModel implements IActivePositionLegViewModel 
     }
     private get quote(): IQuoteRawData | undefined {
         return this.services.marketDataProvider.getSymbolQuote(this.streamerSymbol);
+    }
+
+    private get greeks(): IGreeksRawData | undefined {
+        return this.services.marketDataProvider.getSymbolGreeks(this.streamerSymbol);
     }
 
 
