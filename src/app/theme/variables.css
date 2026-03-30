@@ -27,6 +27,8 @@ http://ionicframework.com/docs/theming/ */
     --ion-font-size-h6: 1rem;
     --ion-font-size-body1: 1.125rem;
     --ion-font-size-body2: 0.875rem;
+    --ion-font-size-body3: 0.85rem;
+    --ion-font-size-body4: 0.8rem;
     --ion-font-size-caption: 0.75rem;
 
     --ion-font-weight-thin: 100;
