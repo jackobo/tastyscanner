@@ -1,7 +1,6 @@
 import React from "react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
-import {GridCellBox} from "../../boxes/common.boxes";
 import {IUnderlyingActivePositionsViewModel} from "../../../../services/brokers/interfaces/active-position.interfaces";
 
 
