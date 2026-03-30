@@ -42,6 +42,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
             activePositionsLegsMap: computed,
             workingOrders: computed,
             workingOrdersLegsMap: computed,
+            activePositionsByUnderlying: computed,
         });
     }
 
@@ -110,7 +111,7 @@ export class TastyAccountModel implements IBrokerageAccountModel {
     }
 
     get activePositionsByUnderlying(): TastyUnderlyingActivePositionsModel[] {
-        return TastyUnderlyingActivePositionsModel.fromPositions(this._activePositions.positions);
+        return TastyUnderlyingActivePositionsModel.fromPositions(this._activePositions.positions).sort((a, b) => (a.daysToExpiration ?? 0) - (b.daysToExpiration ?? 0));
     }
 
     private _workingOrders: TastyWorkingOrderModel[] = [];

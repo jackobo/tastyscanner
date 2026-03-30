@@ -21,8 +21,8 @@ const UnderlyingValuesComponent: React.FC<{underlying: IUnderlyingActivePosition
     return (
         <UnderlyingHeaderValuesBox>
             <CenterAlignedHeaderCellBox>{props.underlying.daysToExpiration}</CenterAlignedHeaderCellBox>
-            <RightAlignedHeaderCellBox></RightAlignedHeaderCellBox>
-            <RightAlignedHeaderCellBox></RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>{`${props.underlying.profitLossPercent.toFixed(2)}%`}</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>{props.underlying.profitLoss.toFixed(2)}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox></RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox></RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.delta}</RightAlignedHeaderCellBox>

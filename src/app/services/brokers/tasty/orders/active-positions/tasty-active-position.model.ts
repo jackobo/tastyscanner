@@ -42,7 +42,7 @@ export class TastyActivePositionModel implements IActivePositionViewModel {
     }
 
     get profitLossPercent(): number {
-        return 100 * (this.profitLoss / Math.abs(this.tradingCost));
+        return  MathUtils.round(100 * (this.profitLoss / Math.abs(this.tradingCost)));
     }
 
     get profitLoss(): number {
@@ -92,6 +92,9 @@ export class TastyActivePositionModel implements IActivePositionViewModel {
     getAllStreamerSymbols(): string[] {
         return this.legs.map(leg => leg.streamerSymbol);
     }
+
+
+
 }
 
 
