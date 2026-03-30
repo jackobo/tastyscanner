@@ -8,6 +8,7 @@ export interface IUnderlyingActivePositionsViewModel {
     readonly profitLoss: number;
     readonly marketPrice: number;
     readonly tradingPrice: number;
+    readonly tradingCost: number;
     readonly delta: NullableNumber;
     readonly theta: NullableNumber;
     readonly bidPrice: NullableNumber;
@@ -24,6 +25,7 @@ export interface IActivePositionViewModel {
     readonly profitLoss: number;
     readonly marketPrice: number;
     readonly tradingPrice: number;
+    readonly tradingCost: number;
     readonly delta: NullableNumber;
     readonly theta: NullableNumber;
     readonly legs: IActivePositionLegViewModel[];
@@ -45,6 +47,7 @@ export interface IActivePositionLegViewModel {
     readonly profitLoss: number;
     readonly marketPrice: number;
     readonly tradingPrice: number;
+    readonly tradingCost: number;
     readonly delta: NullableNumber;
     readonly theta: NullableNumber;
     readonly bidPrice: NullableNumber;

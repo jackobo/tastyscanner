@@ -28,6 +28,7 @@ interface ValuesComponentProps {
     profitLoss: number;
     marketPrice: number;
     tradingPrice: number;
+    tradingCost: number;
     bidPrice: NullableNumber;
     askPrice: NullableNumber;
     delta: NullableNumber;
@@ -43,6 +44,7 @@ const ValuesComponent: React.FC<ValuesComponentProps> = observer((props) => {
             <RightAlignedBodyGridCellBox>{props.profitLoss.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.marketPrice.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.tradingPrice.toFixed(2)}</RightAlignedBodyGridCellBox>
+            <RightAlignedBodyGridCellBox>{props.tradingCost.toFixed(2)}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{`${props.delta?.toFixed(2) ?? ""} ${DELTA_SYMBOL}`}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{`${props.theta?.toFixed(2) ?? ""} ${THETA_SYMBOL}`}</RightAlignedBodyGridCellBox>
             <RightAlignedBodyGridCellBox>{props.bidPrice?.toFixed(2)}</RightAlignedBodyGridCellBox>
@@ -59,6 +61,7 @@ const LegValuesComponent: React.FC<{leg: IActivePositionLegViewModel}> = observe
                          profitLoss={props.leg.profitLoss}
                          marketPrice={props.leg.marketPrice}
                          tradingPrice={props.leg.tradingPrice}
+                         tradingCost={props.leg.tradingCost}
                          delta={props.leg.delta}
                          theta={props.leg.theta}
                          bidPrice={props.leg.bidPrice}
@@ -73,6 +76,7 @@ const PositionValuesComponent: React.FC<{position: IActivePositionViewModel}> = 
                          profitLoss={props.position.profitLoss}
                          marketPrice={props.position.marketPrice}
                          tradingPrice={props.position.tradingPrice}
+                         tradingCost={props.position.tradingCost}
                          delta={props.position.delta}
                          theta={props.position.theta}
                          bidPrice={null}

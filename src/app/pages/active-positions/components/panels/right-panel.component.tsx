@@ -25,6 +25,7 @@ const UnderlyingValuesComponent: React.FC<{underlying: IUnderlyingActivePosition
             <RightAlignedHeaderCellBox>{props.underlying.profitLoss.toFixed(2)}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.marketPrice.toFixed(2)}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.tradingPrice.toFixed(2)}</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>{props.underlying.tradingCost.toFixed(2)}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.delta}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.theta}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{props.underlying.bidPrice?.toFixed(2)}</RightAlignedHeaderCellBox>

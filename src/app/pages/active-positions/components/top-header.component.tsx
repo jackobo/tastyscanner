@@ -33,6 +33,7 @@ export const TopHeaderComponent: React.FC = observer(() => {
             <RightAlignedHeaderCellBox>P/L</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>Mrk</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>Trd Prc</RightAlignedHeaderCellBox>
+            <RightAlignedHeaderCellBox>Cst</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{DELTA_SYMBOL}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>{THETA_SYMBOL}</RightAlignedHeaderCellBox>
             <RightAlignedHeaderCellBox>Bid</RightAlignedHeaderCellBox>
