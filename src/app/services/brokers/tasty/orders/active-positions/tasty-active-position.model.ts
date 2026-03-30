@@ -49,6 +49,21 @@ export class TastyActivePositionModel implements IActivePositionViewModel {
     }
 
 
+    get bidPrice(): NullableNumber {
+        const legsWithBidPrice = this.legs.filter(leg => !Check.isNullOrUndefined(leg.bidPrice));
+        if(legsWithBidPrice.length ===0 ) {
+            return null;
+        }
+        return legsWithBidPrice.sum(leg => leg.isSell ? (leg.bidPrice ?? 0) : -(leg.bidPrice ?? 0));
+    }
+    get askPrice(): NullableNumber {
+        const legsWithAskPrice = this.legs.filter(leg => !Check.isNullOrUndefined(leg.askPrice));
+        if(legsWithAskPrice.length ===0 ) {
+            return null;
+        }
+        return legsWithAskPrice.sum(leg => leg.isSell ? (leg.askPrice ?? 0) : -(leg.askPrice ?? 0));
+    }
+
 
     get daysToExpiration(): NullableNumber {
         const daysToExpiration =  this.legs.filter(l => !Check.isNullOrUndefined(l.daysToExpiration))

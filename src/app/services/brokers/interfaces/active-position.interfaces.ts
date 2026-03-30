@@ -5,12 +5,16 @@ export interface IActivePositionViewModel {
     readonly id: string;
     readonly underlyingSymbol: string;
     readonly createdAt: Date;
+    readonly daysToExpiration: NullableNumber;
     readonly profitLossPercent: number;
     readonly profitLoss: number;
     readonly marketPrice: number;
     readonly tradingPrice: number;
+    readonly bidPrice: NullableNumber;
+    readonly askPrice: NullableNumber;
     readonly legs: IActivePositionLegViewModel[];
-    readonly daysToExpiration: NullableNumber;
+
+
 }
 
 export interface IActivePositionLegViewModel {

@@ -65,8 +65,8 @@ const PositionValuesComponent: React.FC<{position: IActivePositionViewModel}> = 
                          profitLoss={props.position.profitLoss}
                          marketPrice={props.position.marketPrice}
                          tradingPrice={props.position.tradingPrice}
-                         bidPrice={null}
-                         askPrice={null}/>
+                         bidPrice={props.position.bidPrice}
+                         askPrice={props.position.askPrice}/>
     );
 })
 
