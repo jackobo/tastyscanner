@@ -4,7 +4,6 @@ import {TastyGobyStandardPage} from "../tasty-goby-standard.page";
 import {useServices} from "../../hooks/use-services.hook";
 import styled from "styled-components";
 import {SpinnerComponent} from "../../../framework/components/spinner/spinner.component";
-import {UNDERLYING_SYMBOL_WIDTH} from "./constants";
 import {UnderlyingActivePositionsModel} from "./underlying-active-positions.model";
 import {LeftPanelComponent} from "./components/panels/left-panel.component";
 import {RightPanelComponent} from "./components/panels/right-panel.component";
@@ -23,7 +22,7 @@ const PageBox = styled(TastyGobyStandardPage)`
     
     & .${PAGE_CONTENT_CSS_CLASS} {
         display: grid;
-        grid-template-columns: ${UNDERLYING_SYMBOL_WIDTH} 1fr;
+        grid-template-columns: auto 1fr;
         overflow-x: auto;
     }
 `
