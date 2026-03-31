@@ -4,12 +4,35 @@ import {FieldInputContainerComponent} from "../field-input-container.component";
 import {FieldEditorCommonProps, FieldInputContainerComponentProps} from "../inputs-common.props";
 import {IFormField} from "../../../models/forms/form-field.interface";
 import {NullableDate, NullableUndefinedDate} from "../../../types/nullable-types";
-import { useMask, MaskOptions, Replacement} from '@react-input/mask';
+import {MaskOptions, Replacement, useMask} from '@react-input/mask';
 import {DateInputParser} from "./date-input-parser";
 import {DateInputTracker} from "./date-input-tracker";
 import {InputBaseBox} from "../../input/input-base.box";
 import {DateFieldMask} from "./date-field-mask.enum";
 import {useFrameworkServices} from "../../../hooks/use-framework-services.hook";
+import styled from "styled-components";
+import {calendarOutline} from "ionicons/icons";
+import {IonDatetime, IonIcon, IonPopover} from "@ionic/react";
+
+const InputWrapperBox = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+`
+
+const CalendarIconBox = styled.div`
+    position: absolute;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 1;
+`
 
 
 const digitRegEx = /\d/
@@ -42,7 +65,6 @@ export const DateFieldEditorComponent: React.FC<DateFieldEditorWithInputMaskComp
     const services = useFrameworkServices();
     const ignoreFieldChangeEventRef = useRef(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string>("");
-
     const {mask, minDate, maxDate, ...commonFieldInputProps} = props;
     const maskNonNull = mask ?? DateFieldMask.DDMMYYYY;
     const isReadOnly = props.isReadonly || props.field.isReadOnly;
@@ -122,18 +144,66 @@ export const DateFieldEditorComponent: React.FC<DateFieldEditorWithInputMaskComp
         }
     }
 
+    const renderCalendar = () => {
+        if(isReadOnly) {
+            return null;
+        }
+
+        const onCalendarDateTimeChanged = (value: any) => {
+            if(value) {
+                props.field.setValue(services.time.parseIsoDate(value))
+            } else {
+                props.field.setValue(null);
+            }
+        }
+
+        const currentValue = props.field.value?.toISOString();
+        const minDate = props.minDate?.toISOString() ?? undefined;
+        const maxDate = props.maxDate?.toISOString() ?? undefined;
+
+        const calendarIconId = `date-field-calendar-icon-${props.field.fieldName}`;
+        const popoverId = `date-field-popover-${props.field.fieldName}`;
+        return (
+            <>
+                <CalendarIconBox id={calendarIconId}>
+                    <IonIcon icon={calendarOutline}/>
+                </CalendarIconBox>
+                <IonPopover key={popoverId}
+                            id={popoverId}
+                            trigger={calendarIconId}
+                            triggerAction="click"
+                            showBackdrop={false}>
+                    <IonDatetime value={currentValue}
+                                 preferWheel={false}
+                                 showClearButton={true}
+                                 showDefaultButtons={true}
+                                 presentation={props.mask === DateFieldMask.DDMMYYYY ? "date" : "date-time"}
+                                 firstDayOfWeek={0}
+                                 min={minDate}
+                                 max={maxDate}
+                                 onIonChange={(e) => onCalendarDateTimeChanged(e.detail.value)}/>
+                </IonPopover>
+            </>
+        );
+    }
 
     const renderInput = () => {
         let defaultValue: string = "";
         if(props.field.value) {
             defaultValue = dateParser.current.formatValue(props.field.value!);
         }
-        return (<InputBaseBox ref={inputRef}
+        return (
+            <InputWrapperBox>
+                <InputBaseBox ref={inputRef}
                               placeholder={Placeholder[maskNonNull]}
                               defaultValue={defaultValue}
                               readOnly={isReadOnly}
                               onBlur={onBlur}
-                              onChange={onChange}  />)
+                              onChange={onChange}  />
+                {renderCalendar()}
+            </InputWrapperBox>
+        );
+
     }
 
     const onClearButtonClick = (event: MouseEvent<HTMLDivElement>)=> {
