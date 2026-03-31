@@ -28,8 +28,8 @@ export const CondorsShortLegsDeltaRangeFilterComponent: React.FC<{filters: IStra
     }
     return (
         <RangeEditorComponent label="Condors short legs delta range"
-                              min={-10}
-                              max={10}
+                              min={-15}
+                              max={15}
                               lower={filters.condorsMinDelta}
                               upper={filters.condorsMaxDelta}
                               tooltip={renderToolTip()}
