@@ -98,7 +98,7 @@ export class TickerMarketDataReader {
 
                     for(const optionChain of data) {
                         for(const expiration of optionChain.expirations) {
-                            if(expiration.daysToExpiration <= 365) { //maximum 1 year is enough
+                            if(expiration.daysToExpiration <= 90) { //maximum 90 days
                                 optionsChain.push(new OptionsExpirationModel(expiration, this.ticker))
                             }
                         }
