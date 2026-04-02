@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noImplicitAny": false,
-    "types": ["styled-components"]
+    "types": ["styled-components", "firebase/auth"]
 
   },
   "include": ["src"],

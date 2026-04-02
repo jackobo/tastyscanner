@@ -15,8 +15,10 @@ import {IRightSideMenuService} from "./side-menu/right/right-side-menu.service.i
 import {IMediaChecks} from "./media-query/media-queries.interface";
 import {IFrameworkThemeService} from "./theme/framework-theme.service.interface";
 import {FrameworkTheme} from "./theme/framework-theme";
+import {IUserService} from "./user/user.service.interface";
 
 export interface IFrameworkServiceFactory {
+    readonly user: IUserService;
     readonly logger: ILoggerService;
     readonly document: IDocumentService;
     readonly dialog: IDialogService;

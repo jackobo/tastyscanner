@@ -17,7 +17,9 @@ export interface IRenderAppOptions<TServiceFactory extends IFrameworkServiceFact
 }
 
 export function renderApp<TServiceFactory extends IFrameworkServiceFactory>(options: IRenderAppOptions<TServiceFactory>) {
+
     const container = document.getElementById(options.rootElementId);
+
     if(!container) {
         throw new Error(`Container with id ${options.rootElementId} not found`);
     }

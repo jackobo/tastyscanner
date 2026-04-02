@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { IonApp, IonSplitPane, setupIonicReact } from '@ionic/react';
 
 
@@ -44,6 +44,7 @@ import {MAIN_CONTENT} from "../global-constants";
 import {RightSideMenuComponent} from "./side-menu/right/right-side-menu.component";
 import {LeftSideMenuComponent} from "./side-menu/left/left-side-menu.component";
 import {useScreenMediaQueriesChecks} from "../hooks/use-screen-media-queries-checks.hook";
+import {PrimaryButton} from "./buttons/primary-button";
 
 setupIonicReact();
 
@@ -80,11 +81,18 @@ interface AppProps {
 export const App: React.FC<AppProps> = observer((props) => {
     const services = useFrameworkServices();
     const mediaQuery = useScreenMediaQueriesChecks();
+
+    if (!services.user.isAuthenticated) {
+        return <PrimaryButton onClick={() => services.user.login()}>Login</PrimaryButton>;
+    }
+
+
     return (
         <IonApp>
 
                 <IonSplitPaneBox contentId={MAIN_CONTENT} when={!mediaQuery.smallScreen}>
                     <LeftSideMenuComponent appTitle={props.appTitle} renderLogo={props.renderLogo}/>
+                    <button onClick={() => services.user.logout()}>Log out</button>
                     <div className={"ion-page"} id={MAIN_CONTENT}>
                         {services.navigator.currentRoute.render()}
                     </div>

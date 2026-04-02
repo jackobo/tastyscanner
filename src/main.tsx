@@ -5,6 +5,8 @@ import { AppServiceFactoryContext } from './app/react-contexts/app-service-facto
 import {renderApp} from "./framework/render-app";
 import {GlobalStyles} from "./app/theme/global-styles";
 import {AppLogo} from "./app/components/logo/app-logo.component";
+import { useEffect, useState } from "react";
+
 
 const serviceFactory = new AppServiceFactory();
 

@@ -1,0 +1,150 @@
+Ce activezi în Firebase Console
+Creezi proiectul Firebase.
+Authentication → Sign-in method: activezi Google/Apple/Facebook (și ce mai vrei).
+Pentru Apple/Facebook urmezi pașii de configurare redirect/keys din consolă.
+Frontend (React 19, Vite)
+Instalează pachetele:
+npm i firebase
+Configurează Firebase și metodele de login:
+Folosește signInWithPopup pentru SPA sau redirect dacă preferi.
+Exemplu minimal:
+
+// TypeScript
+// src/lib/firebase.ts
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, type User } from "firebase/auth";
+
+const firebaseConfig = {
+  apiKey: "<FIREBASE_API_KEY>",
+  authDomain: "<YOUR_PROJECT>.firebaseapp.com",
+  projectId: "<YOUR_PROJECT_ID>",
+  appId: "<YOUR_APP_ID>",
+};
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+
+export async function loginWithGoogle() {
+  await signInWithPopup(auth, googleProvider);
+}
+
+export function observeUser(cb: (user: User | null) => void) {
+  return onAuthStateChanged(auth, cb);
+}
+
+export async function logout() {
+  await signOut(auth);
+}
+
+
+------------------------
+//Atașează tokenul Firebase la cererile către API:
+// TypeScript
+// src/lib/api.ts
+import { auth } from "./firebase";
+
+export async function apiFetch(input: RequestInfo, init: RequestInit = {}) {
+  const token = await auth.currentUser?.getIdToken(/* forceRefresh? */);
+  const headers = new Headers(init.headers || {});
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  return fetch(input, { ...init, headers });
+}
+
+---------------------------------
+//1. Protejează UI-ul:
+// TypeScript/TSX
+// src/App.tsx
+import { useEffect, useState } from "react";
+import { observeUser, loginWithGoogle, logout } from "./lib/firebase";
+
+export default function App() {
+  const [user, setUser] = useState<import("firebase/auth").User | null>(null);
+
+  useEffect(() => observeUser(setUser), []);
+
+  if (!user) {
+    return <button onClick={loginWithGoogle}>Login with Google</button>;
+  }
+  return (
+    <div>
+      <p>Logged in as {user.email}</p>
+      <button onClick={logout}>Logout</button>
+    </div>
+  );
+}
+
+---------------------------------
+
+Backend (.NET 8 Web API) – validarea tokenului
+1. Config:
+
+- Authority: [https://securetoken.google.com/](https://securetoken.google.com/)
+- Audience:
+
+1. Program.cs:
+
+// C#
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
+var builder = WebApplication.CreateBuilder(args);
+
+var projectId = builder.Configuration["Firebase:ProjectId"];
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = $"https://securetoken.google.com/{projectId}";
+        options.Audience = projectId;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = $"https://securetoken.google.com/{projectId}",
+            ValidateAudience = true,
+            ValidAudience = projectId,
+            ValidateLifetime = true
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapGet("/me/config", async (HttpContext ctx, IUserRepo repo) =>
+{
+    if (!(ctx.User.Identity?.IsAuthenticated ?? false)) return Results.Unauthorized();
+    var externalId = ctx.User.FindFirst("user_id")?.Value ?? ctx.User.FindFirst("sub")?.Value; // Firebase uid
+    if (externalId is null) return Results.Forbid();
+
+    var email = ctx.User.FindFirst("email")?.Value;
+    var user = await repo.GetOrCreateAsync("firebase", externalId, email);
+    var cfg = await repo.GetUserConfigAsync(user.Id);
+    return Results.Ok(cfg);
+}).RequireAuthorization();
+
+app.Run();
+
+---------------------------------
+
+1. Mapping utilizator intern
+
+- La primul request creat automat un utilizator intern:
+    - Provider = "firebase"
+    - ExternalId = uid (sub/user_id)
+    - Email (opțional) din claim
+
+- Atașezi configurările tale per UserId intern.
+
+Note importante
+- Folosește claim-ul sub/user_id ca identificator stabil; email-ul poate fi schimbat de utilizator.
+- Pentru Apple/Facebook în Firebase Auth:
+    - Configurezi providerii în consola Firebase (callback URIs, app IDs/secrets).
+
+- Pentru refresh: getIdToken() gestionează expirarea automat; dacă ai nevoie de token proaspăt, folosește getIdToken(true).
+- În producție, activează HTTPS, CORS corect, și nu stoca tokenuri în localStorage (Firebase le gestionează intern în IndexedDB; e ok pentru SPA).
+
+Dacă vrei, îți pot oferi și un exemplu de repo EF Core pentru Users + UserConfigs și un middleware mic pentru a extrage rapid uid/email în endpointuri.

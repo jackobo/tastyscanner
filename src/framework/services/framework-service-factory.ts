@@ -29,6 +29,8 @@ import {IMediaChecks} from "./media-query/media-queries.interface";
 import {ScreenMediaQueryChecks} from "./media-query/screen/screen-media-query-checks";
 import {IFrameworkThemeService} from "./theme/framework-theme.service.interface";
 import {FrameworkTheme} from "./theme/framework-theme";
+import {IUserService} from "./user/user.service.interface";
+import {UserService} from "./user/user.service";
 
 export abstract class FrameworkServiceFactory implements IFrameworkServiceFactory {
     private _logger: Lazy<ILoggerService> = new Lazy<ILoggerService>(() => new ConsoleLoggerService());
@@ -39,6 +41,11 @@ export abstract class FrameworkServiceFactory implements IFrameworkServiceFactor
     abstract get navigator(): INavigatorService;
     abstract get leftSideMenu(): ILeftSideMenuService;
     abstract get theme(): IFrameworkThemeService<FrameworkTheme>;
+
+    private _user: Lazy<IUserService> = new Lazy<IUserService>(() => new UserService(this));
+    get user(): IUserService {
+        return this._user.value;
+    }
 
     private _frameworkLocalStorage: Lazy<IStorageService<FrameworkLocalStorageKeys>> = new Lazy<IStorageService<FrameworkLocalStorageKeys>>(() => new LocalStorageService<FrameworkLocalStorageKeys>());
     get frameworkLocalStorage(): IStorageService<FrameworkLocalStorageKeys> {
