@@ -12,26 +12,24 @@ import {
 interface LoginFormComponentProps {
     dialogHandler: IDialogHandler;
     authenticationMethods: IAuthenticationMethodViewModel[];
+    onAuthenticate: (method: IAuthenticationMethodViewModel) => Promise<void>;
 }
 
 export const LoginFormComponent: React.FC<LoginFormComponentProps> = observer((props) => {
     const services = useFrameworkServices();
 
     const renderAuthenticationMethod = (method: IAuthenticationMethodViewModel) => {
-        const onAuthenticate = async () =>  {
-            await method.login();
-            props.dialogHandler.accept(method);
-        }
         return (
             <React.Fragment key={method.id}>
-                {method.renderUI({onAuthenticate: onAuthenticate})}
+                {method.renderUI({onAuthenticate: () => props.onAuthenticate(method)})}
             </React.Fragment>
         )
     }
 
     return (
         <StandardDialogPageComponent>
-            <StandardDialogHeaderComponent dialogHandler={props.dialogHandler} title={services.language.translate('Login')}/>
+            <StandardDialogHeaderComponent dialogHandler={props.dialogHandler}
+                                           title={services.language.translate('Login')}/>
             <StandardDialogContentComponent dialogHandler={props.dialogHandler}>
                 {props.authenticationMethods.map(renderAuthenticationMethod)}
             </StandardDialogContentComponent>

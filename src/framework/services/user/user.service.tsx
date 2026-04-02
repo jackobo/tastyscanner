@@ -61,17 +61,17 @@ export class UserService extends FrameworkServiceBase implements IUserService {
         }
 
 
-        await this.services.dialog.showStandardDialog<IAuthenticationMethodModel>({
+        await this.services.dialog.showStandardDialog({
             closeButtonBehavior: DialogCloseButtonBehavior.Reject,
             render: (dialogHandler) => (
                 <LoginFormComponent dialogHandler={dialogHandler}
-                                    authenticationMethods={this._currentAuthenticationStrategy.authenticationMethods} />
-            ),
-            onAccept: async (loginMethod) => {
-                if(loginMethod) {
-                    this._setCurrentLoginMethodId(loginMethod.id);
-                }
-            }
+                                    authenticationMethods={this._currentAuthenticationStrategy.authenticationMethods}
+                                    onAuthenticate={async (method) => {
+                                        await method.login();
+                                        this._setCurrentLoginMethodId(method.id);
+                                        dialogHandler.accept(method);
+                                    }}/>
+            )
         });
 
 
