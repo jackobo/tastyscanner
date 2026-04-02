@@ -1,3 +1,3 @@
 export enum FrameworkLocalStorageKeys {
-    temp = "temp"
+    authenticationMethodId = "authenticationMethodId"
 }

@@ -7,7 +7,9 @@ export abstract class GoogleAuthenticationMethodBase implements IAuthenticationM
     constructor(protected readonly services: IFrameworkServiceFactory) {
     }
 
-    abstract login(): Promise<boolean>;
+    abstract get id(): string;
+    abstract get isAuthenticated(): boolean;
+    abstract login(): Promise<void>;
     abstract logout(): Promise<void>;
 
     renderUI(): React.ReactElement {
