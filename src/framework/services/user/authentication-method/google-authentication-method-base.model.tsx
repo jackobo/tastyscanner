@@ -1,6 +1,8 @@
 import React from "react";
 import {IAuthenticationMethodModel} from "./authentication-method.model.interface";
 import {IFrameworkServiceFactory} from "../../framework-service-factory.interface";
+import {AuthenticateWithGoogleButton} from "../../../components/login-form/authenticate-with-google-button.component";
+import {IRenderUIOptions} from "./authentication-method.view-model.interface";
 
 
 export abstract class GoogleAuthenticationMethodBase implements IAuthenticationMethodModel {
@@ -12,9 +14,9 @@ export abstract class GoogleAuthenticationMethodBase implements IAuthenticationM
     abstract login(): Promise<void>;
     abstract logout(): Promise<void>;
 
-    renderUI(): React.ReactElement {
+    renderUI(options: IRenderUIOptions): React.ReactElement {
         return (
-            <div>Login with Google</div>
+            <AuthenticateWithGoogleButton onClick={options.onAuthenticate}/>
         );
     }
 }

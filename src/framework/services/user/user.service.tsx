@@ -7,6 +7,9 @@ import {IUserAuthenticationStrategy} from "./authentication-strategies/user-auth
 import {FirebaseAuthenticationStrategy} from "./authentication-strategies/firebase/firebase-authentication.strategy";
 import {FrameworkLocalStorageKeys} from "../storage/local-storage/framework-local-storage-keys";
 import {NullableString} from "../../types/nullable-types";
+import {LoginFormComponent} from "../../components/login-form/login-form.component";
+import {DialogCloseButtonBehavior} from "../dialog/dialog-enums";
+
 
 export class UserService extends FrameworkServiceBase implements IUserService {
     constructor(services: IFrameworkServiceFactory) {
@@ -57,13 +60,21 @@ export class UserService extends FrameworkServiceBase implements IUserService {
             return;
         }
 
-        const loginMethod = this._currentAuthenticationStrategy.authenticationMethods[0];
 
-        await loginMethod.login();
+        await this.services.dialog.showStandardDialog<IAuthenticationMethodModel>({
+            closeButtonBehavior: DialogCloseButtonBehavior.Reject,
+            render: (dialogHandler) => (
+                <LoginFormComponent dialogHandler={dialogHandler}
+                                    authenticationMethods={this._currentAuthenticationStrategy.authenticationMethods} />
+            ),
+            onAccept: async (loginMethod) => {
+                if(loginMethod) {
+                    this._setCurrentLoginMethodId(loginMethod.id);
+                }
+            }
+        });
 
-        if(loginMethod.isAuthenticated) {
-            this._setCurrentLoginMethodId(loginMethod.id);
-        }
+
 
     }
 
