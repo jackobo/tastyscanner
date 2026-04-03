@@ -1,8 +1,5 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {SymbolSearchDropDownComponent} from "../ticker/symbol-search-drop-down.component";
-import styled, {css} from "styled-components";
-import {useServices} from "../../hooks/use-services.hook";
 import {useScreenMediaQueriesChecks} from "../../../framework/hooks/use-screen-media-queries-checks.hook";
 import {
     TastyGobyStandardPageHeaderSmallScreenComponent
