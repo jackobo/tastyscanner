@@ -77,9 +77,12 @@ export class StrategiesBuilder {
 
 
                 for(const callSpread of callCreditSpreads) {
+
+
                     if(!(minCallSpreadCredit <= callSpread.totalCredit && callSpread.totalCredit <= maxCallSpreadCredit)) {
                         continue;
                     }
+
 
                     const condor = new IronCondorModel( putSpread.wingsWidth, putSpread, callSpread, this.services);
                     if(condorsMinDelta <= condor.shortLegsDelta && condor.shortLegsDelta <= condorsMaxDelta) {
