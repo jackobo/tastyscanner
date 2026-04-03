@@ -1,10 +1,10 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {SymbolSearchDropDownComponent} from "../components/ticker/symbol-search-drop-down.component";
 import styled, {css} from "styled-components";
-import {useServices} from "../hooks/use-services.hook";
+import {useServices} from "../../hooks/use-services.hook";
+import {SymbolSearchDropDownComponent} from "../ticker/symbol-search-drop-down.component";
 
-const PageTitleBox = styled.div`
+const HeaderContainerBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -40,16 +40,14 @@ const TickerDescriptionBox = styled.span`
     text-align: right;
 `
 
-
-
-export const TastyGobyStandardPageHeaderComponent: React.FC = observer(() => {
+export const TastyGobyStandardPageHeaderLargeScreenComponent: React.FC = observer(() => {
     const services = useServices();
     const ticker = services.tickers.currentTicker;
     const metrics = ticker?.metrics;
     const info = ticker?.info;
 
     return (
-        <PageTitleBox>
+        <HeaderContainerBox>
             <SymbolSearchDropDownComponent/>
             <span>{ticker?.currentPrice?.toFixed(2)}</span>
             <span>|</span>
@@ -63,7 +61,7 @@ export const TastyGobyStandardPageHeaderComponent: React.FC = observer(() => {
             <TickerDescriptionBox>
                 {info?.description}
             </TickerDescriptionBox>
-        </PageTitleBox>
+        </HeaderContainerBox>
 
     )
 })

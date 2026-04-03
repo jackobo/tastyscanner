@@ -82,19 +82,12 @@ export const App: React.FC<AppProps> = observer((props) => {
     const services = useFrameworkServices();
     const mediaQuery = useScreenMediaQueriesChecks();
 
-    const renderLogoutButton = () => {
-        if(!services.user.isAuthenticated) {
-            return null;
-        }
-
-        return (<button onClick={() => services.user.logout()}>Log out</button>);
-    }
 
     const renderLeftSideMenu = () => {
         if(services.leftSideMenu.isVisible) {
             return (
                 <LeftSideMenuComponent appTitle={props.appTitle} renderLogo={props.renderLogo}/>
-            )
+            );
         }
 
         return null;
@@ -105,7 +98,6 @@ export const App: React.FC<AppProps> = observer((props) => {
 
                 <IonSplitPaneBox contentId={MAIN_CONTENT} when={!mediaQuery.smallScreen}>
                     {renderLeftSideMenu()}
-                    {renderLogoutButton()}
                     <div className={"ion-page"} id={MAIN_CONTENT}>
                         {services.navigator.currentRoute.render()}
                     </div>

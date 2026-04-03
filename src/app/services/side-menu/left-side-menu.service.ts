@@ -20,6 +20,7 @@ import {
 import {WorkingOrdersSideMenuItemModel} from "./models/navigation/working-orders/working-orders.side-menu-item.model";
 import {LeftSideMenuBaseService} from "../../../framework/services/side-menu/left/left-side-menu-base.service";
 import {IAppServiceFactory} from "../app-service-factory.interface";
+import {LogoutSideMenuItemModel} from "./models/user/logout/logout.side-menu-item.model";
 
 export class LeftSideMenuService extends LeftSideMenuBaseService<IAppServiceFactory> implements ILeftSideMenuService {
 
@@ -52,6 +53,12 @@ export class LeftSideMenuService extends LeftSideMenuBaseService<IAppServiceFact
                     new WatchListsSideMenuItem(this.services),
                     new BrokerageAccountInfoSideMenuItemModel(this.services),
                     new AppSettingsSideMenuItemModel(this.services)
+                ]
+            },
+            {
+                key: "user-side-menu-group",
+                menuItems: [
+                    new LogoutSideMenuItemModel(this.services)
                 ]
             }
 

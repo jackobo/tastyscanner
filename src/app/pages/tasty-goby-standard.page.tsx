@@ -1,7 +1,7 @@
 import React, {PropsWithChildren} from "react";
 import {observer} from "mobx-react";
 import {StandardPage} from "../../framework/pages/standard.page";
-import {TastyGobyStandardPageHeaderComponent} from "./tasty-goby-standard-page-header.component";
+import {TastyGobyStandardPageHeaderComponent} from "../components/page-header/tasty-goby-standard-page-header.component";
 import {useScreenMediaQueriesChecks} from "../../framework/hooks/use-screen-media-queries-checks.hook";
 
 interface TastyGobyStandardPageProps extends PropsWithChildren {
