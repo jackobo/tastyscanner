@@ -5,6 +5,6 @@ import {IAppNavigatorService} from "./app-navigator.service.interface";
 
 export class AppNavigatorService extends NavigatorService<IApplicationRoutes> implements IAppNavigatorService {
     _createApplicationRoutes(): IApplicationRoutes {
-        return new ApplicationRoutes("", this.services);
+        return new ApplicationRoutes({path: "", requireAuthentication: false}, this.services);
     }
 }

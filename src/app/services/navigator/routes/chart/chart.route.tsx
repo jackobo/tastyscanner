@@ -6,6 +6,6 @@ import {ChartPage} from "../../../../pages/chart/chart.page";
 
 export class ChartRoute  extends RootRouteModel {
     constructor(services: IFrameworkServiceFactory) {
-        super('/chart', services, () => <ChartPage/>);
+        super({path: '/chart', requireAuthentication: false}, services, () => <ChartPage/>);
     }
 }

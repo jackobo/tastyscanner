@@ -6,6 +6,6 @@ import {ActivePositionsPage} from "../../../../pages/active-positions/active-pos
 
 export class ActivePositionsRoute extends RootRouteModel {
     constructor(services: IFrameworkServiceFactory) {
-        super('/active-positions', services, () => <ActivePositionsPage/>);
+        super({path: '/active-positions', requireAuthentication: true}, services, () => <ActivePositionsPage/>);
     }
 }

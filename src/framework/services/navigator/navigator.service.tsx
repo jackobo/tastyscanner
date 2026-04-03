@@ -195,7 +195,9 @@ export abstract class NavigatorService<TAppRoutes extends IApplicationRoutesBase
         }
         const contextData: IRoutingGuardContext = JSON.parse(message);
 
+        const targetRoute = this.routes.matchLocation(contextData.targetLocation.pathname);
         const context = new RoutingGuardContext(contextData.targetLocation,
+                                                targetRoute,
                                                 contextData.navigationDirection,
                                                 contextData.targetIsHomePage);
 

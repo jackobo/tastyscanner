@@ -5,6 +5,6 @@ import {WorkingOrdersPage} from "../../../../pages/working-orders/working-orders
 
 export class WorkingOrdersRoute  extends RootRouteModel {
     constructor(services: IFrameworkServiceFactory) {
-        super('/working-orders', services, () => <WorkingOrdersPage/>);
+        super({path: '/working-orders', requireAuthentication: true}, services, () => <WorkingOrdersPage/>);
     }
 }

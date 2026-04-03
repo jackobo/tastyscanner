@@ -44,7 +44,6 @@ import {MAIN_CONTENT} from "../global-constants";
 import {RightSideMenuComponent} from "./side-menu/right/right-side-menu.component";
 import {LeftSideMenuComponent} from "./side-menu/left/left-side-menu.component";
 import {useScreenMediaQueriesChecks} from "../hooks/use-screen-media-queries-checks.hook";
-import {PrimaryButton} from "./buttons/primary-button";
 
 
 setupIonicReact();
@@ -83,20 +82,6 @@ export const App: React.FC<AppProps> = observer((props) => {
     const services = useFrameworkServices();
     const mediaQuery = useScreenMediaQueriesChecks();
 
-
-    const renderRouteContent = () => {
-        if (services.user.isAuthenticated) {
-            return services.navigator.currentRoute.render();
-        }
-
-        return (
-            <PrimaryButton onClick={() => services.user.login()}>
-                Log in
-            </PrimaryButton>
-        );
-    }
-
-
     return (
         <IonApp>
 
@@ -104,7 +89,7 @@ export const App: React.FC<AppProps> = observer((props) => {
                     <LeftSideMenuComponent appTitle={props.appTitle} renderLogo={props.renderLogo}/>
                     <button onClick={() => services.user.logout()}>Log out</button>
                     <div className={"ion-page"} id={MAIN_CONTENT}>
-                        {renderRouteContent()}
+                        {services.navigator.currentRoute.render()}
                     </div>
                     <RightSideMenuComponent key={services.rightSideMenu.stickySideMenuId}
                                             menuId={services.rightSideMenu.stickySideMenuId}

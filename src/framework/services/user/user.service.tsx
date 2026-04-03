@@ -9,16 +9,19 @@ import {FrameworkLocalStorageKeys} from "../storage/local-storage/framework-loca
 import {NullableString} from "../../types/nullable-types";
 import {LoginFormComponent} from "../../components/login-form/login-form.component";
 import {DialogCloseButtonBehavior} from "../dialog/dialog-enums";
+import {IRoutingGuard, RoutingGuardContext, RoutingGuardResult} from "../navigator/navigator.service.interface";
 
 
-export class UserService extends FrameworkServiceBase implements IUserService {
+export class UserService extends FrameworkServiceBase implements IUserService, IRoutingGuard {
     constructor(services: IFrameworkServiceFactory) {
         super(services);
 
         makeObservable<this, '_currentLoginMethodId' | 'currentLoginMethod'>(this, {
             _currentLoginMethodId: observable.ref,
             currentLoginMethod: computed
-        })
+        });
+
+        this.services.navigator.registerRoutingGuard(this);
 
         this._currentLoginMethodId = this.services.frameworkLocalStorage.getItem(FrameworkLocalStorageKeys.authenticationMethodId);
         this._currentAuthenticationStrategy = new FirebaseAuthenticationStrategy(this.services);
@@ -30,6 +33,29 @@ export class UserService extends FrameworkServiceBase implements IUserService {
                 })
             }
         });
+    }
+
+    async canNavigate(context: RoutingGuardContext): Promise<RoutingGuardResult> {
+        if(!context.targetRoute || context.targetLocationIsHomePage) {
+            return RoutingGuardResult.Allow;
+        }
+
+        if(this.isAuthenticated) {
+            return RoutingGuardResult.Allow;
+        }
+
+        if(!context.targetRoute.requireAuthentication) {
+            return RoutingGuardResult.Allow;
+        }
+
+        await this.login();
+
+        if(this.isAuthenticated) {
+            return RoutingGuardResult.Allow;
+        }
+
+        this.services.navigator.goHome();
+        return RoutingGuardResult.Block;
     }
 
     private readonly _currentAuthenticationStrategy: IUserAuthenticationStrategy;
@@ -85,5 +111,6 @@ export class UserService extends FrameworkServiceBase implements IUserService {
 
         await this.currentLoginMethod.logout();
         this._setCurrentLoginMethodId(null);
+        await this.services.navigator.goHome();
     }
 }

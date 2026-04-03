@@ -1,14 +1,14 @@
 import React from "react";
 import {IRouteActivationOptions} from "../navigator.service.interface";
 import {matchPath} from "react-router";
-import {IRoute} from "./route.interface";
+import {IRoute, IRouteOptions} from "./route.interface";
 import {NullableString} from "../../../types/nullable-types";
 import {Check} from "../../../utils/type-checking";
 import {makeObservable, observable, runInAction} from "mobx";
 import {IFrameworkServiceFactory} from "../../framework-service-factory.interface";
 
 export abstract class RouteBaseModel<TRouteParams extends Record<string, string> = {}> implements IRoute<TRouteParams> {
-    constructor(private readonly _path: string,
+    constructor(private readonly _options: IRouteOptions,
                 public readonly services: IFrameworkServiceFactory,
                 private readonly _parent?: RouteBaseModel | null,
                 private readonly _activateOptions?: IRouteActivationOptions<TRouteParams>) {
@@ -21,10 +21,14 @@ export abstract class RouteBaseModel<TRouteParams extends Record<string, string>
 
     get path(): string {
         if(this._parent) {
-            return this._parent.path + this._path;
+            return this._parent.path + this._options.path;
         } else {
-            return this._path;
+            return this._options.path;
         }
+    }
+
+    get requireAuthentication(): boolean {
+        return this._options.requireAuthentication;
     }
 
     get analyticsName(): NullableString | undefined {

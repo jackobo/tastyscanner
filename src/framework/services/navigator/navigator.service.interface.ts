@@ -16,6 +16,7 @@ export type RouteState = IRouteState | undefined;
 
 export class RoutingGuardContext {
     constructor(public readonly targetLocation: Location<RouteState>,
+                public readonly targetRoute: IRoute | null,
                 private readonly _navigationDirection: NavigationDirectionEnum,
                 public readonly targetLocationIsHomePage: boolean ) {
     }

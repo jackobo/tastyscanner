@@ -2,13 +2,14 @@ import {RouteBaseModel} from "./route-base.model";
 import {IRouteActivationOptions} from "../navigator.service.interface";
 import React from "react";
 import {IFrameworkServiceFactory} from "../../framework-service-factory.interface";
+import {IRouteOptions} from "./route.interface";
 
 export class RootRouteModel<TRouteParams extends Record<string, string> = {}> extends RouteBaseModel<TRouteParams> {
-    constructor(path: string,
+    constructor(options: IRouteOptions,
                 services: IFrameworkServiceFactory,
                 private renderComponent: (routeParams?: TRouteParams) => React.ReactElement,
                 activateOptions?: IRouteActivationOptions<TRouteParams>) {
-        super(path, services, null, activateOptions);
+        super(options, services, null, activateOptions);
     }
 
     render() {

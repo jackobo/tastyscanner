@@ -9,11 +9,11 @@ import {IFrameworkServiceFactory} from "../../../../../framework/services/framew
 
 export class StrategiesRoutes extends ParentRouteModel implements IStrategiesRoutes {
     constructor(services: IFrameworkServiceFactory) {
-        super('/strategies', services);
+        super({path: '/strategies', requireAuthentication: true}, services);
     }
-    ironCondors = new ChildRouteModel("/iron-condors", this, () => <IronCondorsPage/>)
-    putCreditSpreads= new ChildRouteModel("/put-credit-spreads", this, () => <PutCreditSpreadsPage/>)
-    callCreditSpreads = new ChildRouteModel("/call-credit-spreads", this, () => <CallCreditSpreadsPage/>)
+    ironCondors = new ChildRouteModel({path: "/iron-condors", requireAuthentication: true}, this, () => <IronCondorsPage/>)
+    putCreditSpreads= new ChildRouteModel({path: "/put-credit-spreads", requireAuthentication: true}, this, () => <PutCreditSpreadsPage/>)
+    callCreditSpreads = new ChildRouteModel({path: "/call-credit-spreads", requireAuthentication: true}, this, () => <CallCreditSpreadsPage/>)
 
     protected _getDefaultChildRoute(): RouteBaseModel | null {
         return this.ironCondors;
