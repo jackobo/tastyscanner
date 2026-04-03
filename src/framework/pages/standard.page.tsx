@@ -1,5 +1,5 @@
 import React, {PropsWithChildren, useEffect, useRef} from "react";
-import {IonButtons, IonContent, IonFooter, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar} from '@ionic/react';
+import {IonButtons, IonContent, IonFooter, IonHeader, IonMenuButton, IonPage, IonToolbar} from '@ionic/react';
 import {observer} from "mobx-react";
 import styled, {ThemeProvider} from "styled-components";
 import { ContainerMediaQueriesChecksContext } from "../react-contexts/container-media-queries-checks.context";

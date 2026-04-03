@@ -4,6 +4,7 @@ import {useServices} from "../../hooks/use-services.hook";
 import {SymbolSearchDropDownComponent} from "../ticker/symbol-search-drop-down.component";
 import styled from "styled-components";
 import {LoginButtonComponent} from "../login/login-button.component";
+import {AppLogo} from "../logo/app-logo.component";
 
 const HeaderContainerBox = styled.div`
     display: flex;
@@ -18,7 +19,13 @@ const SymbolSearchContainerBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: var(--ion-space-8);
     flex-grow: 1;
+`
+
+const AppTitleBox = styled.span`
+    font-weight: bold;
+    font-size: var(--ion-font-size-h4);
 `
 
 export const TastyGobyStandardPageHeaderSmallScreenComponent: React.FC = observer(() => {
@@ -27,7 +34,12 @@ export const TastyGobyStandardPageHeaderSmallScreenComponent: React.FC = observe
 
     const renderSearchSymbol = () => {
         if(!services.user.isAuthenticated) {
-            return null;
+            return (
+                <>
+                    <AppLogo/>
+                    <AppTitleBox>Tasty Goby</AppTitleBox>
+                </>
+            );
         }
         return (
             <>
