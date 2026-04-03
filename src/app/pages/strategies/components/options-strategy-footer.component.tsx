@@ -1,6 +1,6 @@
 import React, {useRef} from "react";
 import {observer} from "mobx-react-lite";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import {IOptionsStrategyViewModel} from "../../../models/options-strategy.view-model.interface";
 import {useServices} from "../../../hooks/use-services.hook";
 import {SendOrderDialogComponent} from "./send-order/send-order-dialog.component";
@@ -43,7 +43,7 @@ const ValueBox = styled(CellBox)`
     font-weight: var(--ion-font-weight-bold);
 `
 
-const PropertyBox = styled.div`
+const PropertyBox = styled.div<{$fullWidth?: boolean}>`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -52,6 +52,7 @@ const PropertyBox = styled.div`
     padding: 5px;
     border-right: 1px solid var(--ion-color-border);
     border-bottom: 1px solid var(--ion-color-border);
+    ${props => props.$fullWidth && css`grid-column: 1/-1;`}
 `
 
 
@@ -77,9 +78,9 @@ const TradeButtonBox = styled.div`
 
 
 
-const FooterPropertyComponent: React.FC<{label: string | React.ReactElement; value: string | React.ReactElement}> = observer((props) => {
+const FooterPropertyComponent: React.FC<{label: string | React.ReactElement; value: string | React.ReactElement; fullWidth?: boolean}> = observer((props) => {
     return (
-        <PropertyBox>
+        <PropertyBox $fullWidth={props.fullWidth}>
             <LabelBox>
                 {props.label}
             </LabelBox>
@@ -147,21 +148,34 @@ export const OptionsStrategyFooterComponent: React.FC<{strategy: IOptionsStrateg
         )
     }
 
+    const renderCredits = () => {
+        if(props.strategy.credits.length === 0) {
+            return null;
+        }
+        return (
+            <>
+                {props.strategy.credits.map((credit) => (
+                    <FooterPropertyComponent key={credit.description} label={credit.description} value={credit.credit.toFixed(2)}/>
+                ))}
+            </>
+        )
+    }
+
     return (
         <FooterContainerBox>
             <StrategyPropertiesContainerBox>
+                <FooterPropertyComponent label={services.language.translate("Wings")}
+                                         value={`${props.strategy.wingsWidth}$`} fullWidth={true}/>
+
+                <FooterPropertyComponent label={services.language.translate("Total Credit")}
+                                         value={`${props.strategy.totalCredit.toFixed(2)}$`} fullWidth={true}/>
+
+                {renderCredits()}
                 <FooterPropertyComponent label={services.language.translate("Risk/Reward")}
                                          value={props.strategy.riskRewardRatio.toString()}/>
 
                 <FooterPropertyComponent label={services.language.translate("POP")}
                                          value={`${MathUtils.round(props.strategy.pop, 0)}%`}/>
-
-                <FooterPropertyComponent label={services.language.translate("Wings")}
-                                         value={`${props.strategy.wingsWidth}$`}/>
-
-                <FooterPropertyComponent label={services.language.translate("Credit")}
-                                         value={`${props.strategy.credit.toFixed(2)}$`}/>
-
                 <FooterPropertyComponent label={<LabelWithTooltipComponent label={"Delta"}
                                                                            tooltipText={services.language.translate("Total delta for the strategy.")}/>}
                                          value={props.strategy.delta.toFixed(2)}/>

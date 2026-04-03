@@ -345,13 +345,13 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
     const limitPriceAsNumber = limitPrice ? MathUtils.round(parseFloat(limitPrice)) : null;
 
 
-    const optionPriceTickSize = props.strategy.getOptionTickSize(limitPriceAsNumber ?? props.strategy.credit);
+    const optionPriceTickSize = props.strategy.getOptionTickSize(limitPriceAsNumber ?? props.strategy.totalCredit);
 
     const onLockerClick = (isLocked: boolean) => {
         if(isLocked) {
             setLimitPrice(null);
         } else {
-            setLimitPrice(props.strategy.credit.toString());
+            setLimitPrice(props.strategy.totalCredit.toString());
         }
     }
 
@@ -408,12 +408,12 @@ export const SendOrderDialogComponent: React.FC<SendOrderDialogComponentProps> =
                             {`Mid price`}
                         </FieldLabelBox>
                         <MidPriceValueBox>
-                            {props.strategy.credit}
+                            {props.strategy.totalCredit}
                         </MidPriceValueBox>
                     </MidPriceBox>
 
                     <ValueEditorComponent  value={ limitPrice}
-                                           defaultValue={props.strategy.credit.toString()}
+                                           defaultValue={props.strategy.totalCredit.toString()}
                                            onValueChanged={setLimitPrice}
                                            parseValue={value => parseFloat(value ?? "")}
                                            label={"Limit Price"}

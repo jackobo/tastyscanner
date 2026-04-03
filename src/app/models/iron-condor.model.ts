@@ -1,7 +1,10 @@
 import {OptionModel} from "./option.model";
 import {IIronCondorViewModel} from "./iron-condor.view-model.interface";
 import {IAppServiceFactory} from "../services/app-service-factory.interface";
-import {IOptionsStrategySendOrderParams} from "./options-strategy.view-model.interface";
+import {
+    IOptionsStrategyCreditsViewModel,
+    IOptionsStrategySendOrderParams
+} from "./options-strategy.view-model.interface";
 import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
 import {PutCreditSpreadModel} from "./put-credit-spread.model";
 import {CallCreditSpreadModel} from "./call-credit-spread.model";
@@ -27,7 +30,7 @@ export class IronCondorModel implements IIronCondorViewModel {
         ];
 
         makeObservable(this, {
-            credit: computed,
+            totalCredit: computed,
             riskRewardRatio: computed,
             pop: computed,
             delta: computed,
@@ -62,12 +65,25 @@ export class IronCondorModel implements IIronCondorViewModel {
         return `${this.wingsWidth}${this.legs.map(leg => leg.option.strikePrice).join('')}`;
     }
 
-    get credit(): number {
-        return MathUtils.round(this.putSpread.credit + this.callSpread.credit);
+    get totalCredit(): number {
+        return MathUtils.round(this.putSpread.totalCredit + this.callSpread.totalCredit);
+    }
+
+    get credits(): IOptionsStrategyCreditsViewModel[] {
+        return [
+            {
+                description: "Puts credit",
+                credit: this.putSpread.totalCredit,
+            },
+            {
+                description: "Calls credit",
+                credit: this.callSpread.totalCredit,
+            }
+        ];
     }
 
     get riskRewardRatio(): number {
-        return MathUtils.round(this.wingsWidth / this.credit);
+        return MathUtils.round(this.wingsWidth / this.totalCredit);
     }
 
     getOptionTickSize(price: number): number {
@@ -79,9 +95,9 @@ export class IronCondorModel implements IIronCondorViewModel {
     get pop(): number {
 
         //compute theoretical strike price for the sold put
-        const putBreakEvenStrikePrice = this.stoPut.strikePrice - this.putSpread.credit;
+        const putBreakEvenStrikePrice = this.stoPut.strikePrice - this.putSpread.totalCredit;
         //compute theoretical strike price for the sold call
-        const callBreakEvenStrikePrice = this.stoCall.strikePrice + this.callSpread.credit;
+        const callBreakEvenStrikePrice = this.stoCall.strikePrice + this.callSpread.totalCredit;
 
         //find the closest put exactly at or right below the theoretical strike price for the sold put
         const breakEvenPut = this.stoPut.strike.expiration.getClosestStrikeBelowOrAt(putBreakEvenStrikePrice)?.put
@@ -121,7 +137,7 @@ export class IronCondorModel implements IIronCondorViewModel {
         }
 
         await account.sendOrder({
-            price: orderParams.price ?? this.credit,
+            price: orderParams.price ?? this.totalCredit,
             priceEffect: "Credit",
             timeInForce: orderParams.timeInForce,
             orderType: orderParams.orderType,

@@ -7,11 +7,17 @@ export interface IOptionsStrategyWithAnnotationsViewModel<TStrategy extends IOpt
     isBestRiskReward: boolean;
 }
 
+export interface IOptionsStrategyCreditsViewModel {
+    readonly description: string;
+    readonly credit: number;
+}
+
 export interface IOptionsStrategyViewModel {
     readonly strategyName: string;
     readonly key: string;
     readonly wingsWidth: number;
-    readonly credit: number;
+    readonly totalCredit: number;
+    readonly credits: IOptionsStrategyCreditsViewModel[];
     readonly riskRewardRatio: number;
     readonly pop: number;
     readonly delta: number;

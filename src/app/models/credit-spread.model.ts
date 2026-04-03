@@ -1,7 +1,10 @@
 import {ICreditSpreadViewModel} from "./credit-spread.view-model.interface";
 import {OptionModel} from "./option.model";
 import {IAppServiceFactory} from "../services/app-service-factory.interface";
-import {IOptionsStrategySendOrderParams} from "./options-strategy.view-model.interface";
+import {
+    IOptionsStrategyCreditsViewModel,
+    IOptionsStrategySendOrderParams
+} from "./options-strategy.view-model.interface";
 import {OptionsStrategyLegModel} from "./options-strategy-leg.model";
 import {MathUtils} from "../../framework/utils/math-utils";
 import {computed, makeObservable} from "mobx";
@@ -12,7 +15,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
                 public readonly btoOption: OptionModel,
                 protected readonly services: IAppServiceFactory) {
         makeObservable(this, {
-            credit: computed,
+            totalCredit: computed,
             riskRewardRatio: computed,
             pop: computed,
             delta: computed,
@@ -29,12 +32,16 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
         return `${this.wingsWidth}${this.stoOption.strikePrice}${this.btoOption.strikePrice}`;
     }
 
-    get credit(): number {
+    get totalCredit(): number {
         return MathUtils.round(this.stoOption.midPrice - this.btoOption.midPrice);
     }
 
+    get credits(): IOptionsStrategyCreditsViewModel[] {
+        return [];
+    }
+
     get riskRewardRatio(): number {
-        return MathUtils.round(this.wingsWidth / this.credit);
+        return MathUtils.round(this.wingsWidth / this.totalCredit);
     }
 
     get pop(): number {
@@ -73,7 +80,7 @@ export abstract class CreditSpreadModel implements ICreditSpreadViewModel {
         }
 
         await account.sendOrder({
-            price: orderParams.price ?? this.credit,
+            price: orderParams.price ?? this.totalCredit,
             priceEffect: "Credit",
             timeInForce: orderParams.timeInForce,
             orderType: orderParams.orderType,

@@ -61,6 +61,7 @@ export class StrategiesBuilder {
 
         const condorsMinDelta = this.services.strategySettings.strategyFilters.condorsMinDelta;
         const condorsMaxDelta = this.services.strategySettings.strategyFilters.condorsMaxDelta;
+        const wingMaxRiskRewardRatio = this.services.strategySettings.strategyFilters.condorsMaxRiskRewardRatioPerWing;
 
         for(const wing of Object.keys(putCreditSpreadsByWings)) {
             const putCreditSpreads = putCreditSpreadsByWings[wing];
@@ -69,7 +70,13 @@ export class StrategiesBuilder {
                 continue;
             }
             for(const putSpread of putCreditSpreads) {
+                if(putSpread.riskRewardRatio > wingMaxRiskRewardRatio) {
+                    continue;
+                }
                 for(const callSpread of callCreditSpreads) {
+                    if(callSpread.riskRewardRatio > wingMaxRiskRewardRatio) {
+                        continue;
+                    }
                     const condor = new IronCondorModel( putSpread.wingsWidth, putSpread, callSpread, this.services);
                     if(condorsMinDelta <= condor.shortLegsDelta && condor.shortLegsDelta <= condorsMaxDelta) {
                         condors.push(condor);

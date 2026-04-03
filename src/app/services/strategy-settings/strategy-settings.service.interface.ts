@@ -22,6 +22,7 @@ export interface IStrategyFiltersViewModel {
     condorsMinDelta: number;
     condorsMaxDelta: number;
     maxRiskRewardRatio: number;
+    condorsMaxRiskRewardRatioPerWing: number;
     minPop: number;
     minDaysToExpiration: number;
     maxDaysToExpiration: number;
