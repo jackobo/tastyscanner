@@ -2,6 +2,7 @@ import {ISideMenuItemViewModel} from "./models/side-menu-item.view-model.interfa
 import {ISideMenuItemsGroupViewModel} from "./models/side-menu-items-group.view-model.interface";
 
 export interface ILeftSideMenuService {
+    readonly isVisible: boolean;
     readonly rootMenuItems: ISideMenuItemViewModel[];
     readonly menuItemsGroups: ISideMenuItemsGroupViewModel[];
     open(): Promise<void>;

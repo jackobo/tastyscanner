@@ -22,7 +22,11 @@ import {LeftSideMenuBaseService} from "../../../framework/services/side-menu/lef
 import {IAppServiceFactory} from "../app-service-factory.interface";
 
 export class LeftSideMenuService extends LeftSideMenuBaseService<IAppServiceFactory> implements ILeftSideMenuService {
-    
+
+    get isVisible(): boolean {
+        return this.services.user.isAuthenticated;
+    }
+
     get rootMenuItems(): ISideMenuItemViewModel[] {
         return [
             new CurrentBrokerageAccountSideMenuItemModel(this.services),

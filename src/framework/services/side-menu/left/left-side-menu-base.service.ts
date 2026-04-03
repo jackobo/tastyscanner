@@ -10,6 +10,7 @@ import {LEFT_SIDE_MENU} from "../../../components/side-menu/side-menu-consts";
 
 export abstract class LeftSideMenuBaseService<TServiceFactory extends IFrameworkServiceFactory> extends ServiceBase<TServiceFactory>
                                                               implements ILeftSideMenuService {
+    abstract get isVisible(): boolean;
     abstract get rootMenuItems(): ISideMenuItemViewModel[];
     abstract get menuItemsGroups(): ISideMenuItemsGroupViewModel[];
 
