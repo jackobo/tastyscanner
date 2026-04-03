@@ -5,13 +5,9 @@ import {useServices} from "../../hooks/use-services.hook";
 import {SymbolSearchDropDownComponent} from "../ticker/symbol-search-drop-down.component";
 import {LeftSideContainerBox} from "./boxes/left-side-container.box";
 import {HeaderForAnonymousUserComponent} from "./boxes/header-for-anonymous-user.component";
+import {HeaderContainerBox} from "./boxes/header-container.box";
 
-const HeaderContainerBox = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-`
+
 const computeIvrColor = (ivr: number) => {
     if(ivr <= 30) {
         return css`
