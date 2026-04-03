@@ -73,10 +73,25 @@ export class StrategiesBuilder {
                 if(putSpread.riskRewardRatio > wingMaxRiskRewardRatio) {
                     continue;
                 }
+
+                //const minCallSpreadCredit = putSpread.totalCredit * 0.7;
+                //const maxCallSpreadCredit = putSpread.totalCredit * 1.3;
+
+
                 for(const callSpread of callCreditSpreads) {
                     if(callSpread.riskRewardRatio > wingMaxRiskRewardRatio) {
                         continue;
                     }
+
+
+                    /*
+
+                    if(!( minCallSpreadCredit <= callSpread.totalCredit && callSpread.totalCredit <= maxCallSpreadCredit)) {
+                        continue;
+                    }
+
+                     */
+
                     const condor = new IronCondorModel( putSpread.wingsWidth, putSpread, callSpread, this.services);
                     if(condorsMinDelta <= condor.shortLegsDelta && condor.shortLegsDelta <= condorsMaxDelta) {
                         condors.push(condor);

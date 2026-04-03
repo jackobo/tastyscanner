@@ -320,7 +320,9 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
 
         runInAction(() => {
             this._accounts = accountsModels;
-        })
+        });
+
+        this.services.logger.info("Tasty accounts loaded", rawAccounts);
 
         return accountsModels;
     }
