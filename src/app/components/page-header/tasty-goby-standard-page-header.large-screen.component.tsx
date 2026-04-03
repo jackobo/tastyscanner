@@ -3,6 +3,8 @@ import {observer} from "mobx-react";
 import styled, {css} from "styled-components";
 import {useServices} from "../../hooks/use-services.hook";
 import {SymbolSearchDropDownComponent} from "../ticker/symbol-search-drop-down.component";
+import {LeftSideContainerBox} from "./boxes/left-side-container.box";
+import {HeaderForAnonymousUserComponent} from "./boxes/header-for-anonymous-user.component";
 
 const HeaderContainerBox = styled.div`
     display: flex;
@@ -40,28 +42,38 @@ const TickerDescriptionBox = styled.span`
     text-align: right;
 `
 
-export const TastyGobyStandardPageHeaderLargeScreenComponent: React.FC = observer(() => {
+const ForAuthorizedUserComponent: React.FC = observer(() => {
     const services = useServices();
     const ticker = services.tickers.currentTicker;
     const metrics = ticker?.metrics;
     const info = ticker?.info;
-
     return (
         <HeaderContainerBox>
-            <SymbolSearchDropDownComponent/>
-            <span>{ticker?.currentPrice?.toFixed(2)}</span>
-            <span>|</span>
-            <IVRankBox $ivr={metrics?.ivRank ?? 0}>
-                <span>IVR:</span>
-                <span>{metrics?.ivRank}</span>
-            </IVRankBox>
-            <span>|</span>
-            <span>Beta:</span>
-            <span>{metrics?.beta?.toFixed(2)}</span>
+            <LeftSideContainerBox>
+                <SymbolSearchDropDownComponent/>
+                <span>{ticker?.currentPrice?.toFixed(2)}</span>
+                <span>|</span>
+                <IVRankBox $ivr={metrics?.ivRank ?? 0}>
+                    <span>IVR:</span>
+                    <span>{metrics?.ivRank}</span>
+                </IVRankBox>
+                <span>|</span>
+                <span>Beta:</span>
+                <span>{metrics?.beta?.toFixed(2)}</span>
+            </LeftSideContainerBox>
+
             <TickerDescriptionBox>
                 {info?.description}
             </TickerDescriptionBox>
-        </HeaderContainerBox>
 
+        </HeaderContainerBox>
     )
+})
+
+export const TastyGobyStandardPageHeaderLargeScreenComponent: React.FC = observer(() => {
+    const services = useServices();
+    if(services.user.isAuthenticated) {
+        return <ForAuthorizedUserComponent/>
+    }
+    return <HeaderForAnonymousUserComponent/>
 })

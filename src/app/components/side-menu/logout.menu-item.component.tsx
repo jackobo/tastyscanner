@@ -11,7 +11,7 @@ const ButtonContainerBox = styled.div`
     flex-direction: row;
     align-items: center;
     width: 100%;
-    padding-top: var(--ion-space-16);
+    padding: var(--ion-space-8) 0;
 `
 
 const LogoutButton = styled(NeutralButton)`
@@ -39,6 +39,7 @@ export const LogoutMenuItemComponent: React.FC = observer(() => {
                 <span>
                     {services.language.translate('Logout')}
                 </span>
+
                 <IconBox>
                     <IonIcon icon={logOutOutline}/>
                 </IconBox>
