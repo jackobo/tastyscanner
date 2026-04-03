@@ -29,6 +29,14 @@ const PageContentBox = styled.div`
     flex-grow: 1;
 `
 
+const PageHeaderContentContainerBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    
+`
+
 export interface StandardPageProps extends PropsWithChildren {
     renderHeaderContent?: () => string | React.ReactElement;
     renderCustomHeader?: () => React.ReactElement;
@@ -56,6 +64,18 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
         }
     }, []);
 
+    const renderMenuButton = () => {
+        if(services.leftSideMenu.isVisible) {
+            return (
+                <IonButtons slot="start">
+                    <IonMenuButton/>
+                </IonButtons>
+            );
+        }
+
+        return null;
+    }
+
     const renderHeader = () => {
         if(props.renderCustomHeader) {
             return props.renderCustomHeader();
@@ -72,10 +92,8 @@ export const StandardPage: React.FC<StandardPageProps> = observer((props) => {
         return (
             <IonHeader>
                 <IonToolbar>
-                    <IonButtons slot="start">
-                        <IonMenuButton/>
-                    </IonButtons>
-                    <IonTitle>{renderHeaderContent()}</IonTitle>
+                    {renderMenuButton()}
+                    <PageHeaderContentContainerBox>{renderHeaderContent()}</PageHeaderContentContainerBox>
                 </IonToolbar>
             </IonHeader>
         )

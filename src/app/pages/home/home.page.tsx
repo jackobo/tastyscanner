@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {IronCondorsPage} from "../strategies/iron-condors.page";
 import {useServices} from "../../hooks/use-services.hook";
-import {PrimaryButton} from "../../../framework/components/buttons/primary-button";
+import {TastyGobyStandardPage} from "../tasty-goby-standard.page";
 
 export const HomePage: React.FC = observer(() => {
     const services = useServices();
@@ -12,9 +12,9 @@ export const HomePage: React.FC = observer(() => {
         )
     } else {
         return (
-            <PrimaryButton onClick={() => services.user.login()}>
-                Log in
-            </PrimaryButton>
+            <TastyGobyStandardPage>
+                Home page content
+            </TastyGobyStandardPage>
         );
     }
 })

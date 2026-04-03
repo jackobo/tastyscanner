@@ -3,22 +3,48 @@ import {observer} from "mobx-react";
 import {useServices} from "../../hooks/use-services.hook";
 import {SymbolSearchDropDownComponent} from "../ticker/symbol-search-drop-down.component";
 import styled from "styled-components";
+import {LoginButtonComponent} from "../login/login-button.component";
 
 const HeaderContainerBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 8px;
+    gap: var(--ion-space-8);
+    width: 100%;
+    padding: var(--ion-space-8);
+`
+
+const SymbolSearchContainerBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
 `
 
 export const TastyGobyStandardPageHeaderSmallScreenComponent: React.FC = observer(() => {
     const services = useServices();
     const ticker = services.tickers.currentTicker;
-    
+
+    const renderSearchSymbol = () => {
+        if(!services.user.isAuthenticated) {
+            return null;
+        }
+        return (
+            <>
+                <SymbolSearchDropDownComponent/>
+                <span>{ticker?.currentPrice?.toFixed(2)}</span>
+            </>
+        )
+    }
+
     return (
         <HeaderContainerBox>
-            <SymbolSearchDropDownComponent/>
-            <span>{ticker?.currentPrice?.toFixed(2)}</span>
+            <SymbolSearchContainerBox>
+                {renderSearchSymbol()}
+            </SymbolSearchContainerBox>
+
+            {services.user.isAuthenticated ? null : <LoginButtonComponent/>}
+
         </HeaderContainerBox>
     )
 })

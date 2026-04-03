@@ -87,7 +87,7 @@ export class UserService extends FrameworkServiceBase implements IUserService, I
         }
 
 
-        await this.services.dialog.showStandardDialog({
+        await this.services.dialog.showPopupDialog({
             closeButtonBehavior: DialogCloseButtonBehavior.Reject,
             render: (dialogHandler) => (
                 <LoginFormComponent dialogHandler={dialogHandler}
