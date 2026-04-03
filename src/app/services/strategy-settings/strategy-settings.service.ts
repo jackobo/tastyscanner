@@ -48,8 +48,8 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     _maxDelta: number = 30;
     _condorsMinDelta: number = -5;
     _condorsMaxDelta: number = 5;
-    _condorsMinCallPremiumVsPutPremiumPercentage: number = 0.7;
-    _condorsMaxCallPremiumVsPutPremiumPercentage: number = 1.3;
+    _condorsMinCallPremiumVsPutPremiumPercentage: number = 0.5;
+    _condorsMaxCallPremiumVsPutPremiumPercentage: number = 1.5;
     _minDaysToExpiration: number = 35;
     _maxDaysToExpiration: number = 60;
     _wings: number[] = [5, 10];
