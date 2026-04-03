@@ -78,18 +78,21 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
 
         const config = await this._createTastyClientConfig(appSettings);
         if(!config) {
+            debugger;
             return null;
         }
 
         const tastyClient = new TastyTradeClient(config);
 
         if(Check.isNullOrUndefined(await this._connectToAccountStreamer(tastyClient))) {
+            debugger;
             return null;
         }
 
         const marketDataProvider = await this._createMarketDataProvider(tastyClient);
 
         if(Check.isNullOrUndefined(marketDataProvider)) {
+            debugger;
             return null;
         }
 

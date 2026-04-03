@@ -30,6 +30,7 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
         });
 
         this._loadAccounts().finally(() => {
+            this.services.logger.info('BrokersService Accounts loaded');
             runInAction(() => {
                 this.accountsLoadingInProgress = false
             });

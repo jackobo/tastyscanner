@@ -29,7 +29,8 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
             _maxDelta: observable.ref,
             _condorsMinDelta: observable.ref,
             _condorsMaxDelta: observable.ref,
-            _condorsMaxRiskRewardRatioPerWing: observable.ref,
+            _condorsMinCallPremiumVsPutPremiumPercentage: observable.ref,
+            _condorsMaxCallPremiumVsPutPremiumPercentage: observable.ref,
             _minDaysToExpiration: observable.ref,
             _maxDaysToExpiration: observable.ref,
             _maxBidAskSpread: observable.ref,
@@ -47,7 +48,8 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
     _maxDelta: number = 30;
     _condorsMinDelta: number = -5;
     _condorsMaxDelta: number = 5;
-    _condorsMaxRiskRewardRatioPerWing = 5;
+    _condorsMinCallPremiumVsPutPremiumPercentage: number = 0.7;
+    _condorsMaxCallPremiumVsPutPremiumPercentage: number = 1.3;
     _minDaysToExpiration: number = 35;
     _maxDaysToExpiration: number = 60;
     _wings: number[] = [5, 10];
@@ -113,13 +115,22 @@ export class StrategyFiltersModel implements IStrategyFiltersViewModel {
         this._setProperty("_condorsMaxDelta", value);
     }
 
-    get condorsMaxRiskRewardRatioPerWing(): number {
-        return this._condorsMaxRiskRewardRatioPerWing;
+    get condorsMinCallPremiumVsPutPremiumPercentage(): number {
+        return this._condorsMinCallPremiumVsPutPremiumPercentage;
     }
 
-    set condorsMaxRiskRewardRatioPerWing(value) {
-        this._setProperty("_condorsMaxRiskRewardRatioPerWing", value);
+    set condorsMinCallPremiumVsPutPremiumPercentage(value) {
+        this._setProperty("_condorsMinCallPremiumVsPutPremiumPercentage", value);
     }
+
+    get condorsMaxCallPremiumVsPutPremiumPercentage(): number {
+        return this._condorsMaxCallPremiumVsPutPremiumPercentage;
+    }
+
+    set condorsMaxCallPremiumVsPutPremiumPercentage(value) {
+        this._setProperty("_condorsMaxCallPremiumVsPutPremiumPercentage", value);
+    }
+
 
     get minDaysToExpiration(): number {
         return this._minDaysToExpiration;

@@ -13,8 +13,8 @@ import {ByExistingPositionsFilterComponent} from "./parts/by-existing-positions/
 import {PopFilterComponent} from "./parts/pop/pop-filter.component";
 import {BestStrategyFilterComponent} from "./parts/best-strategy/best-strategy-filter.component";
 import {
-    CondorsRiskRewardPerWingFilterComponent
-} from "./parts/condors-risk-reward-per-wing/condors-risk-reward-per-wing-filter.component";
+    CondorsCallsPremiumVsPutsPremiumFilterComponent
+} from "./parts/condors-calls-premium-vs-puts-premium/condors-calls-premium-vs-puts-premium-filter.component";
 
 
 const FiltersContainerBox = styled.div`
@@ -33,7 +33,7 @@ export const StrategyFiltersComponent: React.FC = observer(() => {
         <FiltersContainerBox>
             <BestStrategyFilterComponent filters={filters}/>
             <RiskRewardFilterComponent filters={filters}/>
-            <CondorsRiskRewardPerWingFilterComponent filters={filters}/>
+            <CondorsCallsPremiumVsPutsPremiumFilterComponent filters={filters}/>
             <PopFilterComponent filters={filters}/>
             <StrikesDeltaRangeFilterComponent filters={filters}/>
             <CondorsShortLegsDeltaRangeFilterComponent filters={filters}/>
