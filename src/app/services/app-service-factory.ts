@@ -4,7 +4,7 @@ import {TickersService} from "./tickers/tickers.service";
 import {IStrategySettingsService} from "./strategy-settings/strategy-settings.service.interface";
 import {StrategySettingsService} from "./strategy-settings/strategy-settings.service";
 import {IMarketDataProviderService} from "./market-data-provider/market-data-provider.service.interface";
-import {MarketDataProviderService} from "./market-data-provider/market-data-provider.service";
+import {AuthenticatedUserMarketDataProviderService} from "./market-data-provider/authenticated-user-market-data-provider.service";
 import {IStorageService} from "../../framework/services/storage/storage.service.interface";
 import {AppLocalStorageKeys} from "./storage/app-local-storage-keys";
 import {LocalStorageService} from "../../framework/services/storage/local-storage/local-storage.service";
@@ -23,7 +23,12 @@ import {AppTheme} from "../theme/app-theme";
 import {AppThemeService} from "./theme/app-theme.service";
 import {TastyBroker} from "./brokers/tasty/tasty.broker";
 import {IBrokersService} from "./brokers/brokers.service.interface";
-import {BrokersService} from "./brokers/brokers.service";
+import {AuthorizedUserBrokersService} from "./brokers/authorized-user-brokers.service";
+import {AnonymousUserBrokersService} from "./brokers/anonymous-user-brokers.service";
+import {
+    AnonymousUserMarketDataProviderService
+} from "./market-data-provider/anonymous-user-market-data-provider.service";
+import {AuthorizedServiceFactory} from "../../framework/services/authorized-service-factory";
 
 export class AppServiceFactory extends FrameworkServiceFactory implements IAppServiceFactory {
 
@@ -80,18 +85,25 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
 
     private _tastyBroker: Lazy<TastyBroker> = new Lazy<TastyBroker>(() => new TastyBroker(this));
 
-    private _marketDataProvider: Lazy<IMarketDataProviderService> = new Lazy<IMarketDataProviderService>(() => {
-        return new MarketDataProviderService(this, [this._tastyBroker.value])
+    private _marketDataProvider: Lazy<AuthorizedServiceFactory<IMarketDataProviderService>> = new Lazy<AuthorizedServiceFactory<IMarketDataProviderService>>(() => {
+        return new AuthorizedServiceFactory<IMarketDataProviderService>(this,
+            () => new AuthenticatedUserMarketDataProviderService(this, [this._tastyBroker.value]),
+            () => new AnonymousUserMarketDataProviderService());
     });
     get marketDataProvider(): IMarketDataProviderService {
-        return this._marketDataProvider.value;
+        return this._marketDataProvider.value.currentInstance;
     }
 
-    private _brokers: Lazy<IBrokersService> = new Lazy<IBrokersService>(() => {
-        return new BrokersService(this, [this._tastyBroker.value]);
+    private _brokers: Lazy<AuthorizedServiceFactory<IBrokersService>> = new Lazy<AuthorizedServiceFactory<IBrokersService>>(() => {
+
+        return new AuthorizedServiceFactory<IBrokersService>(this,
+                                                    () => new AuthorizedUserBrokersService(this, [this._tastyBroker.value]),
+                                                    () => new AnonymousUserBrokersService());
+
+
     });
     get brokers(): IBrokersService {
-        return this._brokers.value;
+        return this._brokers.value.currentInstance;
     }
 
 }

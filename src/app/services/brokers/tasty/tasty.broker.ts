@@ -31,8 +31,9 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
 
     constructor(private readonly services: IAppServiceFactory) {
 
-        this._connectToTastyPromise = new Promise((resolve) => {
+        this._connectToTastyPromise = new Promise((resolve, reject) => {
             this._connectToTastyPromiseResolver = resolve;
+            //this._connectToTastyPromiseRejecter = reject;
         });
 
         makeObservable<this, '_currentTastyConnection' | '_accounts'>(this, {
@@ -41,15 +42,7 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
         })
 
         reaction(() => this.services.appSettings.currentSettings, async (appSettings) => {
-            if(this._currentTastyConnection) {
-                this._accountStreamerDisposers.forEach(d => d());
-                this._accountStreamerDisposers = [];
-                this._currentTastyConnection.marketDataProvider.disconnect();
-                this._currentTastyConnection.tastyClient.session.clear();
-                this._connectToTastyPromise = new Promise((resolve) => {
-                    this._connectToTastyPromiseResolver = resolve;
-                });
-            }
+            await this.disposeAsync();
 
             const cnn = await this._connectToTasty(appSettings);
             runInAction(() => {
@@ -69,9 +62,21 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
 
     private _connectToTastyPromise: Promise<TastyConnection>;
     private _connectToTastyPromiseResolver: null | ((value: TastyConnection | PromiseLike<TastyConnection>) => void) = null;
+    //private _connectToTastyPromiseRejecter: null | ((reason?: any) => void) = null;
     private _currentTastyConnection: TastyConnection | null = null;
     private _accountStreamerDisposers: Array<() => void> = [];
 
+    async disposeAsync(): Promise<void> {
+        if(this._currentTastyConnection) {
+            this._accountStreamerDisposers.forEach(d => d());
+            this._accountStreamerDisposers = [];
+            await this._currentTastyConnection.marketDataProvider.disposeAsync();
+            this._currentTastyConnection.tastyClient.session.clear();
+            this._connectToTastyPromise = new Promise((resolve) => {
+                this._connectToTastyPromiseResolver = resolve;
+            });
+        }
+    }
 
     private async _connectToTasty(appSettings: IAppSettingsFields | null): Promise<TastyConnection | null> {
 

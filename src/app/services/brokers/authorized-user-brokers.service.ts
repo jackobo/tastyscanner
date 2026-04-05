@@ -11,7 +11,7 @@ import {TimeSpan} from "../../../framework/types/time-span";
 
 export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(5);
 
-export class BrokersService extends AppServiceBase implements IBrokersService {
+export class AuthorizedUserBrokersService extends AppServiceBase implements IBrokersService {
     constructor(services: IAppServiceFactory, private readonly brokers: IBroker[]) {
         super(services);
 
@@ -131,6 +131,14 @@ export class BrokersService extends AppServiceBase implements IBrokersService {
         }, timeIntervalMS);
     }
 
+    async disposeAsync(): Promise<void> {
+        runInAction(() => {
+            this.currentAccount = null;
+        })
+        for(const broker of this.brokers) {
+            await broker.disposeAsync();
+        }
+    }
 
 }
 

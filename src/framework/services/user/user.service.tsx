@@ -89,6 +89,7 @@ export class UserService extends FrameworkServiceBase implements IUserService, I
 
         await this.services.dialog.showPopupDialog({
             closeButtonBehavior: DialogCloseButtonBehavior.Reject,
+            width: '360px',
             render: (dialogHandler) => (
                 <LoginFormComponent dialogHandler={dialogHandler}
                                     authenticationMethods={this._currentAuthenticationStrategy.authenticationMethods}

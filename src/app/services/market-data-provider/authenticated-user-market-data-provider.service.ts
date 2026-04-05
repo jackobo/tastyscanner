@@ -8,7 +8,7 @@ import {
 import {AppServiceBase} from "../app-service-base";
 import {IAppServiceFactory} from "../app-service-factory.interface";
 
-export class MarketDataProviderService extends AppServiceBase implements IMarketDataProviderService {
+export class AuthenticatedUserMarketDataProviderService extends AppServiceBase implements IMarketDataProviderService {
 
     constructor(services: IAppServiceFactory, private readonly providers: IMarketDataProvider[]) {
         super(services);
@@ -18,7 +18,9 @@ export class MarketDataProviderService extends AppServiceBase implements IMarket
     private _currentProvider: IMarketDataProvider;
 
 
-
+    async disposeAsync(): Promise<void> {
+        await this._currentProvider.disposeAsync();
+    }
 
     async getOptionsChain(symbol: string): Promise<IOptionChainRawData[]> {
         return await this._currentProvider.getOptionsChain(symbol);

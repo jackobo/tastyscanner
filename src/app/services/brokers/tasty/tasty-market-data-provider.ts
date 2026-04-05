@@ -24,6 +24,10 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
 
     private _streamerSubscriptionsCount: Record<string, number> = {};
 
+    async disposeAsync(): Promise<void> {
+        this.tastyClient.quoteStreamer.removeEventListener(this._streamEventHandler);
+        this.tastyClient.quoteStreamer.disconnect();
+    }
 
 
     public async connect(): Promise<void> {
@@ -42,10 +46,6 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
         }
     }
 
-    public disconnect(): void {
-        this.tastyClient.quoteStreamer.removeEventListener(this._streamEventHandler);
-        this.tastyClient.quoteStreamer.disconnect();
-    }
 
     public quotes: Record<string, any> = {};
     public trades: Record<string, any> = {};
