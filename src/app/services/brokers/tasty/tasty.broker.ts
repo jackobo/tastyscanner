@@ -31,7 +31,7 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
 
     constructor(private readonly services: IAppServiceFactory) {
 
-        this._connectToTastyPromise = new Promise((resolve, reject) => {
+        this._connectToTastyPromise = new Promise((resolve) => {
             this._connectToTastyPromiseResolver = resolve;
             //this._connectToTastyPromiseRejecter = reject;
         });
