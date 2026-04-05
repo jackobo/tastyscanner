@@ -1,20 +1,18 @@
-import {makeObservable, observable, reaction} from "mobx";
+import {makeObservable, observable, reaction, runInAction} from "mobx";
 import {IFrameworkServiceFactory} from "./framework-service-factory.interface";
 import {FrameworkServiceBase} from "./framework-service-base";
-import {IDisposableAsync} from "./disposable.interface";
+import {IDisposable} from "./disposable.interface";
 
-export class AuthorizedServiceFactory<TServiceInterface extends IDisposableAsync> extends FrameworkServiceBase {
+export class AuthorizedServiceFactory<TServiceInterface extends IDisposable> extends FrameworkServiceBase {
     constructor(services: IFrameworkServiceFactory,
                 private readonly createAuthorizesServiceInstance: () => TServiceInterface,
                 private readonly createAnonymousServiceInstance: () => TServiceInterface) {
         super(services);
 
-        this._currentInstance = this._createCurrentInstance();
-
-        reaction(() => this.services.user.isAuthenticated, async () => {
-            await this._currentInstance.disposeAsync();
-            this._currentInstance = this._createCurrentInstance();
-        })
+        reaction(() => this.services.user.isAuthenticated,
+            () => {
+                this._currentInstance = null;
+            })
 
         makeObservable<this, '_currentInstance'>(this, {
             _currentInstance: observable.ref
@@ -22,10 +20,17 @@ export class AuthorizedServiceFactory<TServiceInterface extends IDisposableAsync
 
     }
 
-    private _currentInstance: TServiceInterface;
+    private _currentInstance: TServiceInterface | null = null;
     get currentInstance(): TServiceInterface {
-        return this._currentInstance;
+        if(!this._currentInstance) {
+            runInAction(() => {
+                this._currentInstance = this._createCurrentInstance();
+            });
+        }
+
+        return this._currentInstance!;
     }
+
 
     private _createCurrentInstance(): TServiceInterface {
         if(this.services.user.isAuthenticated) {

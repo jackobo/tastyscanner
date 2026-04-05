@@ -1,6 +1,6 @@
-import {IDisposableAsync} from "../../../framework/services/disposable.interface";
+import {IDisposable} from "../../../framework/services/disposable.interface";
 
-export interface IMarketDataProviderService extends IDisposableAsync {
+export interface IMarketDataProviderService extends IDisposable {
     getOptionsChain(symbol: string): Promise<IOptionChainRawData[]>;
     subscribeToStreamer(symbols: string[]): void;
     unsubscribeFromStreamer(symbols: string[]): void;

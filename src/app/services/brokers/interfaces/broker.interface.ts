@@ -1,8 +1,8 @@
 import {IBrokerageAccountModel} from "./brokerage-account.view-model.interface";
-import {IDisposableAsync} from "../../../../framework/services/disposable.interface";
+import {IDisposable} from "../../../../framework/services/disposable.interface";
 
 
-export interface IBroker extends IDisposableAsync {
+export interface IBroker extends IDisposable {
     readonly name: string;
     readonly accounts: IBrokerageAccountModel[];
     waitForAccountsLoading(): Promise<void>;

@@ -24,7 +24,7 @@ export class TastyMarketDataProvider implements Omit<IMarketDataProviderService,
 
     private _streamerSubscriptionsCount: Record<string, number> = {};
 
-    async disposeAsync(): Promise<void> {
+    dispose(): void {
         this.tastyClient.quoteStreamer.removeEventListener(this._streamEventHandler);
         this.tastyClient.quoteStreamer.disconnect();
     }

@@ -1,9 +1,9 @@
 import {FormFields} from "../../../framework/models/forms/form-field.interface";
 import {IBrokerageAccountViewModel} from "./interfaces/brokerage-account.view-model.interface";
-import {IDisposableAsync} from "../../../framework/services/disposable.interface";
+import {IDisposable} from "../../../framework/services/disposable.interface";
 
 
-export interface IBrokersService extends IDisposableAsync {
+export interface IBrokersService extends IDisposable {
     readonly accounts: IBrokerageAccountViewModel[];
     readonly currentAccount: IBrokerageAccountViewModel | null;
     readonly fields: FormFields<IBrokerageAccountSettingsFields>;

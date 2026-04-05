@@ -7,7 +7,7 @@ import {
     IWatchListRawData,
     ISymbolMetricsRawData,
     ISymbolInfoRawData,
-    ISearchSymbolItemRawData, IMarketDataProvider
+    ISearchSymbolItemRawData
 } from "../../market-data-provider/market-data-provider.service.interface";
 import TastyTradeClient, {STREAMER_STATE} from "@tastytrade/api"
 import {Check} from "../../../../framework/utils/type-checking";
@@ -15,10 +15,10 @@ import {IAppServiceFactory} from "../../app-service-factory.interface";
 import {IAppSettingsFields} from "../../app-settings/app-settings.service.interface";
 import {ITastyAccountRawData} from "./raw-data/tasty-account.raw-data.interfaces";
 import {TastyAccountModel} from "./tasty-account.model";
-import {IBroker} from "../interfaces/broker.interface";
 import {TastyMarketDataProvider} from "./tasty-market-data-provider";
 import {NullableUndefinedString} from "../../../../framework/types/nullable-types";
 import {TastyOrdersReader} from "./orders/tasty-orders-reader";
+import {ITastyBroker} from "./tasty-broker.interface";
 
 class TastyConnection {
     constructor(public readonly tastyClient: TastyTradeClient,
@@ -27,10 +27,9 @@ class TastyConnection {
 
 }
 
-export class TastyBroker implements IBroker, IMarketDataProvider {
+export class AuthorizedUserTastyBroker implements ITastyBroker {
 
     constructor(private readonly services: IAppServiceFactory) {
-
         this._connectToTastyPromise = new Promise((resolve) => {
             this._connectToTastyPromiseResolver = resolve;
             //this._connectToTastyPromiseRejecter = reject;
@@ -42,7 +41,7 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
         })
 
         reaction(() => this.services.appSettings.currentSettings, async (appSettings) => {
-            await this.disposeAsync();
+            this.dispose();
 
             const cnn = await this._connectToTasty(appSettings);
             runInAction(() => {
@@ -66,11 +65,11 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
     private _currentTastyConnection: TastyConnection | null = null;
     private _accountStreamerDisposers: Array<() => void> = [];
 
-    async disposeAsync(): Promise<void> {
+    dispose(): void {
         if(this._currentTastyConnection) {
             this._accountStreamerDisposers.forEach(d => d());
             this._accountStreamerDisposers = [];
-            await this._currentTastyConnection.marketDataProvider.disposeAsync();
+            this._currentTastyConnection.marketDataProvider.dispose();
             this._currentTastyConnection.tastyClient.session.clear();
             this._connectToTastyPromise = new Promise((resolve) => {
                 this._connectToTastyPromiseResolver = resolve;
@@ -79,7 +78,6 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
     }
 
     private async _connectToTasty(appSettings: IAppSettingsFields | null): Promise<TastyConnection | null> {
-
 
         const config = await this._createTastyClientConfig(appSettings);
         if(!config) {
@@ -101,7 +99,7 @@ export class TastyBroker implements IBroker, IMarketDataProvider {
         const tastyConnection = new TastyConnection(tastyClient, marketDataProvider);
 
         if(this._connectToTastyPromiseResolver) {
-            this._connectToTastyPromiseResolver(new TastyConnection(tastyClient, marketDataProvider));
+            this._connectToTastyPromiseResolver(tastyConnection);
         }
 
         return tastyConnection;

@@ -16,7 +16,7 @@ export class AnonymousUserBrokersService implements IBrokersService {
         return Promise.resolve();
     }
 
-    async disposeAsync(): Promise<void> {
+    dispose(): void {
     }
 
 }

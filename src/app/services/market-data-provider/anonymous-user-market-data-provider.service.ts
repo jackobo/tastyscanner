@@ -9,7 +9,7 @@ import {
 
 export class AnonymousUserMarketDataProviderService implements IMarketDataProviderService {
 
-    async disposeAsync(): Promise<void> {
+    dispose(): void {
     }
 
     async getOptionsChain(symbol: string): Promise<IOptionChainRawData[]> {

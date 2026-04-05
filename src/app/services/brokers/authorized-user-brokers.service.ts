@@ -12,7 +12,7 @@ import {TimeSpan} from "../../../framework/types/time-span";
 export const WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL = TimeSpan.fromSeconds(5);
 
 export class AuthorizedUserBrokersService extends AppServiceBase implements IBrokersService {
-    constructor(services: IAppServiceFactory, private readonly brokers: IBroker[]) {
+    constructor(services: IAppServiceFactory, private readonly brokers: Array<() => IBroker>) {
         super(services);
 
         makeObservable(this, {
@@ -30,6 +30,7 @@ export class AuthorizedUserBrokersService extends AppServiceBase implements IBro
         });
 
         this._loadAccounts().finally(() => {
+            this.services.logger.info('Accounts loaded');
             runInAction(() => {
                 this.accountsLoadingInProgress = false
             });
@@ -42,7 +43,7 @@ export class AuthorizedUserBrokersService extends AppServiceBase implements IBro
     private readonly _form: BrokerageAccountSettingsForm;
 
     get accounts(): IBrokerageAccountModel[] {
-        return this.brokers.selectMany(b => b.accounts);
+        return this.brokers.selectMany(b => b().accounts);
     }
 
     currentAccount: IBrokerageAccountModel | null = null;
@@ -96,8 +97,8 @@ export class AuthorizedUserBrokersService extends AppServiceBase implements IBro
 
 
     private async _loadAccounts(): Promise<void> {
-        await Promise.all(this.brokers.map(b => b.waitForAccountsLoading()));
-
+        await Promise.all(this.brokers.map(b => b().waitForAccountsLoading()));
+        this.services.logger.info('_loadAccounts');
         const lastUsedAccount = this.services.localStorage.getItem(AppLocalStorageKeys.currentBrokerAccount);
         if (lastUsedAccount) {
             await this.setCurrentAccount(lastUsedAccount);
@@ -131,12 +132,12 @@ export class AuthorizedUserBrokersService extends AppServiceBase implements IBro
         }, timeIntervalMS);
     }
 
-    async disposeAsync(): Promise<void> {
+    async dispose(): Promise<void> {
         runInAction(() => {
             this.currentAccount = null;
         })
         for(const broker of this.brokers) {
-            await broker.disposeAsync();
+            broker().dispose();
         }
     }
 

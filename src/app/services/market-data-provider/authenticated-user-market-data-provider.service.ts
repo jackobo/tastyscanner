@@ -10,16 +10,17 @@ import {IAppServiceFactory} from "../app-service-factory.interface";
 
 export class AuthenticatedUserMarketDataProviderService extends AppServiceBase implements IMarketDataProviderService {
 
-    constructor(services: IAppServiceFactory, private readonly providers: IMarketDataProvider[]) {
+    constructor(services: IAppServiceFactory, private readonly providers: Array<() => IMarketDataProvider>) {
         super(services);
-        this._currentProvider = this.providers[0];
     }
 
-    private _currentProvider: IMarketDataProvider;
+    private get _currentProvider(): IMarketDataProvider {
+        return this.providers[0]();
+    }
 
 
-    async disposeAsync(): Promise<void> {
-        await this._currentProvider.disposeAsync();
+    dispose(): void {
+        this._currentProvider.dispose();
     }
 
     async getOptionsChain(symbol: string): Promise<IOptionChainRawData[]> {
