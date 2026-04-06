@@ -167,8 +167,8 @@ export class AuthorizedUserTastyBroker implements ITastyBroker {
             let disposer: any = null;
             const msgObserver = (json: any) => {
                 if(json.action === 'connect') {
-                    console.log("connect", json);
-                    if(json.value) {
+                    this.services.logger.info("connect", json);
+                    if(Check.isArray(json.value) && accountNumbers.all(acc => json.value.includes(acc))) {
                         resolve(true);
                     } else {
                         resolve(false);

@@ -7,7 +7,7 @@ import {IAppServiceFactory} from "../app-service-factory.interface";
 import {AppLocalStorageKeys} from "../storage/app-local-storage-keys";
 
 
-export class TickersService extends AppServiceBase implements ITickersService {
+export class AuthorizedUserTickersService extends AppServiceBase implements ITickersService {
     constructor(services: IAppServiceFactory) {
         super(services);
 
@@ -31,6 +31,10 @@ export class TickersService extends AppServiceBase implements ITickersService {
     }
 
     private _loadedTickers: Record<string, TickerModel> = {};
+
+    dispose(): void {
+        this._currentTicker?.stop();
+    }
 
     public recentTickers: TickerModel[] = [];
 

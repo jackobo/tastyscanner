@@ -1,6 +1,7 @@
 import {ITickerViewModel} from "../../models/ticker/ticker.view-model.interface";
+import {IDisposable} from "../../../framework/services/disposable.interface";
 
-export interface ITickersService {
+export interface ITickersService extends IDisposable {
     readonly currentTicker: ITickerViewModel | null;
     setCurrentTicker(symbol: string): Promise<void>;
     getTicker(symbol: string): ITickerViewModel;

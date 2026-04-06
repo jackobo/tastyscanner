@@ -1,6 +1,6 @@
 import { ITickersService } from "./tickers/tickers.service.interface";
 import {IAppServiceFactory} from "./app-service-factory.interface";
-import {TickersService} from "./tickers/tickers.service";
+import {AuthorizedUserTickersService} from "./tickers/authorized-user-tickers.service";
 import {IStrategySettingsService} from "./strategy-settings/strategy-settings.service.interface";
 import {StrategySettingsService} from "./strategy-settings/strategy-settings.service";
 import {IMarketDataProviderService} from "./market-data-provider/market-data-provider.service.interface";
@@ -31,6 +31,7 @@ import {
 import {AuthorizedServiceFactory} from "../../framework/services/authorized-service-factory";
 import {ITastyBroker} from "./brokers/tasty/tasty-broker.interface";
 import {AnonymousUserTastyBroker} from "./brokers/tasty/anonymous-user-tasty.broker";
+import {AnonymousUserTickersService} from "./tickers/anonymous-user-tickers.service";
 
 export class AppServiceFactory extends FrameworkServiceFactory implements IAppServiceFactory {
 
@@ -70,9 +71,11 @@ export class AppServiceFactory extends FrameworkServiceFactory implements IAppSe
     }
 
 
-    private _tickers: Lazy<ITickersService> = new Lazy<ITickersService>(() => new TickersService(this));
+    private _tickers: AuthorizedServiceFactory<ITickersService> = new AuthorizedServiceFactory<ITickersService>(this,
+        () => new AuthorizedUserTickersService(this),
+        () => new AnonymousUserTickersService());
     get tickers(): ITickersService {
-        return this._tickers.value;
+        return this._tickers.currentInstance;
     }
 
     private _appSettings: Lazy<IAppSettingsService> = new Lazy<IAppSettingsService>(() => new AppSettingsService(this));

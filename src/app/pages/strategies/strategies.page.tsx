@@ -41,6 +41,9 @@ export const StrategiesPage: React.FC<StrategiesPageProps> = observer((props) =>
     const services = useServices();
 
     const ticker = services.tickers.currentTicker;
+    if(!ticker) {
+        return null;
+    }
 
     const renderPageContent = () => {
         if(!ticker) {
