@@ -19,6 +19,7 @@ import {TastyMarketDataProvider} from "./tasty-market-data-provider";
 import {NullableUndefinedString} from "../../../../framework/types/nullable-types";
 import {TastyOrdersReader} from "./orders/tasty-orders-reader";
 import {ITastyBroker} from "./tasty-broker.interface";
+import {delay} from "../../../../framework/utils/delay-function";
 
 class TastyConnection {
     constructor(public readonly tastyClient: TastyTradeClient,
@@ -69,7 +70,9 @@ export class AuthorizedUserTastyBroker implements ITastyBroker {
         if(this._currentTastyConnection) {
             this._accountStreamerDisposers.forEach(d => d());
             this._accountStreamerDisposers = [];
+
             this._currentTastyConnection.marketDataProvider.dispose();
+            this._currentTastyConnection.tastyClient.accountStreamer.stop();
             this._currentTastyConnection.tastyClient.session.clear();
             this._connectToTastyPromise = new Promise((resolve) => {
                 this._connectToTastyPromiseResolver = resolve;
@@ -84,9 +87,10 @@ export class AuthorizedUserTastyBroker implements ITastyBroker {
             return null;
         }
 
-        const tastyClient = new TastyTradeClient(config);
+        let tastyClient: TastyTradeClient | null = new TastyTradeClient(config);
 
-        if(Check.isNullOrUndefined(await this._connectToAccountStreamer(tastyClient))) {
+        tastyClient = await this._connectToAccountStreamer(tastyClient);
+        if(Check.isNullOrUndefined(tastyClient)) {
             return null;
         }
 
@@ -122,19 +126,28 @@ export class AuthorizedUserTastyBroker implements ITastyBroker {
     }
 
     private async _connectToAccountStreamer(tastyClient: TastyTradeClient): Promise<TastyTradeClient | null> {
-        let accountNumbers: string[];
         try {
-            accountNumbers = (await this._loadAccounts(tastyClient)).map(acc => acc.accountNumber);
+            const accountNumbers = (await this._loadAccounts(tastyClient)).map(acc => acc.accountNumber);
             if(accountNumbers.length === 0) {
                 return tastyClient;
             }
-            const accountStreamer = tastyClient.accountStreamer;
-            await accountStreamer.start();
-            await accountStreamer.subscribeToAccounts(accountNumbers);
+
+
+            let isSubscribedToAccounts = false;
+
+            do {
+                isSubscribedToAccounts = await this._subscribeToAccounts(tastyClient, accountNumbers);
+                if(!isSubscribedToAccounts) {
+                    await delay(Date.now(), 500);
+                }
+
+            } while(!isSubscribedToAccounts);
+
+            this._accountStreamerDisposers.push(tastyClient.accountStreamer.addMessageObserver(this._accountStreamerMessageObserver));
+            this._accountStreamerDisposers.push(tastyClient.accountStreamer.addStreamerStateObserver(this._accountStreamerStateObserver));
             //console.log("subscribeResult", subscribeResult);
-            this._accountStreamerDisposers.push(accountStreamer.addMessageObserver(this._accountStreamerMessageObserver));
-            this._accountStreamerDisposers.push(accountStreamer.addStreamerStateObserver(this._accountStreamerStateObserver));
             return tastyClient;
+
         }
         catch(e) {
             await this.services.toaster.showErrorToast({
@@ -142,6 +155,44 @@ export class AuthorizedUserTastyBroker implements ITastyBroker {
             });
             return null;
         }
+    }
+
+    private async _subscribeToAccounts(tastyClient: TastyTradeClient, accountNumbers: string[]): Promise<boolean> {
+        const isAccountStreamerStarted = await tastyClient.accountStreamer.start();
+        if(!isAccountStreamerStarted) {
+            return false;
+        }
+
+        const subscribeToAccountPromise = new Promise<boolean>(resolve => {
+            let disposer: any = null;
+            const msgObserver = (json: any) => {
+                if(json.action === 'connect') {
+                    console.log("connect", json);
+                    if(json.value) {
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+
+                    if(disposer) {
+                        disposer();
+                    }
+                }
+
+
+            }
+            disposer = tastyClient.accountStreamer.addMessageObserver(msgObserver);
+        });
+
+        tastyClient.accountStreamer.subscribeToAccounts(accountNumbers);
+
+        if(await subscribeToAccountPromise) {
+            return true;
+        }
+
+        tastyClient.accountStreamer.stop();
+        return false;
+
     }
 
     private async _createTastyClientConfig(appSettings: IAppSettingsFields | null) {

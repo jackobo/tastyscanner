@@ -30,7 +30,6 @@ export class AuthorizedUserBrokersService extends AppServiceBase implements IBro
         });
 
         this._loadAccounts().finally(() => {
-            this.services.logger.info('Accounts loaded');
             runInAction(() => {
                 this.accountsLoadingInProgress = false
             });
@@ -98,7 +97,6 @@ export class AuthorizedUserBrokersService extends AppServiceBase implements IBro
 
     private async _loadAccounts(): Promise<void> {
         await Promise.all(this.brokers.map(b => b().waitForAccountsLoading()));
-        this.services.logger.info('_loadAccounts');
         const lastUsedAccount = this.services.localStorage.getItem(AppLocalStorageKeys.currentBrokerAccount);
         if (lastUsedAccount) {
             await this.setCurrentAccount(lastUsedAccount);
