@@ -29,11 +29,12 @@ export class AuthorizedUserBrokersService extends AppServiceBase implements IBro
             }
         });
 
-        this._loadAccounts().finally(() => {
+        this._loadAccounts().then(() => {
+            this._startAutoReplaceWorkingOrders();
+        }).finally(() => {
             runInAction(() => {
                 this.accountsLoadingInProgress = false
             });
-            this._startAutoReplaceWorkingOrders();
         });
 
     }
@@ -71,9 +72,7 @@ export class AuthorizedUserBrokersService extends AppServiceBase implements IBro
             } catch (err) {
                 this.services.logger.error(`Failed to dispose account: ${this.currentAccount.id}`, err);
             }
-
         }
-
 
         try {
             await newAccount.connect();
@@ -115,10 +114,16 @@ export class AuthorizedUserBrokersService extends AppServiceBase implements IBro
         this._form.commitChanges();
     }
 
+
+    private _autoReplaceWorkingOrdersTimerRef: any = null;
+
     private _startAutoReplaceWorkingOrders(): void {
+        if(this._isDisposed) {
+            return;
+        }
         //this random stuff is to reduce the likelihood that multiple browser tabs to execute the order replacement at the same time
         const timeIntervalMS = Math.max(1000, Math.round(Math.random() * WORKING_ORDERS_MAX_AUTO_REPLACE_TIME_INTERVAL.totalMilliseconds));
-        setTimeout(async () => {
+        this._autoReplaceWorkingOrdersTimerRef = setTimeout(async () => {
             if(this.currentAccount) {
                 const workingOrders = this.currentAccount.workingOrders.filter(wo => wo.isGobyOrder);
 
@@ -130,7 +135,17 @@ export class AuthorizedUserBrokersService extends AppServiceBase implements IBro
         }, timeIntervalMS);
     }
 
+    private _stopAutoReplaceWorkingOrders(): void {
+        if(this._autoReplaceWorkingOrdersTimerRef) {
+            clearTimeout(this._autoReplaceWorkingOrdersTimerRef);
+            this._autoReplaceWorkingOrdersTimerRef = null;
+        }
+    }
+
+    private _isDisposed: boolean = false;
     async dispose(): Promise<void> {
+        this._isDisposed = true;
+        this._stopAutoReplaceWorkingOrders();
         runInAction(() => {
             this.currentAccount = null;
         })
